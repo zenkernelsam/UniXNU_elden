@@ -17,7 +17,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -57,14 +56,16 @@ def main() -> None:
     parser.add_argument(
         "--keep-build-tree",
         action="store_true",
-        help="do not delete the previous EDK II output directory",
+        help="reuse the previous EDK II output directory (fresh directories are preferred)",
     )
     args = parser.parse_args()
 
     build_dir = MU / "Build" / "PakalaPkg" / f"{args.target}_CLANGPDB"
     if build_dir.exists() and not args.keep_build_tree:
-        print(f"remove stale build tree: {build_dir}")
-        shutil.rmtree(build_dir)
+        raise SystemExit(
+            f"build tree exists: {build_dir}; use a new workspace, move it to Trash, "
+            "or explicitly pass --keep-build-tree. Nothing was deleted."
+        )
 
     run([
         sys.executable,

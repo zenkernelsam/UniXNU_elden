@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Assemble a v91 candidate from explicit inputs; no old boot carrier or device I/O.
 
-The FD, loader and packed Data fixture remain pinned external inputs while their
-source recipes are being closed. Producing this image does not end maintenance.
+The FD, loader and packed Data fixture are checked against source-rebuilt
+contracts. Producing this image is an offline check, not hardware acceptance.
 """
 from pathlib import Path
 import argparse,gzip,hashlib,json,os,shutil,struct,subprocess,sys,tomllib
@@ -14,6 +14,7 @@ from boot_formats import Fat
 from build_boot_shim import extract_alloc_sections
 from darwinboot_preflight import adt_walk,parse_kernel
 from verify_v91_assets import verify_loader,verify_packed_seed
+from firmware_contract import verify_firmware
 HASHES={'fd':'e50e1d6e2be51367225d76d4e97b90d51ba7812193d99fd4d4d7dd9fdc2ee534','loader':'ae8e5938b22766b921f43f68e2ea63db028fb57ec1f3791edaf7db10f5825299','data':'483125a27280f17d91de594f951cee4216f4888b764525b74db0f61ed62d34b3'}
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def encode_adt(node):
@@ -37,7 +38,7 @@ def main():
         return '/mnt/'+s[0].lower()+s[2:].replace('\\','/')
     def run(cmd):subprocess.run((['wsl','-d',a.wsl_distro,'-u','root','--'] if a.wsl_distro else [])+cmd,check=True)
     if out.exists():raise RuntimeError('Output must be new')
-    if sha(a.fd)!=HASHES['fd']:raise RuntimeError('Frozen firmware asset mismatch')
+    firmware_contract=verify_firmware(a.fd)
     loader_contract=verify_loader(a.loader)
     data_contract={'legacy_frozen_seed':True}
     if sha(a.data)!=HASHES['data']:
@@ -96,6 +97,6 @@ def main():
     for key,value in meta['props'].items():cmd+=['--prop',key+':'+value]
     run(cmd);checked=check_image(signed,'boot_a')
     if metadata(signed)['props']!=meta['props'] or checked.bytes!=100663296:raise RuntimeError('Stock signing properties changed')
-    result={'kernel_sha256':sha(a.kernel),'image_sha256':checked.sha256,'rollback_index':checked.index,'footer_location':checked.location,'session':session,'fat_files':expected,'bootshim_sha256':hashlib.sha256(shim).hexdigest(),'external_assets':{name:sha(getattr(a,name)) for name in HASHES},'loader_contract':loader_contract,'data_contract':data_contract,'assembled_without_old_boot_carrier':True,'hardware_tested':False,'device_operation':False,'full_asset_source_closure':False}
+    result={'kernel_sha256':sha(a.kernel),'image_sha256':checked.sha256,'rollback_index':checked.index,'footer_location':checked.location,'session':session,'fat_files':expected,'bootshim_sha256':hashlib.sha256(shim).hexdigest(),'external_assets':{name:sha(getattr(a,name)) for name in HASHES},'firmware_contract':firmware_contract,'loader_contract':loader_contract,'data_contract':data_contract,'assembled_without_old_boot_carrier':True,'hardware_tested':False,'device_operation':False,'full_asset_source_closure':not data_contract.get('legacy_frozen_seed',False)}
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:result[k] for k in ('image_sha256','rollback_index','footer_location','session','full_asset_source_closure')},indent=2))
 if __name__=='__main__':main()

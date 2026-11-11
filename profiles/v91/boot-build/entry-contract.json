@@ -1,0 +1,7 @@
+{
+  "baseline_kernel_sha256": "2d72dea2e1b69adf063a9db2b91b06cb16e1bc880425a868f62f6611989efe69",
+  "body_bytes": 100,
+  "body_sha256": "61e4aa89e7d42126ecc196984f54529fb8ab6242bafea3ba2525b0f5bed9e418",
+  "total_stub_bytes": 104,
+  "return_target": "0xfffffff00746a05c"
+}

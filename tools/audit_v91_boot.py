@@ -8,11 +8,13 @@ from boot_formats import Fat
 from darwinboot_preflight import parse_kernel,adt_walk
 import make_entry_probe_kernel as maker
 from verify_v91_assets import verify_loader,verify_packed_seed
+from firmware_contract import verify_firmware
 def sha(b):return hashlib.sha256(b).hexdigest()
 def main():
     if sys.flags.optimize:raise SystemExit('Run without -O; validation assertions must remain enabled')
     p=argparse.ArgumentParser(description=__doc__)
-    for name in ('image','entry-kernel','baseline-kernel','stock-boot','parent-vbmeta','output'):p.add_argument('--'+name,type=Path,required=True)
+    for name in ('image','entry-kernel','stock-boot','parent-vbmeta','output'):p.add_argument('--'+name,type=Path,required=True)
+    p.add_argument('--baseline-kernel',type=Path,help='Optional original hardware baseline; otherwise use its checked-in entry-body fingerprint')
     p.add_argument('--data-report',type=Path)
     a=p.parse_args();checked=check_image(a.image,'boot_a');stock=check_image(a.stock_boot,'boot_a');check_image(a.parent_vbmeta,'vbmeta')
     if stock.sha256!='8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890':raise RuntimeError('Unknown stock contract')
@@ -25,32 +27,39 @@ def main():
     header[44:44+len(spec['cmdline'].encode())]=spec['cmdline'].encode()
     if b[:4096]!=header:raise RuntimeError('Android header differs outside the variable kernel length')
     raw=gzip.decompress(b[4096:4096+struct.unpack_from('<I',b,8)[0]])
-    if len(raw)!=128+4194304+58720256 or sha(raw[:128])!='ac27ecc2bcec5440606d77e69b7726921b0bf3803dd2234f23b10d1619149e1d' or sha(raw[128:0x400080])!='e50e1d6e2be51367225d76d4e97b90d51ba7812193d99fd4d4d7dd9fdc2ee534':raise RuntimeError('Shim/firmware mismatch')
+    if len(raw)!=128+4194304+58720256 or sha(raw[:128])!='ac27ecc2bcec5440606d77e69b7726921b0bf3803dd2234f23b10d1619149e1d':raise RuntimeError('Shim/firmware length mismatch')
+    firmware_contract=verify_firmware(raw[128:0x400080])
     fat=Fat(raw[0x400080:]);sector=fat.data
     if fat.bits!=16 or sector[510:512]!=b'\x55\xaa' or fat.fats!=2:raise RuntimeError('Unexpected FAT layout')
     start=fat.reserved*fat.bps;length=fat.fat_sectors*fat.bps
     if sector[start:start+length]!=sector[start+length:start+2*length]:raise RuntimeError('FAT mirrors differ')
     prefix='EFI/UniXNU/';kernel=fat.read(prefix+'Payloads/kernel.macho')
     if kernel!=a.entry_kernel.read_bytes():raise RuntimeError('Kernel bytes in FAT differ')
-    old=a.baseline_kernel.read_bytes()
-    if sha(old)!='2d72dea2e1b69adf063a9db2b91b06cb16e1bc880425a868f62f6611989efe69':raise RuntimeError('Unknown hardware baseline kernel')
+    contract=json.loads((ROOT/'profiles/v91/boot-build/entry-contract.json').read_text())
     def stub(image):
         s=next(x for x in maker.segments(image) if x['name']=='__ELDEN_PROBE');return s,image[s['file_offset']:s['file_offset']+s['file_size']]
-    now,code=stub(kernel);prior,oldcode=stub(old)
-    if len(code)!=104 or code[:-4]!=oldcode[:-4] or now['protection']!=5:raise RuntimeError('Entry body differs from the hardware-tested stub')
-    old_return=maker.branch_target(struct.unpack_from('<I',oldcode,100)[0],prior['address']+100)
+    now,code=stub(kernel)
+    if len(code)!=contract['total_stub_bytes'] or sha(code[:100])!=contract['body_sha256'] or now['protection']!=5:raise RuntimeError('Entry body differs from the hardware-tested stub')
+    old_return=int(contract['return_target'],16)
+    if a.baseline_kernel:
+        old=a.baseline_kernel.read_bytes()
+        if sha(old)!=contract['baseline_kernel_sha256']:raise RuntimeError('Unknown hardware baseline kernel')
+        prior,oldcode=stub(old)
+        if sha(oldcode[:100])!=contract['body_sha256'] or maker.branch_target(struct.unpack_from('<I',oldcode,100)[0],prior['address']+100)!=old_return:raise RuntimeError('Baseline disagrees with the recorded entry contract')
     new_return=maker.branch_target(struct.unpack_from('<I',code,100)[0],now['address']+100)
     if new_return!=old_return:raise RuntimeError('Relocated entry branch has a different return target')
     parsed=parse_kernel(kernel);word=struct.unpack_from('<I',kernel,parsed['entry_file_offset'])[0]
     if maker.branch_target(word,parsed['entry'])!=now['address']:raise RuntimeError('Entry branch misses stub')
     if struct.unpack_from('<I',kernel,maker.locate(kernel,0xfffffff004aaecfc)[1])[0]!=0x17ffffd4:raise RuntimeError('AMFI transform differs')
     expected={'Payloads/kernel.macho.adt':'169ea871e483d8ca989f6725c79f28698ebda937eeb9ca4514d85cec0354a9e3','Payloads/kernel.macho.trustcache':'583b2012d14c45f74532bccc0ec6eaf35143ba47b4dfbfabbe7dff5ced7ee67e','Payloads/data.packed':'483125a27280f17d91de594f951cee4216f4888b764525b74db0f61ed62d34b3','EldenPayloadLoader.efi':'ae8e5938b22766b921f43f68e2ea63db028fb57ec1f3791edaf7db10f5825299'}
+    rebuilt_seed=False
     for name,h in expected.items():
         content=fat.read(prefix+name)
         if name=='EldenPayloadLoader.efi':verify_loader(content)
         elif name=='Payloads/data.packed' and sha(content)!=h:
             if not a.data_report:raise RuntimeError('Rebuilt Data seed verification is missing')
             verify_packed_seed(content,a.data_report)
+            rebuilt_seed=True
         elif sha(content)!=h:raise RuntimeError('Frozen payload changed: '+name)
     tree=adt_walk(fat.read(prefix+'Payloads/kernel.macho.adt'))
     if tree['window']!=0x180000000 or tree['gpuaddon'] is not None:raise RuntimeError('Memory/GPU configuration changed')
@@ -61,7 +70,7 @@ def main():
     identity=kernel+template.encode()+fat.read(prefix+'Payloads/kernel.macho.adt')+hashlib.sha256(fat.read(prefix+'Payloads/kernel.macho.trustcache')).digest()
     for content in (raw[128:0x400080],fat.read(prefix+'EldenPayloadLoader.efi'),fat.read(prefix+'Payloads/data.packed')):identity+=hashlib.sha256(content).digest()
     if sessions[0]!=hashlib.sha256(identity).hexdigest()[:16]:raise RuntimeError('Debug session is not bound to all payload inputs')
-    report={'accepted_static':True,'image_sha256':checked.sha256,'kernel_sha256':sha(kernel),'rollback_index':checked.index,'footer_location':checked.location,'parent_boot_chain_location':3,'fat_mirrors_equal':True,'entry_body_100_bytes_equal_hardware_baseline':True,'entry_branch_target_equal':True,'entry_address':hex(now['address']),'entry_return_target':hex(new_return),'session':sessions[0],'memory_window_bytes':tree['window'],'hardware_tested':False,'device_operation':False,'full_asset_source_closure':False}
+    report={'accepted_static':True,'image_sha256':checked.sha256,'kernel_sha256':sha(kernel),'rollback_index':checked.index,'footer_location':checked.location,'parent_boot_chain_location':3,'fat_mirrors_equal':True,'entry_body_100_bytes_equal_hardware_baseline':True,'entry_branch_target_equal':True,'entry_address':hex(now['address']),'entry_return_target':hex(new_return),'session':sessions[0],'memory_window_bytes':tree['window'],'firmware_contract':firmware_contract,'hardware_tested':False,'device_operation':False,'full_asset_source_closure':rebuilt_seed}
     if a.output.exists():raise RuntimeError('Audit output must be new')
     a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
 if __name__=='__main__':main()

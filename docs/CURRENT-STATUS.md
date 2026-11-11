@@ -31,3 +31,10 @@ v92 仅为离线 framebuffer 映射实验，尚未完成签名、资格与实机
 Boot rollback floor 始终为 **1738713600 / footer location 0**，父链 location 3。
 写入前核对目标、fresh 电量准入和完整镜像；写后完整 SHA 读回。
 本文不是其他设备的刷写授权或通用刷写指南。
+
+## 源码重建候选
+
+2026-11-12 已完成从固定源码重建内核、FD、加载器与 Data 种子，并打包签名。
+候选 SHA `4866c181ffb9c4d927e3d4c4cc3833110d80853288947109e03c0566c646a9b5`，会话 `3cf1627c47aa4365`，
+通过完整独立静态核验，尚未刷入。已有硬件结论仍属于原 v91；本次没有新增外设验收。
+复现结果见 `profiles/v91/validation/source-closed-candidate.json`。

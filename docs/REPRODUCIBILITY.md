@@ -23,11 +23,15 @@
 8. entry 转换、ADT/菜单/信任缓存再生、FAT16 与签名 boot 的工具已实现，并生成通过独立静态核验的候选。
    详情见 [boot-build](../profiles/v91/boot-build/README.md)。没有刷机或硬件验收。
 
-**源码到 prelinked kernel 已闭环；完整 boot 的资产源码链仍未闭环。**
-已验 UEFI FD 仍是固定外部资产。独立 EFI 与 Data seed 的源码生成、逻辑/布局约束及离线验证
-已完成，并已用于第二份静态核验通过的候选。不能把这说成新候选已完成设备验收。
+9. UEFI FD 从固定 Git 对象重建，包含新编译的 BaseTools 和所有目标模块。
+   SEC、223 个 FVMAIN 文件及其顺序、依赖、代码/数据/布局均通过独立结构核验；
+   仅准确定位的 CodeView GUID 与相应压缩表示允许变化。见 [firmware-build](../profiles/v91/firmware-build/README.md)。
+
+**v91 自有源码到签名 boot 的构建链已闭环。** 原始 OS、Qualcomm/Crypto 固件、
+原厂签名模板等外部材料仍须按指纹自备，不代表这些专有组件已开源。
+新候选尚未刷入，不把静态验证当作设备验收。
 新内核允许 UUID、调试链接信息及 `_PrelinkKCID` 随构建变化，不宣称整文件 SHA 与旧像相同。
-历史打包入口仍依赖旧资产和增量记录，不能直接当作新的完整复现入口。
+历史打包入口已归档，由当前 profile 工具接替；不再作为现行复现入口。
 `board.toml` / `unixnu.lock` 的默认值仍是早期引导配置，不能作为 v91 的一键复现入口。
 不要直接把同步到最新的参考仓替换冻结依赖。
 
@@ -72,9 +76,13 @@ python3 tools/build_v91_xnu_objects.py --xnu-source /path/to/new-source-output/x
 `observed-repositories.json` 和上游 overlay 的 provenance 记录捕获时的依赖状态；
 其中 dirty 状态必须结合补丁和冻结快照使用，不能单凭 HEAD 宣称复现。
 
-## 剩余验收
+## 复现顺序与边界
 
-- 完成剩余 UEFI FD 的独立源码重建，见 boot-build/external-inputs.json。
-- 完整资产闭环后再做最终候选资格；当前 prelink 执行区不变的结论不涵盖之后的 AMFI 单指令转换。
-- 消除有效配方对旧工作台路径的依赖，保留原始证据哈希。
-- 完整重建后核对导出、模块 ABI、签名 floor 和 boot 资格，再宣称 Jerry 可以复现最终镜像。
+按 object-build → native-build → image-build → boot-build 执行各 README；固件使用
+firmware-build，独立加载器/Data 使用 boot-build/ASSET-REBUILD.md。输出目录均应新建。
+最终审计入口 `tools/audit_v91_boot.py` 不再强制要求私有旧内核：已验入口体和返回地址
+保存在 `boot-build/entry-contract.json`，可选提供旧内核做额外交叉核对。
+
+完整候选检查保留模块 ABI、执行区、FAT 双表、签名 floor、父链和所有载荷会话绑定。
+prelink 的执行区不变结论不涵盖之后明确列出的 AMFI 单指令转换。
+物理触控、性能、持久 Data 与剩余外设仍按 PLAN 推进，完整外围 Goal 未完成。

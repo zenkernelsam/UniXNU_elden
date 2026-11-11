@@ -1,15 +1,17 @@
 {
-  "source_closure_complete": false,
+  "source_closure_complete": true,
   "inputs": {
     "firmware_fd": {
       "bytes": 4194304,
       "sha256": "e50e1d6e2be51367225d76d4e97b90d51ba7812193d99fd4d4d7dd9fdc2ee534",
-      "source_evidence": "Accepted FD contains EldenPayloadDxe, UniXNU, UniXNUDxe and DarwinBoot. Its debug paths identify the Mac Pakala DEBUG_CLANGPDB build. Sources/overlays are retained in the repository.",
+      "source_evidence": "Pinned Git exports, canonical overlays, original Main.c, fixed compiler clocks and virtual paths reproduce SEC and every FVMAIN module under the exact CodeView/compression contract.",
       "recipes": [
-        "scripts/build_phase2_firmware.py",
-        "scripts/build_direct_edk2.py"
+        "tools/build_v91_firmware.py",
+        "tools/firmware_contract.py"
       ],
-      "remaining": "Reconcile the exact accepted source/toolchain state and independently rebuild; the newer phase2.3 FD has a different hash and is not substituted."
+      "remaining": "No owned-source reproduction gap. Original Qualcomm/Crypto inputs remain required; new candidate hardware acceptance is pending.",
+      "status": "independent-git-source-rebuild-qualified",
+      "rebuilt_sha256": "aba76d8a8374e1356e41c0c97b9e4f83691108b8eb7767a5ead28b0d2b2a7b35"
     },
     "payload_loader": {
       "bytes": 31744,

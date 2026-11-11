@@ -1,0 +1,18 @@
+{
+  "sha256": "aba76d8a8374e1356e41c0c97b9e4f83691108b8eb7767a5ead28b0d2b2a7b35",
+  "contract_sha256": "c3287ed4949e54529b6ad6cda482b28d1ee749439282ab1574f5ae9f643f84aa",
+  "all_executable_bytes_equal": true,
+  "hardware_tested": false,
+  "source_git_exports": true,
+  "mu_commit": "3e1d052064beb6e59cda3cfba87d50e6cc088174",
+  "unixnu_commit": "73a793d20f7dd9d36f3dc05f63ecf6c30dd45c7c",
+  "historical_build_objects_copied": false,
+  "source_profile_sha256": "1acec9efcc0d7fb6bae0d14ae1164af31cab57c716008d7fffd05f0ca57a08b0",
+  "qualification_history": [
+    "Fresh Git export and fresh BaseTools build; initial metadata check exposed PMIC filename case mismatch, corrected before any target object",
+    "Target sources rebuilt with the original Main.c and canonical overlays",
+    "Build-banner clocks and host path separators fixed; target build rerun, all previous failure/results retained",
+    "Independent full SEC/FVMAIN contract and negative mutation checks passed"
+  ],
+  "device_operation": false
+}

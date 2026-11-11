@@ -15,8 +15,9 @@
 | `lab/reference-reviews/` | 每轮上游更新的证据和结论 |
 | `archive/research-notes/` | 旧 handover、探索文档 |
 | `archive/session-logs/` | 原 AGENTS 历史；包含私有现场信息，不公开提交 |
+| `archive/legacy-workbench-source-20261112/` | 已逐字匹配正式仓的447份旧顶层源码副本 |
 | `maintenance/` | 整理事务、路径迁移表、回收凭据、同步报告 |
-| `edl_work/` | 尚在迁移的冻结产物和历史运行记录；不要新建独立源码 |
+| `edl_work/` | 冻结产物、历史运行记录和七个兼容入口；不要新建独立源码 |
 | `Backup/`, `signing/`, `vendor-pack/` | 备份、恢复和外部输入；不得按废件清理 |
 
 一次性工具放 Windows TEMP。Windows 退役文件只进回收站；WSL 退役文件先移至
@@ -25,6 +26,10 @@ Windows 并核对内容，再进回收站；macOS 文件进用户 Trash。不要
 
 历史路径通过 `maintenance/cleanup-20261111/research-moves.json` 查原位置和新位置。
 Mac 有自己的对应表。不要盲目全局替换历史 JSON，否则会破坏证据的哈希关系。
+
+新增 `legacy-source-moves.json` 记录447份源码副本的归档路径；现行实现和修补只在正式仓维护。
+`retire-superseded-boot-packages.receipts.jsonl` 记录328份过时 boot/FAT 包的回收路径和完整摘要，
+约17.5GiB，仍占回收站空间。v89–v92、内核/日志、备份与恢复资产保留。
 
 每六小时的引用同步使用：
 

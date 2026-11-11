@@ -40,6 +40,7 @@ Run as UID501 (the historical fixture owner) or root; ownership operations remai
 inside the newly attached test image. The packer accepts this result with
 `--data-report /path/to/new-seed/result.json` and the rebuilt `data.packed`.
 
-The accepted UEFI FD's independent source rebuild remains outstanding. The
-maintenance marker and full peripheral Goal must remain active until that work
-and the final candidate qualification/cleanup are complete.
+The accepted UEFI FD is now independently reconstructed from pinned Git objects;
+see `../firmware-build/README.md`. All executable bytes, data and dependencies
+match under the exact CodeView/compression contract. The full peripheral Goal
+remains active; offline reconstruction is separate from device acceptance.
