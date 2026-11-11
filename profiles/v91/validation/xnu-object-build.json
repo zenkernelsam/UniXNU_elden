@@ -1,0 +1,14 @@
+{
+  "selected": 1010,
+  "accepted": 1010,
+  "copied_old_objects": 0,
+  "source_files": 3259,
+  "seconds": 288.14494731114246,
+  "complete_object_build": true,
+  "native_linked": false,
+  "device_operation": false,
+  "arm64_headers_checked": true,
+  "profile_plan_sha256": "4c17a857c5dd22d95b205ddf3179de8f3226b1d4f62bb75fb650f6fa5145c8f8",
+  "historical_objects_required": false,
+  "comparison": "Loadable section bytes, sizes and flags; excludes DWARF, object-local addresses and final relocation/link validation"
+}

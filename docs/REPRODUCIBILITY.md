@@ -12,6 +12,9 @@
 4. 从复现者提供的原始 `iconservicesagent` 重做本地依赖和签名，并生成
    `EldenIconCpuPayload.h`；签名执行件及最终头文件 SHA 也与 v91 **逐字一致**。
    原始代码段及 entitlements 均复核未变。
+5. 用正式仓的编译清单在新目录重建 **1,010 个 XNU 对象**，全部通过代码/数据段的字节、
+   大小与类型比对，未复制旧对象。包括原 XNU 的 HIB/KLD/LAST 编译后处理。
+   入口和边界见 [`object-build`](../profiles/v91/object-build/README.md)。这不是最终链接验收。
 
 **完整干净整核构建、prelink 和最终 boot 包尚未重新验收。**
 历史入口曾依赖旧对象、ABI 导出和增量记录；归仓不等于这些依赖已经消除。
@@ -28,6 +31,7 @@ python3 tools/reconstruct_v91.py --verify-only
 python3 tools/reconstruct_v91.py --xnu-repository /path/to/pinned-xnu --output /path/to/new-source-output
 python3 tools/build_icon_v91.py --output /path/to/new-icon-output
 python3 tools/prepare_icon_agent_v91.py --original-agent /path/to/original/iconservicesagent --library /path/to/new-icon-output/EldenIconCpuMode.dylib --output /path/to/new-agent-output
+python3 tools/build_v91_xnu_objects.py --xnu-source /path/to/new-source-output/xnu --xnu-repository /path/to/pinned-xnu --payload-header /path/to/new-agent-output/EldenIconCpuPayload.h --output /path/to/new-object-output
 ```
 
 所有输出目录必须新建，工具不重置已有目录，不签设备 boot、不刷机。
@@ -42,6 +46,7 @@ python3 tools/prepare_icon_agent_v91.py --original-agent /path/to/original/icons
 | `drivers/`, `soc/`, `package/`, `patches/`, `scripts/` | 当前开发源码；可能包含未验收工作稿 |
 | `profiles/v91/sources/` | 实际编译输入的冻结源码，排除二进制载荷头 |
 | `profiles/v91/reconstruction/` | XNU、UniXNU、固件宿主改动与依赖观察记录 |
+| `profiles/v91/object-build/` | 可分发的 XNU 编译清单、生成源码及逐对象验收指纹 |
 | `tools/legacy-workbench/` | 原工作台配方源码，保留原字节；不是可移植入口 |
 | `tools/device/` | 维护中的 AVB、Firehose、完整刷写和 USB 日志/帧解码；工作台路径显式传入 |
 | `archive/host-differences/` | Mac 与 Windows 不同版本，供审核，不自动覆盖当前源码 |
