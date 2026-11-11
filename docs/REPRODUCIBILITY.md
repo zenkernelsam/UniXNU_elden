@@ -29,7 +29,9 @@
 
 **v91 自有源码到签名 boot 的构建链已闭环。** 原始 OS、Qualcomm/Crypto 固件、
 原厂签名模板等外部材料仍须按指纹自备，不代表这些专有组件已开源。
-新候选尚未刷入，不把静态验证当作设备验收。
+修复 Data 原始 inode 所有者后，候选 `211b084b…` 已实机完成软件上滑→Settings，
+随后经会话绑定 RPC 回 fastboot 并恢复 Android。初版种子的 POSIX 视图核验曾漏过
+匿名所有者差异；现在生成及打包都校验磁盘 inode，见 [说明](DATA-SEED-OWNERSHIP.md)。
 新内核允许 UUID、调试链接信息及 `_PrelinkKCID` 随构建变化，不宣称整文件 SHA 与旧像相同。
 历史打包入口已归档，由当前 profile 工具接替；不再作为现行复现入口。
 `board.toml` / `unixnu.lock` 的默认值仍是早期引导配置，不能作为 v91 的一键复现入口。

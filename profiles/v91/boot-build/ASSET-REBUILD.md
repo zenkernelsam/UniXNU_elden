@@ -14,7 +14,9 @@ ignore executable bytes, PE attributes, unwind data or arbitrary strings.
 
 `tools/build_v91_data_seed.py` takes the exact original 21H461 OS image. The
 `data-seed.json` manifest describes 232 OS-derived files/directories/links, the
-six setup preferences and their permissions/owners. No old user data or host
+six setup preferences and their modes. Child UID/GID values in the old entries
+are historical macOS stat projections; `raw_ownership` is the authoritative
+on-disk policy: anonymous `99:99` children and a `501:20` root. No old user data or host
 account records are copied. Host-generated `.fseventsd` journals are excluded
 from logical equivalence and are never copied from the old fixture.
 
@@ -24,11 +26,14 @@ copy**. Only validated APFS volume-superblock UUID fields and their Fletcher
 checksums change. The source image and any tablet partitions are not modified.
 It rejects encrypted, corrupt, unexpected or differently sized images. A
 read-only remount verifies the UUID and every declared logical entry; read-only
-`fsck_apfs` and APFS feature checks must also pass.
+`fsck_apfs` and APFS feature checks must also pass. All 233 live inode owners are
+read from checksummed APFS leaves, rather than inferred from `stat()`. The packed
+payload is independently checked for the same ownership. See
+`../../../docs/DATA-SEED-OWNERSHIP.md` for the hardware-discovered regression.
 
 The generated filesystem has new allocation/checkpoint/journal metadata, so its
 whole-file hash differs from the historical seed. The verified rebuild preserves
-the required volume UUID, OS file contents, modes, UID/GID and symlink targets.
+the required volume UUID, OS file contents, modes, raw ownership and symlink targets.
 The packed DBRDISK1 reconstruction is independently hashed against the verified
 raw image. This is an offline filesystem qualification, not a tablet boot test.
 

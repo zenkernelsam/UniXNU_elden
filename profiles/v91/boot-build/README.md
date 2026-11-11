@@ -43,8 +43,16 @@ Neither has been flashed. The full maintenance/peripheral Goal remains active.
 The final candidate with the independently rebuilt FD, loader, Data and kernel
 passed all static checks with SHA
 `4866c181ffb9c4d927e3d4c4cc3833110d80853288947109e03c0566c646a9b5`,
-session `3cf1627c47aa4365`. It remains unflashed. See the checked-in
+session `3cf1627c47aa4365`. Its subsequent hardware run exposed the anonymous
+Data ownership mismatch and it is superseded; the static record remains in
 `../validation/source-closed-candidate.json` for the result.
+
+The corrected source-built candidate is
+`211b084ba1f04cfb4235e2626c8e2ee4a7d9288b96797c61743aa7282b021d40`,
+session `bb45c8412698e8a2`. It passed the software swipe → populated Settings
+operation and explicit sync/reset to fastboot; stock was restored afterwards.
+See `../validation/anonymous-data-candidate.json` and
+`../validation/source-rebuilt-hardware.json`. Real finger input remains untested.
 
 ```sh
 python3 tools/prepare_v91_entry.py --kernel /new/prelink/kernel.macho \

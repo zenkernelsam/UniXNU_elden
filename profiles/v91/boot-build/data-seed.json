@@ -1537,5 +1537,16 @@
   "ignored_host_metadata": [
     ".fseventsd"
   ],
-  "purpose": "Logical contents, permissions and identity of the initial volatile Data volume; no personal files or executable bytes embedded"
+  "purpose": "Logical contents, permissions and identity of the initial volatile Data volume; no personal files or executable bytes embedded",
+  "raw_ownership": {
+    "root": [
+      501,
+      20
+    ],
+    "children": [
+      99,
+      99
+    ],
+    "note": "Child uid/gid fields in entries are historical macOS stat projections; raw anonymous ownership is authoritative."
+  }
 }

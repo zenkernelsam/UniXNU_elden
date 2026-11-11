@@ -32,9 +32,15 @@ Boot rollback floor 始终为 **1738713600 / footer location 0**，父链 locati
 写入前核对目标、fresh 电量准入和完整镜像；写后完整 SHA 读回。
 本文不是其他设备的刷写授权或通用刷写指南。
 
-## 源码重建候选
+## 源码重建实机验证
 
-2026-11-12 已完成从固定源码重建内核、FD、加载器与 Data 种子，并打包签名。
-候选 SHA `4866c181ffb9c4d927e3d4c4cc3833110d80853288947109e03c0566c646a9b5`，会话 `3cf1627c47aa4365`，
-通过完整独立静态核验，尚未刷入。已有硬件结论仍属于原 v91；本次没有新增外设验收。
-复现结果见 `profiles/v91/validation/source-closed-candidate.json`。
+2026-11-12：修复新 Data 种子被 macOS 所有者映射掩盖的99:99→501:20差异后，
+全源码候选 `211b084ba1f04cfb4235e2626c8e2ee4a7d9288b96797c61743aa7282b021d40`
+已自动上滑、短按打开有内容的 Settings。CRC `3bd2f297` 与原v91画面一致。
+本轮日志5007472B、drop17；会话绑定RPC的RESET_AFTER_SYNC已捕获，随后实见fastboot，
+并完整SHA恢复stock Android。旧4866…仅静态通过、实机停启动图，已经撤回。
+原Data单变量对照1959…也通过Settings，因而没有借此更改内核或供电控制。
+
+生成器与打包器现在都读取原始APFS inode验证233项所有者，不能再只依赖stat视图。
+详见 `DATA-SEED-OWNERSHIP.md` 和 `profiles/v91/validation/source-rebuilt-hardware.json`。
+这是一次软件交互验收；物理触控、约0.7秒整屏拷贝、持久Data及其余外设继续按PLAN。

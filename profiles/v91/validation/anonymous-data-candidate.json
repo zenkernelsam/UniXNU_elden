@@ -1,0 +1,24 @@
+{
+  "accepted_static": true,
+  "image_sha256": "211b084ba1f04cfb4235e2626c8e2ee4a7d9288b96797c61743aa7282b021d40",
+  "kernel_sha256": "6c8ae4c3759ba592878156e982a7f916041856c9f3f8e3fa9d7de5ef1e80227e",
+  "rollback_index": 1738713600,
+  "footer_location": 0,
+  "parent_boot_chain_location": 3,
+  "fat_mirrors_equal": true,
+  "entry_body_100_bytes_equal_hardware_baseline": true,
+  "entry_branch_target_equal": true,
+  "entry_address": "0xfffffff0084bc000",
+  "entry_return_target": "0xfffffff00746a05c",
+  "session": "bb45c8412698e8a2",
+  "memory_window_bytes": 6442450944,
+  "firmware_contract": {
+    "sha256": "aba76d8a8374e1356e41c0c97b9e4f83691108b8eb7767a5ead28b0d2b2a7b35",
+    "contract_sha256": "c3287ed4949e54529b6ad6cda482b28d1ee749439282ab1574f5ae9f643f84aa",
+    "all_executable_bytes_equal": true,
+    "hardware_tested": false
+  },
+  "hardware_tested": false,
+  "device_operation": false,
+  "full_asset_source_closure": true
+}

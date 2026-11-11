@@ -20,7 +20,8 @@ XNU 对象、14 个原生库、native 链接和 prelink 的独立源码构建也
 entry 转换、ADT/菜单/FAT 和签名 boot 的工具也已生成通过静态核验的候选；
 独立 EFI、Data seed 与完整 UEFI FD 也已完成源码生成及离线核验。
 **v91 的自有源码到签名候选构建链已闭环**；原始 OS、Qualcomm/Crypto 固件等仍须按指纹自备。
-新候选的静态通过不等于真机验收。
+修复 Data 种子的匿名所有者语义后，重建候选也已实机自动上滑并打开 Settings；
+实际手指、性能与完整外设仍未验收。见 [Data 所有者问题与对照](docs/DATA-SEED-OWNERSHIP.md)。
 默认 `board.toml` / `unixnu.lock` 仍是早期配置，不能据此声称一键得到 v91。
 
 原始 iPadOS/固件、签名密钥、设备备份与生成的二进制载荷头不提交到本仓。

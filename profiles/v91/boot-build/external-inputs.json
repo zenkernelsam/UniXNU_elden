@@ -35,8 +35,20 @@
         "profiles/v91/boot-build/data-seed.json",
         "tools/verify_v91_assets.py"
       ],
-      "remaining": "No source-generation gap for logical fixture; filesystem allocation/checkpoint metadata and hash can differ. Full tablet acceptance remains pending.",
-      "status": "independent-source-generation-logically-verified"
+      "remaining": "One software Settings operation passed. Physical touch, performance, persistence and broader hardware conditions remain open.",
+      "status": "source-generated-raw-ownership-qualified-and-software-settings-device-verified",
+      "rebuilt_packed_sha256": "11f90ff4e7e5214a2e7a02afd3a2eb7d8644780664b00f027c9e74a0d8faa766",
+      "rebuilt_raw_sha256": "272d89b1de12a20e0f773456fd9de59af3c65597f4cce798ab52d61edcee3897",
+      "raw_ownership": {
+        "root": [
+          501,
+          20
+        ],
+        "children": [
+          99,
+          99
+        ]
+      }
     }
   }
 }

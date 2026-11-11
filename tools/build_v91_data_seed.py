@@ -6,6 +6,7 @@ is limited to checksummed, unencrypted APFS volume superblocks in a 512MiB copy.
 """
 from pathlib import Path
 import argparse,hashlib,json,os,plistlib,shutil,stat,struct,subprocess,uuid
+from seed_ownership import audit_image
 ROOT=Path(__file__).resolve().parents[1];PROFILE=ROOT/'profiles/v91/boot-build/data-seed.json'
 def digest(p):
     h=hashlib.sha256()
@@ -13,7 +14,7 @@ def digest(p):
         while block:=f.read(8<<20):h.update(block)
     return h.hexdigest()
 def attach(image,mount):
-    info=plistlib.loads(subprocess.check_output(['hdiutil','attach','-readonly' if mount.name=='verify-mount' or mount.name=='os-mount' else '-readwrite','-nobrowse','-owners','off' if mount.name=='os-mount' else 'on','-imagekey','diskimage-class=CRawDiskImage','-mountpoint',str(mount),'-plist',str(image)]))
+    info=plistlib.loads(subprocess.check_output(['hdiutil','attach','-readonly' if mount.name=='verify-mount' or mount.name=='os-mount' else '-readwrite','-nobrowse','-owners','off','-imagekey','diskimage-class=CRawDiskImage','-mountpoint',str(mount),'-plist',str(image)]))
     entities=info['system-entities'];volumes=[v for v in entities if v.get('mount-point')==str(mount)]
     if len(volumes)!=1:raise RuntimeError('Unexpected owned-image mount')
     return next(v['dev-entry'] for v in entities if 'dev-entry' in v)
@@ -43,14 +44,15 @@ def verify_tree(mount,profile):
     for root,dirs,files in os.walk(mount,followlinks=False):
         if Path(root)==mount:dirs[:]=[n for n in dirs if n not in profile['ignored_host_metadata']]
         for name in dirs+files:
-            path=Path(root)/name;s=path.lstat();rel=path.relative_to(mount).as_posix();item={'mode':stat.S_IMODE(s.st_mode),'uid':s.st_uid,'gid':s.st_gid}
+            path=Path(root)/name;s=path.lstat();rel=path.relative_to(mount).as_posix();item={'mode':stat.S_IMODE(s.st_mode)}
             if path.is_symlink():item.update(kind='symlink',target=os.readlink(path))
             elif path.is_dir():item['kind']='directory'
             elif path.is_file():item.update(kind='file',bytes=path.stat().st_size,sha256=digest(path))
             else:raise RuntimeError('Unexpected fixture file type')
             observed[rel]=item
-    if observed!=profile['entries']:
-        different=[n for n in set(observed)|set(profile['entries']) if observed.get(n)!=profile['entries'].get(n)]
+    expected={name:{k:v for k,v in item.items() if k not in ('uid','gid')} for name,item in profile['entries'].items()}
+    if observed!=expected:
+        different=[n for n in set(observed)|set(expected) if observed.get(n)!=expected.get(n)]
         raise RuntimeError('Data fixture logical mismatch: '+', '.join(sorted(different)[:12]))
     return len(observed)
 def pack(source,dest):
@@ -109,7 +111,9 @@ def main():
                     if data is None:raise RuntimeError('Preference encoding differs: '+name)
                     target.write_bytes(data)
                 else:raise RuntimeError('Required content is not in the original OS: '+name)
-            if item['kind']!='symlink':os.chmod(target,item['mode']);os.chown(target,item['uid'],item['gid'])
+            # Match the original owners-off creation semantics: children store
+            # anonymous 99:99, not the host's projected stat() UID/GID.
+            if item['kind']!='symlink':os.chmod(target,item['mode'])
         os.chmod(dm,profile['root']['mode']);os.chown(dm,profile['root']['uid'],profile['root']['gid'])
         verify_tree(dm,profile)
     finally:
@@ -120,10 +124,14 @@ def main():
         dev=attach(raw,vm);info=plistlib.loads(subprocess.check_output(['diskutil','info','-plist',str(vm)]))
         if info['VolumeUUID'].upper()!=profile['volume_uuid']:raise RuntimeError('APFS volume identity did not survive retag')
         count=verify_tree(vm,profile)
+        live_inodes={name:(vm/name).lstat().st_ino for name in profile['entries']}
+        live_inodes['.']=vm.lstat().st_ino
+        raw_owners=audit_image(raw,live_inodes,profile)
     finally:
         if dev:detach(dev)
     packed=out/'data.packed';extents=pack(raw,packed)
     report={'logical_manifest_sha256':digest(PROFILE),'logical_entries_verified':count,'volume_uuid':profile['volume_uuid'],'raw_sha256':digest(raw),'packed_sha256':digest(packed),'packed_bytes':packed.stat().st_size,'expanded_bytes':raw.stat().st_size,'extent_count':extents,'retagged_superblocks':changed,'only_new_image_files_modified':True,'host_journal_contents_not_copied':True,'hardware_tested':False,'tablet_operation':False}
     report.update(verify_filesystem(raw,out))
-    (out/'result.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
+    report.update(raw_owners_verified=raw_owners,live_inodes=live_inodes,raw_ownership=profile['raw_ownership'])
+    (out/'result.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({k:v for k,v in report.items() if k!='live_inodes'},indent=2))
 if __name__=='__main__':main()
