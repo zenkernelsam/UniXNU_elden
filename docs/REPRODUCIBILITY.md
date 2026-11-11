@@ -43,6 +43,7 @@ python3 tools/prepare_icon_agent_v91.py --original-agent /path/to/original/icons
 | `profiles/v91/sources/` | 实际编译输入的冻结源码，排除二进制载荷头 |
 | `profiles/v91/reconstruction/` | XNU、UniXNU、固件宿主改动与依赖观察记录 |
 | `tools/legacy-workbench/` | 原工作台配方源码，保留原字节；不是可移植入口 |
+| `tools/device/` | 维护中的 AVB、Firehose、完整刷写和 USB 日志/帧解码；工作台路径显式传入 |
 | `archive/host-differences/` | Mac 与 Windows 不同版本，供审核，不自动覆盖当前源码 |
 | `archive/kshimc-wsl-20261111/` | 相对固定 ArmadaOS 快照的 KShimC 差异，保留未来双系统路线 |
 
