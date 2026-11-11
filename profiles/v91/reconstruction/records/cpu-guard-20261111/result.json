@@ -1,0 +1,26 @@
+{
+  "kernel_sha256": "4704c33991c6ef316abdcf51416c281c5573eb4ec5cbd38d476441f7581a2f58",
+  "native_sha256": "b83c7b418cd70a973d9401dc6c1abb2446b081afd1763382841ccb6183960dfc",
+  "armcpu_object_sha256": "3586de1d907d7377e37d92eb38d0b57451a30ed0581b15a374ca8c31ebdfb820",
+  "armcpu_no_fp": true,
+  "armcpu_instructions": 2599,
+  "seconds": 386.213029803941,
+  "baseline_kernel_unchanged": true,
+  "boot_image_created": false,
+  "hardware_tested": false,
+  "source": {
+    "files": {
+      "ArmCpu.cpp": "70db071c7a7c975ad149342a62997e83376b44838cc4e9cd7f4201b698e23930",
+      "EldenSdamRecovery.inc": "132728e6a82bf29950df46680471d612a549951d7fd8c1d3d9cfff53b52755a6",
+      "GuardPolicy.h": "f551cd64fceb6d148ad9f0cd923573a92bcc4a617e9380a4f2dcb3fc808c23d9",
+      "SmpGuard.inc": "941239b298513bfa4a2a46ce6b543f459799e7dd66ca6c4999fb427dd21e396e",
+      "Deferred.py": "b9db2cd3984ad39c95d027af4e93e746089ed6eaad45d431d75e0275798d231a"
+    },
+    "cpu8_source_sha256": "815868520794ce7d7230adac373928a107a2bae6d427cc4513daa533919896dc",
+    "v80_recovery_sha256": "3ba363421ca32c70ce4563b79812ec77365f712d55841f6b9049c4b43c379ab6",
+    "watchdog_qualification_sha256": "f3727f2e76e8913309946dad7e3161dd01effc4d1db69c29cd1b27e8b0e4c8b0",
+    "queue_release_methods_unchanged": true,
+    "smp_hardware_tested": false,
+    "boot_image_created": false
+  }
+}

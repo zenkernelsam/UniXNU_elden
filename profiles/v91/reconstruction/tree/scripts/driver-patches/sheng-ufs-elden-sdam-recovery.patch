@@ -1,0 +1,22 @@
+--- a/NativeUfs.cpp
++++ b/NativeUfs.cpp
+@@ -1385,6 +1385,7 @@
+ 
+ #include "EldenPinnedRootXnu.inc"
+ #include "EldenUsbDebugXnu.inc"
++#include "EldenSdamRecovery.inc"
+ 
+ bool NativeUfsBlock::configure (const char *name, uint64_t absoluteOffset, uint64_t size)
+ {
+@@ -1863,6 +1864,11 @@
+ {
+ #if defined(ELDEN_USB_DEBUG) && ELDEN_USB_DEBUG
+   eldenStartUsbDebug();
++#endif
++#if defined(ELDEN_SDAM_RECOVERY) && ELDEN_SDAM_RECOVERY
++  if(!eldenArmSdamRecovery())panic("ELDEN_RECOVERY SDAM refused stage=%u status=%x old=%x after=%x",gEldenSdam.stage,gEldenSdam.status,gEldenSdam.before,gEldenSdam.after);
++  unsigned selftest=0;PE_parse_boot_argn("elden-recovery-selftest",&selftest,sizeof(selftest));
++  if(selftest==1 && gEldenSdam.armed==1){IOSleep(5000);panic("ELDEN_RECOVERY controlled SDAM qualification; expect fastboot after180s");}
+ #endif
+   unsigned probe = 0, rootMode = 0;
+   PE_parse_boot_argn("native-ufs-lun", &gRootLun, sizeof(gRootLun));

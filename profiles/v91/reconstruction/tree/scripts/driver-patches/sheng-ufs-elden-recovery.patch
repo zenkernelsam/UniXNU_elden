@@ -1,0 +1,33 @@
+--- a/NativeUfs.cpp
++++ b/NativeUfs.cpp
+@@ -931,6 +931,10 @@
+ 
+ #include "RootQueue.h"
+ 
++#if defined(ELDEN_BOOT_RECOVERY) && ELDEN_BOOT_RECOVERY
++#include "EldenBcbRules.h"
++static bool gEldenBcbWritePermit=false;
++#endif
+ #include "RootCommands.h"
+ #include "LunDiscovery.h"
+ 
+@@ -1385,6 +1389,7 @@
+ 
+ #include "EldenPinnedRootXnu.inc"
+ #include "EldenUsbDebugXnu.inc"
++#include "EldenBootRecovery.inc"
+ 
+ bool NativeUfsBlock::configure (const char *name, uint64_t absoluteOffset, uint64_t size)
+ {
+@@ -2007,6 +2012,11 @@
+     IOLog ("NativeUfs: root bring-up failed: %s\n", why);
+     return false;
+   }
++#if defined(ELDEN_BOOT_RECOVERY) && ELDEN_BOOT_RECOVERY
++  if (!eldenArmBootRecovery()) panic("ELDEN_RECOVERY refused stage=%u result=%x ocs=%x scsi=%x sense=%x protocol=%u; root not published",gEldenRecoveryStage,gEldenRecoveryResult,gRootDiagnostic.ocs,gRootDiagnostic.scsi,gRootDiagnostic.sense,gRootDiagnostic.protocol);
++  unsigned selftest=0;PE_parse_boot_argn("elden-recovery-selftest",&selftest,sizeof(selftest));
++  if(selftest==1 && gEldenRecoveryArmed==1){IOSleep(5000);panic("ELDEN_RECOVERY controlled qualification panic; expect fastboot after180s");}
++#endif
+   native_ufs_root_step = 2;
+   RootLayout *layout = static_cast<RootLayout *> (IOMalloc (sizeof (RootLayout)));
+   if (!layout || !findRootLayout (layout, &why, UFS_ROOT_PARTITION, gRootLunLast)) {

@@ -1,0 +1,256 @@
+diff --git a/package/UniXNUPkg/Library/UniXNULib/Inject.c b/package/UniXNUPkg/Library/UniXNULib/Inject.c
+index 08f07b8..c6c31d2 100644
+--- a/package/UniXNUPkg/Library/UniXNULib/Inject.c
++++ b/package/UniXNUPkg/Library/UniXNULib/Inject.c
+@@ -11,10 +11,11 @@
+ #include <Guid/Fdt.h>
+ #include <Guid/LinuxEfiInitrdMedia.h>
+ #include <IndustryStandard/Acpi.h>
+-#include <Library/FdtLib.h>
+ #include <Protocol/AcpiTable.h>
+ #include <Protocol/LoadFile2.h>
+ 
++#include <libfdt.h>
++
+ //
+ // Room added to every DTB copy for properties and nodes UniXNU adds.
+ //
+@@ -198,11 +199,11 @@ UniXNUFirmwareCompatible (
+   CONST CHAR8  *Value;
+   INT32        Len;
+ 
+-  if (EFI_ERROR (EfiGetSystemConfigurationTable (&gFdtTableGuid, &Fdt)) || (FdtCheckHeader (Fdt) != 0)) {
++  if (EFI_ERROR (EfiGetSystemConfigurationTable (&gFdtTableGuid, &Fdt)) || (fdt_check_header (Fdt) != 0)) {
+     return NULL;
+   }
+ 
+-  Value = FdtGetProp (Fdt, 0, "compatible", &Len);
++  Value = fdt_getprop (Fdt, 0, "compatible", &Len);
+   if ((Value == NULL) || (Len <= 0)) {
+     return NULL;
+   }
+@@ -226,7 +227,7 @@ EnsureNode (
+   CONST CHAR8  *Start;
+   CONST CHAR8  *End;
+ 
+-  Offset = FdtPathOffset (Fdt, Path);
++  Offset = fdt_path_offset (Fdt, Path);
+   if (Offset >= 0) {
+     return Offset;
+   }
+@@ -247,14 +248,14 @@ EnsureNode (
+       End++;
+     }
+ 
+-    Offset = FdtSubnodeOffsetNameLen (Fdt, Parent, Start, (INT32)(End - Start));
++    Offset = fdt_subnode_offset_namelen (Fdt, Parent, Start, (INT32)(End - Start));
+     if (Offset < 0) {
+       CHAR8  Name[128];
+       UINTN  Len = MIN ((UINTN)(End - Start), sizeof (Name) - 1);
+ 
+       CopyMem (Name, Start, Len);
+       Name[Len] = '\0';
+-      Offset    = FdtAddSubnode (Fdt, Parent, Name);
++      Offset    = fdt_add_subnode (Fdt, Parent, Name);
+       if (Offset < 0) {
+         return Offset;
+       }
+@@ -288,12 +289,12 @@ UniXNUApplyDtPatches (
+     switch (Patch->Op) {
+       case UniXNUDtSet:
+         Offset = EnsureNode (Fdt, Patch->Node);
+-        Result = (Offset < 0) ? Offset : FdtSetProp (Fdt, Offset, Patch->Prop, Patch->Value, (UINT32)Patch->ValueSize);
++        Result = (Offset < 0) ? Offset : fdt_setprop (Fdt, Offset, Patch->Prop, Patch->Value, (UINT32)Patch->ValueSize);
+         break;
+ 
+       case UniXNUDtDeleteProp:
+-        Offset = FdtPathOffset (Fdt, Patch->Node);
+-        Result = (Offset < 0) ? Offset : FdtDelProp (Fdt, Offset, Patch->Prop);
++        Offset = fdt_path_offset (Fdt, Patch->Node);
++        Result = (Offset < 0) ? Offset : fdt_delprop (Fdt, Offset, Patch->Prop);
+         break;
+ 
+       case UniXNUDtAddNode:
+@@ -302,8 +303,8 @@ UniXNUApplyDtPatches (
+         break;
+ 
+       case UniXNUDtDeleteNode:
+-        Offset = FdtPathOffset (Fdt, Patch->Node);
+-        Result = (Offset < 0) ? Offset : FdtDelNode (Fdt, Offset);
++        Offset = fdt_path_offset (Fdt, Patch->Node);
++        Result = (Offset < 0) ? Offset : fdt_del_node (Fdt, Offset);
+         break;
+ 
+       case UniXNUDtOverlay:
+@@ -317,7 +318,7 @@ UniXNUApplyDtPatches (
+           break;
+         }
+ 
+-        Result = FdtOverlayApply (Fdt, Overlay);
++        Result = fdt_overlay_apply (Fdt, Overlay);
+         FreePool (Overlay);
+         break;
+     }
+@@ -331,7 +332,7 @@ UniXNUApplyDtPatches (
+         (Patch->Node != NULL) ? Patch->Node : "(overlay)",
+         (Patch->Prop != NULL) ? ":" : "",
+         (Patch->Prop != NULL) ? Patch->Prop : "",
+-        FdtStrerror (Result)
++        fdt_strerror (Result)
+         );
+     }
+   }
+@@ -363,12 +364,12 @@ UniXNUPrepareDeviceTree (
+   FreeBase = FALSE;
+   if (StrCmp (Entry->Dtb, L"firmware") == 0) {
+     Status = EfiGetSystemConfigurationTable (&gFdtTableGuid, &Base);
+-    if (EFI_ERROR (Status) || (FdtCheckHeader (Base) != 0)) {
++    if (EFI_ERROR (Status) || (fdt_check_header (Base) != 0)) {
+       UniXNULog ("dt: entry wants the firmware DTB but none is installed");
+       return EFI_NOT_FOUND;
+     }
+ 
+-    BaseSize = Fdt32ToCpu (((FDT_HEADER *)Base)->TotalSize);
++    BaseSize = fdt_totalsize (Base);
+   } else {
+     Status = UniXNUReadFile (Entry->Volume, Entry->Dtb, &Base, &BaseSize);
+     if (EFI_ERROR (Status)) {
+@@ -377,7 +378,7 @@ UniXNUPrepareDeviceTree (
+     }
+ 
+     FreeBase = TRUE;
+-    if (FdtCheckHeader (Base) != 0) {
++    if (fdt_check_header (Base) != 0) {
+       UniXNULog ("dt: %s is not a flattened device tree", Entry->Dtb);
+       FreePool (Base);
+       return EFI_VOLUME_CORRUPTED;
+@@ -409,7 +410,7 @@ UniXNUPrepareDeviceTree (
+   }
+ 
+   Tree = (VOID *)(UINTN)Address;
+-  if (FdtOpenInto (Base, Tree, (INT32)Size) != 0) {
++  if (fdt_open_into (Base, Tree, (INT32)Size) != 0) {
+     Status = EFI_VOLUME_CORRUPTED;
+   }
+ 
+@@ -423,7 +424,7 @@ UniXNUPrepareDeviceTree (
+     //
+     UniXNUApplyDtPatches (Tree, Config->Patches, Config->PatchCount);
+     UniXNUApplyDtPatches (Tree, Entry->Patches, Entry->PatchCount);
+-    FdtPack (Tree);
++    fdt_pack (Tree);
+     Status = gBS->InstallConfigurationTable (&gFdtTableGuid, Tree);
+   }
+ 
+@@ -434,7 +435,7 @@ UniXNUPrepareDeviceTree (
+ 
+   UniXNULog (
+     "dt: installed %u bytes, %u global + %u entry patch(es)",
+-    Fdt32ToCpu (((FDT_HEADER *)Tree)->TotalSize),
++    fdt_totalsize (Tree),
+     (UINT32)Config->PatchCount,
+     (UINT32)Entry->PatchCount
+     );
+@@ -444,7 +445,7 @@ UniXNUPrepareDeviceTree (
+   }
+ 
+   if (FdtSize != NULL) {
+-    *FdtSize = Fdt32ToCpu (((FDT_HEADER *)Tree)->TotalSize);
++    *FdtSize = fdt_totalsize (Tree);
+   }
+ 
+   return EFI_SUCCESS;
+diff --git a/package/UniXNUPkg/Library/UniXNULib/Main.c b/package/UniXNUPkg/Library/UniXNULib/Main.c
+index 482f4d6..31a4a54 100644
+--- a/package/UniXNUPkg/Library/UniXNULib/Main.c
++++ b/package/UniXNUPkg/Library/UniXNULib/Main.c
+@@ -75,14 +75,16 @@ UniXNURun (
+     gST->FirmwareRevision
+     );
+ 
++  UniXNUConfigLoad (ImageHandle, &Config);
++
+   //
+-  // Started straight from BDS, storage may not be connected yet.
++  // Started straight from BDS, storage may not be connected yet. Honor
++  // boot.connect_all so a driver that faults on foreign hardware state
++  // (e.g. kShimC FreeExec chain) can be opted out via unixnu.toml.
+   //
+-  if (Host == UniXNUHostFirmware) {
++  if (Host == UniXNUHostFirmware && Config.ConnectAll) {
+     UniXNUConnectAll ();
+   }
+-
+-  UniXNUConfigLoad (ImageHandle, &Config);
+   UniXNULog (
+     "config: %u entries, %u drivers, %u dt patches, %u acpi tables, %u slices, %u kits loaded, %u skipped",
+     (UINT32)Config.EntryCount,
+diff --git a/package/UniXNUPkg/Library/UniXNULib/UniXNULib.inf b/package/UniXNUPkg/Library/UniXNULib/UniXNULib.inf
+index 7a395a8..6532bd4 100644
+--- a/package/UniXNUPkg/Library/UniXNULib/UniXNULib.inf
++++ b/package/UniXNUPkg/Library/UniXNULib/UniXNULib.inf
+@@ -30,6 +30,7 @@
+ 
+ [Packages]
+   MdePkg/MdePkg.dec
++  EmbeddedPkg/EmbeddedPkg.dec
+   UniXNUPkg/UniXNUPkg.dec
+ 
+ [LibraryClasses]
+diff --git a/package/UniXNUPkg/Test/HelloPayload/HelloPayload.c b/package/UniXNUPkg/Test/HelloPayload/HelloPayload.c
+index b3526ec..2477f4b 100644
+--- a/package/UniXNUPkg/Test/HelloPayload/HelloPayload.c
++++ b/package/UniXNUPkg/Test/HelloPayload/HelloPayload.c
+@@ -18,7 +18,6 @@
+ #include <Library/BaseLib.h>
+ #include <Library/BaseMemoryLib.h>
+ #include <Library/DevicePathLib.h>
+-#include <Library/FdtLib.h>
+ #include <Library/MemoryAllocationLib.h>
+ #include <Library/PrintLib.h>
+ #include <Library/UefiBootServicesTableLib.h>
+@@ -29,6 +28,8 @@
+ #include <Protocol/LoadedImage.h>
+ #include <Protocol/LoadFile2.h>
+ 
++#include <libfdt.h>
++
+ extern EFI_GUID  gUniXNUVariableGuid;
+ 
+ #pragma pack (1)
+@@ -78,12 +79,12 @@ FdtString (
+   INT32  Offset;
+   INT32  Len;
+ 
+-  Offset = FdtPathOffset (Fdt, Node);
++  Offset = fdt_path_offset (Fdt, Node);
+   if (Offset < 0) {
+     return NULL;
+   }
+ 
+-  return FdtGetProp (Fdt, Offset, Prop, &Len);
++  return fdt_getprop (Fdt, Offset, Prop, &Len);
+ }
+ 
+ STATIC
+@@ -98,7 +99,7 @@ CheckDtb (
+   CONST CHAR8  *Overlay;
+   CHAR16       Detail[200];
+ 
+-  if (EFI_ERROR (EfiGetSystemConfigurationTable (&gFdtTableGuid, &Fdt)) || (FdtCheckHeader (Fdt) != 0)) {
++  if (EFI_ERROR (EfiGetSystemConfigurationTable (&gFdtTableGuid, &Fdt)) || (fdt_check_header (Fdt) != 0)) {
+     Report (L"dtb", FALSE, L"no EFI_DTB_TABLE");
+     if (WantOverlay) {
+       Report (L"overlay", FALSE, L"no EFI_DTB_TABLE");
+diff --git a/package/UniXNUPkg/Test/HelloPayload/HelloPayload.inf b/package/UniXNUPkg/Test/HelloPayload/HelloPayload.inf
+index ff73d3b..acdd050 100644
+--- a/package/UniXNUPkg/Test/HelloPayload/HelloPayload.inf
++++ b/package/UniXNUPkg/Test/HelloPayload/HelloPayload.inf
+@@ -19,6 +19,7 @@
+ 
+ [Packages]
+   MdePkg/MdePkg.dec
++  EmbeddedPkg/EmbeddedPkg.dec
+   UniXNUPkg/UniXNUPkg.dec
+   UniXNUPkg/Test/UniXNUTest.dec
+ 

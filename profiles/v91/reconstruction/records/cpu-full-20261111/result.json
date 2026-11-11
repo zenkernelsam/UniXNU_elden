@@ -1,0 +1,11 @@
+{
+  "kernel_sha256": "1858feded630624af97aa73c2d182d92832e018944d0212fb0d2fe212f96313f",
+  "source_kernel_sha256": "4fdea7559a82d1bb15ec7ee0dd51a078265f9f08b4561416157e32cf32f6da47",
+  "armcpu_object_sha256": "c2396f0cbd885bcb1ecfaa747ac2a804ed94fbee37e4be848dfd55b01d34fa5e",
+  "armcpu_instructions": 2388,
+  "armcpu_fp_simd": false,
+  "link_seconds": 66.24731615488417,
+  "full_link": true,
+  "boot_image_created": false,
+  "hardware_tested": false
+}

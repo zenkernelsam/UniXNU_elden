@@ -1,0 +1,50 @@
+--- a/TransferPoll.h
++++ b/TransferPoll.h
+@@ -4,6 +4,7 @@
+ enum class UfsTransferEnd { Completed, Fatal, Timeout };
+ struct UfsTransferPoll {
+   uint32_t polls = 0, doorbellSeen = 0, interruptSeen = 0, ocs = 15;
++  bool rechecked = false;
+ };
+ static constexpr uint32_t kUfsFatalStatus = 0x71880U;
+ 
+@@ -22,7 +23,22 @@
+       // Also allow a completion so fast that software never observes DB=1.
+       if (state.ocs != 15) return UfsTransferEnd::Completed;
+     }
+-    if (port.expired()) return UfsTransferEnd::Timeout;
++    if (port.expired()) {
++      // A thread can be descheduled after its first MMIO sample. Before
++      // quarantining, make one fresh ordered completion observation. This
++      // remains the active command; no submission or buffer reuse occurs here.
++      state.rechecked = true;
++      ++state.polls;
++      doorbell = port.doorbell();
++      state.doorbellSeen |= doorbell;
++      state.interruptSeen |= port.interrupt();
++      if (state.interruptSeen & kUfsFatalStatus) return UfsTransferEnd::Fatal;
++      if (!(doorbell & 1)) {
++        state.ocs = port.completedOcs();
++        if (state.ocs != 15) return UfsTransferEnd::Completed;
++      }
++      return UfsTransferEnd::Timeout;
++    }
+     port.delay();
+   }
+ }
+--- a/RootCommands.h
++++ b/RootCommands.h
+@@ -107,6 +107,13 @@
+   gRootDiagnostic.dbSeen = state.doorbellSeen;
+   gRootDiagnostic.isSeen = state.interruptSeen;
+   *ocs = state.ocs;
++#if defined(NATIVE_UFS_SM8750) && NATIVE_UFS_SM8750
++  if (end == UfsTransferEnd::Completed && state.rechecked) {
++    IOLog ("ELDEN_UFS final completion recheck command=%llu polls=%u elapsed=%llx budget=%llx\n",
++      (unsigned long long)gRootDiagnostic.command, state.polls,
++      (unsigned long long)gRootDiagnostic.elapsedTicks, (unsigned long long)gRootDiagnostic.waitTicks);
++  }
++#endif
+   if (end != UfsTransferEnd::Completed) {
+     // Passive, possibly changing DMA snapshot; never authorizes completion or reuse.
+     cacheInvalidate (gHost.virt, 64);

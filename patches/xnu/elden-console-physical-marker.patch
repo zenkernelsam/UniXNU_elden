@@ -1,0 +1,16 @@
+--- a/pexpert/arm/pe_init.c
++++ b/pexpert/arm/pe_init.c
+@@ -534,8 +534,11 @@
+ 		/* UEFI supplied boot_args.Video, not Apple's fixed panic-log area.
+ 		 * Bit 0 is initialize_screen's physical-address marker. */
+ 		extern void PE_elden_enable_gop_kprintf(void);
+-		PE_state.video.v_baseAddr |= 1;
+-		PE_initialize_console(&PE_state.video, kPETextMode);
++		/* The marker belongs only to this console call. PE_current_console
++		 * must continue to return the actual GOP physical address. */
++		PE_Video console_video = PE_state.video;
++		console_video.v_baseAddr |= 1;
++		PE_initialize_console(&console_video, kPETextMode);
+ 		PE_elden_enable_gop_kprintf();
+ 		return;
+ 	}

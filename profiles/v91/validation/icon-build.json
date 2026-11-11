@@ -1,0 +1,9 @@
+{
+  "sha256": "f748e9cf601db43167eaf7736b0a161771b8c01eeb46860820604ccf892ac034",
+  "original_v91_sha256": "f748e9cf601db43167eaf7736b0a161771b8c01eeb46860820604ccf892ac034",
+  "byte_identical": true,
+  "codesign_verified": true,
+  "device_operation": false,
+  "compiler": "Apple clang version 17.0.0 (clang-1700.6.4.2)\nTarget: x86_64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+  "sdk": "26.2"
+}

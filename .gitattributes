@@ -13,3 +13,11 @@
 *.png binary
 *.efi binary
 patches/overlays/** -whitespace
+# Frozen evidence/source imports are byte-addressed by their manifests.
+profiles/v91/** -text -whitespace
+profiles/v92-experimental/** -text -whitespace
+tools/legacy-workbench/** -text -whitespace
+archive/host-differences/** -text -whitespace
+archive/kshimc-wsl-20261111/** -text -whitespace
+archive/lilac-toolkit-20261101/** -text -whitespace
+docs/archive/** -whitespace

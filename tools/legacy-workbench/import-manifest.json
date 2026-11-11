@@ -1,0 +1,2288 @@
+{
+  "status": "historical source recipes; path migration incomplete",
+  "files": [
+    {
+      "workbench_path": "edl_work/accept_basic_bundle.py",
+      "canonical_path": "tools/legacy-workbench/accept_basic_bundle.py",
+      "sha256": "dba1e6413dee88db4cef7f25ce3cbcc6510c3f50bbe2738562c8b7d928b5ea2a"
+    },
+    {
+      "workbench_path": "edl_work/accept_battery_artifacts.py",
+      "canonical_path": "tools/legacy-workbench/accept_battery_artifacts.py",
+      "sha256": "28fec282fbcb8edd56e381fa4bfb8044986b711575b8a45137de382e3bd7c517"
+    },
+    {
+      "workbench_path": "edl_work/adb_flash.sh",
+      "canonical_path": "tools/legacy-workbench/adb_flash.sh",
+      "sha256": "daa6d12f133a92d8fcd1c2e4886fdd19f0595e154d2cf22247d8f0809e834ab2"
+    },
+    {
+      "workbench_path": "edl_work/adt_gestures.py",
+      "canonical_path": "tools/legacy-workbench/adt_gestures.py",
+      "sha256": "8720abf2ce0ed509dcf5eef0c29b52c32e74e53e5100b42c752ffaeb63640ee0"
+    },
+    {
+      "workbench_path": "edl_work/advlog_read.py",
+      "canonical_path": "tools/legacy-workbench/advlog_read.py",
+      "sha256": "036e6de0c07ab2e92a1cc97110775f1bb2ed27b05cfecfc09c853315ecd1d23b"
+    },
+    {
+      "workbench_path": "edl_work/apply_f2fs_128g.c",
+      "canonical_path": "tools/legacy-workbench/apply_f2fs_128g.c",
+      "sha256": "dabaeef8f601682d29d50387d6f606799cda729b6b3a88b0f93bebe568291c88"
+    },
+    {
+      "workbench_path": "edl_work/apply_lun0_gpt128.c",
+      "canonical_path": "tools/legacy-workbench/apply_lun0_gpt128.c",
+      "sha256": "5f5128d220401aeeef95cacbb9727eceaedb7fe9a87ede1099b0ded03645ec38"
+    },
+    {
+      "workbench_path": "edl_work/assess_backlight_observation.py",
+      "canonical_path": "tools/legacy-workbench/assess_backlight_observation.py",
+      "sha256": "96c7bb499082883da7887bab65436c097565802256cc90fc2adbdc4c0ba622dc"
+    },
+    {
+      "workbench_path": "edl_work/assess_backlight_power.py",
+      "canonical_path": "tools/legacy-workbench/assess_backlight_power.py",
+      "sha256": "fb07d2da3077106b6177c17d6510be625c25de088f975852fd4f4bead11d8d8c"
+    },
+    {
+      "workbench_path": "edl_work/assess_backlight_session.py",
+      "canonical_path": "tools/legacy-workbench/assess_backlight_session.py",
+      "sha256": "d9a78099a38442b2c7b25d531903640cd8f17fb3f82807495153a0dcfcd27225"
+    },
+    {
+      "workbench_path": "edl_work/assess_backlight_trial.py",
+      "canonical_path": "tools/legacy-workbench/assess_backlight_trial.py",
+      "sha256": "aca75269d303b0135b22f0ec7f6239de54ea5ebae86600f06effc5d6cd96ee45"
+    },
+    {
+      "workbench_path": "edl_work/assess_charge_modes.py",
+      "canonical_path": "tools/legacy-workbench/assess_charge_modes.py",
+      "sha256": "9fbc8b58ba3a40b010a685785f5da8f45f30aed51bcbf4b451114342dcc8ed17"
+    },
+    {
+      "workbench_path": "edl_work/assess_cpu8_ui.py",
+      "canonical_path": "tools/legacy-workbench/assess_cpu8_ui.py",
+      "sha256": "f18b6a7381d9e1b185022de0eb2ffe85091d4821f544c7d58498b14697a5be33"
+    },
+    {
+      "workbench_path": "edl_work/assess_dc_native.py",
+      "canonical_path": "tools/legacy-workbench/assess_dc_native.py",
+      "sha256": "2ce3313d3af319eafc33bdb5def2f3de8bb773ac4c41fae08ec84a9a78a88ddf"
+    },
+    {
+      "workbench_path": "edl_work/assess_dc_noop.py",
+      "canonical_path": "tools/legacy-workbench/assess_dc_noop.py",
+      "sha256": "ead23ef1ab839a39307214aefadbe83e9c103b4e49fc55f047fd745934e1dd1d"
+    },
+    {
+      "workbench_path": "edl_work/assess_event_clock.py",
+      "canonical_path": "tools/legacy-workbench/assess_event_clock.py",
+      "sha256": "c6ca0296db5dcf362880fbe124084489ed9777fabdc03f5bc453e962fe56d58a"
+    },
+    {
+      "workbench_path": "edl_work/assess_gpio_path.py",
+      "canonical_path": "tools/legacy-workbench/assess_gpio_path.py",
+      "sha256": "e5a9f4c452143883e53978e9688d5d6b3db148d3d00d03b0063e84e2af953ca0"
+    },
+    {
+      "workbench_path": "edl_work/assess_icon_cpu_v62.py",
+      "canonical_path": "tools/legacy-workbench/assess_icon_cpu_v62.py",
+      "sha256": "9b889d3876677e81fe00c2d2174c3db7534fb3159baf3a8eb29d4e2765f7047f"
+    },
+    {
+      "workbench_path": "edl_work/assess_pd_bootstrap.py",
+      "canonical_path": "tools/legacy-workbench/assess_pd_bootstrap.py",
+      "sha256": "0af24dadc6476603e402e130152c4748b32bf3d9541fafbbb8cc52855f9f5ee9"
+    },
+    {
+      "workbench_path": "edl_work/assess_policy_trace.py",
+      "canonical_path": "tools/legacy-workbench/assess_policy_trace.py",
+      "sha256": "f01b405f3693e20c9778b602e4c2182e03c746052ee2c7fdaa6173165a98bf41"
+    },
+    {
+      "workbench_path": "edl_work/assess_power_path.py",
+      "canonical_path": "tools/legacy-workbench/assess_power_path.py",
+      "sha256": "e9b5b34b31f53a5d5eda333109d75331ffff8b3cbd4eb1b1af54cc925b144095"
+    },
+    {
+      "workbench_path": "edl_work/assess_power_session.py",
+      "canonical_path": "tools/legacy-workbench/assess_power_session.py",
+      "sha256": "41403a5065396d3fea8397de926a10f5d8b9da657fbeaa0c13335ab59cd8eeaf"
+    },
+    {
+      "workbench_path": "edl_work/assess_smp_admission.py",
+      "canonical_path": "tools/legacy-workbench/assess_smp_admission.py",
+      "sha256": "e3f1ffaa5e10134aa63edd3eb0ae2dd908614bfaa5392a52d2e47afaf74cb2f0"
+    },
+    {
+      "workbench_path": "edl_work/assess_touch_dma_survey.py",
+      "canonical_path": "tools/legacy-workbench/assess_touch_dma_survey.py",
+      "sha256": "08a33579e60e02faf5656f27a95e48fa15abcd08bac9b680ede593e823d47d8c"
+    },
+    {
+      "workbench_path": "edl_work/assess_ucsi_events.py",
+      "canonical_path": "tools/legacy-workbench/assess_ucsi_events.py",
+      "sha256": "af76bf7317583ec84c0585493236c21bab6c7ce9b05f470eedcc36843299edb0"
+    },
+    {
+      "workbench_path": "edl_work/assess_ui_dispatch.py",
+      "canonical_path": "tools/legacy-workbench/assess_ui_dispatch.py",
+      "sha256": "914515175c14adb9408c5a2d5117063312d02854822fefd8e2f444204e05eb4e"
+    },
+    {
+      "workbench_path": "edl_work/assess_usb_handoff.py",
+      "canonical_path": "tools/legacy-workbench/assess_usb_handoff.py",
+      "sha256": "e73a2ebbd0685115332b9354dbe5ce53c84ca04dd3d131d5f633fb1cb2150fd2"
+    },
+    {
+      "workbench_path": "edl_work/audit_backlight_codegen_mac.py",
+      "canonical_path": "tools/legacy-workbench/audit_backlight_codegen_mac.py",
+      "sha256": "0089b2c432b19a07e5355a6fd33d1edb5be5aa3370ca5f6ff74939e11d22062f"
+    },
+    {
+      "workbench_path": "edl_work/audit_basic_bundle.py",
+      "canonical_path": "tools/legacy-workbench/audit_basic_bundle.py",
+      "sha256": "ce400051d044719cf23a9e76c52ce361b65942a6b55a095789007df1641ebc9e"
+    },
+    {
+      "workbench_path": "edl_work/audit_battery_codegen_mac.py",
+      "canonical_path": "tools/legacy-workbench/audit_battery_codegen_mac.py",
+      "sha256": "2e3441994224bbc1ed0d7d9bc4d6fc80b9372802cab3a6265491fc9b1c508a16"
+    },
+    {
+      "workbench_path": "edl_work/audit_battery_telemetry.py",
+      "canonical_path": "tools/legacy-workbench/audit_battery_telemetry.py",
+      "sha256": "d575c8ff78dd4471185bcdd0d74492933167b9b8b055126c011736bf5611297d"
+    },
+    {
+      "workbench_path": "edl_work/audit_blocker_references.py",
+      "canonical_path": "tools/legacy-workbench/audit_blocker_references.py",
+      "sha256": "317329b2cfc13ef39089de1f2b26a73d0c0acde0e60746fa91420ba80ac05253"
+    },
+    {
+      "workbench_path": "edl_work/audit_bluetoothd_21h461_mac.py",
+      "canonical_path": "tools/legacy-workbench/audit_bluetoothd_21h461_mac.py",
+      "sha256": "3b644dcc647e46e737a0555d02186ce79bb37a0324ebde6f35ffc512724dc10f"
+    },
+    {
+      "workbench_path": "edl_work/audit_boot_candidate.py",
+      "canonical_path": "tools/legacy-workbench/audit_boot_candidate.py",
+      "sha256": "60c9f75313b92e7c169c8ae7bf11f2dce6800cfe5c31ca83e3d2f19582fbdfca"
+    },
+    {
+      "workbench_path": "edl_work/audit_bt_native.py",
+      "canonical_path": "tools/legacy-workbench/audit_bt_native.py",
+      "sha256": "abbdeafc753da2a7ff9182aa837f034e0e54ced49488492f0ea1a6f13867a2d3"
+    },
+    {
+      "workbench_path": "edl_work/audit_combined_rescue.py",
+      "canonical_path": "tools/legacy-workbench/audit_combined_rescue.py",
+      "sha256": "8fd53065f9f8fbee7f05c4407c3d36e471c4c9cdae12dcce75342f3a8699a706"
+    },
+    {
+      "workbench_path": "edl_work/audit_cpu_asm_fixed.py",
+      "canonical_path": "tools/legacy-workbench/audit_cpu_asm_fixed.py",
+      "sha256": "4914e1c231c3cffa41bd943afdcc096b943e7c6e3ef937de7ebb089ccc9083df"
+    },
+    {
+      "workbench_path": "edl_work/audit_cpu_full.py",
+      "canonical_path": "tools/legacy-workbench/audit_cpu_full.py",
+      "sha256": "55f7db0f674875f08bc66b1b8d1c201255112de191cd7f8d92584af6bfad30b4"
+    },
+    {
+      "workbench_path": "edl_work/audit_cpu_groups.py",
+      "canonical_path": "tools/legacy-workbench/audit_cpu_groups.py",
+      "sha256": "8b37a783bf83af744461590fe404fb5e9b73a0217bb7b6539dd6f1c9ed9e187c"
+    },
+    {
+      "workbench_path": "edl_work/audit_cpu_guard_link.py",
+      "canonical_path": "tools/legacy-workbench/audit_cpu_guard_link.py",
+      "sha256": "32a25ff6ca3210c215f4a2e471c419df11a900dc0ca45696d2a58afdc4f90633"
+    },
+    {
+      "workbench_path": "edl_work/audit_cpu_guard_mac.py",
+      "canonical_path": "tools/legacy-workbench/audit_cpu_guard_mac.py",
+      "sha256": "77a3b706d45eac5919b59e31903c7761a1c95a82b63af347a20172b3faf11619"
+    },
+    {
+      "workbench_path": "edl_work/audit_cpu_irq_snapshot.py",
+      "canonical_path": "tools/legacy-workbench/audit_cpu_irq_snapshot.py",
+      "sha256": "d85bb13ad1a2f206907856a711c05830b393a3b63ff9ccd4615f8737e1dbfa4e"
+    },
+    {
+      "workbench_path": "edl_work/audit_cpu_layout_mac.py",
+      "canonical_path": "tools/legacy-workbench/audit_cpu_layout_mac.py",
+      "sha256": "6c712292fcdd596a7b297c1b438074960c9585eaccce61927f386db9b5774d24"
+    },
+    {
+      "workbench_path": "edl_work/audit_dc_native_mac.py",
+      "canonical_path": "tools/legacy-workbench/audit_dc_native_mac.py",
+      "sha256": "0cac3720c53250b4e17d6905dc11abaf2b5dd7c2ff6a32b892b0938ba5bf76d2"
+    },
+    {
+      "workbench_path": "edl_work/audit_dc_noop_mac.py",
+      "canonical_path": "tools/legacy-workbench/audit_dc_noop_mac.py",
+      "sha256": "8caf0f1e49afe8f91756172824febe382d097c6c55e0414a2a010a4d8fc285d7"
+    },
+    {
+      "workbench_path": "edl_work/audit_event_time_delta.py",
+      "canonical_path": "tools/legacy-workbench/audit_event_time_delta.py",
+      "sha256": "d374a66cd6bcf24b76b57d4c8b97626a8a8637df83794b0e6c57c313297b94ac"
+    },
+    {
+      "workbench_path": "edl_work/audit_external_stage2.py",
+      "canonical_path": "tools/legacy-workbench/audit_external_stage2.py",
+      "sha256": "4f71128a4fb54286f86bdff519d7e3194d73250eaf8d26d9dde271f65c8cb89a"
+    },
+    {
+      "workbench_path": "edl_work/audit_gesture_seed_mac.py",
+      "canonical_path": "tools/legacy-workbench/audit_gesture_seed_mac.py",
+      "sha256": "8d7c17bdc2c9157533436affdd5e4046ce658f7ae6a3e08c214249c5713b6f0a"
+    },
+    {
+      "workbench_path": "edl_work/audit_graphic_variant.py",
+      "canonical_path": "tools/legacy-workbench/audit_graphic_variant.py",
+      "sha256": "44d122d549f1fc46fbd855e3d370853e9353bb8cd496ab801676abc4fb3c6811"
+    },
+    {
+      "workbench_path": "edl_work/audit_hid_candidate.py",
+      "canonical_path": "tools/legacy-workbench/audit_hid_candidate.py",
+      "sha256": "728977353f17a5c883e68e3d395e2e38b67acfa4a1a1b72725f370df3387defc"
+    },
+    {
+      "workbench_path": "edl_work/audit_icon_cpu_codegen.py",
+      "canonical_path": "tools/legacy-workbench/audit_icon_cpu_codegen.py",
+      "sha256": "ab40f9e28f48b484a8534e3baf213a73d2a041ed1aecb788be1266c9a7ae86ab"
+    },
+    {
+      "workbench_path": "edl_work/audit_icon_fault_trace.py",
+      "canonical_path": "tools/legacy-workbench/audit_icon_fault_trace.py",
+      "sha256": "da90c313c187edbdaf2ac50b985db8d5052c824dc39fbff53652b6d59eed3a7d"
+    },
+    {
+      "workbench_path": "edl_work/audit_icon_observer_delta.py",
+      "canonical_path": "tools/legacy-workbench/audit_icon_observer_delta.py",
+      "sha256": "a9fb52eac1a5398707b1b2f4060d0282834dfeeda40ffb570aa0f2412a0a7d13"
+    },
+    {
+      "workbench_path": "edl_work/audit_kshim_rescue48.py",
+      "canonical_path": "tools/legacy-workbench/audit_kshim_rescue48.py",
+      "sha256": "9db8472a42094edb217fcab0fc3369713a9c87850cbc061f09f73d1b344af542"
+    },
+    {
+      "workbench_path": "edl_work/audit_old_ebs_assert.py",
+      "canonical_path": "tools/legacy-workbench/audit_old_ebs_assert.py",
+      "sha256": "b0fe4ba68a4202a995d68d543bfd0047b7c6f4547798de3a55bc3c6536a811af"
+    },
+    {
+      "workbench_path": "edl_work/audit_pd_bootstrap_mac.py",
+      "canonical_path": "tools/legacy-workbench/audit_pd_bootstrap_mac.py",
+      "sha256": "b593a4340ac10a5fd7cf771a5647efcbc17f165603573deec4328a205a6ba68d"
+    },
+    {
+      "workbench_path": "edl_work/audit_persistent_foundation.py",
+      "canonical_path": "tools/legacy-workbench/audit_persistent_foundation.py",
+      "sha256": "b16aba8e8220b8d6d89e4cc1df081566735413df6998acd88d5eae9af5699d16"
+    },
+    {
+      "workbench_path": "edl_work/audit_power_runtime.py",
+      "canonical_path": "tools/legacy-workbench/audit_power_runtime.py",
+      "sha256": "a931f07165d71bafb6aa1d56b006d29de6dbb18fc22d645bcf6c21ba501ad12f"
+    },
+    {
+      "workbench_path": "edl_work/audit_preview_codegen_mac.py",
+      "canonical_path": "tools/legacy-workbench/audit_preview_codegen_mac.py",
+      "sha256": "2c14fd12b6b2d3965dd3d933c9d5cecf27b6cb1b6c09e667f102b10ec2375948"
+    },
+    {
+      "workbench_path": "edl_work/audit_preview_four.py",
+      "canonical_path": "tools/legacy-workbench/audit_preview_four.py",
+      "sha256": "932a0f6a46d3145198ad9d9b3d682c29813c7562f4f99eeb6d082f1a6aa65f3a"
+    },
+    {
+      "workbench_path": "edl_work/audit_recovery_deadline_mac.py",
+      "canonical_path": "tools/legacy-workbench/audit_recovery_deadline_mac.py",
+      "sha256": "23390653cfa6dc3779b96bd67083e4df6aca5a7d4fe46d1ee863f37181ee35b6"
+    },
+    {
+      "workbench_path": "edl_work/audit_reset_checkpoint.py",
+      "canonical_path": "tools/legacy-workbench/audit_reset_checkpoint.py",
+      "sha256": "b992fc24dbef6743257577936ae643798a35b9001e103ef557b39b81faa0be01"
+    },
+    {
+      "workbench_path": "edl_work/audit_rootcheck_derivative.py",
+      "canonical_path": "tools/legacy-workbench/audit_rootcheck_derivative.py",
+      "sha256": "87fb82fc78ce0e8e8573041e8389ecdf4a49e0da2c85f07b72ddc2174afea8a0"
+    },
+    {
+      "workbench_path": "edl_work/audit_sgi_mode.py",
+      "canonical_path": "tools/legacy-workbench/audit_sgi_mode.py",
+      "sha256": "4ff5595453b88e592432dd69cd26d17d1ce7b91e3f41b70b1d6661a35c06d6b9"
+    },
+    {
+      "workbench_path": "edl_work/audit_startup_candidates.py",
+      "canonical_path": "tools/legacy-workbench/audit_startup_candidates.py",
+      "sha256": "7af9b4d8ac1eee89f40e2d1d3059faba3f9327a595aab9d230a638dc6c14d799"
+    },
+    {
+      "workbench_path": "edl_work/audit_stock_f2fs.py",
+      "canonical_path": "tools/legacy-workbench/audit_stock_f2fs.py",
+      "sha256": "823ca73a4e5cbd5abc96762b4d88888e8c99785e2e1f3c1232eb88136af8e063"
+    },
+    {
+      "workbench_path": "edl_work/audit_touch_dma_codegen_mac.py",
+      "canonical_path": "tools/legacy-workbench/audit_touch_dma_codegen_mac.py",
+      "sha256": "b9483a64d1752088fd338b23f894f302a98fca6947fae01eb5181e0a46104cac"
+    },
+    {
+      "workbench_path": "edl_work/audit_touch_runtime.py",
+      "canonical_path": "tools/legacy-workbench/audit_touch_runtime.py",
+      "sha256": "0905af0249cfb04b1a064f86f890c2ffa0104653d5a42c1a1df8d6a25bc9fc0a"
+    },
+    {
+      "workbench_path": "edl_work/audit_ucsi_events_mac.py",
+      "canonical_path": "tools/legacy-workbench/audit_ucsi_events_mac.py",
+      "sha256": "adf2eddccafba730ebcd7f2a411835685d3c685afa0d5214ec35dbf9dc20e758"
+    },
+    {
+      "workbench_path": "edl_work/audit_ui_dispatch.py",
+      "canonical_path": "tools/legacy-workbench/audit_ui_dispatch.py",
+      "sha256": "9010518cf464835f3392a2df21e64cfa47ccfddc743d98292b4e3204094e5bb8"
+    },
+    {
+      "workbench_path": "edl_work/audit_ulog_filter_mac.py",
+      "canonical_path": "tools/legacy-workbench/audit_ulog_filter_mac.py",
+      "sha256": "725e58170fbf5104c504ff73fb80b07768751f241579f00d96c82b2d7f72ab18"
+    },
+    {
+      "workbench_path": "edl_work/audit_ulog_objects_mac.py",
+      "canonical_path": "tools/legacy-workbench/audit_ulog_objects_mac.py",
+      "sha256": "599b8caccde8fe3ac16a810ba5b48ab79404869d43c33a9993992225af341d29"
+    },
+    {
+      "workbench_path": "edl_work/audit_vdog_trial.py",
+      "canonical_path": "tools/legacy-workbench/audit_vdog_trial.py",
+      "sha256": "ce108db4aa54c79510313f4fcc178e201ceb899c46011daaa58ae23662822305"
+    },
+    {
+      "workbench_path": "edl_work/audit_wcn7861.py",
+      "canonical_path": "tools/legacy-workbench/audit_wcn7861.py",
+      "sha256": "f2a0ee1deceffd6b964507d18e9f89f1f93767a539d15ceb1026008dc3c9448a"
+    },
+    {
+      "workbench_path": "edl_work/audit_wcn_hci.py",
+      "canonical_path": "tools/legacy-workbench/audit_wcn_hci.py",
+      "sha256": "96fe67848dc2a42a9cef4d1d3da3aef9bf189566c3531c45de2dc79513813a61"
+    },
+    {
+      "workbench_path": "edl_work/audit_wcn_power.py",
+      "canonical_path": "tools/legacy-workbench/audit_wcn_power.py",
+      "sha256": "d2b07a0371bbc174ef763fbf539f0fe18f223163399786757417a09d84bda2ea"
+    },
+    {
+      "workbench_path": "edl_work/audit_wcn_uart.py",
+      "canonical_path": "tools/legacy-workbench/audit_wcn_uart.py",
+      "sha256": "237e983d829c5248668682bd5a185d505986f924a872c7c4bb58040ae583bebd"
+    },
+    {
+      "workbench_path": "edl_work/audit_wfe_counter_fix.py",
+      "canonical_path": "tools/legacy-workbench/audit_wfe_counter_fix.py",
+      "sha256": "c23eb6bd6a8d8df9da2865e606b3990adea18f1622ca117e2e965a0ac3decbc3"
+    },
+    {
+      "workbench_path": "edl_work/avb_guard.py",
+      "canonical_path": "tools/legacy-workbench/avb_guard.py",
+      "sha256": "6e06e17f54c22d83229a8cef2bc4dfc3fed6ea98d16d1e15dd108457e7ad0077"
+    },
+    {
+      "workbench_path": "edl_work/backup_allocated_userdata.py",
+      "canonical_path": "tools/legacy-workbench/backup_allocated_userdata.py",
+      "sha256": "024bd2b12d1065ce3d3998add4647d01ed516c6fe41cddbc4a54dc5e5688d028"
+    },
+    {
+      "workbench_path": "edl_work/benchmark_firehose.py",
+      "canonical_path": "tools/legacy-workbench/benchmark_firehose.py",
+      "sha256": "34e7518555af4c228cbdadf0e6d91b814323abcc0ae6b29a1dd68452ab74b9fd"
+    },
+    {
+      "workbench_path": "edl_work/build_arm_io_phandle_rootcheck.sh",
+      "canonical_path": "tools/legacy-workbench/build_arm_io_phandle_rootcheck.sh",
+      "sha256": "a75a954b294ffd96455389dbf04b522dcb79cf04b282826b027bb8e438a3aa25"
+    },
+    {
+      "workbench_path": "edl_work/build_arm_io_rootcheck.sh",
+      "canonical_path": "tools/legacy-workbench/build_arm_io_rootcheck.sh",
+      "sha256": "db051f3d4cb4e1e02da740fae2c6b8e5f99b3503e94db6bcd8736759917af1af"
+    },
+    {
+      "workbench_path": "edl_work/build_bisect_arm_next.sh",
+      "canonical_path": "tools/legacy-workbench/build_bisect_arm_next.sh",
+      "sha256": "e33c24b5919f8ad7e8c5ba55da05d9d69284db7aec309d81e53fe664ab2c4902"
+    },
+    {
+      "workbench_path": "edl_work/build_bt_native.py",
+      "canonical_path": "tools/legacy-workbench/build_bt_native.py",
+      "sha256": "040bbfadb68034bf8a39ced395e76934f9990704d5a9407cdb2a6331550eac1c"
+    },
+    {
+      "workbench_path": "edl_work/build_cb0_read_form.py",
+      "canonical_path": "tools/legacy-workbench/build_cb0_read_form.py",
+      "sha256": "91b6d914b0575c1d141278156a88f3596a1a600293ede37e71945a0f44805909"
+    },
+    {
+      "workbench_path": "edl_work/build_combined_rescue.py",
+      "canonical_path": "tools/legacy-workbench/build_combined_rescue.py",
+      "sha256": "d747b80f10cebba2ed324053d0da49356f932d45f5f0c48b8b0cb6f3fcf6e22e"
+    },
+    {
+      "workbench_path": "edl_work/build_cpu_guard_mac.py",
+      "canonical_path": "tools/legacy-workbench/build_cpu_guard_mac.py",
+      "sha256": "0b30db6788c319483682fd3be1e1f74d3cdbf687f3a4ace0509da5a840855848"
+    },
+    {
+      "workbench_path": "edl_work/build_external_stage2.py",
+      "canonical_path": "tools/legacy-workbench/build_external_stage2.py",
+      "sha256": "20f717bb315ef8dac90021d0c7345e724b30382694839331e4f862733bcc6bc3"
+    },
+    {
+      "workbench_path": "edl_work/build_fbwc_objects_mac.py",
+      "canonical_path": "tools/legacy-workbench/build_fbwc_objects_mac.py",
+      "sha256": "d942db558bca8f156b4c8aa0c5e2e132156f5e20cae7fe10e4871ef384ec8af1"
+    },
+    {
+      "workbench_path": "edl_work/build_graphic_variant_cpu_mac.py",
+      "canonical_path": "tools/legacy-workbench/build_graphic_variant_cpu_mac.py",
+      "sha256": "1be018ab73824404a5e60ddce0d6f682201f21e11cb1e06876ef38f5a5cf2a09"
+    },
+    {
+      "workbench_path": "edl_work/build_graphic_variant_library_mac.py",
+      "canonical_path": "tools/legacy-workbench/build_graphic_variant_library_mac.py",
+      "sha256": "587edb56e92b05ed7b3c5ee4dae3ea46a5889e214b44be2cad016e065ebc1b31"
+    },
+    {
+      "workbench_path": "edl_work/build_hci_wcn7861.py",
+      "canonical_path": "tools/legacy-workbench/build_hci_wcn7861.py",
+      "sha256": "20171e8ad291d38bb3ae789c2ed790371bc1625e952b7346a2bfaa7a5a68e781"
+    },
+    {
+      "workbench_path": "edl_work/build_icon_fault_trace_mac.py",
+      "canonical_path": "tools/legacy-workbench/build_icon_fault_trace_mac.py",
+      "sha256": "6eae0b09c6bf95d6275fdc0a1fd26a5f8d62b624b1869b82e8fba12c24d7062e"
+    },
+    {
+      "workbench_path": "edl_work/build_ipados_6g_packet.sh",
+      "canonical_path": "tools/legacy-workbench/build_ipados_6g_packet.sh",
+      "sha256": "075b48adbbcd9fb66eef10d155e1a68458a6f673364be37bd69f00f945745edb"
+    },
+    {
+      "workbench_path": "edl_work/build_ipados_console_kernel.py",
+      "canonical_path": "tools/legacy-workbench/build_ipados_console_kernel.py",
+      "sha256": "b6ebb3445b5dac612691ca086343fa85ddf5a9bbaefdcd7cdba6abd6af87b0e7"
+    },
+    {
+      "workbench_path": "edl_work/build_ipados_root_writer.sh",
+      "canonical_path": "tools/legacy-workbench/build_ipados_root_writer.sh",
+      "sha256": "998f7813a533b8ef7126520f09204dbd3590ed930647bc6ee0fcd4f8ed389c0e"
+    },
+    {
+      "workbench_path": "edl_work/build_ipados_rootcheck_kernel.py",
+      "canonical_path": "tools/legacy-workbench/build_ipados_rootcheck_kernel.py",
+      "sha256": "5645b48faa79d13d8c17be86f89e188d7670c6f0a8719cacc07812373eba268e"
+    },
+    {
+      "workbench_path": "edl_work/build_kshim_rescue48.py",
+      "canonical_path": "tools/legacy-workbench/build_kshim_rescue48.py",
+      "sha256": "eabed436ca7cbe786ab5a0a29198174f7de5e825d99886dc3345c1b939ef6a8f"
+    },
+    {
+      "workbench_path": "edl_work/build_pinned_root_incremental.py",
+      "canonical_path": "tools/legacy-workbench/build_pinned_root_incremental.py",
+      "sha256": "137a0682040dc7a81ba51b8490ce4ef328e03fdfca6c1148dc4b209f93c180e6"
+    },
+    {
+      "workbench_path": "edl_work/build_preview_four_mac.py",
+      "canonical_path": "tools/legacy-workbench/build_preview_four_mac.py",
+      "sha256": "1d59e4449430422ef5915e46d1ebf37e328aacde3b9ce5ac75f577fff4be8ae4"
+    },
+    {
+      "workbench_path": "edl_work/build_rescue48.py",
+      "canonical_path": "tools/legacy-workbench/build_rescue48.py",
+      "sha256": "ffc462c7454f0ae9a893ac0d732437b1b6629e8e871140b824ca4f0bb03dc415"
+    },
+    {
+      "workbench_path": "edl_work/build_rescue_prototype.py",
+      "canonical_path": "tools/legacy-workbench/build_rescue_prototype.py",
+      "sha256": "a3757666edc0ab93d46ad6b77498da7901bf6cb2cb79e281bd58e1bbdc1f90ed"
+    },
+    {
+      "workbench_path": "edl_work/build_rootcheck_kernel.py",
+      "canonical_path": "tools/legacy-workbench/build_rootcheck_kernel.py",
+      "sha256": "77922197543437a6180d178e9ad63c15183b9f3404d4a0a47b673e2f9da69ee5"
+    },
+    {
+      "workbench_path": "edl_work/build_rootmatch_candidate.py",
+      "canonical_path": "tools/legacy-workbench/build_rootmatch_candidate.py",
+      "sha256": "73f8580e90941d3b14622d02d2780a5b647cdb5bc97b5832ad7378201a4b07de"
+    },
+    {
+      "workbench_path": "edl_work/build_smr_no_writeback.py",
+      "canonical_path": "tools/legacy-workbench/build_smr_no_writeback.py",
+      "sha256": "6c8425b7f200b6462b55d269ee4e27bbc25c22436a293fc48fd1502a6dce9a8b"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_chrono_wait.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_chrono_wait.py",
+      "sha256": "2ac8ce89cd78c4a6f798beaec295bc7fe75d1fedaf2df73bab13008f8ab6fb47"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_data_detail.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_data_detail.py",
+      "sha256": "97a3a4c8499670619dcfad9c646b74060480bd7325410be5b730691dd1419716"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_data_diag.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_data_diag.py",
+      "sha256": "39d1077ce40336c245c77a9ab215ecaa5adf52e2023bee0fab46888359ab3511"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_display.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_display.py",
+      "sha256": "21e26bfe39e6d54acdb53b0ec8ea43f6e41009ab37593dfb6fa4bc5002d107b2"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_display_preview.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_display_preview.py",
+      "sha256": "4f556fb2bd7da2a211f80814367084d92d82b669c525e7f05547cdaf4cfc5550"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_display_r2.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_display_r2.py",
+      "sha256": "02f4064c031de6339b19cb863f4b36d4fc10815569133a0aff91d0f7eddc9626"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_display_r3.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_display_r3.py",
+      "sha256": "2a94fd00abc4d4fcd735f5d1b848c5b8aee03d110782158cab0672eff1763bad"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_hid.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_hid.py",
+      "sha256": "96eb0bb14c74a3300cf742803bda913546503f95e6cb1e579a10083213bdf3f4"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_hid_preview.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_hid_preview.py",
+      "sha256": "c20027b1c416437e410cac9da6fb3784d0f33653bf5d17b864b765de43f6e84e"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_incremental.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_incremental.py",
+      "sha256": "b5cbc47c691eae5b6398e8de6c4f494477408fb431b43353e982f86d35eab8cc"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_key_events.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_key_events.py",
+      "sha256": "430cb91c114b5cc58c385e612a0524a8f59f7687862fb4bf7b9c87541382b842"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_key_events_recheck.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_key_events_recheck.py",
+      "sha256": "a25faa6afa41f322d39def01b4d83ab6de49ddc34d6e92b4de2dd0b06bd628fe"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_key_state.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_key_state.py",
+      "sha256": "f77aa646a3f7db844e2c9f225ddae7e74b672f5f4cd3bc23d2e40a6c6107c867"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_persistent_foundation.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_persistent_foundation.py",
+      "sha256": "c79011f7e5ddcf9860311ed3fee90bb5653429c9adf9c2c95ab0e8297076e371"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_power_inspect.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_power_inspect.py",
+      "sha256": "b57dd8864b30cbb253e7745fa35cbfad689971a8be75933584034cac4642eecb"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_power_runtime.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_power_runtime.py",
+      "sha256": "b6333743c333d9ca7c3e047cf05a4a3e41863a329159364678f8d789d7b8475c"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_r2_incremental.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_r2_incremental.py",
+      "sha256": "dcfc460697ae9fbb0227bae23b9a5a69f4d22db174af56d720e3a09203e7cab5"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_r3_incremental.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_r3_incremental.py",
+      "sha256": "79db14def8739984fac20fbdc01232ab07302c4d5b1b76d80f69802f1972a30c"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_r4_incremental.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_r4_incremental.py",
+      "sha256": "d9c79cf17a763a0e1af81676de574e1db2a6547cba0bff2de0dd562bd2ed3ec6"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_ramblock.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_ramblock.py",
+      "sha256": "d01b9f85852a0a40c38b5d44f0e2a5bef923a2104b2d19f789e3ba8c22c8b852"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_recovery.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_recovery.py",
+      "sha256": "d03c80db0523085cc42f00a9b0a06267849b1b282c7ec0f7b8cc6ddb7a7bca07"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_recovery_r2.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_recovery_r2.py",
+      "sha256": "7b292d152e8d29bb402858a3ebf616ce7e1080015bf848e46f61e3bf9d9cc16e"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_sdam_recovery.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_sdam_recovery.py",
+      "sha256": "db47380360252b9004dbfb740276277f9d745c13122b02982c0a40b2be910909"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_sdam_rpc.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_sdam_rpc.py",
+      "sha256": "1371035ee82d8bb5e70181d97b36b20a2daa2587c2205c90643a6afb0ad28557"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_services.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_services.py",
+      "sha256": "e8ee732294acd593c94ed0bbfd3d300996c6ae1ade2ebda4031b31edda81217c"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_spmi_probe.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_spmi_probe.py",
+      "sha256": "f67929b08b4129454d66d47fa1c839ee774c755313e7b106f31bceef84f00e14"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_touch_inspect.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_touch_inspect.py",
+      "sha256": "6bacaf5dcc8a9aa3be8b886c92965709b59eaed8c9f2bda7374c87bec8f08c67"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_touch_runtime.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_touch_runtime.py",
+      "sha256": "25b5f59522484f48ebcc1905ac227f085cab16d71cf4b3132a15ab1a30b86317"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_ucsi_powerinputs.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_ucsi_powerinputs.py",
+      "sha256": "b72ba1f546bff63adba78c7babec9e755e994601ee083efba18a629a570cd33f"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_ucsi_query.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_ucsi_query.py",
+      "sha256": "b2bd5e9414612f1c3b837b357a96772a61115bd7866d76a9e531300ebae8633c"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_userfault_meta.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_userfault_meta.py",
+      "sha256": "eefa46228998d6f4b1e028c8ab2b6fb40d82075ce749c6fa6097f7a9d7d179ea"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_userwait.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_userwait.py",
+      "sha256": "8af05254510df40975934702eca075e15524347748c00bdb5c00f3ecb4cdb66b"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_watchdog.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_watchdog.py",
+      "sha256": "c4ef3c140f0bd76be7468ab37d5be0ec794f9ff650ce530297157e06dc428a5e"
+    },
+    {
+      "workbench_path": "edl_work/build_startup_wcn7861.py",
+      "canonical_path": "tools/legacy-workbench/build_startup_wcn7861.py",
+      "sha256": "88abdda021e529f4678e82ebb14098feee29da46c2c290f18c255fd7b2996bf6"
+    },
+    {
+      "workbench_path": "edl_work/build_usb_root_incremental.py",
+      "canonical_path": "tools/legacy-workbench/build_usb_root_incremental.py",
+      "sha256": "fcfc73f51f9b40dce4b4c9bb00373ccd44e729f87b9b005fe4e44c1a38d7ad26"
+    },
+    {
+      "workbench_path": "edl_work/build_wcn_power.py",
+      "canonical_path": "tools/legacy-workbench/build_wcn_power.py",
+      "sha256": "15537f6d1e7db70d8e01d19e78993b528da44aa5b3e4b535b11245d138e41f9c"
+    },
+    {
+      "workbench_path": "edl_work/build_wcn_power_final.py",
+      "canonical_path": "tools/legacy-workbench/build_wcn_power_final.py",
+      "sha256": "fb4545b1aa12695668385b6542a13d38afd376065a280d1f4277afd762a515ee"
+    },
+    {
+      "workbench_path": "edl_work/build_wcn_uart.py",
+      "canonical_path": "tools/legacy-workbench/build_wcn_uart.py",
+      "sha256": "7fee99821dde16f18e2ffff836eae67578a8091ff0126f5674d51ce76f7c79bb"
+    },
+    {
+      "workbench_path": "edl_work/build_wfe_counter_fix.sh",
+      "canonical_path": "tools/legacy-workbench/build_wfe_counter_fix.sh",
+      "sha256": "4f864b4958fcfa9f4b8b9440eed2df161f3bd7859bd16a0217afd7d14a73a41c"
+    },
+    {
+      "workbench_path": "edl_work/capture_cpu_inputs_mac.py",
+      "canonical_path": "tools/legacy-workbench/capture_cpu_inputs_mac.py",
+      "sha256": "3f6296524d58b2aeaca7cf892ad5c503f61c7f14144702a2693cadd8f9d6271c"
+    },
+    {
+      "workbench_path": "edl_work/capture_stock_adc.py",
+      "canonical_path": "tools/legacy-workbench/capture_stock_adc.py",
+      "sha256": "7778cdf12527226034441a5b340c33315d497c1fcf5129aee1a140da1e780abe"
+    },
+    {
+      "workbench_path": "edl_work/capture_stock_backlight.py",
+      "canonical_path": "tools/legacy-workbench/capture_stock_backlight.py",
+      "sha256": "699569b6d2e51106f697ada5599cdffd97f0c0f2e3a1fad5a7d4b40be291b972"
+    },
+    {
+      "workbench_path": "edl_work/capture_stock_pd_contract.py",
+      "canonical_path": "tools/legacy-workbench/capture_stock_pd_contract.py",
+      "sha256": "6796be8ef1f49934137621e5a6c10eb57ba2a0333908112617dcd443f8c2d54a"
+    },
+    {
+      "workbench_path": "edl_work/capture_stock_watchdog.py",
+      "canonical_path": "tools/legacy-workbench/capture_stock_watchdog.py",
+      "sha256": "73fb48fa28168f3eca4687c706a0864f0518643d6f84a28e4bbf0734b0946ee3"
+    },
+    {
+      "workbench_path": "edl_work/characterize_charge_disable.py",
+      "canonical_path": "tools/legacy-workbench/characterize_charge_disable.py",
+      "sha256": "32a1be450228eaf6a4a3744ab49ca0492d62481d582a4270a374ee6df2a44388"
+    },
+    {
+      "workbench_path": "edl_work/characterize_protection_window.py",
+      "canonical_path": "tools/legacy-workbench/characterize_protection_window.py",
+      "sha256": "cdf68bcd51422a9857de33f9f5195956f0428b1bd3d73cb814322525cc21bc45"
+    },
+    {
+      "workbench_path": "edl_work/check_menu_policy_negative.py",
+      "canonical_path": "tools/legacy-workbench/check_menu_policy_negative.py",
+      "sha256": "1680a48b0c79304fd2e403405fa865f9953aa4d291bc893be16c8c08837de5b6"
+    },
+    {
+      "workbench_path": "edl_work/check_prerequisites.py",
+      "canonical_path": "tools/legacy-workbench/check_prerequisites.py",
+      "sha256": "10b2c476c5c1bd1f8c587001b1de26ec6a84f36ea53f8e0904fea0f818990f45"
+    },
+    {
+      "workbench_path": "edl_work/check_stock_adsp.c",
+      "canonical_path": "tools/legacy-workbench/check_stock_adsp.c",
+      "sha256": "861e48e38ea0eadd3bd3033335181f8f8eefa3d7f552582c2ed42135b6707b30"
+    },
+    {
+      "workbench_path": "edl_work/collect_evening_evidence.py",
+      "canonical_path": "tools/legacy-workbench/collect_evening_evidence.py",
+      "sha256": "845c095719098867062ce83573f971701f7d4a8ad5ad6506e52c67771113b32a"
+    },
+    {
+      "workbench_path": "edl_work/collect_power_evidence.py",
+      "canonical_path": "tools/legacy-workbench/collect_power_evidence.py",
+      "sha256": "c584fef36c2a6c717792405ba1fd40adf4ea641625a10379d06740f945e1ae06"
+    },
+    {
+      "workbench_path": "edl_work/compare_hid_upstream.py",
+      "canonical_path": "tools/legacy-workbench/compare_hid_upstream.py",
+      "sha256": "890d4f6a44f4fd0c778f681e810459e63809f99b9c582f7d79c8e1b090512740"
+    },
+    {
+      "workbench_path": "edl_work/compile_adsp_qmp_broker_mac.py",
+      "canonical_path": "tools/legacy-workbench/compile_adsp_qmp_broker_mac.py",
+      "sha256": "f7812c22b9dbb52d03a2adbfd5d9a6320eb8d849422d50b773dc5ae21924bfd2"
+    },
+    {
+      "workbench_path": "edl_work/compile_backlight_runtime_mac.py",
+      "canonical_path": "tools/legacy-workbench/compile_backlight_runtime_mac.py",
+      "sha256": "a9bcddbeb5b2d8ee91b4a790770c0c03cfc68a923f0d3039439da7406892fe20"
+    },
+    {
+      "workbench_path": "edl_work/compile_battery_runtime_mac.py",
+      "canonical_path": "tools/legacy-workbench/compile_battery_runtime_mac.py",
+      "sha256": "fedf8269ed0e1caf7722fe872866a17ff68efe6af87565fa23a9463f1c4c6fed"
+    },
+    {
+      "workbench_path": "edl_work/compile_bt_completion_mac.py",
+      "canonical_path": "tools/legacy-workbench/compile_bt_completion_mac.py",
+      "sha256": "25b401e24bc10c1b42926bb66c6da44815e731563543de7aa3889cad24f79034"
+    },
+    {
+      "workbench_path": "edl_work/compile_cpu_activation_mac.py",
+      "canonical_path": "tools/legacy-workbench/compile_cpu_activation_mac.py",
+      "sha256": "c668a34a8a1f303f0804c292855c9f866550e6ab81a1e8d534a106f126c20f32"
+    },
+    {
+      "workbench_path": "edl_work/compile_cpu_affinity_mac.py",
+      "canonical_path": "tools/legacy-workbench/compile_cpu_affinity_mac.py",
+      "sha256": "8cc8d5a5402ee59c3cdcdf80d8dbd70f464565658924896eb7a855a00e337fcd"
+    },
+    {
+      "workbench_path": "edl_work/compile_cpu_mmio_mac.py",
+      "canonical_path": "tools/legacy-workbench/compile_cpu_mmio_mac.py",
+      "sha256": "d50072ef2b8d9a8dfc3c53a5e1ebecbbd35af9ab073137184c45ddc6f3adb34c"
+    },
+    {
+      "workbench_path": "edl_work/compile_icon_cpu_mac.py",
+      "canonical_path": "tools/legacy-workbench/compile_icon_cpu_mac.py",
+      "sha256": "51ed99249a9cd332fd1aa23ff6604c24c79f73f896e9a283b630223b4e2f2f93"
+    },
+    {
+      "workbench_path": "edl_work/compile_icon_dependency_library_mac.py",
+      "canonical_path": "tools/legacy-workbench/compile_icon_dependency_library_mac.py",
+      "sha256": "345c49954beb63850cc3f0e9d5db441fe50cdec1000fc1c39543393d58474c9b"
+    },
+    {
+      "workbench_path": "edl_work/compile_qemu_fixture.py",
+      "canonical_path": "tools/legacy-workbench/compile_qemu_fixture.py",
+      "sha256": "c3b6bd7a327deb56d0d919bc7ae4ae8761388abd90577bfc033f5fb8e57e1537"
+    },
+    {
+      "workbench_path": "edl_work/compile_touch_dma_core_mac.py",
+      "canonical_path": "tools/legacy-workbench/compile_touch_dma_core_mac.py",
+      "sha256": "e22b3a7312a4bcaabe8284fa911796e37b625729b00b2cfcfb3bfaa760fe50bc"
+    },
+    {
+      "workbench_path": "edl_work/compile_touch_dma_native_mac.py",
+      "canonical_path": "tools/legacy-workbench/compile_touch_dma_native_mac.py",
+      "sha256": "42051032d01959b2b107d41ef47b2465abe4112d2d649d00c1638cc434fa4c97"
+    },
+    {
+      "workbench_path": "edl_work/compile_vdog_mac.py",
+      "canonical_path": "tools/legacy-workbench/compile_vdog_mac.py",
+      "sha256": "eb63df0e24c55570dc6b8aedde8882d5d843962eb6c14b64639e6574baa85238"
+    },
+    {
+      "workbench_path": "edl_work/compress_rescue_assets.py",
+      "canonical_path": "tools/legacy-workbench/compress_rescue_assets.py",
+      "sha256": "c9fcf0e2754ff6234479c48e4ecef849d2cd61f612928fc27b8c0c713ca36ae5"
+    },
+    {
+      "workbench_path": "edl_work/compress_rescue_macos.py",
+      "canonical_path": "tools/legacy-workbench/compress_rescue_macos.py",
+      "sha256": "4f79b3b68a9baa671c5f7d8f75c77bef1c216d257bef61f36573b02646f67cd4"
+    },
+    {
+      "workbench_path": "edl_work/cpu_guard_qualification.py",
+      "canonical_path": "tools/legacy-workbench/cpu_guard_qualification.py",
+      "sha256": "2df995a7ce485178255c084acadfa36d934bbf59bd732d8ae29f973de821f5e1"
+    },
+    {
+      "workbench_path": "edl_work/dc_native_qualification.py",
+      "canonical_path": "tools/legacy-workbench/dc_native_qualification.py",
+      "sha256": "cc6171d361e39e02b19510cdecf8d43309a868edfd5100b259ad5261998b8fc2"
+    },
+    {
+      "workbench_path": "edl_work/dc_noop_qualification.py",
+      "canonical_path": "tools/legacy-workbench/dc_noop_qualification.py",
+      "sha256": "9a8dff3d704d5cff34014c9de24e213381c451acf69f4053d02638b7b9313416"
+    },
+    {
+      "workbench_path": "edl_work/debug_cycle_gate.py",
+      "canonical_path": "tools/legacy-workbench/debug_cycle_gate.py",
+      "sha256": "2deefca70621327c696da5813ed9a7bcd3003c89bacc3274681d5c1e7bd8faf6"
+    },
+    {
+      "workbench_path": "edl_work/decode_charger_ulog.py",
+      "canonical_path": "tools/legacy-workbench/decode_charger_ulog.py",
+      "sha256": "7043f7ea3eae7713959a28ff091e01258b8e60b658d0f93a488e3a62dd2d368c"
+    },
+    {
+      "workbench_path": "edl_work/decode_display_mode.py",
+      "canonical_path": "tools/legacy-workbench/decode_display_mode.py",
+      "sha256": "853f1eaf8b4fee2890771c4a0fe9c839b7add5581b622e1f7cbc0ee0f5a81633"
+    },
+    {
+      "workbench_path": "edl_work/decode_frame_preview.py",
+      "canonical_path": "tools/legacy-workbench/decode_frame_preview.py",
+      "sha256": "ec852f1539d90e04d22b4567cd52a8523795712a4dd79427cbbe41a533b2df3a"
+    },
+    {
+      "workbench_path": "edl_work/decode_statusbar_preview.py",
+      "canonical_path": "tools/legacy-workbench/decode_statusbar_preview.py",
+      "sha256": "fbf2bfe3b6230c6bde38bdaef66a8d4f87557e1d199c49b9bdb73da8321e05d3"
+    },
+    {
+      "workbench_path": "edl_work/device_target.py",
+      "canonical_path": "tools/legacy-workbench/device_target.py",
+      "sha256": "180c1abcce996ca9346b60bd4bddf41614b0ec74b0d7d755b3c3fb3eb4168c07"
+    },
+    {
+      "workbench_path": "edl_work/do_reset.bat",
+      "canonical_path": "tools/legacy-workbench/do_reset.bat",
+      "sha256": "3e8c14bcb9c923da48b4d37b269a06bce68d2f0fe6384b8e69eb461950eef9ba"
+    },
+    {
+      "workbench_path": "edl_work/elden_usb_console.py",
+      "canonical_path": "tools/legacy-workbench/elden_usb_console.py",
+      "sha256": "0d368d4e19a0341289983885ecf75e6d75e7bcb6a74a8c5bf11ad246897bb2f0"
+    },
+    {
+      "workbench_path": "edl_work/emulate_old_debug_assert.py",
+      "canonical_path": "tools/legacy-workbench/emulate_old_debug_assert.py",
+      "sha256": "a3e01dd648a8d822abad311bb641919b4e1b0e48142b391067307dac0b23d5bf"
+    },
+    {
+      "workbench_path": "edl_work/export_basic_bundle_mac.py",
+      "canonical_path": "tools/legacy-workbench/export_basic_bundle_mac.py",
+      "sha256": "5b92fcb3a7dd467e440ed3e01cdbd88a80f34b6adde740f6ad0410a862d7d81c"
+    },
+    {
+      "workbench_path": "edl_work/export_battery_telemetry_mac.py",
+      "canonical_path": "tools/legacy-workbench/export_battery_telemetry_mac.py",
+      "sha256": "53b1ba2abf3cca0709422dcb8ae84a8dcd64e1dc508aecac889d5eb3d0a85bf2"
+    },
+    {
+      "workbench_path": "edl_work/export_bt_native_mac.py",
+      "canonical_path": "tools/legacy-workbench/export_bt_native_mac.py",
+      "sha256": "eabea35a4d7f050416943c16b1a27c376c03ec4b1530d835da82f02a45e08cf6"
+    },
+    {
+      "workbench_path": "edl_work/export_cpu_full_mac.py",
+      "canonical_path": "tools/legacy-workbench/export_cpu_full_mac.py",
+      "sha256": "b22c2df241ddc78bc20ca63ee978117a40c91ad8390dd05d21b5d483685bf84d"
+    },
+    {
+      "workbench_path": "edl_work/export_cpu_guard_mac.py",
+      "canonical_path": "tools/legacy-workbench/export_cpu_guard_mac.py",
+      "sha256": "b11ea7c1561b8414063676f0707f925f9bb8d32c80098a9452eb40d05b258ec2"
+    },
+    {
+      "workbench_path": "edl_work/export_wcn_hci_mac.py",
+      "canonical_path": "tools/legacy-workbench/export_wcn_hci_mac.py",
+      "sha256": "c1a79a9b4fd0be404255266306d0cac0137078f80056d9202c0486a427ea797c"
+    },
+    {
+      "workbench_path": "edl_work/export_wcn_power_final_mac.py",
+      "canonical_path": "tools/legacy-workbench/export_wcn_power_final_mac.py",
+      "sha256": "df022617146257cb4a06c48e05f9321a89c90e5affa385dce6cd5b786f8206f1"
+    },
+    {
+      "workbench_path": "edl_work/export_wcn_power_mac.py",
+      "canonical_path": "tools/legacy-workbench/export_wcn_power_mac.py",
+      "sha256": "b18cd131fd13569343688bd7e6d7d0b61a21b262227407c1ac05c01d0c58d092"
+    },
+    {
+      "workbench_path": "edl_work/export_wcn_uart_mac.py",
+      "canonical_path": "tools/legacy-workbench/export_wcn_uart_mac.py",
+      "sha256": "33bc1e5cd226a68c828e634b694b72d82ec1108ffeeea1c13f30852b172f1806"
+    },
+    {
+      "workbench_path": "edl_work/extract_accepted_darwinboot.py",
+      "canonical_path": "tools/legacy-workbench/extract_accepted_darwinboot.py",
+      "sha256": "858045af3fdffd499abf00c25f09912b65dc97493f3eb7dc1910a2cb494f46b6"
+    },
+    {
+      "workbench_path": "edl_work/extract_accepted_unixnu.py",
+      "canonical_path": "tools/legacy-workbench/extract_accepted_unixnu.py",
+      "sha256": "f443cd404b4615c9d4399a79ba78dd49b8ea9e32a39caf105ebd10883d282fd6"
+    },
+    {
+      "workbench_path": "edl_work/extract_graphic_variant_abi_mac.py",
+      "canonical_path": "tools/legacy-workbench/extract_graphic_variant_abi_mac.py",
+      "sha256": "7db1b74bbdb792e4320efabfd1a27bac0e7de5a18032381eab464c22e21fb5f9"
+    },
+    {
+      "workbench_path": "edl_work/extract_icon_fault_chains.py",
+      "canonical_path": "tools/legacy-workbench/extract_icon_fault_chains.py",
+      "sha256": "f0094ef9a93f11fe46227ef43d2af4d3ad36af99b2323a7fc4c13e8df958246c"
+    },
+    {
+      "workbench_path": "edl_work/extract_root_apfs.py",
+      "canonical_path": "tools/legacy-workbench/extract_root_apfs.py",
+      "sha256": "80045022bd4b9f6ca5f14b89f5eea8f2bf1eaa31940fc8625f5833c9ec089dfe"
+    },
+    {
+      "workbench_path": "edl_work/extract_wait_samples.py",
+      "canonical_path": "tools/legacy-workbench/extract_wait_samples.py",
+      "sha256": "fb4897cb9e18200f74381fe71d73da7e29c473a8f9e592f774d2ccaaa2a64a81"
+    },
+    {
+      "workbench_path": "edl_work/f2fs_resize_probe.c",
+      "canonical_path": "tools/legacy-workbench/f2fs_resize_probe.c",
+      "sha256": "0808784ef3ed5ec28a1566f04c4375f2b7439f99054d17ce68aaecc7e75d99ec"
+    },
+    {
+      "workbench_path": "edl_work/f2fs_shrink_plan.py",
+      "canonical_path": "tools/legacy-workbench/f2fs_shrink_plan.py",
+      "sha256": "07fe5ea751e5677d3af9b0ca8f7238e4592c6b6ca40da6d92710a5ca22244e56"
+    },
+    {
+      "workbench_path": "edl_work/fdt_memory_plan.py",
+      "canonical_path": "tools/legacy-workbench/fdt_memory_plan.py",
+      "sha256": "828003427de65540321c3ad639d34f0183fc3493dadb2b28e8f0c44791093ed1"
+    },
+    {
+      "workbench_path": "edl_work/fetch_root_inputs.py",
+      "canonical_path": "tools/legacy-workbench/fetch_root_inputs.py",
+      "sha256": "8ecec715bb6fc383595a8cd2b39008b3bd745428929e7030e96574c4b6056903"
+    },
+    {
+      "workbench_path": "edl_work/finalize_cpu_kernel_mac.py",
+      "canonical_path": "tools/legacy-workbench/finalize_cpu_kernel_mac.py",
+      "sha256": "edce80cb1243100f8722078d3f5162b63046ed9f4d92722da68bbdb3c66ec5dc"
+    },
+    {
+      "workbench_path": "edl_work/finalize_icon_bundle_mac.py",
+      "canonical_path": "tools/legacy-workbench/finalize_icon_bundle_mac.py",
+      "sha256": "a23c2270bc08dd8d77f458088dcff5d165f77c050061901fd0ef0295b0a8b906"
+    },
+    {
+      "workbench_path": "edl_work/firehose_cli.py",
+      "canonical_path": "tools/legacy-workbench/firehose_cli.py",
+      "sha256": "05a0c5604d7d9ea0f0c898a3c9cfed44cbcd0d6143c537777864e46e5aa12dba"
+    },
+    {
+      "workbench_path": "edl_work/firehose_transport.py",
+      "canonical_path": "tools/legacy-workbench/firehose_transport.py",
+      "sha256": "4efbc455328f469aebabb068e82a435ae25118de489dc6a715eadf3da6962610"
+    },
+    {
+      "workbench_path": "edl_work/flash_adb.py",
+      "canonical_path": "tools/legacy-workbench/flash_adb.py",
+      "sha256": "d2d6717b83a7a9b4afc87278bdbb1732801306bd6e16bc824c29ae8853513a8b"
+    },
+    {
+      "workbench_path": "edl_work/flash_verified_boot.py",
+      "canonical_path": "tools/legacy-workbench/flash_verified_boot.py",
+      "sha256": "e82b746743c29470e928f42313d45b8dc7a4aa4b5ef5a4705d0fee1b336f2976"
+    },
+    {
+      "workbench_path": "edl_work/freeze_gui_baseline.py",
+      "canonical_path": "tools/legacy-workbench/freeze_gui_baseline.py",
+      "sha256": "feed787601cc9ab207e303e1d9c1195c79f4a38f3ff9488f8bde917d35430cd0"
+    },
+    {
+      "workbench_path": "edl_work/freeze_settings_v91.py",
+      "canonical_path": "tools/legacy-workbench/freeze_settings_v91.py",
+      "sha256": "3d0cea0a8768933436a850619e92700572547e458e469d257f2ba34348b40471"
+    },
+    {
+      "workbench_path": "edl_work/gpio_route_probe.c",
+      "canonical_path": "tools/legacy-workbench/gpio_route_probe.c",
+      "sha256": "2d624779c07194a901b40c644a22663d03ad71e77faa3575f788dfdb4eef192d"
+    },
+    {
+      "workbench_path": "edl_work/gpio_route_pulse.c",
+      "canonical_path": "tools/legacy-workbench/gpio_route_pulse.c",
+      "sha256": "61fa90cb97d097551e10937f688dbcca12209d6230e8cc4f1f1caf63d02eecd1"
+    },
+    {
+      "workbench_path": "edl_work/gpt_attr_fix.py",
+      "canonical_path": "tools/legacy-workbench/gpt_attr_fix.py",
+      "sha256": "28ab6a7cc6941907f1eef1ffcc3d46545958ec827e326d58af699aa8a46a4474"
+    },
+    {
+      "workbench_path": "edl_work/harvest_wifi_inputs.py",
+      "canonical_path": "tools/legacy-workbench/harvest_wifi_inputs.py",
+      "sha256": "3f113e0d081bcafb932cab5bbff13be3257843349944c69879b07f50f1fa50a9"
+    },
+    {
+      "workbench_path": "edl_work/icl_route_hold.c",
+      "canonical_path": "tools/legacy-workbench/icl_route_hold.c",
+      "sha256": "61cd4a46b5f60191805c28c507ebb9ab0b474f15d2f38db2470148b056637621"
+    },
+    {
+      "workbench_path": "edl_work/icl_route_pulse.c",
+      "canonical_path": "tools/legacy-workbench/icl_route_pulse.c",
+      "sha256": "f731967faa21939d397c98a257f0ec36f1fc07f32b39a1fa5fbea07dd14a5242"
+    },
+    {
+      "workbench_path": "edl_work/icon_cpu_qualification.py",
+      "canonical_path": "tools/legacy-workbench/icon_cpu_qualification.py",
+      "sha256": "4351a3baeeb5cc3f125a8a3e92a7240131cde23ee68fc748cc686dcbc793a898"
+    },
+    {
+      "workbench_path": "edl_work/icon_cpu_trust.py",
+      "canonical_path": "tools/legacy-workbench/icon_cpu_trust.py",
+      "sha256": "4b247da8f839bbeb2b5b0d526a23dd857fe4d94ffaab3fae8441a997458f755e"
+    },
+    {
+      "workbench_path": "edl_work/icon_dependency_qualification.py",
+      "canonical_path": "tools/legacy-workbench/icon_dependency_qualification.py",
+      "sha256": "9da76b3f2727d1b11403ad8ea191fa8901f349f1b724c65a37960e59fac92201"
+    },
+    {
+      "workbench_path": "edl_work/import_ufs_core.py",
+      "canonical_path": "tools/legacy-workbench/import_ufs_core.py",
+      "sha256": "fcfd48c4f5703a8691823e3daae53094373de0eba44c3bc658f23c47628096dd"
+    },
+    {
+      "workbench_path": "edl_work/inspect_console_mapping_mac.py",
+      "canonical_path": "tools/legacy-workbench/inspect_console_mapping_mac.py",
+      "sha256": "b827fa28ebbe49a488d42814166f5a80b645119321b51a48e923a6c75386fff9"
+    },
+    {
+      "workbench_path": "edl_work/inspect_coreui_vector.py",
+      "canonical_path": "tools/legacy-workbench/inspect_coreui_vector.py",
+      "sha256": "995fb2bb9de19e454eff2d78b63d55b1dd3580c122056a1d2d0dc108e2ef7982"
+    },
+    {
+      "workbench_path": "edl_work/inspect_preview_symbols_mac.py",
+      "canonical_path": "tools/legacy-workbench/inspect_preview_symbols_mac.py",
+      "sha256": "f01ba1bc144d958cb32f68aee84d42342e5bee1d03f2e0f74e921e46ac1f4710"
+    },
+    {
+      "workbench_path": "edl_work/inspect_root_images_macos.py",
+      "canonical_path": "tools/legacy-workbench/inspect_root_images_macos.py",
+      "sha256": "55342048d64ab47a07981d7e433c9405b781db5c157f56242d22005146d5f91f"
+    },
+    {
+      "workbench_path": "edl_work/install_bt_native_mac.py",
+      "canonical_path": "tools/legacy-workbench/install_bt_native_mac.py",
+      "sha256": "378719fa4d101ccc6ee4622a63b9677cc014957c65fc1fa19ff1aa0b8f1ac6d4"
+    },
+    {
+      "workbench_path": "edl_work/install_ipados_root.py",
+      "canonical_path": "tools/legacy-workbench/install_ipados_root.py",
+      "sha256": "6cd84329ec8d711d79d9b26eeb5a81bf9ba179709a092499a737f4b5e3b79d32"
+    },
+    {
+      "workbench_path": "edl_work/install_ipados_root_chunks.py",
+      "canonical_path": "tools/legacy-workbench/install_ipados_root_chunks.py",
+      "sha256": "68c9991019008b2e23dfdea7ec4ccfb4f224b654fc52285a74661103d57a7ecf"
+    },
+    {
+      "workbench_path": "edl_work/install_ipados_root_raw.py",
+      "canonical_path": "tools/legacy-workbench/install_ipados_root_raw.py",
+      "sha256": "56ec982c84f701498da870a54dd46649ac10c98749805f67d2e4f85239b639bc"
+    },
+    {
+      "workbench_path": "edl_work/install_ui_dispatch_scalar_mac.py",
+      "canonical_path": "tools/legacy-workbench/install_ui_dispatch_scalar_mac.py",
+      "sha256": "56599d9a818568dd5ae565498161ea3d87f55974bfd8f12d870618e486068400"
+    },
+    {
+      "workbench_path": "edl_work/install_wcn_hci_mac.py",
+      "canonical_path": "tools/legacy-workbench/install_wcn_hci_mac.py",
+      "sha256": "970659993357c817e772fb30a8cfe70806d40ac328080e964d515609c527178d"
+    },
+    {
+      "workbench_path": "edl_work/install_wcn_power_mac.py",
+      "canonical_path": "tools/legacy-workbench/install_wcn_power_mac.py",
+      "sha256": "b8b3e3ecaa71cfba0b51538d921c86501fbabead90e419925e296b981095c497"
+    },
+    {
+      "workbench_path": "edl_work/install_wcn_uart_mac.py",
+      "canonical_path": "tools/legacy-workbench/install_wcn_uart_mac.py",
+      "sha256": "422a092e02cf790461c1fb645072ba45a764a425c33592644b7b1b647287c349"
+    },
+    {
+      "workbench_path": "edl_work/inventory_runtime_blockers.py",
+      "canonical_path": "tools/legacy-workbench/inventory_runtime_blockers.py",
+      "sha256": "5809b2f97470cb94d84dbb2f044c6b9053ed9576ca520023b614f20a38502c0f"
+    },
+    {
+      "workbench_path": "edl_work/kshim_dt_read.py",
+      "canonical_path": "tools/legacy-workbench/kshim_dt_read.py",
+      "sha256": "1dba28854e1eea5a667d5568ec39877f11b4f6e3e5370f3f6d7c0f71244b7cf5"
+    },
+    {
+      "workbench_path": "edl_work/make_arm_io_adt_variant.py",
+      "canonical_path": "tools/legacy-workbench/make_arm_io_adt_variant.py",
+      "sha256": "997a7012d1f6b4be5d0d3e0f944a7937314d89e9cdec46a099c396f404c2298b"
+    },
+    {
+      "workbench_path": "edl_work/make_armada_part.py",
+      "canonical_path": "tools/legacy-workbench/make_armada_part.py",
+      "sha256": "94abf2e87c4fbf1d6a09a594cdc7b42a611895e45044d421e5db301d272eb540"
+    },
+    {
+      "workbench_path": "edl_work/make_console_source_patch.py",
+      "canonical_path": "tools/legacy-workbench/make_console_source_patch.py",
+      "sha256": "4ae668f622ed1dbdb4ff32a5062cf0e4f27af3465f806e439db0a5b5d80bb8dc"
+    },
+    {
+      "workbench_path": "edl_work/make_storage_lifecycle_patch.py",
+      "canonical_path": "tools/legacy-workbench/make_storage_lifecycle_patch.py",
+      "sha256": "45d5b0922416be56aebf1ff249ead4b8125af33005954c0e45e9e1c0a5eea80f"
+    },
+    {
+      "workbench_path": "edl_work/make_ufs_root_patch.py",
+      "canonical_path": "tools/legacy-workbench/make_ufs_root_patch.py",
+      "sha256": "d5373224bbdbc80885b0d4b9264ee42f533be64a4b9d93b96338aa3655e1aad4"
+    },
+    {
+      "workbench_path": "edl_work/make_unixnu_part.py",
+      "canonical_path": "tools/legacy-workbench/make_unixnu_part.py",
+      "sha256": "b3d53d6db92e6d1085aea3b8e46c48c489417b1df83cac2fffc824ede19a509f"
+    },
+    {
+      "workbench_path": "edl_work/map_icon_context_callers.py",
+      "canonical_path": "tools/legacy-workbench/map_icon_context_callers.py",
+      "sha256": "1577b5b03dac45615acfc51378eb3b54d888b33f3ee7a79221111ea05e36eca7"
+    },
+    {
+      "workbench_path": "edl_work/minifh.py",
+      "canonical_path": "tools/legacy-workbench/minifh.py",
+      "sha256": "43cbd67eae6382a14c6671f061f67cc7a9bea77fd419ac7f723c1daaa8c4f8cb"
+    },
+    {
+      "workbench_path": "edl_work/nop.bat",
+      "canonical_path": "tools/legacy-workbench/nop.bat",
+      "sha256": "5e766b93fe2e5dba6a8fec8220d9982cb7e80c37637b98e13db67784e45610bf"
+    },
+    {
+      "workbench_path": "edl_work/observe_storage_class.py",
+      "canonical_path": "tools/legacy-workbench/observe_storage_class.py",
+      "sha256": "e3d2e09cb6a525e59d9e4d0f8ab92690cc88ff0fd55b330dd9d85b603d082f6a"
+    },
+    {
+      "workbench_path": "edl_work/pack_ram_data.py",
+      "canonical_path": "tools/legacy-workbench/pack_ram_data.py",
+      "sha256": "5eeefeb3c802b4047145a983a638468c5acb021d659b3e9f268ef1e45a1ac4f5"
+    },
+    {
+      "workbench_path": "edl_work/package_basic_bundle.py",
+      "canonical_path": "tools/legacy-workbench/package_basic_bundle.py",
+      "sha256": "287f453a7c40bb6c54db25f736da71c692437fd326a7fd9665a0037de0a56198"
+    },
+    {
+      "workbench_path": "edl_work/package_battery_telemetry.py",
+      "canonical_path": "tools/legacy-workbench/package_battery_telemetry.py",
+      "sha256": "d4d81dd30a47fc225b8671bfdd7927bc916700a85c9d32baf131ea423b5ec420"
+    },
+    {
+      "workbench_path": "edl_work/package_bt_native.py",
+      "canonical_path": "tools/legacy-workbench/package_bt_native.py",
+      "sha256": "0c0ae951bbbed7c8859c76028ffa68afbf4d8b71097cab9661c89626fc68146d"
+    },
+    {
+      "workbench_path": "edl_work/package_chrono_wait.py",
+      "canonical_path": "tools/legacy-workbench/package_chrono_wait.py",
+      "sha256": "31b7450621bb38790389abbafd4db1d65bedbfb7685b4f0fa776fbfbf6f15a4e"
+    },
+    {
+      "workbench_path": "edl_work/package_data_detail.py",
+      "canonical_path": "tools/legacy-workbench/package_data_detail.py",
+      "sha256": "241757c53349f60307cd3763171a8a90b0f39f6415dc44332e1d9c472d2ca504"
+    },
+    {
+      "workbench_path": "edl_work/package_data_diag.py",
+      "canonical_path": "tools/legacy-workbench/package_data_diag.py",
+      "sha256": "2610b7a8b22fa8905212ba05bdf2d4f34f808f4593edb1170401eac569e52c64"
+    },
+    {
+      "workbench_path": "edl_work/package_display.py",
+      "canonical_path": "tools/legacy-workbench/package_display.py",
+      "sha256": "e9412f8954b3d38fcbfa2092c5531151d946925a1b452fc3358ee156b47f35f7"
+    },
+    {
+      "workbench_path": "edl_work/package_display_preview.py",
+      "canonical_path": "tools/legacy-workbench/package_display_preview.py",
+      "sha256": "af7bf968e98da8ea1bb92db9c4b24175d5c5d6c3037933dcd52e04c87d4af69a"
+    },
+    {
+      "workbench_path": "edl_work/package_display_r2.py",
+      "canonical_path": "tools/legacy-workbench/package_display_r2.py",
+      "sha256": "0a39f8d2569076b39afe5eb85c59b0d7abc4ad5042bedd7de7d3547d2214a20b"
+    },
+    {
+      "workbench_path": "edl_work/package_display_r3.py",
+      "canonical_path": "tools/legacy-workbench/package_display_r3.py",
+      "sha256": "fc48e13fccc6f1ae5b9a05c2a13ec1c4fe31bdad1dc024eb6de6a842e0f3edb8"
+    },
+    {
+      "workbench_path": "edl_work/package_display_scale.py",
+      "canonical_path": "tools/legacy-workbench/package_display_scale.py",
+      "sha256": "e38c7ec42893ebc87c77e7aed618d3dc6e873803fdd5b37d0cb146af75a67a88"
+    },
+    {
+      "workbench_path": "edl_work/package_hid.py",
+      "canonical_path": "tools/legacy-workbench/package_hid.py",
+      "sha256": "ce9f7f584864fffd591d7b10f959cc88978f79ae05dd534eb29920bd603b3f39"
+    },
+    {
+      "workbench_path": "edl_work/package_key_events.py",
+      "canonical_path": "tools/legacy-workbench/package_key_events.py",
+      "sha256": "595f5b84ef79c011bfead4c404c6d93aab7b7f3e3b1b5852a9a4c7595a9af861"
+    },
+    {
+      "workbench_path": "edl_work/package_key_events_recheck.py",
+      "canonical_path": "tools/legacy-workbench/package_key_events_recheck.py",
+      "sha256": "acdd897dfe64ca6febd560e8316776c3d51a1618184b2899b6b511bb349258bf"
+    },
+    {
+      "workbench_path": "edl_work/package_key_state.py",
+      "canonical_path": "tools/legacy-workbench/package_key_state.py",
+      "sha256": "a4ad044bb96cc82bca959cc99707c45ea85cea060bbddf7adb56929b5db9c912"
+    },
+    {
+      "workbench_path": "edl_work/package_macos_candidate.py",
+      "canonical_path": "tools/legacy-workbench/package_macos_candidate.py",
+      "sha256": "8006d2cba19adb1a88b6182dc68d2f716c631e43884978014f2142f73ec3f882"
+    },
+    {
+      "workbench_path": "edl_work/package_night_candidates.py",
+      "canonical_path": "tools/legacy-workbench/package_night_candidates.py",
+      "sha256": "21ba634d33ac5f8a925a61470aa054d1fbbd574880a9bed0941fce68bf03a2b6"
+    },
+    {
+      "workbench_path": "edl_work/package_persistent_foundation.py",
+      "canonical_path": "tools/legacy-workbench/package_persistent_foundation.py",
+      "sha256": "79b662fd8e7eb639c58e8720e5c1133e89b7904dd60acac7dd463fd1a37f6f43"
+    },
+    {
+      "workbench_path": "edl_work/package_power_inspect.py",
+      "canonical_path": "tools/legacy-workbench/package_power_inspect.py",
+      "sha256": "1b33c660abfacb17227c5c1eb9fb51c8513b41c6a13a62d630484fbdb79b8130"
+    },
+    {
+      "workbench_path": "edl_work/package_power_runtime.py",
+      "canonical_path": "tools/legacy-workbench/package_power_runtime.py",
+      "sha256": "1cd7d3ef41b4092e9767e98a688d2e4ba8caf3139046a3c084a3d5d6c9914171"
+    },
+    {
+      "workbench_path": "edl_work/package_ramblock.py",
+      "canonical_path": "tools/legacy-workbench/package_ramblock.py",
+      "sha256": "1cc1e5acb9e9e4eccf34536135323236ca9d2f708b104de6ab63807934b864e7"
+    },
+    {
+      "workbench_path": "edl_work/package_recovery_candidate.py",
+      "canonical_path": "tools/legacy-workbench/package_recovery_candidate.py",
+      "sha256": "fca7b1b9db03e7453df8b39613f54ef9463b151a351baad37fb7cb07bf19287a"
+    },
+    {
+      "workbench_path": "edl_work/package_recovery_r2.py",
+      "canonical_path": "tools/legacy-workbench/package_recovery_r2.py",
+      "sha256": "5174f12aa36cf3f545b4d40985d125d1cf49861bfa4f45da9bd915730f082882"
+    },
+    {
+      "workbench_path": "edl_work/package_sdam_candidate.py",
+      "canonical_path": "tools/legacy-workbench/package_sdam_candidate.py",
+      "sha256": "5ec1a203b85c04ef6428713d304f4695aab0d712882ea0cfed9446bf4a48b032"
+    },
+    {
+      "workbench_path": "edl_work/package_sdam_rpc.py",
+      "canonical_path": "tools/legacy-workbench/package_sdam_rpc.py",
+      "sha256": "6910b3a2d6b4f64814b120a424fbe0b92b2223e43e7c0b499a8004602b53f5ad"
+    },
+    {
+      "workbench_path": "edl_work/package_services.py",
+      "canonical_path": "tools/legacy-workbench/package_services.py",
+      "sha256": "7adcc2516159ec6f9cf2dbb0b658a48934ead55aa56b287d615a6ba3995db42c"
+    },
+    {
+      "workbench_path": "edl_work/package_skip_setup.py",
+      "canonical_path": "tools/legacy-workbench/package_skip_setup.py",
+      "sha256": "88d733380bbdb7cc5eb6223a417cdd5dafcf158122cd07d08a92f90045deebad"
+    },
+    {
+      "workbench_path": "edl_work/package_spmi_probe.py",
+      "canonical_path": "tools/legacy-workbench/package_spmi_probe.py",
+      "sha256": "5e4f25b3e2b1ca2a9a0418d129b0321e3077aa5884a2ffe17145db885afdff5d"
+    },
+    {
+      "workbench_path": "edl_work/package_startup_candidates.py",
+      "canonical_path": "tools/legacy-workbench/package_startup_candidates.py",
+      "sha256": "348f80cb559aa23a9092a85c1f24ba8c0dda9847b2a1458b9cd90574cf712bd5"
+    },
+    {
+      "workbench_path": "edl_work/package_touch_inspect.py",
+      "canonical_path": "tools/legacy-workbench/package_touch_inspect.py",
+      "sha256": "8500a44053359744415c9b69c57485767ff4fd4b1cf0995d482c7783d9eadbdf"
+    },
+    {
+      "workbench_path": "edl_work/package_touch_runtime.py",
+      "canonical_path": "tools/legacy-workbench/package_touch_runtime.py",
+      "sha256": "d96147d37c19c7b139d86324eaba4b7f5cd2f842841dc341d4afa0f603fc9159"
+    },
+    {
+      "workbench_path": "edl_work/package_ucsi_powerinputs.py",
+      "canonical_path": "tools/legacy-workbench/package_ucsi_powerinputs.py",
+      "sha256": "85da0681d727e50da6937dfc51f674b7abbc07252909887d1aea61c65ace93d2"
+    },
+    {
+      "workbench_path": "edl_work/package_userfault_meta.py",
+      "canonical_path": "tools/legacy-workbench/package_userfault_meta.py",
+      "sha256": "a2543589f79a712ac6a2325eeeb6bbf88b912eda0218e9d600af5a378c12353a"
+    },
+    {
+      "workbench_path": "edl_work/package_userwait.py",
+      "canonical_path": "tools/legacy-workbench/package_userwait.py",
+      "sha256": "60b6f3b73b7f52334efaf66fb391e96238f3a3b561b6fc46da822e9aa8721443"
+    },
+    {
+      "workbench_path": "edl_work/package_watchdog_auto.py",
+      "canonical_path": "tools/legacy-workbench/package_watchdog_auto.py",
+      "sha256": "822018098c086e3cbb18844a1aece4cfb16164132fdd7fe8faa064bd0b003331"
+    },
+    {
+      "workbench_path": "edl_work/package_wcn7861.py",
+      "canonical_path": "tools/legacy-workbench/package_wcn7861.py",
+      "sha256": "bccf8a0d24da539e8910efd415b366e0914deb3ebe88ab306090e54ea6f89638"
+    },
+    {
+      "workbench_path": "edl_work/package_wcn_hci.py",
+      "canonical_path": "tools/legacy-workbench/package_wcn_hci.py",
+      "sha256": "2c9fa990c7450ffb48991ce3a8c741003cb4433df5f323bbaa8896c503590ec8"
+    },
+    {
+      "workbench_path": "edl_work/package_wcn_power.py",
+      "canonical_path": "tools/legacy-workbench/package_wcn_power.py",
+      "sha256": "68614f08a185f3483937e1c324f5c302ea078ee45c04ab99eea08c4accb35055"
+    },
+    {
+      "workbench_path": "edl_work/package_wcn_uart.py",
+      "canonical_path": "tools/legacy-workbench/package_wcn_uart.py",
+      "sha256": "90689c730efef581dac3de6fae352c2db8ff6265be92eac7ef4e536245ed7967"
+    },
+    {
+      "workbench_path": "edl_work/patch_platform.py",
+      "canonical_path": "tools/legacy-workbench/patch_platform.py",
+      "sha256": "1b6df92b87e7694edd9f30a22b4ec494a7838d61002701fd9d43461418d2c155"
+    },
+    {
+      "workbench_path": "edl_work/pdo_notification_qualification.py",
+      "canonical_path": "tools/legacy-workbench/pdo_notification_qualification.py",
+      "sha256": "1faa2a4c6cba686515bd20ae7d1dddf7c33e128175012cf193b2fe2ad5660dbc"
+    },
+    {
+      "workbench_path": "edl_work/peel_ui_v75_mac.py",
+      "canonical_path": "tools/legacy-workbench/peel_ui_v75_mac.py",
+      "sha256": "161a11e7bca2e51c72b13da3ae9a8eb7bd173f3302defe66bc97a50eff9fad4f"
+    },
+    {
+      "workbench_path": "edl_work/plan_gpt_128g.py",
+      "canonical_path": "tools/legacy-workbench/plan_gpt_128g.py",
+      "sha256": "5f9533db2b2300cb64a7de0aed09bff48b5536a67b5e24aabd38802cf3624771"
+    },
+    {
+      "workbench_path": "edl_work/plan_persistent_tail.py",
+      "canonical_path": "tools/legacy-workbench/plan_persistent_tail.py",
+      "sha256": "e65490529ca84e4126cee81f2ce0d2d59d1806bb091d8dff44d9a67bf9b3e433"
+    },
+    {
+      "workbench_path": "edl_work/prepare_backlight_upload.py",
+      "canonical_path": "tools/legacy-workbench/prepare_backlight_upload.py",
+      "sha256": "a446b7d6c5d5ec83bbe37fc0366c002ab5648b04323c72c79cfca1fcb00213b5"
+    },
+    {
+      "workbench_path": "edl_work/prepare_basic_bundle.py",
+      "canonical_path": "tools/legacy-workbench/prepare_basic_bundle.py",
+      "sha256": "3a33e6a6e471e22621bf4cc577eb7db5bd2ab093ebed037c5d703c90aa4c2e6e"
+    },
+    {
+      "workbench_path": "edl_work/prepare_battery_telemetry_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_battery_telemetry_derivative.py",
+      "sha256": "efca4561ff83b7ebf52ed4ab4074021efa53f62a925ddba26cd5158e84eb118a"
+    },
+    {
+      "workbench_path": "edl_work/prepare_battery_upload.py",
+      "canonical_path": "tools/legacy-workbench/prepare_battery_upload.py",
+      "sha256": "275a270ffe5c8bb3cf6c323386d8c6809740ea89c36dfb7063303da697c1390f"
+    },
+    {
+      "workbench_path": "edl_work/prepare_bt_native_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_bt_native_derivative.py",
+      "sha256": "82ecd64ec3c545f11643001c5789ee3224195f8b9fce243895134845a166e76b"
+    },
+    {
+      "workbench_path": "edl_work/prepare_chrono_wait_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_chrono_wait_derivative.py",
+      "sha256": "2b167be144a45b0a50d125ac33d8576ff97ebc7592a0bb56cf4749251fa45bbe"
+    },
+    {
+      "workbench_path": "edl_work/prepare_cpu8_v86.py",
+      "canonical_path": "tools/legacy-workbench/prepare_cpu8_v86.py",
+      "sha256": "681190ee79e24235ff555c9b4c7ec3e5425ea763a586f5f4ace54bac64b82e6c"
+    },
+    {
+      "workbench_path": "edl_work/prepare_cpu_activation.py",
+      "canonical_path": "tools/legacy-workbench/prepare_cpu_activation.py",
+      "sha256": "62527993753b9ed6c494a047f8081db5eea0eec0b7e84e7c6c2392456caf5f75"
+    },
+    {
+      "workbench_path": "edl_work/prepare_cpu_affinity.py",
+      "canonical_path": "tools/legacy-workbench/prepare_cpu_affinity.py",
+      "sha256": "52ab9b20aeb0becce72b9235a69ec2efc93f857d8bdded27393a85121ace525b"
+    },
+    {
+      "workbench_path": "edl_work/prepare_cpu_asm_fixed.py",
+      "canonical_path": "tools/legacy-workbench/prepare_cpu_asm_fixed.py",
+      "sha256": "7f338fa9cb81f796da0ea26f51bf5649d70a5e18228fa6dbf295f75464a9773d"
+    },
+    {
+      "workbench_path": "edl_work/prepare_cpu_full_mac.py",
+      "canonical_path": "tools/legacy-workbench/prepare_cpu_full_mac.py",
+      "sha256": "e4de40b2604f256787fbee7638bfc72d8039fc91114c625eb577955753f34526"
+    },
+    {
+      "workbench_path": "edl_work/prepare_cpu_groups.py",
+      "canonical_path": "tools/legacy-workbench/prepare_cpu_groups.py",
+      "sha256": "2f50bf8285b2e9d496bf8e0e852950945e1acf3569dda01a08e7ad54bef15ea4"
+    },
+    {
+      "workbench_path": "edl_work/prepare_cpu_guard.py",
+      "canonical_path": "tools/legacy-workbench/prepare_cpu_guard.py",
+      "sha256": "0b8f20a918449c446f07d3cfc75b65dc8b0fd56a4d14d921968e81135729ffb1"
+    },
+    {
+      "workbench_path": "edl_work/prepare_cpu_guard_export_mac.py",
+      "canonical_path": "tools/legacy-workbench/prepare_cpu_guard_export_mac.py",
+      "sha256": "f4db71b10b8acd6c041610420a15713ace7bc85fa56a8c337f4dad0de070dfd6"
+    },
+    {
+      "workbench_path": "edl_work/prepare_cpu_hold.py",
+      "canonical_path": "tools/legacy-workbench/prepare_cpu_hold.py",
+      "sha256": "107d4af392a73d6504a9749a65c46ee0da481ba0f5c450b7151ddde2975ca6fd"
+    },
+    {
+      "workbench_path": "edl_work/prepare_cpu_irq_snapshot.py",
+      "canonical_path": "tools/legacy-workbench/prepare_cpu_irq_snapshot.py",
+      "sha256": "ad1a129f7ba1d9df3d4d6bfb9a3a67bde7f009e809249a0e36bcc655157aad78"
+    },
+    {
+      "workbench_path": "edl_work/prepare_dc_native_candidate.py",
+      "canonical_path": "tools/legacy-workbench/prepare_dc_native_candidate.py",
+      "sha256": "ba1e8285b7997a17932aaca4c7a8af91c5eb51c7ab73e570b95eae5ae9ad4bf1"
+    },
+    {
+      "workbench_path": "edl_work/prepare_dc_noop_candidate.py",
+      "canonical_path": "tools/legacy-workbench/prepare_dc_noop_candidate.py",
+      "sha256": "9684ea246667a806b9ea9f00c87e48947dbea99e5b697f6ddb93622062f64ef5"
+    },
+    {
+      "workbench_path": "edl_work/prepare_dc_noop_current.py",
+      "canonical_path": "tools/legacy-workbench/prepare_dc_noop_current.py",
+      "sha256": "01a63ae155d228050dda3e732980d0079d2f7b1d51179ed0ada5aff87baf104e"
+    },
+    {
+      "workbench_path": "edl_work/prepare_dc_reply_candidate.py",
+      "canonical_path": "tools/legacy-workbench/prepare_dc_reply_candidate.py",
+      "sha256": "147dba62f1ad133c4f40c93ec340af87ab465a5c17c4ce3875765e147bb27369"
+    },
+    {
+      "workbench_path": "edl_work/prepare_display_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_display_derivative.py",
+      "sha256": "644dd99bb4d84009a28ffffa5228c8b72d70fc997378d13b7c735fc9aff569eb"
+    },
+    {
+      "workbench_path": "edl_work/prepare_display_derivative_preview.py",
+      "canonical_path": "tools/legacy-workbench/prepare_display_derivative_preview.py",
+      "sha256": "093658c50e250e013ad1bbbab65979a238b7e5199bba7a98d8fc5f0b77dcabea"
+    },
+    {
+      "workbench_path": "edl_work/prepare_display_derivative_r2.py",
+      "canonical_path": "tools/legacy-workbench/prepare_display_derivative_r2.py",
+      "sha256": "100326b8064286f863eac3305e28d45f8492c0cc170514d3db596bdcfab7b400"
+    },
+    {
+      "workbench_path": "edl_work/prepare_display_derivative_r3.py",
+      "canonical_path": "tools/legacy-workbench/prepare_display_derivative_r3.py",
+      "sha256": "356064f8ea42f933f9e549a74619eb426112f1f4e43ceb3b7653a6f37f1665c6"
+    },
+    {
+      "workbench_path": "edl_work/prepare_fbwc.py",
+      "canonical_path": "tools/legacy-workbench/prepare_fbwc.py",
+      "sha256": "0097922ac1b0bf2b87af059f14b9467e365d72c6b9549bfda69605d7d27d37ed"
+    },
+    {
+      "workbench_path": "edl_work/prepare_graphic_variant_kernel.py",
+      "canonical_path": "tools/legacy-workbench/prepare_graphic_variant_kernel.py",
+      "sha256": "5b723c549399b62279ceb43a3f756727ceb83418da5da9a2fdff698bdfb9f440"
+    },
+    {
+      "workbench_path": "edl_work/prepare_handoff_candidate.py",
+      "canonical_path": "tools/legacy-workbench/prepare_handoff_candidate.py",
+      "sha256": "fbfc2b77d4f0cecfacb6210be22c087398f305b6e312b97587a5149fe19d974b"
+    },
+    {
+      "workbench_path": "edl_work/prepare_hid_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_hid_derivative.py",
+      "sha256": "743a5d145455f0c0b3abb5d74d3815dea73fff107d8b21ee5243dc21bf15db18"
+    },
+    {
+      "workbench_path": "edl_work/prepare_icon_cpu_inputs.py",
+      "canonical_path": "tools/legacy-workbench/prepare_icon_cpu_inputs.py",
+      "sha256": "bd3b13c3da02df4ebed9da76f216858603a2aac3f67b40d9ffefb6224e81e813"
+    },
+    {
+      "workbench_path": "edl_work/prepare_icon_cpu_kernel_patch.py",
+      "canonical_path": "tools/legacy-workbench/prepare_icon_cpu_kernel_patch.py",
+      "sha256": "fea3e2e373fb8763473111851f9a8e5fd356bb18096473f8040d5944b5b654db"
+    },
+    {
+      "workbench_path": "edl_work/prepare_icon_cpu_qualification.py",
+      "canonical_path": "tools/legacy-workbench/prepare_icon_cpu_qualification.py",
+      "sha256": "c3e7f8cbb4c96d753c9f2523bd9591b6ff342ab48f1a8f49e5d3f29b402efa73"
+    },
+    {
+      "workbench_path": "edl_work/prepare_icon_dependency.py",
+      "canonical_path": "tools/legacy-workbench/prepare_icon_dependency.py",
+      "sha256": "46ed20fde319129116c7dcc4ddb403d3a2fa78077a535e218eaefb5cc20f3ec6"
+    },
+    {
+      "workbench_path": "edl_work/prepare_icon_dependency_kernel_patch.py",
+      "canonical_path": "tools/legacy-workbench/prepare_icon_dependency_kernel_patch.py",
+      "sha256": "f323b82e3f288875cab52a6c91e39b8772ec3f6fe8d51472f958f2340c143dc4"
+    },
+    {
+      "workbench_path": "edl_work/prepare_icon_fault_trace.py",
+      "canonical_path": "tools/legacy-workbench/prepare_icon_fault_trace.py",
+      "sha256": "61c0d06490aab2c056a0f2cf7231721c0d42d10aab89d75a2d8ef2e591b039e7"
+    },
+    {
+      "workbench_path": "edl_work/prepare_icon_service_symbols.py",
+      "canonical_path": "tools/legacy-workbench/prepare_icon_service_symbols.py",
+      "sha256": "c0e7b4a3a5d8217fb2368cbd1a00efb47ab600d9871dc49cfe0948db2fdbed1a"
+    },
+    {
+      "workbench_path": "edl_work/prepare_ipados_console_packet.py",
+      "canonical_path": "tools/legacy-workbench/prepare_ipados_console_packet.py",
+      "sha256": "d676cd59cba687ed983bd8dc8a5453fbbad0f57f86a7159362b0f9ab26fc6393"
+    },
+    {
+      "workbench_path": "edl_work/prepare_ipados_readcheck_packet.py",
+      "canonical_path": "tools/legacy-workbench/prepare_ipados_readcheck_packet.py",
+      "sha256": "b14b4b74c3618448604c5be027759be332ea34ed3d73f1706f87a75007b8b984"
+    },
+    {
+      "workbench_path": "edl_work/prepare_key_events_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_key_events_derivative.py",
+      "sha256": "bee3e8d79592cb90539eade84e683d15657d680f6a9df0010a0b587826ec355b"
+    },
+    {
+      "workbench_path": "edl_work/prepare_key_events_recheck_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_key_events_recheck_derivative.py",
+      "sha256": "3359d0b53ab803c8becac3eb2918c6a1f8cae84fee5580ae43928036d2454a79"
+    },
+    {
+      "workbench_path": "edl_work/prepare_key_state_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_key_state_derivative.py",
+      "sha256": "7566ad65d8f705ba18818da1551f08bcc2f53e194d92252a37939e28ed6ec2c2"
+    },
+    {
+      "workbench_path": "edl_work/prepare_live_bt_bridge.py",
+      "canonical_path": "tools/legacy-workbench/prepare_live_bt_bridge.py",
+      "sha256": "717653411917a3d3da7430ac12dd34565eee9d14ba17d68ab059f68b18ea17d2"
+    },
+    {
+      "workbench_path": "edl_work/prepare_pdo_events_candidate.py",
+      "canonical_path": "tools/legacy-workbench/prepare_pdo_events_candidate.py",
+      "sha256": "a32fc25537dd9ea62316c44f621d09683d7d241be3c11668e12d7f43b430d637"
+    },
+    {
+      "workbench_path": "edl_work/prepare_persistent_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_persistent_derivative.py",
+      "sha256": "61b49de0bef21918010a0956cb6be17916c7c23eb2add072718f858817416dd1"
+    },
+    {
+      "workbench_path": "edl_work/prepare_policy_trace_candidate.py",
+      "canonical_path": "tools/legacy-workbench/prepare_policy_trace_candidate.py",
+      "sha256": "3d75fe92bb004d68a27af91f60cabfe6a6926a090262875f7c18419e6805b9ce"
+    },
+    {
+      "workbench_path": "edl_work/prepare_power_inspect_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_power_inspect_derivative.py",
+      "sha256": "dcc9a60246a5577b506cfe1c82393e9fd06fb46dc326b00e4cd6d053b64d4146"
+    },
+    {
+      "workbench_path": "edl_work/prepare_power_runtime_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_power_runtime_derivative.py",
+      "sha256": "18418198859f757fb9cd88f76623fbffa27ed734aef07acf882a3c30e9c1a8bc"
+    },
+    {
+      "workbench_path": "edl_work/prepare_qemu_storage.py",
+      "canonical_path": "tools/legacy-workbench/prepare_qemu_storage.py",
+      "sha256": "45d07351e7845192565af92bf58d6990a8fc6cb50181f44e10db224fa713a4bd"
+    },
+    {
+      "workbench_path": "edl_work/prepare_ram_data_macos.py",
+      "canonical_path": "tools/legacy-workbench/prepare_ram_data_macos.py",
+      "sha256": "1e31e2de83728fb3b0d2b239f9524aff781036cc0c215b2bcfca0c9b2f03d6ad"
+    },
+    {
+      "workbench_path": "edl_work/prepare_rescue_inputs.py",
+      "canonical_path": "tools/legacy-workbench/prepare_rescue_inputs.py",
+      "sha256": "63e673fd060cd15748137f76c8bc561e43a7999a7f19e4e1503fcc3811059ddd"
+    },
+    {
+      "workbench_path": "edl_work/prepare_root_archive.py",
+      "canonical_path": "tools/legacy-workbench/prepare_root_archive.py",
+      "sha256": "3e15105b4841d0ce5800ec4f8017b2899af1f1cfe8b6913b047ee54f31f587bd"
+    },
+    {
+      "workbench_path": "edl_work/prepare_rootcheck_packet.py",
+      "canonical_path": "tools/legacy-workbench/prepare_rootcheck_packet.py",
+      "sha256": "4847d4cf89da11a2a5567feb1f18cb5d6fca934bc7eb9c026840285f08270875"
+    },
+    {
+      "workbench_path": "edl_work/prepare_services_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_services_derivative.py",
+      "sha256": "ffd47dbd9e1417a0a042fe90c40227eb51bd6fc3e358db921842ebe38cb8b7ce"
+    },
+    {
+      "workbench_path": "edl_work/prepare_sgi_mode.py",
+      "canonical_path": "tools/legacy-workbench/prepare_sgi_mode.py",
+      "sha256": "618560e719f2eb179d525d005ef5bc005786e2dce9842c0bd52e9ffbece5eecd"
+    },
+    {
+      "workbench_path": "edl_work/prepare_skip_setup_macos.py",
+      "canonical_path": "tools/legacy-workbench/prepare_skip_setup_macos.py",
+      "sha256": "50c40065ca6a481a6e9be87ebf713ee137c424af4fc34c992ab8ebdb7a162bda"
+    },
+    {
+      "workbench_path": "edl_work/prepare_storage_audit.py",
+      "canonical_path": "tools/legacy-workbench/prepare_storage_audit.py",
+      "sha256": "5be290a71aae99d062420c2b37d9ad5c39954b5c9c2536e546b180287ad50b1b"
+    },
+    {
+      "workbench_path": "edl_work/prepare_touch_dma_core.py",
+      "canonical_path": "tools/legacy-workbench/prepare_touch_dma_core.py",
+      "sha256": "6c86e6f14785b96711212bbf89ad73ecff96ca8428062c66d3e62e1648ea9620"
+    },
+    {
+      "workbench_path": "edl_work/prepare_touch_inspect_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_touch_inspect_derivative.py",
+      "sha256": "a6c6aadf60fabb166610a73ac5255987bde18799dd84c7910fce6900a740b5a5"
+    },
+    {
+      "workbench_path": "edl_work/prepare_touch_runtime_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_touch_runtime_derivative.py",
+      "sha256": "eb4f30e502b8f02dfceac1c882060167008c3e9778bbea38a9677a22fb034fc3"
+    },
+    {
+      "workbench_path": "edl_work/prepare_ucsi_powerinputs_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_ucsi_powerinputs_derivative.py",
+      "sha256": "8d80bb97959d256fbe133d99662a2a69e1a08925504b67091c113d61942c3c52"
+    },
+    {
+      "workbench_path": "edl_work/prepare_ui_dispatch_host.py",
+      "canonical_path": "tools/legacy-workbench/prepare_ui_dispatch_host.py",
+      "sha256": "58493710cd87775e15a5bfbfc07a062c737e3c4a19f39f9665ab9df4c1fb361e"
+    },
+    {
+      "workbench_path": "edl_work/prepare_ui_dispatch_patch.py",
+      "canonical_path": "tools/legacy-workbench/prepare_ui_dispatch_patch.py",
+      "sha256": "8c9ec26380e32268b5725c00e1fd8d8f8a67c519b83c78abbd7ad6552fa0a133"
+    },
+    {
+      "workbench_path": "edl_work/prepare_ui_wait_samples.py",
+      "canonical_path": "tools/legacy-workbench/prepare_ui_wait_samples.py",
+      "sha256": "6a8c85a73baa8c94e1efb7e1fec829958eeb61972af946db7d39aa79a446c6c7"
+    },
+    {
+      "workbench_path": "edl_work/prepare_userwait_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_userwait_derivative.py",
+      "sha256": "561cb17e20fd8a8d97eca864c1e6a94df8c366b94733f317fead3b4ae7b69a3d"
+    },
+    {
+      "workbench_path": "edl_work/prepare_vdog_trial.py",
+      "canonical_path": "tools/legacy-workbench/prepare_vdog_trial.py",
+      "sha256": "2cf16c455a753e37c8de068c0d47661f449cfc2b0f7f5b2236d1430ef3af01b7"
+    },
+    {
+      "workbench_path": "edl_work/prepare_wcn7861_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_wcn7861_derivative.py",
+      "sha256": "6f41b3ee753c3145be86fc6d1e61461ebf94504ee8202d740a76fe0554dfe178"
+    },
+    {
+      "workbench_path": "edl_work/prepare_wcn_hci_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_wcn_hci_derivative.py",
+      "sha256": "68724be0f5029ea5f9851e437a3c8157acf2f8c59783101f3cda0edadc70e8b6"
+    },
+    {
+      "workbench_path": "edl_work/prepare_wcn_power_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_wcn_power_derivative.py",
+      "sha256": "dd0dcc979663c8d516b53b6a8a56f23f59a71b1c4aff910285b62a2acdcabf12"
+    },
+    {
+      "workbench_path": "edl_work/prepare_wcn_power_final_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_wcn_power_final_derivative.py",
+      "sha256": "94faff4dd735eaa936cae69e2366859c69704a4ee1e1d0463f5a677268a13fc4"
+    },
+    {
+      "workbench_path": "edl_work/prepare_wcn_uart_derivative.py",
+      "canonical_path": "tools/legacy-workbench/prepare_wcn_uart_derivative.py",
+      "sha256": "a92efd7af2f1d190d2ac3b60d24b3203e709db9b325210891b667df542ed222d"
+    },
+    {
+      "workbench_path": "edl_work/prove_darwin_asm_mac.py",
+      "canonical_path": "tools/legacy-workbench/prove_darwin_asm_mac.py",
+      "sha256": "a23e54ae877d91b39cf5f0e5c06d9be387813836379f117181e05c5f46a37ac8"
+    },
+    {
+      "workbench_path": "edl_work/qemu_boot_metadata_audit.py",
+      "canonical_path": "tools/legacy-workbench/qemu_boot_metadata_audit.py",
+      "sha256": "0175eb74d6b00216144d15da0f329c22f9c1b8883722b3818954605bb5bf7ebc"
+    },
+    {
+      "workbench_path": "edl_work/qemu_external_stage2.py",
+      "canonical_path": "tools/legacy-workbench/qemu_external_stage2.py",
+      "sha256": "34f4d8ecde7da01449c0fe7e71209fe347ed7e3187771e8e5d3b9bc58871845a"
+    },
+    {
+      "workbench_path": "edl_work/qemu_payload_loader_audit.py",
+      "canonical_path": "tools/legacy-workbench/qemu_payload_loader_audit.py",
+      "sha256": "fbc7fd993761eab3a9d50d29432917258083840ed89408fe57c4eafbb2ad18f5"
+    },
+    {
+      "workbench_path": "edl_work/qemu_stage2_audit.py",
+      "canonical_path": "tools/legacy-workbench/qemu_stage2_audit.py",
+      "sha256": "094a440e900f8c0d4b9e6ad731c4029ffc075f2c6610d40f01c841e207ab0f5f"
+    },
+    {
+      "workbench_path": "edl_work/qualify_battery_publisher.py",
+      "canonical_path": "tools/legacy-workbench/qualify_battery_publisher.py",
+      "sha256": "afac93d5654ac8993d402a643375e108b9a627b9ee8b964fcce6d2538683a52f"
+    },
+    {
+      "workbench_path": "edl_work/qualify_cpu_hold.py",
+      "canonical_path": "tools/legacy-workbench/qualify_cpu_hold.py",
+      "sha256": "f41a5067c545a1dbd62ffb5e18296520c58e9b663d179601082aaebb5f186918"
+    },
+    {
+      "workbench_path": "edl_work/qualify_graphic_variant_bundle.py",
+      "canonical_path": "tools/legacy-workbench/qualify_graphic_variant_bundle.py",
+      "sha256": "1318092c78ebd579ff4a550651912635f6eefc7ba763a1429ea3429cdfdac3ce"
+    },
+    {
+      "workbench_path": "edl_work/qualify_icon_fault_bundle.py",
+      "canonical_path": "tools/legacy-workbench/qualify_icon_fault_bundle.py",
+      "sha256": "10769bfaa245b0a1b294d41e9a99aa82e5b4e0668607f063307e32e34c0812a1"
+    },
+    {
+      "workbench_path": "edl_work/qualify_preview_four.py",
+      "canonical_path": "tools/legacy-workbench/qualify_preview_four.py",
+      "sha256": "6b38ed06289d2c1e9ca215fa95198f77cf7737aa1cd51e60be600ed43221d503"
+    },
+    {
+      "workbench_path": "edl_work/read_state.bat",
+      "canonical_path": "tools/legacy-workbench/read_state.bat",
+      "sha256": "6cf13096202a7f444ab15f9bb7b93124eafd7f0e89b044021edcfe6488eb69ef"
+    },
+    {
+      "workbench_path": "edl_work/read_state2.bat",
+      "canonical_path": "tools/legacy-workbench/read_state2.bat",
+      "sha256": "4dded45eb5cb15962a63891f70de844c6a8ae3409cc2167965046275c9552d5a"
+    },
+    {
+      "workbench_path": "edl_work/read_state3.bat",
+      "canonical_path": "tools/legacy-workbench/read_state3.bat",
+      "sha256": "d89f18b147b72e987659211c4fe54dfea4034eadbfbde0456f10c289c22b7637"
+    },
+    {
+      "workbench_path": "edl_work/readback_recovery.bat",
+      "canonical_path": "tools/legacy-workbench/readback_recovery.bat",
+      "sha256": "9b46295247f174afb451bb44a0cd81d518cd4f49ca4abf2470518ef555fdfd4b"
+    },
+    {
+      "workbench_path": "edl_work/rebuild_cpu_external_mac.py",
+      "canonical_path": "tools/legacy-workbench/rebuild_cpu_external_mac.py",
+      "sha256": "f74f5293fe0dfe298bfec38b2f033a89eae116096027d80a50f84d579979a328"
+    },
+    {
+      "workbench_path": "edl_work/rebuild_cpu_standard_mac.py",
+      "canonical_path": "tools/legacy-workbench/rebuild_cpu_standard_mac.py",
+      "sha256": "5e14c32ca7a170985de3caf364c0d935cb0315de1f78d363aebde1a04cba05bf"
+    },
+    {
+      "workbench_path": "edl_work/record_android_restore.py",
+      "canonical_path": "tools/legacy-workbench/record_android_restore.py",
+      "sha256": "d423072c9291a4d4f9299ad9581a607c2fcd325bdbe11dcec4234c39bdc90eb2"
+    },
+    {
+      "workbench_path": "edl_work/relink_cpu_groups_mac.py",
+      "canonical_path": "tools/legacy-workbench/relink_cpu_groups_mac.py",
+      "sha256": "156c39499982301a7eea8ab097caf4c1e477840a8edcdeeacf8814f46a65c984"
+    },
+    {
+      "workbench_path": "edl_work/relink_fbwc_mac.py",
+      "canonical_path": "tools/legacy-workbench/relink_fbwc_mac.py",
+      "sha256": "37f9074b7dc42c7cd3da68607fcf9b470fd9735a16ae9e4813e12ec1a1a8528d"
+    },
+    {
+      "workbench_path": "edl_work/relink_graphic_variant_mac.py",
+      "canonical_path": "tools/legacy-workbench/relink_graphic_variant_mac.py",
+      "sha256": "1c5146a530df5b67c1706b4276fe5cd355e86108497797248b8017464b4f232c"
+    },
+    {
+      "workbench_path": "edl_work/relink_icon_fault_mac.py",
+      "canonical_path": "tools/legacy-workbench/relink_icon_fault_mac.py",
+      "sha256": "bce097a1fabe04d5dad6ca10cf6ba8c4f3b2912968a684c5def14aa5dc326d3d"
+    },
+    {
+      "workbench_path": "edl_work/relink_preview_four_mac.py",
+      "canonical_path": "tools/legacy-workbench/relink_preview_four_mac.py",
+      "sha256": "c0473beba46a2abcf474cf4d47eea91beeda03758ff6688ab4bc9c862b500701"
+    },
+    {
+      "workbench_path": "edl_work/restore_format2_late_patches.py",
+      "canonical_path": "tools/legacy-workbench/restore_format2_late_patches.py",
+      "sha256": "30e964af7d8eae529729a9c2314cca800a55bbb8d81ec1dd403ab0199859dc73"
+    },
+    {
+      "workbench_path": "edl_work/restore_v74_recovery_input_mac.py",
+      "canonical_path": "tools/legacy-workbench/restore_v74_recovery_input_mac.py",
+      "sha256": "0c965a40a1f556f5769ffeb9d7633fc3a92c02cf7e9d234a8b77f2f9c22ba670"
+    },
+    {
+      "workbench_path": "edl_work/resume_icon_prelink_mac.py",
+      "canonical_path": "tools/legacy-workbench/resume_icon_prelink_mac.py",
+      "sha256": "8dc87c8e0d5e691c62e1cf8fec7b7d5655bb41ea72ace9ae512fc75153e5db05"
+    },
+    {
+      "workbench_path": "edl_work/review_reference_sync.py",
+      "canonical_path": "tools/legacy-workbench/review_reference_sync.py",
+      "sha256": "9f859bb9961cfb27f493b446ed7f6db4da94f88710281462028c62a3b3ac3c76"
+    },
+    {
+      "workbench_path": "edl_work/root_image_preflight.py",
+      "canonical_path": "tools/legacy-workbench/root_image_preflight.py",
+      "sha256": "c16ada0206a6cb2f3da0a953295a7264c7efa20d94479fdbbf4a3fa88f66005a"
+    },
+    {
+      "workbench_path": "edl_work/run_cpu_bootstrap_mac.py",
+      "canonical_path": "tools/legacy-workbench/run_cpu_bootstrap_mac.py",
+      "sha256": "ed75b256751eb28348aa698b989e9a50926b1aeac7cb2ba77e7ce920b23c03bc"
+    },
+    {
+      "workbench_path": "edl_work/run_cpu_hold_mac.py",
+      "canonical_path": "tools/legacy-workbench/run_cpu_hold_mac.py",
+      "sha256": "6d9e6858afb00c0f0e6c89556a9d7612e37aa74c5808647aa5f7dc90321bde22"
+    },
+    {
+      "workbench_path": "edl_work/run_power_probe_once.py",
+      "canonical_path": "tools/legacy-workbench/run_power_probe_once.py",
+      "sha256": "f9826b2b5ad7a91e9cfa389cb32028a45df4893a64edfd96a339c326fcb789f4"
+    },
+    {
+      "workbench_path": "edl_work/send_loader.bat",
+      "canonical_path": "tools/legacy-workbench/send_loader.bat",
+      "sha256": "56a12c02372ab3aa95e09c4b42a8ec0412ba5b6cdbf5cbd75c46c4d9dface4be"
+    },
+    {
+      "workbench_path": "edl_work/sign_icon_dependency_mac.py",
+      "canonical_path": "tools/legacy-workbench/sign_icon_dependency_mac.py",
+      "sha256": "44231673b6c2e875ec69a57dcdc6e20a19f0b05e9a0fec857608316e8804693b"
+    },
+    {
+      "workbench_path": "edl_work/sign_verified_candidate.py",
+      "canonical_path": "tools/legacy-workbench/sign_verified_candidate.py",
+      "sha256": "ad06c6549a71db434fff7c75640b6cab93a6705619637e95d65192e01a7abddf"
+    },
+    {
+      "workbench_path": "edl_work/stage2_adb.py",
+      "canonical_path": "tools/legacy-workbench/stage2_adb.py",
+      "sha256": "6ab3bae23ebae909a895fd28f4d04a69b47b79527e08838920c05b1c0243fb45"
+    },
+    {
+      "workbench_path": "edl_work/stage2_store.py",
+      "canonical_path": "tools/legacy-workbench/stage2_store.py",
+      "sha256": "bd737693e3da3e5c008f118a25d701a91880fda4f49bd7e2516695837afbe416"
+    },
+    {
+      "workbench_path": "edl_work/stream_userdata_extents.c",
+      "canonical_path": "tools/legacy-workbench/stream_userdata_extents.c",
+      "sha256": "60e5a3b2606f8b358afab07c02db6cf121b59a1b43aa061e20d2d7867ec68371"
+    },
+    {
+      "workbench_path": "edl_work/summarize_blocker_evidence.py",
+      "canonical_path": "tools/legacy-workbench/summarize_blocker_evidence.py",
+      "sha256": "577c36c8f1895c15d86a0a0117bcff5e9a997f4b798ee4c6713c646c7782b8d6"
+    },
+    {
+      "workbench_path": "edl_work/symbolicate_icon_chain_mac.py",
+      "canonical_path": "tools/legacy-workbench/symbolicate_icon_chain_mac.py",
+      "sha256": "ab5367d89b5e1407f399672230238ba3446e3bca3c034087e34ac609bfb084ce"
+    },
+    {
+      "workbench_path": "edl_work/sync_reference_repos.py",
+      "canonical_path": "tools/legacy-workbench/sync_reference_repos.py",
+      "sha256": "99d45704a9857d7f8144fc8a1264c20d09e86b31439baeca85cd52c3cb926cdd"
+    },
+    {
+      "workbench_path": "edl_work/test_assess_touch_dma_survey.py",
+      "canonical_path": "tools/legacy-workbench/test_assess_touch_dma_survey.py",
+      "sha256": "e370b8cd0cd0ad561bf746ea19006f15b71bb9d2b6ccec669b7abbef50e5d1f2"
+    },
+    {
+      "workbench_path": "edl_work/test_cpu_activation_host.py",
+      "canonical_path": "tools/legacy-workbench/test_cpu_activation_host.py",
+      "sha256": "45159141f00dd5ec5b3ef2e729b0778482228fcfe310ec7108488c82615a6e49"
+    },
+    {
+      "workbench_path": "edl_work/test_cpu_affinity_reuse.py",
+      "canonical_path": "tools/legacy-workbench/test_cpu_affinity_reuse.py",
+      "sha256": "192951e4811a8a96032e3212f3beb25c56c8c0e479f7516b6013ea46bb627164"
+    },
+    {
+      "workbench_path": "edl_work/test_edl_port_ready.py",
+      "canonical_path": "tools/legacy-workbench/test_edl_port_ready.py",
+      "sha256": "a615db06856ec18f7f21a733b98c5e05b3fc67a8f08f81f56f38380e7e610adb"
+    },
+    {
+      "workbench_path": "edl_work/test_f2fs_resize_probe.py",
+      "canonical_path": "tools/legacy-workbench/test_f2fs_resize_probe.py",
+      "sha256": "8f7e1602d5182c1bc07169ac9843bbe63f62cd685310926349b44d62c4f1af13"
+    },
+    {
+      "workbench_path": "edl_work/test_f2fs_shrink_plan.py",
+      "canonical_path": "tools/legacy-workbench/test_f2fs_shrink_plan.py",
+      "sha256": "be33f65e80a09b035e1078f672c3deab0817b769237c1b8799f297f0a1d23a87"
+    },
+    {
+      "workbench_path": "edl_work/test_fastboot_power_guard.py",
+      "canonical_path": "tools/legacy-workbench/test_fastboot_power_guard.py",
+      "sha256": "a335afe2125f16676d0fbe0e2a588f642d10dc4d6be718d4715545c2616a2321"
+    },
+    {
+      "workbench_path": "edl_work/test_frame_control_interleave.py",
+      "canonical_path": "tools/legacy-workbench/test_frame_control_interleave.py",
+      "sha256": "ecfae4e3363346ac111ea35c098b73a44a088aad08d914dcba49da3edbfe6ab9"
+    },
+    {
+      "workbench_path": "edl_work/test_frame_discontinuities.py",
+      "canonical_path": "tools/legacy-workbench/test_frame_discontinuities.py",
+      "sha256": "b2d3f4e1b7b1f7093fa2529bacd9b1e6700fadea9e4f87ecd03f78ba54eb5060"
+    },
+    {
+      "workbench_path": "edl_work/test_gunyah_semantics.py",
+      "canonical_path": "tools/legacy-workbench/test_gunyah_semantics.py",
+      "sha256": "bd2bad306808b730ce47bc55ee689763b8d891acb5559f4a1fad144df175bd6a"
+    },
+    {
+      "workbench_path": "edl_work/test_live_bt_bridge.py",
+      "canonical_path": "tools/legacy-workbench/test_live_bt_bridge.py",
+      "sha256": "97c45d31ba9622311fbc5031017685ec440c1d72db4ad7f375bba983439d5e94"
+    },
+    {
+      "workbench_path": "edl_work/test_modem_firmware_path.c",
+      "canonical_path": "tools/legacy-workbench/test_modem_firmware_path.c",
+      "sha256": "251238fc51cd8c23afe7d1357233951100d6fcda6561a232d81084cc7305c098"
+    },
+    {
+      "workbench_path": "edl_work/test_packed_data.c",
+      "canonical_path": "tools/legacy-workbench/test_packed_data.c",
+      "sha256": "37d67bb981a188019534183492c5a05ad0f853f495923c0327208f5c5c72a026"
+    },
+    {
+      "workbench_path": "edl_work/test_panic_console_alias.py",
+      "canonical_path": "tools/legacy-workbench/test_panic_console_alias.py",
+      "sha256": "9bc39229b12caf7119eb0960842cdb4e323bc55490ab4d5b0fb3b17b0e03042b"
+    },
+    {
+      "workbench_path": "edl_work/test_power_inventory.py",
+      "canonical_path": "tools/legacy-workbench/test_power_inventory.py",
+      "sha256": "6e44df915f24f28e214335be846077462ddc934980fd2c541197f1677b18ff14"
+    },
+    {
+      "workbench_path": "edl_work/test_prerequisite_plans.py",
+      "canonical_path": "tools/legacy-workbench/test_prerequisite_plans.py",
+      "sha256": "df9961c7cdca6095276901831cc66d2d255dcb97c58fa7c1b8db5cf4693b0b03"
+    },
+    {
+      "workbench_path": "edl_work/test_reboot_ownership.cpp",
+      "canonical_path": "tools/legacy-workbench/test_reboot_ownership.cpp",
+      "sha256": "4943f8afee5ce1d81d55f3de975493538fe005432aeedb3239c925a0e5027a26"
+    },
+    {
+      "workbench_path": "edl_work/test_spmi_restart.cpp",
+      "canonical_path": "tools/legacy-workbench/test_spmi_restart.cpp",
+      "sha256": "8803348bb2bbfb6acb441771defbeafb1cd8ea66e1dde8fc0dea9d7364ce8a48"
+    },
+    {
+      "workbench_path": "edl_work/test_stage2_adb.py",
+      "canonical_path": "tools/legacy-workbench/test_stage2_adb.py",
+      "sha256": "c159ac5c584d38881e6f448cf8634c93b2aaa1e040a69bfe6c02594df3c0abb6"
+    },
+    {
+      "workbench_path": "edl_work/test_stage2_store.py",
+      "canonical_path": "tools/legacy-workbench/test_stage2_store.py",
+      "sha256": "b6cbef28bffa873592993596d6835a59977bb41493a7af257baa5704684f4a42"
+    },
+    {
+      "workbench_path": "edl_work/test_statusbar_preview.py",
+      "canonical_path": "tools/legacy-workbench/test_statusbar_preview.py",
+      "sha256": "910af5481edc617cfb2faf1104734a40dfe891f279f57e435d1b2f37361ed076"
+    },
+    {
+      "workbench_path": "edl_work/test_thermal_lifecycle.cpp",
+      "canonical_path": "tools/legacy-workbench/test_thermal_lifecycle.cpp",
+      "sha256": "80e7af58caacc6b8d5d7bab8706ad28bfd220743db62e6e8e55a1a46debadc4c"
+    },
+    {
+      "workbench_path": "edl_work/test_ufs_session.py",
+      "canonical_path": "tools/legacy-workbench/test_ufs_session.py",
+      "sha256": "2972f82442df9aa9b4a8e527d8231edebb39c1b8398018ae2a3718f1ff6f6138"
+    },
+    {
+      "workbench_path": "edl_work/test_ufs_timeout_recheck.cpp",
+      "canonical_path": "tools/legacy-workbench/test_ufs_timeout_recheck.cpp",
+      "sha256": "9fd00c59cea6c9f9f4061392b3c0e530752cca99b7d826d4fd623a6bead31aa8"
+    },
+    {
+      "workbench_path": "edl_work/test_usb_console_lines.py",
+      "canonical_path": "tools/legacy-workbench/test_usb_console_lines.py",
+      "sha256": "2c5c0a31cc9055eb3a719555bf9864727bba80143df986a4d3eea595119d35e6"
+    },
+    {
+      "workbench_path": "edl_work/test_usb_control_requests.py",
+      "canonical_path": "tools/legacy-workbench/test_usb_control_requests.py",
+      "sha256": "0ffc05daf13dfa47a073dff4104e50e26a6ce07948e0e8b48ea0a7ccf193adc8"
+    },
+    {
+      "workbench_path": "edl_work/test_usb_identity.cpp",
+      "canonical_path": "tools/legacy-workbench/test_usb_identity.cpp",
+      "sha256": "95381241585d83adbff3898c2d2516790a0f71f24ed9ce644e8e3f402f8647d9"
+    },
+    {
+      "workbench_path": "edl_work/test_usb_reconnect.py",
+      "canonical_path": "tools/legacy-workbench/test_usb_reconnect.py",
+      "sha256": "a5a5db00353aac64694f9457f8cf81e402fc16241daee27619677492c47d4ed7"
+    },
+    {
+      "workbench_path": "edl_work/test_userdata_plan.py",
+      "canonical_path": "tools/legacy-workbench/test_userdata_plan.py",
+      "sha256": "1c767c492647452f5a390400e8bd9f3e2958698651460c9c326d4a484d7f65e6"
+    },
+    {
+      "workbench_path": "edl_work/test_vdog_host.py",
+      "canonical_path": "tools/legacy-workbench/test_vdog_host.py",
+      "sha256": "6b24db64281d372825919586163bb81826affceab798345caecc7175b926eee3"
+    },
+    {
+      "workbench_path": "edl_work/test_wcn_hci.py",
+      "canonical_path": "tools/legacy-workbench/test_wcn_hci.py",
+      "sha256": "adb470c857c88b653effe13f543f1dee31c4efac78f18e37caf6c4d12f1a6612"
+    },
+    {
+      "workbench_path": "edl_work/test_wcn_power.py",
+      "canonical_path": "tools/legacy-workbench/test_wcn_power.py",
+      "sha256": "cb6bc0e04e6ae2bc6077381b3540699e7a0c5ff2355bb0c683e5d58be2b47883"
+    },
+    {
+      "workbench_path": "edl_work/test_wcn_uart.py",
+      "canonical_path": "tools/legacy-workbench/test_wcn_uart.py",
+      "sha256": "473ba80893b408075e4eb0f387d89215ca318956ca57cfcc38b5b62f3e466470"
+    },
+    {
+      "workbench_path": "edl_work/test_wifi_modem_files.py",
+      "canonical_path": "tools/legacy-workbench/test_wifi_modem_files.py",
+      "sha256": "1d0f3fd0cb72794e61cdd4140e5ece19ce7057df69039f425808e3b4f1cb06af"
+    },
+    {
+      "workbench_path": "edl_work/ui_dispatch_qualification.py",
+      "canonical_path": "tools/legacy-workbench/ui_dispatch_qualification.py",
+      "sha256": "6a06106832b1811fa4b77fb4dc7657e132a654a122c5e9925b6aa3127b1a8e2c"
+    },
+    {
+      "workbench_path": "edl_work/ulog_filter_qualification.py",
+      "canonical_path": "tools/legacy-workbench/ulog_filter_qualification.py",
+      "sha256": "aad4d7a0398fb4cbe8438389a4292cc6d34d98534b6ceba92825cc2fdd2ded01"
+    },
+    {
+      "workbench_path": "edl_work/update_battery_records.py",
+      "canonical_path": "tools/legacy-workbench/update_battery_records.py",
+      "sha256": "a0ac33eb8e0e0ace1fd411ade65bf22765300613f8267a67f5d84e2f232b646d"
+    },
+    {
+      "workbench_path": "edl_work/usb-ring-test.cpp",
+      "canonical_path": "tools/legacy-workbench/usb-ring-test.cpp",
+      "sha256": "801daecf30547f1fd10058e456b1dd0dcd89286f511f5dac7636873dee0cec7b"
+    },
+    {
+      "workbench_path": "edl_work/usb_handoff_qualification.py",
+      "canonical_path": "tools/legacy-workbench/usb_handoff_qualification.py",
+      "sha256": "c0f64f6835cf799167af9bce2d3e973ecde5cb8ee7003f0e1f615ea7bc5bdab4"
+    },
+    {
+      "workbench_path": "edl_work/userdata_plan.py",
+      "canonical_path": "tools/legacy-workbench/userdata_plan.py",
+      "sha256": "d769b3bbe81d50bb9aeaea99df973dfc0b06a9ced4cbe5433f64f5b599d7efcb"
+    },
+    {
+      "workbench_path": "edl_work/validate_current_porting.py",
+      "canonical_path": "tools/legacy-workbench/validate_current_porting.py",
+      "sha256": "aa0ec0d06dc66acfd1a5a87d3b162d8b57997f63ea99d4db238440877ad32e2d"
+    },
+    {
+      "workbench_path": "edl_work/vdog_qualification.py",
+      "canonical_path": "tools/legacy-workbench/vdog_qualification.py",
+      "sha256": "bbcfe9235060b409c4506899a7c4aa979bca65145fbcb937bfd561ce028ee002"
+    },
+    {
+      "workbench_path": "edl_work/verify_fdt_mailbox_shim.py",
+      "canonical_path": "tools/legacy-workbench/verify_fdt_mailbox_shim.py",
+      "sha256": "ef12aa9c438a99d9d8976a1ff046d3f8676b1cff5b93a7efb764a037cb87275c"
+    },
+    {
+      "workbench_path": "edl_work/verify_offline_ufs.py",
+      "canonical_path": "tools/legacy-workbench/verify_offline_ufs.py",
+      "sha256": "7ec29ef586fe4b79a391e051629b58621ecc5f1832411625dde19ebd2ad6792f"
+    },
+    {
+      "workbench_path": "edl_work/verify_root_fixups_macos.py",
+      "canonical_path": "tools/legacy-workbench/verify_root_fixups_macos.py",
+      "sha256": "bf4c0e0e6f6c88aa44edbea64fab92a045a02aa002d031e8f3f64e0f5c68fe1b"
+    },
+    {
+      "workbench_path": "edl_work/verify_userdata_backup.py",
+      "canonical_path": "tools/legacy-workbench/verify_userdata_backup.py",
+      "sha256": "21a922d1a165c1df9e742ec907c52c98b6304e6f1c33af8dd112d8326f253c5c"
+    },
+    {
+      "workbench_path": "edl_work/watch_dc_hold_stop.py",
+      "canonical_path": "tools/legacy-workbench/watch_dc_hold_stop.py",
+      "sha256": "c8aeb29bf07a5eb1747174b5f7a119fede662ed24b778c89426515630b0b5d35"
+    },
+    {
+      "workbench_path": "edl_work/watch_icon_trial.py",
+      "canonical_path": "tools/legacy-workbench/watch_icon_trial.py",
+      "sha256": "906af562b3c3efe81e94bf8fa45c1e4254f10aac951168495d6e5eba1f562b9e"
+    },
+    {
+      "workbench_path": "edl_work/write_blocker_reference_matrix.py",
+      "canonical_path": "tools/legacy-workbench/write_blocker_reference_matrix.py",
+      "sha256": "38568bdf70a243e9ef41a0654cfd0b70579dfd7ebe55f21dda7ce8f987b1e9b7"
+    },
+    {
+      "workbench_path": "edl_work/write_ipados_root.c",
+      "canonical_path": "tools/legacy-workbench/write_ipados_root.c",
+      "sha256": "c620a70120037d92e375af6b73d93d72a986126ff5ce43c5cd4d7de094f00961"
+    },
+    {
+      "workbench_path": "edl_work/write_misc.bat",
+      "canonical_path": "tools/legacy-workbench/write_misc.bat",
+      "sha256": "108741b415df289b4ee163ad792aa9370394b5aa5739b1f57f176014700174a0"
+    },
+    {
+      "workbench_path": "edl_work/write_misc_br.bat",
+      "canonical_path": "tools/legacy-workbench/write_misc_br.bat",
+      "sha256": "85af2362450bc427c69441b1e512b6054c11aa84ecece69a8b5aeec2b1fd14d7"
+    },
+    {
+      "workbench_path": "edl_work/write_recovery.bat",
+      "canonical_path": "tools/legacy-workbench/write_recovery.bat",
+      "sha256": "6fc92f3722935008fa9e8220d2af22733dcfd3cb13630e32cfe2d34abb252151"
+    },
+    {
+      "workbench_path": "edl_work/write_recovery_stock.bat",
+      "canonical_path": "tools/legacy-workbench/write_recovery_stock.bat",
+      "sha256": "91814cdd45f3f949062e8e05b41c629ab4c2fcf7dce12e4e78bacb06750430c6"
+    },
+    {
+      "workbench_path": "edl_work/write_slotb.bat",
+      "canonical_path": "tools/legacy-workbench/write_slotb.bat",
+      "sha256": "d8dc7246cee620d8e76515f259d7b5adb377e05a7d956efd2e091a4182926352"
+    }
+  ],
+  "oneoff_helpers_not_imported": [
+    "_agents_bcb_patch.py",
+    "_agents_dispatch.py",
+    "_bcb_patch.c",
+    "_bcb_rewrite.py",
+    "_ffbm_scan.py",
+    "_imem_patch.py",
+    "_plat2.py",
+    "_plat3.py",
+    "_plat4.py",
+    "_plat5.py",
+    "_platform_patch.py"
+  ]
+}

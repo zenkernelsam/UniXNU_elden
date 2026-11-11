@@ -1,0 +1,210 @@
+{
+  "schema": 1,
+  "repositories": [
+    {
+      "name": "Adreno740-a830",
+      "url": "https://github.com/IssacL04/Adreno740.git",
+      "observed_head": "a9a2cbb43b89d672e2921e19721a6438b738b17f"
+    },
+    {
+      "name": "Adreno740-ipados27",
+      "url": "https://github.com/UniXNU/Adreno740",
+      "observed_head": "10ac0eaa0ad8f24426da85d3570026081dc50bc5"
+    },
+    {
+      "name": "AdrenoMetal-a830",
+      "url": "https://github.com/IssacL04/AdrenoMetal.git",
+      "observed_head": "831a9dcbd6ac7de89a11bdaf031e07b9aadfa3c8"
+    },
+    {
+      "name": "AdrenoPM4-night",
+      "url": "https://github.com/UniXNU/AdrenoPM4.git",
+      "observed_head": "282606b528b2595bc4274ea7490b62b323f35a5f"
+    },
+    {
+      "name": "armada-tb321fu",
+      "url": "https://github.com/enij90/armada-tb321fu.git",
+      "observed_head": "07421c6f143925e5856d5d56ff4bb230ecbfef8f"
+    },
+    {
+      "name": "armadaos-freedom",
+      "url": "https://github.com/mydanyi/armadaos-freedom",
+      "observed_head": "885fd1fdaa373f266b9a3207997b91c67aa22e6d"
+    },
+    {
+      "name": "ArmSmmu4K-night",
+      "url": "https://github.com/UniXNU/ArmSmmu4K.git",
+      "observed_head": "83969cd874503e65997ff7639f7dcf3d0a92cd17"
+    },
+    {
+      "name": "data-a-live",
+      "url": "https://github.com/ShueiTsuki/data-a-live",
+      "observed_head": "d2c7089b0a2e6da2b1e7e843337b503ec032b2c5"
+    },
+    {
+      "name": "droidspaces-kernel",
+      "url": "https://github.com/ll1zt/tb322fc-droidspaces-kernel",
+      "observed_head": "8ee29ae7e01d2798f3b2a356bedeaa33e8d366d8"
+    },
+    {
+      "name": "edk2-gunyah",
+      "url": "https://github.com/Droid-VM/edk2-gunyah",
+      "observed_head": "90c4d52c7d11485318bbb4fb9291a15ea1550ab2"
+    },
+    {
+      "name": "hackios-xnu-kernel-sm8750",
+      "url": "https://github.com/SQMY-dor/hackios-xnu-kernel-sm8750",
+      "observed_head": "c58470091712d02975fc3671c62004522eb9c74b"
+    },
+    {
+      "name": "ltbox",
+      "url": "https://github.com/miner7222/LTBox",
+      "observed_head": "8f6d141c467e6039d2d605b2b1324cbada56b8f1"
+    },
+    {
+      "name": "mu-silicium",
+      "url": "https://github.com/Project-Silicium/Mu-Silicium",
+      "observed_head": "46e4ac0800862fb3ee6da09f0028fbef4e767648"
+    },
+    {
+      "name": "mwp",
+      "url": "https://github.com/sunflower2333/mu_wide_platforms",
+      "observed_head": "3e1d052064beb6e59cda3cfba87d50e6cc088174"
+    },
+    {
+      "name": "NativeAdreno",
+      "url": "https://github.com/UniXNU/NativeAdreno",
+      "observed_head": "95789237473c8bc72be86f2bb4166b11ad0f0f20"
+    },
+    {
+      "name": "NativeAdreno-myron",
+      "url": "https://github.com/zg7681/NativeAdreno-myron",
+      "observed_head": "26220f1ab79fec643517336fbd81574bd1e0d05a"
+    },
+    {
+      "name": "partclone",
+      "url": "https://github.com/Thomas-Tsai/partclone.git",
+      "observed_head": "09f9e772a486283ff4cd3fb48e54f6a29e13b9ce"
+    },
+    {
+      "name": "QcaBluetooth",
+      "url": "https://github.com/UniXNU/QcaBluetooth.git",
+      "observed_head": "22ff97f93416452335bb61badb14c762da653487"
+    },
+    {
+      "name": "QcomDwc3",
+      "url": "https://github.com/UniXNU/QcomDwc3.git",
+      "observed_head": "e4efe95c903a737e0f5955e5b50a8fb4d2a7d718"
+    },
+    {
+      "name": "qdlrs",
+      "url": "https://github.com/qualcomm/qdlrs",
+      "observed_head": "75fe2f7e42546a1d75969040378d4616419a9dcf"
+    },
+    {
+      "name": "ShengHidInput",
+      "url": "https://github.com/UniXNU/ShengHidInput",
+      "observed_head": "114061452959a547aaa08f9ca5aa54033394ca2f"
+    },
+    {
+      "name": "ShengNovatekTouch",
+      "url": "https://github.com/UniXNU/ShengNovatekTouch",
+      "observed_head": "69fdd6223ed2572aa8bd8351e77c53a238276130"
+    },
+    {
+      "name": "ShengPreflight",
+      "url": "https://github.com/UniXNU/ShengPreflight",
+      "observed_head": "9cfc8d2c8d77f2008ba228fa6eff83d2c7ab7fd2"
+    },
+    {
+      "name": "ShengUfs",
+      "url": "https://github.com/UniXNU/ShengUfs",
+      "observed_head": "57f031c99d7f69ffa611626bebaeab0731e93254"
+    },
+    {
+      "name": "tb322fc-linux-kernel",
+      "url": "https://github.com/h0cheung/tb322fc-linux-kernel",
+      "observed_head": "bf96c3d4048973298ede78487177c6f1b4f6bc0f"
+    },
+    {
+      "name": "testkey-signer",
+      "url": "https://github.com/showdo/AOSP-Testkey-BootSigner",
+      "observed_head": "0afc0203d9e28b37499f895bf1d4cf4e2f9c661a"
+    },
+    {
+      "name": "twrp-device",
+      "url": "https://github.com/polygraphene/android_device_lenovo_TB322FC",
+      "observed_head": "c9c6a9f1287e5b416c3480c5fe06b23dc54c9ab8"
+    },
+    {
+      "name": "uefi-sheng",
+      "url": "https://github.com/UniXNU/uefi-sheng",
+      "observed_head": "66421cb7bb5694843aec8de1ca3d1de4c20cca38"
+    },
+    {
+      "name": "UniXNU-dada",
+      "url": "https://github.com/7Night-kqx/UniXNU-dada",
+      "observed_head": "81981cdf679620bcd30457d1d518d3b93d753434"
+    },
+    {
+      "name": "UniXNU-erhai",
+      "url": "https://github.com/wally001012-cyber/UniXNU-erhai",
+      "observed_head": "48cf00a7a97f3a2db10c84c39cf21701a867784e"
+    },
+    {
+      "name": "UniXNU-hummer",
+      "url": "https://github.com/2426120557/UniXNU-hummer",
+      "observed_head": "596d9dcdf59b06a2b139c12a1c69c2f216a55c90"
+    },
+    {
+      "name": "UniXNU-myron",
+      "url": "https://github.com/zg7681/UniXNU-myron",
+      "observed_head": "b3ce4ca3c0411078ba5897633b7b1440acd678bf"
+    },
+    {
+      "name": "unixnu-nativemobiledisplay",
+      "url": "https://github.com/RigoLigoRLC/unixnu-nativemobiledisplay",
+      "observed_head": "9e61131843529e3d5deb4466b26468c8e9628ce5"
+    },
+    {
+      "name": "UniXNU-Odin3",
+      "url": "https://github.com/darkplace/UniXNU-Odin3.git",
+      "observed_head": "6d58c09d1529fb22dba8e3d6f74d8d4c7f9f8306"
+    },
+    {
+      "name": "UniXNU-Pagani-Drivers",
+      "url": "https://github.com/IssacL04/UniXNU-Pagani-Drivers.git",
+      "observed_head": "c888efd3ce1b817d13f28783a77cf689cb2255c9"
+    },
+    {
+      "name": "UniXNU-Pagani_SM8750",
+      "url": "https://github.com/IssacL04/UniXNU-Pagani_SM8750",
+      "observed_head": "a84204eccb9b183945072e1b9b63de36c8495097"
+    },
+    {
+      "name": "UniXNU-piano",
+      "url": "https://github.com/code002-2/UniXNU-piano",
+      "observed_head": "98b3f94a067aff93a9296de7b80fdddc03dae380"
+    },
+    {
+      "name": "UniXNU-sheng",
+      "url": "https://github.com/UniXNU/UniXNU-sheng",
+      "observed_head": "abfc15a6e05d36b616ad2d8a3b52fef960999a0e"
+    },
+    {
+      "name": "UniXNU-sm8550-common",
+      "url": "https://github.com/UniXNU/UniXNU-sm8550-common",
+      "observed_head": "97665e28578483082b674e8375a8fa65f4cf49cf"
+    },
+    {
+      "name": "UniXNU-sm8750-common-pagani",
+      "url": "https://github.com/IssacL04/UniXNU-sm8750-common.git",
+      "observed_head": "feaa135df4763e3c19a155402e6b17b124a12e13"
+    },
+    {
+      "name": "UniXNU_Enc3l-night",
+      "url": "https://github.com/IssacL04/UniXNU_Enc3l.git",
+      "observed_head": "a6ff7768bba6b9f285ac4c3e5b2c5d4904a016a3"
+    }
+  ]
+}

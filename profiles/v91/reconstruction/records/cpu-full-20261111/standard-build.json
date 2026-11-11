@@ -1,0 +1,47 @@
+[
+  {
+    "step": "corecrypto",
+    "returncode": 0,
+    "elapsed_seconds": 54.86303773196414
+  },
+  {
+    "step": "pthread",
+    "returncode": 0,
+    "elapsed_seconds": 6.289588218089193
+  },
+  {
+    "step": "mockfs",
+    "returncode": 0,
+    "elapsed_seconds": 1.401986159849912
+  },
+  {
+    "step": "armdt",
+    "returncode": 0,
+    "elapsed_seconds": 0.742978957016021
+  },
+  {
+    "step": "armcpu",
+    "returncode": 0,
+    "elapsed_seconds": 0.9142182141076773
+  },
+  {
+    "step": "aes",
+    "returncode": 0,
+    "elapsed_seconds": 0.8005686420947313
+  },
+  {
+    "step": "ufs",
+    "returncode": 0,
+    "elapsed_seconds": 8.249317002017051
+  },
+  {
+    "step": "ramblock",
+    "returncode": 0,
+    "elapsed_seconds": 3.1806885339319706
+  },
+  {
+    "step": "display",
+    "returncode": 0,
+    "elapsed_seconds": 10.579749133903533
+  }
+]

@@ -1,0 +1,26 @@
+--- a/osfmk/arm64/sleh.c
++++ b/osfmk/arm64/sleh.c
+@@ -1224,6 +1224,8 @@
+ }
+ 
+ #if DEVELOPMENT || DEBUG
++#include <vm/vm_shared_region.h>
++extern void elden_usb_user_meta(int,uint64_t,uint32_t,int,const void *) __attribute__((weak));
+ extern int elden_usb_fault_enabled(void) __attribute__((weak));
+ extern void elden_usb_user_fault(int, const char *, uint32_t, uint64_t, uint64_t,
+     uint64_t, uint64_t, uint64_t) __attribute__((weak));
+@@ -1232,6 +1234,14 @@
+ {
+     if (!elden_usb_user_fault || !elden_usb_fault_enabled || !elden_usb_fault_enabled() ||
+         !is_saved_state64(state) || (saved_state64(state)->cpsr & 0xf) != 0) return;
++    if (elden_usb_user_meta) {
++        vm_shared_region_t shared = vm_shared_region_get(current_task());
++        uint32_t slide = shared ? shared->sr_slide : UINT32_MAX;
++        if (shared) vm_shared_region_deallocate(shared);
++        uint8_t instruction[16] = {0};
++        int copy_error = copyin(get_saved_state_pc(state), instruction, sizeof(instruction));
++        elden_usb_user_meta(proc_pid(current_proc()), get_saved_state_pc(state), slide, copy_error, instruction);
++    }
+     uint64_t start = 0, offset = 0;
+     vm_map_t map = current_thread()->map;
+     vm_map_entry_t entry;

@@ -1,0 +1,6 @@
+.globl __ZN17AppleARMBacklight10gMetaClassE
+.set __ZN17AppleARMBacklight10gMetaClassE, 0xfffffff006ade638
+.globl __ZN17AppleARMBacklightC2EPK11OSMetaClass
+.set __ZN17AppleARMBacklightC2EPK11OSMetaClass, 0xfffffff0049abc1c
+.globl __ZN17AppleARMBacklightD2Ev
+.set __ZN17AppleARMBacklightD2Ev, 0xfffffff0049abc84

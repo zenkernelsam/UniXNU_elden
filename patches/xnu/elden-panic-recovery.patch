@@ -1,0 +1,13 @@
+--- a/osfmk/kern/debug.c
++++ b/osfmk/kern/debug.c
+@@ -1558,6 +1558,10 @@
+ 	}
+ 
+ 	paniclog_append_noflush("\nPlease go to https://panic.apple.com to report this panic\n");
++#if DEVELOPMENT || DEBUG
++	extern void elden_panic_return_to_fastboot(void) __attribute__((weak));
++	if (elden_panic_return_to_fastboot) elden_panic_return_to_fastboot();
++#endif
+ 	panic_spin_forever();
+ }
+ 

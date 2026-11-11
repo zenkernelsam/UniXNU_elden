@@ -1,0 +1,16 @@
+{
+  "files": {
+    "WcPolicy.h": "60aba7c6f1f14974607db9ecd5d24e02aea11720acbe9bcf473df58c7c5dc7de",
+    "MappingCheck.c": "0635cabede2e88b14711ba28101c2977577fe25a520195f97626941fe664f6ad",
+    "TestWcPolicy.c": "16bee8addd044230b72cf834b537e1081203895a185d14ba29a66db0df34de31",
+    "video_console.c": "9c7525a67b438f254cc3a69045b28cd536a111ae0b85d19ac715ec2df9771f66",
+    "SmpGuard.inc": "b9cb4004d114243cf30bf4796e18b6f1415d5aea9c7f895af88a5a9373d24c84",
+    "EldenSdamRecovery.inc": "85928bf0212ed86b27edbfb49c01807d2ef710adf668f0be9f2fd80fac7f9aec",
+    "EldenDisplayGlue.cpp": "aea986603a6f13d013d155bf62819be6a70bd2f821ad44bc29c56f24c23d4a05",
+    "NativeLegacyDisplay.cpp": "780a5ea64e3348ab0edbfb0c6bce525947acb7da21826cee2815e03e29d97d00"
+  },
+  "parent_source_manifest_sha256": "77252f3b3d55529189324f14c3793bbe1dd1000480de6f4d297da98bb3da095f",
+  "parent_console_sha256": "0bbc3e6242546f8c6d815d6184dc3d55c3292190bb496e6aa9efbb50c4c5444a",
+  "scope": "experimental fbwc=1: no console alias; deferred display after confirmed hardware watchdog; fixed isolated framebuffer; WC descriptor; all-page AT check before pixel access",
+  "hardware_tested": false
+}

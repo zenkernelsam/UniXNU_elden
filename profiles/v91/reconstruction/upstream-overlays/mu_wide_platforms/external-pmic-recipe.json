@@ -1,0 +1,13 @@
+{
+  "file": "Platforms/PakalaPkg/Device/lenovo-y700g4/PatchedBinaries/PmicDxeLA.efi",
+  "upstream_commit": "3e1d052064beb6e59cda3cfba87d50e6cc088174",
+  "input_sha256": "23e11b46ffc7c8e23e66a8724bd57705072c1cd58fd17846ede68a84f4de019c",
+  "output_sha256": "e34f2478c1719c5c53fe25255b6d6ec0a20ca544eade294b83e86185f861694a",
+  "input_bytes": 266240,
+  "bytes": 274432,
+  "changed_bytes": null,
+  "changes": [],
+  "reconstruction": "Use the already-tracked patches/overlays/mu_wide_platforms file in this repository; full SHA matches the Mac input. No new firmware binary added by this migration.",
+  "scope": "Observed Y700 firmware input, not a new authorization to flash",
+  "other_device_binary": "nubia-nx789j remains on Mac; not part of Y700 reproduction"
+}

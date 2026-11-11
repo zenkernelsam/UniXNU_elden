@@ -1,0 +1,14 @@
+--- a/bsd/kern/kern_shutdown.c
++++ b/bsd/kern/kern_shutdown.c
+@@ -563,4 +563,11 @@
+ 			vfs_unmountall(FALSE);
+ 			halt_log_enter("vfs_unmountall", 0, mach_absolute_time() - startTime);
+ 		}
++		/* The owned Data provider closes writes only after the full VFS
++		 * shutdown, before storage driver/hardware termination. */
++		{
++			extern int elden_data_reboot_fence(void) __attribute__((weak));
++			if (elden_data_reboot_fence && !elden_data_reboot_fence())
++				panic("ELDEN_DATA reboot fence refused outstanding or uncertain writes");
++		}
+ 

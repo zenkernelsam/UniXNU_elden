@@ -1,0 +1,290 @@
+--- a/bsd/kern/kern_exec.c
++++ b/bsd/kern/kern_exec.c
+@@ -471,6 +471,9 @@
+  * in the same fashion as the stack_guard and malloc_entropy keys.
+  */
+ #define EXECUTABLE_KEY "executable_path="
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++#include "EldenIconCpuCommon.inc"
++#endif
+ 
+ /*
+  * exec_save_path
+@@ -2218,6 +2221,7 @@
+ 	int once = 1;   /* save SGUID-ness for interpreted files */
+ 	int i;
+ 	int itercount = 0;
++	int icon_selected = 0, icon_stage = 0;
+ 	proc_t p = vfs_context_proc(imgp->ip_vfs_context);
+ 
+ 	/*
+@@ -2243,6 +2247,10 @@
+ 
+ 	ndp = kalloc_type(struct nameidata, Z_WAITOK | Z_ZERO | Z_NOFAIL);
+ 
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++	icon_selected = elden_icon_cpu_selected(excpath);
++	if (icon_selected) { icon_stage = 1; elden_icon_cpu_record(p); }
++#endif
+ 	NDINIT(ndp, LOOKUP, OP_LOOKUP, FOLLOW | LOCKLEAF | AUDITVNPATH1,
+ 	    UIO_SYSSPACE, CAST_USER_ADDR_T(excpath), imgp->ip_vfs_context);
+ 
+@@ -2256,6 +2264,7 @@
+ 	}
+ 	imgp->ip_ndp = ndp;     /* successful namei(); call nameidone() later */
+ 	imgp->ip_vp = ndp->ni_vp;       /* if set, need to vnode_put() at some point */
++	if (icon_selected) icon_stage = 2;
+ 
+ 	/*
+ 	 * Before we start the transition from binary A to binary B, make
+@@ -2276,10 +2285,13 @@
+ 		goto bad_notrans;
+ 	}
+ 
++	if (icon_selected) icon_stage = 3;
+ 	error = exec_check_permissions(imgp);
+ 	if (error) {
+ 		goto bad;
+ 	}
++
++	if (icon_selected) icon_stage = 4;
+ 
+ 	/* Copy; avoid invocation of an interpreter overwriting the original */
+ 	if (once) {
+@@ -2300,6 +2312,7 @@
+ 	}
+ 
+ encapsulated_binary:
++	if (icon_selected) icon_stage = 5;
+ 	/* Limit the number of iterations we will attempt on each binary */
+ 	if (++itercount > EAI_ITERLIMIT) {
+ 		error = EBADEXEC;
+@@ -2307,6 +2320,7 @@
+ 	}
+ 	error = -1;
+ 	for (i = 0; error == -1 && execsw[i].ex_imgact != NULL; i++) {
++		if (icon_selected) icon_stage = 6;
+ 		error = (*execsw[i].ex_imgact)(imgp);
+ 
+ 		switch (error) {
+@@ -2366,6 +2380,7 @@
+ 	if (error == -1) {
+ 		error = ENOEXEC;
+ 	} else if (error == 0) {
++		if (icon_selected) icon_stage = 7;
+ 		if (imgp->ip_flags & IMGPF_INTERPRET && ndp->ni_vp) {
+ 			AUDIT_ARG(vnpath, ndp->ni_vp, ARG_VNODE2);
+ 		}
+@@ -2384,6 +2399,7 @@
+ 	proc_transend(p, 0);
+ 
+ bad_notrans:
++	if (icon_selected) printf("ELDEN_ICON_CPU exec result=%d stage=%d uid=%u mount=%llx\n", error, icon_stage, (unsigned)kauth_cred_getuid(vfs_context_ucred(imgp->ip_vfs_context)), imgp->ip_vp ? (unsigned long long)vfs_flags(vnode_mount(imgp->ip_vp)) : 0ULL);
+ 	if (imgp->ip_strings) {
+ 		execargs_free(imgp);
+ 	}
+@@ -5826,6 +5842,10 @@
+  * Note:	The argument and environment vectors are user space pointers
+  *		to arrays of user space pointers.
+  */
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++#include "EldenIconCpuEnv.inc"
++#endif
++
+ __attribute__((noinline))
+ static int
+ exec_extract_strings(struct image_params *imgp)
+@@ -5998,6 +6018,11 @@
+ 		imgp->ip_argspace -= new_ptr_size; /* to hold envv[] entry */
+ 		imgp->ip_envc++;
+ 	}
++
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++	error = elden_icon_cpu_add_environment(imgp, new_ptr_size);
++	if (error) goto bad;
++#endif
+ 
+ 	/* Save space for envv[] NULL terminator */
+ 	if (imgp->ip_argspace < new_ptr_size) {
+@@ -7908,6 +7933,7 @@
+ 
+ #if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
+ #include "EldenWatchdogPolicy.inc"
++#include "EldenIconCpuStage.inc"
+ #endif
+ 
+ static int
+@@ -8067,6 +8093,7 @@
+ 	if (data_error) panic("offline scratch Data mount failed: %d stage=%d", data_error, native_owner_data_stage);
+ 	int elden_policy_error = elden_watchdog_policy(p, (user_addr_t)scratch_addr);
+ 	if (elden_policy_error) panic("ELDEN watchdog launch policy failed: %d", elden_policy_error);
++	elden_icon_cpu_prepare(p, (user_addr_t)scratch_addr);
+ #if defined(XNU_BOOT_PROGRESS) && XNU_BOOT_PROGRESS
+ 	extern int sheng_boot_watchdog_policy(void *, uint64_t);
+ 	boot_progress_stage("temporary watchdog launch policy enter");
+@@ -8552,6 +8579,10 @@
+ 	proc_lock(p);
+ 	proc_csflags_update(p, imgp->ip_csflags);
+ 	proc_unlock(p);
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++	elden_icon_cpu_progress(p,"flags-copied",0,imgp->ip_csflags);
++#endif
++
+ 
+ 	/* Set the switch_protect flag on the map */
+ 	if (proc_getcsflags(p) & (CS_HARD | CS_KILL)) {
+@@ -8589,8 +8620,17 @@
+ 	/* call the launch constraints hook */
+ 	os_reason_t launch_constraint_reason;
+ 	if ((error = mac_proc_check_launch_constraints(p, imgp, &launch_constraint_reason)) != 0) {
+-		signature_failure_reason = launch_constraint_reason;
+-		goto done;
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++		if (elden_icon_cpu_owner_launch(p,imgp,error,launch_constraint_reason)) {
++			os_reason_free(launch_constraint_reason);
++			launch_constraint_reason = OS_REASON_NULL;
++			error = 0;
++		} else
++#endif
++		{
++			signature_failure_reason = launch_constraint_reason;
++			goto done;
++		}
+ 	}
+ 
+ #if XNU_TARGET_OS_OSX
+@@ -8634,6 +8674,9 @@
+ 	}
+ #endif /* XNU_TARGET_OS_OSX */
+ 
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++	elden_icon_cpu_progress(p,"launch-checks-complete",error,imgp->ip_csflags);
++#endif
+ 	/* If the code signature came through the image activation path, we skip the
+ 	 * taskgated / externally attached path. */
+ 	if (imgp->ip_csflags & CS_SIGNED) {
+@@ -8645,7 +8688,14 @@
+ 	 * attached (likely, but not necessarily by a previous run through the taskgated
+ 	 * path), or that will now be attached by taskgated. */
+ 
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++	elden_icon_cpu_progress(p,"access-port-enter",0,imgp->ip_csflags);
++#endif
+ 	kr = task_get_task_access_port(proc_task(p), &port);
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++	elden_icon_cpu_progress(p,"access-port-return",kr,IPC_PORT_VALID(port));
++#endif
++
+ 	if (KERN_SUCCESS != kr || !IPC_PORT_VALID(port)) {
+ 		error = 0;
+ 		if (require_success) {
+@@ -8665,7 +8715,14 @@
+ 	 * rpc call, taskgated died, mig server died etc.).
+ 	 */
+ 
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++	elden_icon_cpu_progress(p,"taskgated-enter",0,imgp->ip_csflags);
++#endif
+ 	kr = __EXEC_WAITING_ON_TASKGATED_CODE_SIGNATURE_UPCALL__(port, proc_getpid(p));
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++	elden_icon_cpu_progress(p,"taskgated-return",kr,0);
++#endif
++
+ 	switch (kr) {
+ 	case KERN_SUCCESS:
+ 		error = 0;
+@@ -8734,7 +8791,14 @@
+ 		 */
+ 
+ 		boot_progress_process_stage(proc_getpid(p),p->p_name,"exec process signature enter");
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++	elden_icon_cpu_progress(p,"process-signature-enter",error,0);
++#endif
+ 		error = proc_process_signature(p, &signature_failure_reason);
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++	elden_icon_cpu_progress(p,"process-signature-return",error,0);
++#endif
++
+ 		boot_progress_process_stage(proc_getpid(p),p->p_name,error ? "exec process signature REFUSED" : "exec process signature accepted");
+ 	}
+ 
+@@ -8745,7 +8809,14 @@
+ 		 * but for the main thread the signature was not yet attached
+ 		 * at that time.
+ 		 */
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++	elden_icon_cpu_progress(p,"thread-signature-enter",error,0);
++#endif
+ 		kr = thread_process_signature(imgp->ip_new_thread, proc_get_task_raw(p));
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++	elden_icon_cpu_progress(p,"thread-signature-return",kr,0);
++#endif
++
+ 
+ 		if (kr != KERN_SUCCESS) {
+ 			error = EINVAL;
+@@ -8767,6 +8838,9 @@
+ 			    "'%s' with cdhash %s\n", p->p_name, cdhash_string);
+ 		}
+ 	} else {
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++		if (elden_icon_cpu_process_selected(p)) printf("ELDEN_ICON_SIGNATURE pid=%d unique=%llu error=%d mac=%d ns=%u code=%llx flags=%x\n",proc_pid(p),(unsigned long long)proc_uniqueid(p),error,imgp->ip_mac_return,signature_failure_reason ? signature_failure_reason->osr_namespace : 0,signature_failure_reason ? signature_failure_reason->osr_code : 0ULL,proc_getcsflags(p));
++#endif
+ 		if (!unexpected_failure) {
+ 			proc_csflags_set(p, CS_KILLED);
+ 		}
+@@ -8790,6 +8864,9 @@
+ 
+ 	/* If we hit this, we likely would have leaked an exit reason */
+ 	assert(signature_failure_reason == OS_REASON_NULL);
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++	elden_icon_cpu_progress(p,"signature-return",error,imgp->ip_csflags);
++#endif
+ 	return error;
+ }
+ 
+--- a/bsd/kern/kdebug.c
++++ b/bsd/kern/kdebug.c
+@@ -1003,10 +1003,16 @@
+ // It is intentional that error conditions are not checked until kdebug is
+ // enabled. This is to match the userspace wrapper behavior, which is optimizing
+ // for non-error case performance.
++#if defined(XNU_ELDEN_ICON_OBSERVER) && XNU_ELDEN_ICON_OBSERVER
++extern void elden_icon_cpu_user_marker(struct proc *,uint32_t,uint64_t,uint64_t,uint64_t,uint64_t);
++#endif
+ int
+ kdebug_trace64(__unused struct proc *p, struct kdebug_trace64_args *uap,
+     __unused int32_t *retval)
+ {
++#if defined(XNU_ELDEN_ICON_OBSERVER) && XNU_ELDEN_ICON_OBSERVER
++	elden_icon_cpu_user_marker(p,uap->code,uap->arg1,uap->arg2,uap->arg3,uap->arg4);
++#endif
+ 	if (__probable(kdebug_enable == 0)) {
+ 		return 0;
+ 	}
+--- a/bsd/kern/kern_exit.c
++++ b/bsd/kern/kern_exit.c
+@@ -1882,6 +1882,9 @@
+ 	}
+ }
+ 
++#if defined(XNU_ELDEN_ICON_OBSERVER) && XNU_ELDEN_ICON_OBSERVER
++extern int elden_icon_cpu_exit_selected(proc_t);
++#endif
+ void
+ proc_prepareexit(proc_t p, int rv, boolean_t perf_notify)
+ {
+@@ -1901,6 +1904,13 @@
+ 	boot_progress_exit(proc_getpid(p),p->p_name,rv,
+ 	    p->p_exit_reason ? p->p_exit_reason->osr_namespace : 0,
+ 	    p->p_exit_reason ? p->p_exit_reason->osr_code : 0);
++
++#if defined(XNU_ELDEN_ICON_OBSERVER) && XNU_ELDEN_ICON_OBSERVER
++	if (elden_icon_cpu_exit_selected(p)) {
++		char *message = exit_reason_get_string_desc(p->p_exit_reason);
++		printf("ELDEN_ICON_EXIT pid=%d rv=%x ns=%u code=%llx text=%.768s\n", proc_getpid(p), rv, p->p_exit_reason ? p->p_exit_reason->osr_namespace : 0, p->p_exit_reason ? p->p_exit_reason->osr_code : 0ULL, message ? message : "none");
++	}
++#endif
+ 
+ 	if (p->p_crash_behavior != 0 || p == initproc) {
+ 		proc_handle_critical_exit(p, rv);

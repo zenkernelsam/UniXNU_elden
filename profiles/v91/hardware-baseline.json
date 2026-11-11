@@ -1,0 +1,47 @@
+{
+  "milestone": "One software swipe and short Settings tap reached populated Settings/General UI",
+  "visual_assessment": {
+    "observer": "assistant via view_image",
+    "confirmed": true,
+    "details": "Settings title, populated colored sidebar, General selection and populated right pane",
+    "frame_id": 10,
+    "frame_crc32": "0x3bd2f297",
+    "sampled_dimensions": [
+      238,
+      380
+    ]
+  },
+  "image_sha256": "879ef26b2f438bc63856769deee0d1b0790d51a55b30bcc57f5fb92d34ca746f",
+  "kernel_sha256": "2d72dea2e1b69adf063a9db2b91b06cb16e1bc880425a868f62f6611989efe69",
+  "session": "6c0b187edabfa6cf",
+  "glyph_pid": 108,
+  "successful_raster_events": 8,
+  "cf_color_identity_observed": true,
+  "complete_fault_lines": 0,
+  "nonzero_icon_exit_lines": [],
+  "whole_capture_dropped": 24,
+  "software_settings_operation_passed": true,
+  "physical_touch_verified": false,
+  "full_goal_complete": false,
+  "limits": [
+    "single boot/operation, not all workloads",
+    "some unrelated log bytes dropped; CRC frame and counted raster records retained",
+    "extra CI effects and 8-bit output limitations remain",
+    "display performance, physical gestures and remaining peripherals still pending"
+  ],
+  "current_device": "restored stock Android, root/green/boot completed, sleep requested",
+  "evidence_sha256": {
+    "edl_work/basic-bundle-20261108/v91/final/icon-cpu-focused-gestures-ipad-pro-cpu8/boot-signed.img": "879ef26b2f438bc63856769deee0d1b0790d51a55b30bcc57f5fb92d34ca746f",
+    "edl_work/basic-bundle-20261108/v91/final/icon-cpu-focused-gestures-ipad-pro-cpu8/packet.json": "13bffd2d2e1059b7a4c0548252b70c803d8799f6e9095a3b77b69ada69e4e0e8",
+    "edl_work/basic-bundle-20261108/v91/final/icon-cpu-focused-gestures-ipad-pro-cpu8/independent-audit.json": "e2eac12511624ef9a26fcd707a1e7cf94d407f9f77857d3f66ab9297fb18c462",
+    "edl_work/live-graphic-cfcolor-v91-20261111/flash/result.json": "d4e73bf147f6034a258409b2bf3b3772419cd24be8f8692542676555bd0f05bf",
+    "edl_work/live-graphic-cfcolor-v91-20261111/usb/20261111-130743.bin": "dce87b250805f331a541d470909a0812df78cbaa6be7258007eec8b3bfb53dd2",
+    "edl_work/live-graphic-cfcolor-v91-20261111/usb/20261111-130743.json": "cc8358cfa8e39ca5b78f8204eef2492bf181c09ce0e504da8d673f894e14a21d",
+    "edl_work/live-graphic-cfcolor-v91-20261111/trial.json": "e1b436d5c64f69293c19833bc84d310c59d6734ff39ff1cd2a19f17716efef3f",
+    "edl_work/live-graphic-cfcolor-v91-20261111/trial-frames/after-tap-10.png": "d0e28f117d989dba33e8eaa090540bde9fce18adb40f0aa0de5ff3d5b4c077c3",
+    "edl_work/graphic-cfcolor-v91-stock-20261111/flash/result.json": "d4131ba018e33f84ab1065b50c7504c79833b35eeab46362c8cf3f433d976a71",
+    "edl_work/graphic-cfcolor-v91-stock-20261111/android-final.json": "42cea4ccf84cb3762315f460021e225c11dd3265a7f39a09c38f450169ba0d0d",
+    "edl_work/icon-dependency-20261111/v91/EldenIconCpuMode.dylib": "f748e9cf601db43167eaf7736b0a161771b8c01eeb46860820604ccf892ac034",
+    "edl_work/basic-bundle-20261108/v91/glyph-codegen.json": "d1b7d16a3ccf9cc7b34a9c8462321307e6977f023164f9542b2e383a9c78aaf0"
+  }
+}

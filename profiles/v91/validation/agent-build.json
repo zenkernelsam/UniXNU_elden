@@ -1,0 +1,10 @@
+{
+  "original_sha256": "dd01b74e4413e0bb72de4a62f3f7675deb5026cad79d376fde6570abd0d012f8",
+  "library_sha256": "f748e9cf601db43167eaf7736b0a161771b8c01eeb46860820604ccf892ac034",
+  "signed_agent_sha256": "73ab1f27b03c6b823678bbd1a194db285eb494f1b8fa53d24d887a5a0d94bb8d",
+  "header_sha256": "8fe7e098bf56d6d71ee02f885f1e5166c1ae95ad77497d0a08b30adf8835a143",
+  "header_byte_identical_to_v91": true,
+  "original_text_sections_unchanged": true,
+  "entitlements_unchanged": true,
+  "device_operation": false
+}

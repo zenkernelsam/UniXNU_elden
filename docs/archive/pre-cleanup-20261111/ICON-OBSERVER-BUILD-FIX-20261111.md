@@ -1,0 +1,11 @@
+# 状态／退出钩子的编译开关错误
+
+v71之后离线发现确定错误：build-xnu-4k-baseline.sh只通过kern_exec.o_CFLAGS_ADD传入XNU_OWNER_DATA_MOUNT。此前kdebug.c和kern_exit.c中的观察代码也套用此宏，因此被预处理掉；Common.inc中的辅助函数虽然存在，系统调用和退出入口没有调用它们。
+
+实际v71反汇编：kdebug_trace64仅15指令、无elden_icon_cpu_user_marker；kdebug_trace34指令同样没有该调用；proc_prepareexit没有elden_icon_cpu_exit_selected调用。旧审计只确认辅助函数存在和其机器码，没有检查入口可达性，覆盖不足。v67–v71“无loaded/installed／无退出报告”不能证明库未加载或服务没有退出；其他已有签名阶段／等待栈／UI证据仍有效。
+
+v72修复使用专用XNU_ELDEN_ICON_OBSERVER，同时给构建传入该宏；从原构建脚本读取默认XNU_EXTRA_CFLAGS并原样保留，或保留已有显式值，不用新开关替代原选项。仅这两个观察文件使用该宏，不全局开启OWNER_DATA_MOUNT。实际审计新增syscall179、syscall180（允许经64入口转调）与proc_prepareexit的可达调用要求。
+
+附加最多8条精确选中进程／固定trace code的拒绝参数记录，防止正确接入后因UID或ABI不匹配继续静默。正常状态仍64条上限、同一magic/mode/version/UID准入；host拒绝门和原owner约束门通过ASan/UBSan。库、agent、TC、充电和触控控制均未改。当前仅构建，尚未上机；结果另记。
+
+后续候选不能复用“辅助函数存在”当作接口已接通的证明，必须检查调用入口或实际运行记录。

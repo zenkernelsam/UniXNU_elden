@@ -33,6 +33,12 @@ ufs_phy = "0x1d80000"
 usb_debug_controller = "0x0a600000"
 usb_debug_sid = "0x40"
 usb_debug_resources = "soc/sm8750/include/EldenUsbResources.h"
+cpu_performance = "SCMI PERF over CPUCP v2, TX mailbox channel 0"
+cpu_performance_resources = "soc/sm8750/include/EldenCpuPerfResources.h"
+backlight = "AW99706 at I2C10 / QUPv3 wrapper2 SE2, address 0x76, HWEN GPIO88"
+backlight_resources = "soc/sm8750/include/EldenBacklightResources.h"
+connector_thermometers = "ADC5 SDAM0: USB1 SID7 AMUX47 Gen4; USB2 SID1 AMUX47 Gen3"
+connector_thermal_resources = "soc/sm8750/include/EldenAdcResources.h"
 
 [kernel]
 defconfig = "elden_defconfig"

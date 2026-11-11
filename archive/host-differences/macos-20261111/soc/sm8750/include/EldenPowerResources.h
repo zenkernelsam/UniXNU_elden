@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: BSD-2-Clause-Patent
+// h0cheung/tb322fc-linux-kernel 6f97250ead155fc3b980856323e99a4623dae73d:
+// sm8750.dtsi reserved-memory, SMP2P and ADSP nodes. Firmware is board-owned.
+#pragma once
+#define ELDEN_POWER_SMEM_BASE 0x81d00000ULL
+#define ELDEN_POWER_SMEM_SIZE 0x200000u
+#define ELDEN_POWER_ADSP_PID 2u
+#define ELDEN_POWER_SMP2P_IN 443u
+#define ELDEN_POWER_SMP2P_OUT 429u
+#define ELDEN_POWER_GLINK_DESC 478u
+#define ELDEN_POWER_GLINK_TX 479u
+#define ELDEN_POWER_GLINK_RX 480u
+#define ELDEN_POWER_ADSP_BASE 0x9ee00000ULL
+#define ELDEN_POWER_ADSP_SIZE 0x3a80000u
+#define ELDEN_POWER_ADSP_DTB_BASE 0x9ed80000ULL
+#define ELDEN_POWER_ADSP_DTB_SIZE 0x80000u
+#define ELDEN_POWER_ADSP_PAS 1u
+#define ELDEN_POWER_ADSP_DTB_PAS 36u

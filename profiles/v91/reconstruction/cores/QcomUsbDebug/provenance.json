@@ -1,0 +1,10 @@
+{
+  "source": "Sibling QcomXnuUsbDebug generic MIT USB core; its native private-DMA adapter is not copied or modified",
+  "upstream_base": "m1n1 v1.4.17 per source header",
+  "files": {
+    "usb/Dwc3.c": "c7d9c98235d0c2b5422fb1a3e10a4ecc5834bb011c6790a9b2f81ce9b2ea7635",
+    "usb/Dwc3.h": "18dc05fba18820df14cc8e0e6739afa1d8ff364568df8e2c8d52a6a48d4e9f41",
+    "usb/Dwc3Regs.h": "2ceb1e04662f2e65dd05a3a990cf39014feef19f177c11414ed15345c5ffc18d",
+    "usb/LICENSE.m1n1": "ef78dd2f0b2d4414f828e6ac8b52126b86c4dd1b327ae78452dbab97d422bbb4"
+  }
+}

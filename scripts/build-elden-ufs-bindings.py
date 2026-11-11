@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bind NativeUfsBlock to the audited original iOS IOBlockStorageDevice.
+"""Bind Elden UFS/RAM subclasses to the audited original iOS IOBlockStorageDevice.
 
 The public reference object only describes the ABI. It is never linked into
 the kernel. All bindings below point to the owned candidate's original
@@ -37,6 +37,8 @@ def main():
     parser.add_argument('--candidate', type=Path, required=True)
     parser.add_argument('--plan', type=Path, required=True)
     parser.add_argument('--directory', type=Path, required=True)
+    parser.add_argument('--component', choices=('NativeUfsBlock','NativeRamBlock'), default='NativeUfsBlock')
+    parser.add_argument('--reuse-bindings', type=Path, help='Already linked UFS binding record; RAM adds no duplicate aliases')
     args = parser.parse_args()
     out = args.directory.resolve()
     audit = json.loads(args.audit.read_text())
@@ -57,9 +59,9 @@ def main():
             observed.get('guest_code_modified') is False,
             'Storage audit lacks the original kernel SCTLR instruction observation')
 
-    component = 'NativeUfsBlock'
+    component = args.component
     mangled = str(len(component)) + component
-    obj_path = out / 'ShengUfs.o'
+    obj_path = out / ('ShengUfs.o' if component == 'NativeUfsBlock' else 'NativeRamBlock.o')
     obj = obj_path.read_bytes()
     image = np.macho(obj)
     require(image['kind'] == 1 and struct.unpack_from('<3I', obj)[1:] == (0x100000c, 0),
@@ -134,9 +136,17 @@ def main():
     bound_obj = out / 'original-bindings.o'
     subprocess.run(['xcrun', 'clang', '-target', 'arm64-apple-ios17.0', '-Werror',
                     '-Wno-incompatible-sysroot', '-c', assembly, '-o', bound_obj], check=True)
-    archive = out / 'libShengUfs.a'
+    archive = out / ('libShengUfs.a' if component == 'NativeUfsBlock' else 'libRamBlock.a')
     archive.unlink(missing_ok=True)
-    subprocess.run(['xcrun', 'ar', 'rcs', archive, obj_path, bound_obj], check=True)
+    members = [obj_path, bound_obj]
+    if component == 'NativeRamBlock':
+        require(args.reuse_bindings is not None, 'RAM must share the qualified UFS binding definitions')
+        shared = json.loads(args.reuse_bindings.read_text())
+        require(shared['original_candidate_sha256'] == candidate_sha and
+                all(shared['bindings'].get(name) == hex(value) for name,value in bindings.items()),
+                'RAM imports differ from the already linked UFS bindings')
+        members = [obj_path]
+    subprocess.run(['xcrun', 'ar', 'rcs', archive, *members], check=True)
     record = dict(original_candidate_sha256=candidate_sha, original_sha256=ORIGINAL_SHA,
         audit_sha256=digest(args.audit), plan_sha256=digest(args.plan),
         public_source_revision=STORAGE_REVISION, compiled_object_sha256=digest(obj_path),
@@ -146,9 +156,11 @@ def main():
         bindings={name: hex(value) for name, value in sorted(bindings.items())},
         original_code_modified=False, live_base_metadata_qualified=True,
         actual_io_qualified=False, hardware_tested=False)
+    record['component'] = component
+    record['binding_aliases_reused'] = component == 'NativeRamBlock'
     (out / 'bindings.json').write_text(json.dumps(record, indent=2) + '\n')
-    print(f'PASS: 190 concrete UFS slots, {overrides} overrides, {len(bindings)} genuine original imports')
-    print(f'{archive} ({archive.stat().st_size} bytes); UFS hardware I/O remains untested')
+    print(f'PASS: {component}: 190 slots, {overrides} overrides, {len(bindings)} genuine original imports')
+    print(f'{archive} ({archive.stat().st_size} bytes); runtime I/O requires device evidence')
 
 
 if __name__ == '__main__':

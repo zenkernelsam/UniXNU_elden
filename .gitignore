@@ -22,3 +22,10 @@ third_party/
 *.key
 backup/
 backups/
+
+# Generated headers contain externally supplied Apple/Novatek executable bytes.
+EldenIconCpuPayload.h
+EldenNvtFirmware.h
+/lab/
+/maintenance/
+/local-maintenance.toml

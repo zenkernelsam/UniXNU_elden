@@ -1,0 +1,44 @@
+--- a/bsd/kern/kern_exec.c
++++ b/bsd/kern/kern_exec.c
+@@ -7822,6 +7822,8 @@
+ 	vnode_put(vp);
+ }
+ 
++extern void IOLog(const char *format, ...);
++
+ static int
+ native_owner_data_prepare(proc_t p, user_addr_t scratch)
+ {
+@@ -7866,7 +7868,14 @@
+ 	    (error = copyout(device_path, spec, strlen(device_path) + 1)) ||
+ 	    (error = copyout(payload, request.data, sizeof(payload)))) goto done;
+ 	native_owner_data_stage = 2;
++	vnode_t check_target = NULLVP, check_spec = NULLVP;
++	int target_error = vnode_lookup("/private/var", 0, &check_target, vfs_context_current());
++	int spec_error = vnode_lookup(device_path, 0, &check_spec, vfs_context_current());
++	IOLog("ELDEN_DATA preflight target=%d spec=%d device=%s bytes=%llu\n", target_error, spec_error, device_path, (unsigned long long)size);
++	if (check_target) vnode_put(check_target);
++	if (check_spec) vnode_put(check_spec);
+ 	error = mount(p, &request, &result);
++	IOLog("ELDEN_DATA mount returned %d\n", error);
+ 	if (error) goto done;
+ 	native_owner_data_stage = 3;
+ 	error = vnode_lookup("/private/var", 0, &data_root, vfs_context_current());
+@@ -7887,7 +7896,7 @@
+ done:
+ 	if (data_root) vnode_put(data_root);
+ 	native_owner_data_status = error;
+-	printf("ELDEN_BOOT RAM Data stage=%d status=%d readonly=%d bytes=%llu\n", native_owner_data_stage, error, native_owner_data_readonly, (unsigned long long)native_owner_data_seed_size);
++	IOLog("ELDEN_BOOT RAM Data stage=%d status=%d readonly=%d bytes=%llu\n", native_owner_data_stage, error, native_owner_data_readonly, (unsigned long long)native_owner_data_seed_size);
+ 	return error;
+ }
+ #endif
+@@ -8050,7 +8059,7 @@
+ 	boot_progress_stage("Data mount enter");
+ 	int data_error = native_owner_data_prepare(p, (user_addr_t)scratch_addr);
+ 	boot_progress_stage("Data mount returned");
+-	if (data_error) panic("offline scratch Data mount failed: %d", data_error);
++	if (data_error) panic("offline scratch Data mount failed: %d stage=%d", data_error, native_owner_data_stage);
+ #if defined(XNU_BOOT_PROGRESS) && XNU_BOOT_PROGRESS
+ 	extern int sheng_boot_watchdog_policy(void *, uint64_t);
+ 	boot_progress_stage("temporary watchdog launch policy enter");

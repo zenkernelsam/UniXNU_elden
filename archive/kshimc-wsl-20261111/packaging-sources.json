@@ -1,0 +1,18 @@
+{
+  "files": [
+    {
+      "path": "build_android_boot.py",
+      "sha256": "eafa333a92a51ce74ff7a1d6843495372c4648f1e78c8bc6774b388fc56ae8e3"
+    },
+    {
+      "path": "repack_boot_v4.py",
+      "sha256": "96d38070ddc56e996c4a594c1a3ea34cbd1ba86818cdb760e8ec117aca80fdce"
+    },
+    {
+      "path": "avbtool.py",
+      "sha256": "7238c0061f28bcc25a3b775fa4df67d6ca92e0e85b1aed9f3e1c610e2e02757e"
+    }
+  ],
+  "mbkp_head": "2276163d066596cb0750e76cbfeec5c193b1779f",
+  "mbkp_tracked_changes": false
+}

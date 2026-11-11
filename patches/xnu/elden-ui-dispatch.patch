@@ -1,0 +1,109 @@
+--- a/bsd/kern/kdebug.c
++++ b/bsd/kern/kdebug.c
+@@ -119,6 +119,13 @@
+ 
+ static typefilter_t kdbg_typefilter;
+ static mach_port_t kdbg_typefilter_memory_entry;
++#if defined(XNU_ELDEN_UI_DISPATCH) && XNU_ELDEN_UI_DISPATCH
++static bool elden_ui_active,elden_ui_filter_revoked;
++static void elden_ui_filter_changed(typefilter_t tf) {
++    if(tf==kdbg_typefilter && os_atomic_load(&elden_ui_active,acquire))
++        os_atomic_store(&elden_ui_filter_revoked,true,release);
++}
++#endif
+ 
+ /*
+  * There are 3 combinations of page sizes:
+@@ -156,6 +163,9 @@
+ static void
+ typefilter_copy(typefilter_t dst, typefilter_t src)
+ {
++#if defined(XNU_ELDEN_UI_DISPATCH) && XNU_ELDEN_UI_DISPATCH
++	elden_ui_filter_changed(dst);
++#endif
+ 	assert(src != NULL);
+ 	assert(dst != NULL);
+ 	memcpy(dst, src, KDBG_TYPEFILTER_BITMAP_SIZE);
+@@ -164,6 +174,9 @@
+ static void
+ typefilter_reject_all(typefilter_t tf)
+ {
++#if defined(XNU_ELDEN_UI_DISPATCH) && XNU_ELDEN_UI_DISPATCH
++	elden_ui_filter_changed(tf);
++#endif
+ 	assert(tf != NULL);
+ 	memset(tf, 0, KDBG_TYPEFILTER_BITMAP_SIZE);
+ }
+@@ -171,6 +184,9 @@
+ static void
+ typefilter_allow_all(typefilter_t tf)
+ {
++#if defined(XNU_ELDEN_UI_DISPATCH) && XNU_ELDEN_UI_DISPATCH
++	elden_ui_filter_changed(tf);
++#endif
+ 	assert(tf != NULL);
+ 	memset(tf, ~0, KDBG_TYPEFILTER_BITMAP_SIZE);
+ }
+@@ -178,6 +194,9 @@
+ static void
+ typefilter_allow_class(typefilter_t tf, uint8_t class)
+ {
++#if defined(XNU_ELDEN_UI_DISPATCH) && XNU_ELDEN_UI_DISPATCH
++	elden_ui_filter_changed(tf);
++#endif
+ 	assert(tf != NULL);
+ 	const uint32_t BYTES_PER_CLASS = 256 / 8; // 256 subclasses, 1 bit each
+ 	memset(&tf[class * BYTES_PER_CLASS], 0xFF, BYTES_PER_CLASS);
+@@ -186,6 +205,9 @@
+ static void
+ typefilter_allow_csc(typefilter_t tf, uint16_t csc)
+ {
++#if defined(XNU_ELDEN_UI_DISPATCH) && XNU_ELDEN_UI_DISPATCH
++	elden_ui_filter_changed(tf);
++#endif
+ 	assert(tf != NULL);
+ 	setbit(tf, csc);
+ }
+@@ -1006,12 +1028,20 @@
+ #if defined(XNU_ELDEN_ICON_OBSERVER) && XNU_ELDEN_ICON_OBSERVER
+ extern void elden_icon_cpu_user_marker(struct proc *,uint32_t,uint64_t,uint64_t,uint64_t,uint64_t);
+ #endif
++#if defined(XNU_ELDEN_UI_DISPATCH) && XNU_ELDEN_UI_DISPATCH
++#include "EldenUiDispatch.inc"
++/* Preserve scalar argument forwarding in the legacy syscall wrapper. */
++__attribute__((always_inline))
++#endif
+ int
+ kdebug_trace64(__unused struct proc *p, struct kdebug_trace64_args *uap,
+     __unused int32_t *retval)
+ {
+ #if defined(XNU_ELDEN_ICON_OBSERVER) && XNU_ELDEN_ICON_OBSERVER
+ 	elden_icon_cpu_user_marker(p,uap->code,uap->arg1,uap->arg2,uap->arg3,uap->arg4);
++#endif
++#if defined(XNU_ELDEN_UI_DISPATCH) && XNU_ELDEN_UI_DISPATCH
++	elden_ui_dispatch_note(p,uap->code,uap->arg1,uap->arg2);
+ #endif
+ 	if (__probable(kdebug_enable == 0)) {
+ 		return 0;
+@@ -1747,6 +1777,10 @@
+ uint32_t
+ kdebug_commpage_state(void)
+ {
++#if defined(XNU_ELDEN_UI_DISPATCH) && XNU_ELDEN_UI_DISPATCH
++	if(os_atomic_load(&elden_ui_active,acquire) && kdebug_enable)
++		os_atomic_store(&elden_ui_filter_revoked,true,release);
++#endif
+ 	uint32_t state = 0;
+ 	if (kdebug_enable) {
+ 		state |= KDEBUG_COMMPAGE_ENABLE_TRACE;
+@@ -1757,6 +1791,10 @@
+ 			state |= KDEBUG_COMMPAGE_CONTINUOUS;
+ 		}
+ 	}
++#if defined(XNU_ELDEN_UI_DISPATCH) && XNU_ELDEN_UI_DISPATCH
++	if(!kdebug_enable && elden_ui_dispatch_gate())
++		state=KDEBUG_COMMPAGE_ENABLE_TRACE|KDEBUG_COMMPAGE_ENABLE_TYPEFILTER;
++#endif
+ 	return state;
+ }
+ 

@@ -1,0 +1,58 @@
+{
+  "revision": "b5399b5646c4d7415deec6d887fd51715a97a024",
+  "component": {
+    "id": "QcomGeniSpi",
+    "repository_id": 1426849026,
+    "kind": "driver",
+    "function": "Qualcomm GENI SPI controller operations",
+    "scope": "controller",
+    "repository": "https://github.com/UniXNU/QcomGeniSpi.git",
+    "revision": "eac47baefe6a5d2368a70351e6ad1b6361bedbe2",
+    "path": "drivers/QcomGeniSpi",
+    "hardware": [
+      "Qualcomm GENI SPI"
+    ],
+    "os_abi": [
+      "ipados-17.7.11-21H461"
+    ],
+    "board_dependencies": [
+      "MMIO and DMA callbacks",
+      "clocks and pins"
+    ],
+    "verified_devices": [],
+    "dependencies": [],
+    "source_files": [
+      "GeniSpi.c"
+    ],
+    "runtime_identifiers": [
+      "NativeGeniSpi",
+      "GeniSpi.c"
+    ],
+    "build_stage": "embedded",
+    "build": [],
+    "outputs": [],
+    "legacy_name": "NativeGeniSpi"
+  },
+  "files": {
+    "GeniSpi.h": {
+      "bytes": 9152,
+      "sha256": "e73891e4571c5323bca27aaf987bafa002856dfa1dcee156ff31b119e2d3ae3c"
+    },
+    "GeniSpi.c": {
+      "bytes": 15536,
+      "sha256": "2042cfc9647391e24d5a558202046425ac62a05adfc73afe769367b8374e3f91"
+    },
+    "README.md": {
+      "bytes": 175,
+      "sha256": "7cfd142d7ee9a710dda3a9649eabe8c51dcbeab18083f83d66d0c3df6d3d475d"
+    },
+    "LICENSE": {
+      "bytes": 2645,
+      "sha256": "45e326bc5ca67488a547a30fbb713f1303d2770b3340443ebcf38717a62534f9"
+    },
+    "Test/geni-spi.c": {
+      "bytes": 16356,
+      "sha256": "a5b8a9ab217590064fc8ce701ceee5f2dcfbc0b3f0b0d8907505bae25fb2c113"
+    }
+  }
+}

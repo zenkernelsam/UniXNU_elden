@@ -1,0 +1,12 @@
+--- a/bsd/kern/kern_exec.c
++++ b/bsd/kern/kern_exec.c
+@@ -7876,7 +7876,8 @@
+ 	if (check_spec) vnode_put(check_spec);
+ 	error = mount(p, &request, &result);
+ 	IOLog("ELDEN_DATA mount returned %d\n", error);
+-	if (error) goto done;
++	if (error) panic("ELDEN_DATA mount error=%d target=%d spec=%d path=%s bytes=%llu cache=%d; RAM only",
++	    error, target_error, spec_error, device_path, (unsigned long long)size, native_owner_cache_status);
+ 	native_owner_data_stage = 3;
+ 	error = vnode_lookup("/private/var", 0, &data_root, vfs_context_current());
+ 	if (error) goto done;

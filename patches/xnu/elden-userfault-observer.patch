@@ -1,0 +1,50 @@
+--- a/osfmk/arm64/sleh.c
++++ b/osfmk/arm64/sleh.c
+@@ -1223,6 +1223,31 @@
+ #undef MSG_FMT
+ }
+ 
++#if DEVELOPMENT || DEBUG
++extern int elden_usb_fault_enabled(void) __attribute__((weak));
++extern void elden_usb_user_fault(int, const char *, uint32_t, uint64_t, uint64_t,
++    uint64_t, uint64_t, uint64_t) __attribute__((weak));
++static void
++elden_trace_user_fault(arm_saved_state_t *state, uint32_t esr, uint64_t far)
++{
++    if (!elden_usb_user_fault || !elden_usb_fault_enabled || !elden_usb_fault_enabled() ||
++        !is_saved_state64(state) || (saved_state64(state)->cpsr & 0xf) != 0) return;
++    uint64_t start = 0, offset = 0;
++    vm_map_t map = current_thread()->map;
++    vm_map_entry_t entry;
++    vm_map_lock_read(map);
++    if (vm_map_lookup_entry(map, get_saved_state_pc(state), &entry)) {
++        start = entry->vme_start;
++        offset = VME_OFFSET(entry);
++    }
++    vm_map_unlock_read(map);
++    elden_usb_user_fault(proc_pid(current_proc()), proc_best_name(current_proc()), esr,
++        get_saved_state_pc(state), get_saved_state_lr(state), far, start, offset);
++}
++#else
++#define elden_trace_user_fault(...) ((void)0)
++#endif
++
+ static void
+ handle_breakpoint(arm_saved_state_t *state, uint32_t esr __unused)
+ {
+@@ -1230,6 +1255,7 @@
+ 	mach_exception_data_type_t codes[2]  = {EXC_ARM_BREAKPOINT};
+ 	mach_msg_type_number_t     numcodes  = 2;
+ 
++	elden_trace_user_fault(state, esr, 0);
+ 	boot_progress_user_breakpoint(state, esr);
+ #if __has_feature(ptrauth_calls)
+ 	if (ESR_EC(esr) == ESR_EC_BRK_AARCH64 &&
+@@ -1674,6 +1700,7 @@
+ 	}
+ #endif /* __has_feature(ptrauth_calls) */
+ 
++	elden_trace_user_fault(state, esr, fault_addr);
+ 	boot_progress_user_abort(state, esr, fault_addr);
+ 	if (user_fault_in_self_restrict_mode(thread) &&
+ 	    task_is_jit_exception_fatal(get_threadtask(thread))) {

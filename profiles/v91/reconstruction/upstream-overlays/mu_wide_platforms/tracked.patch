@@ -1,0 +1,422 @@
+diff --git a/BootShim/BootShim.S b/BootShim/BootShim.S
+index 76dcb4f9..6285be14 100644
+--- a/BootShim/BootShim.S
++++ b/BootShim/BootShim.S
+@@ -12,8 +12,12 @@ _StackBase:
+ 	.quad UEFI_BASE
+ 
+ _StackSize:
+-	/* Image Size */
+-	.quad UEFI_SIZE
++	/* Image Size: firmware plus embedded FAT payload when present */
++#ifdef EMBEDDED_PAYLOAD_SIZE
++	.quad	UEFI_SIZE + (EMBEDDED_PAYLOAD_SIZE)
++#else
++	.quad	UEFI_SIZE
++#endif
+ 
+ 	/* Flags */
+ 	.quad 0
+@@ -38,7 +42,11 @@ _Start:
+ 	ldr		x5, _StackBase
+ 	cmp		x4, x5
+ 	beq		_Entry
++#ifdef EMBEDDED_PAYLOAD_SIZE
++	ldr		x6,  _CopySize
++#else
+ 	ldr		x6,  _StackSize
++#endif
+ 
+ _CopyLoop:
+ 	ldp		x2, x3, [x4], #16
+@@ -48,12 +56,24 @@ _CopyLoop:
+ 	ldr		x5, _StackBase
+ 
+ _Entry:
++#ifdef EMBEDDED_PAYLOAD_SIZE
++	/* x1 still holds the decompressed image base; the payload follows the FD. */
++	add		x2, x1, #UEFI_SIZE
++	ldr		x3, =EMBEDDED_PAYLOAD_SIZE
++#endif
+ 	br		x5
+ 
+ _Dead:
+ 	/* We should never get here */
+ 	b		_Dead
+ 
++#ifdef EMBEDDED_PAYLOAD_SIZE
++.align 3
++_CopySize:
++	/* Only the firmware volume is copied; the payload stays in place. */
++	.quad	UEFI_SIZE
++#endif
++
+ .text
+ .align 4
+ 
+diff --git a/Platforms/AndromedaPkg/PrePi/AArch64/ModuleEntryPoint.S b/Platforms/AndromedaPkg/PrePi/AArch64/ModuleEntryPoint.S
+index 568b07e6..dce49898 100644
+--- a/Platforms/AndromedaPkg/PrePi/AArch64/ModuleEntryPoint.S
++++ b/Platforms/AndromedaPkg/PrePi/AArch64/ModuleEntryPoint.S
+@@ -13,6 +13,15 @@
+ .set CTRL_SPAN_BIT, (1 << 23)
+ 
+ ASM_FUNC(_ModuleEntryPoint)
++#ifdef ELDEN_INITRD_HANDOFF
++  // Save the bootloader FDT pointer before ArmReadMpidr overwrites x0.
++  mov   x19, x0
++#endif
++#ifdef ELDEN_EMBEDDED_PAYLOAD
++  // BootShim passes the embedded FAT image in x2/x3; keep them across calls.
++  mov   x20, x2
++  mov   x21, x3
++#endif
+   // Do early platform specific actions
+   bl    ASM_PFX(ArmPlatformPeiBootAction)
+ 
+@@ -100,8 +109,18 @@ _EnableCache:
+ 
+ _PrepareArguments:
+   mov   x0, x10
++#if defined (ELDEN_EMBEDDED_PAYLOAD)
++  // x1 = embedded payload base, x2 = payload size (saved at entry)
++  mov   x1, x20
++  mov   x2, x21
++#elif defined (ELDEN_INITRD_HANDOFF)
++  // x1 = bootloader FDT address (saved at entry)
++  mov   x1, x19
++  mov   x2, x12
++#else
+   mov   x1, x11
+   mov   x2, x12
++#endif
+ 
+   // Move sec startup address into a data register
+   // Ensure we're jumping to FV version of the code (not boot remapped alias)
+diff --git a/Platforms/AndromedaPkg/PrePi/PeiUniCore.inf b/Platforms/AndromedaPkg/PrePi/PeiUniCore.inf
+index e7e65029..3227dd1c 100644
+--- a/Platforms/AndromedaPkg/PrePi/PeiUniCore.inf
++++ b/Platforms/AndromedaPkg/PrePi/PeiUniCore.inf
+@@ -107,3 +107,4 @@
+ [Pcd]
+   gArmTokenSpaceGuid.PcdSystemMemoryBase
+   gArmTokenSpaceGuid.PcdSystemMemorySize
++
+diff --git a/Platforms/AndromedaPkg/PrePi/PrePi.c b/Platforms/AndromedaPkg/PrePi/PrePi.c
+index bbade5ed..68631b3e 100644
+--- a/Platforms/AndromedaPkg/PrePi/PrePi.c
++++ b/Platforms/AndromedaPkg/PrePi/PrePi.c
+@@ -38,6 +38,33 @@
+ UINT64  mSystemMemoryEnd = FixedPcdGet64 (PcdSystemMemoryBase) +
+                            FixedPcdGet64 (PcdSystemMemorySize) - 1;
+ 
++#ifdef ELDEN_INITRD_HANDOFF
++//
++// Phase 2.3: hand the bootloader-provided FDT to DXE so UniXNURamDiskDxe can
++// publish the initrd listed in /chosen.  The GUID is defined by UniXNU.
++//
++STATIC CONST EFI_GUID  mEntryArgHobGuid = {
++  0xDAEE82E6, 0x8090, 0x4E72, { 0xBF, 0xB9, 0x78, 0xC1, 0x3C, 0xD4, 0xE3, 0x59 }
++};
++STATIC UINT64  mEntryFdt = 0;
++#endif
++
++#ifdef ELDEN_EMBEDDED_PAYLOAD
++//
++// Phase 2.3 embed_payload: BootShim appends the FAT image after the UEFI FD and
++// passes its base and size in x2/x3.  EldenPayloadDxe publishes it in DXE.
++//
++typedef struct {
++  UINT64  Base;
++  UINT64  Size;
++} ELDEN_PAYLOAD_INFO;
++
++STATIC CONST EFI_GUID  mEldenPayloadHobGuid = {
++  0x5E1D9C3A, 0x7B24, 0x4F0E, { 0x9A, 0x6D, 0x2C, 0x8F, 0x1B, 0x4E, 0x7D, 0x10 }
++};
++STATIC ELDEN_PAYLOAD_INFO  mEldenPayload = { 0, 0 };
++#endif
++
+ ////////////////////////////////////////////
+ // Patch: call lk scheduler related function.
+ extern VOID _ModuleEntryPoint(VOID);
+@@ -165,6 +192,27 @@ PrePiMain (
+   // TODO: Call CpuPei as a library
+   BuildCpuHob (ArmGetPhysicalAddressBits (), PcdGet8 (PcdPrePiCpuIoSize));
+ 
++#ifdef ELDEN_INITRD_HANDOFF
++  //
++  // Publish the bootloader FDT address for UniXNURamDiskDxe (DXE).  The
++  // initrd itself lives in the reserved Kernel region, so no extra
++  // reservation HOB is needed here.
++  //
++  if (mEntryFdt != 0) {
++    BuildGuidDataHob (&mEntryArgHobGuid, &mEntryFdt, sizeof (mEntryFdt));
++  }
++#endif
++
++#ifdef ELDEN_EMBEDDED_PAYLOAD
++  //
++  // Publish the FAT image appended to the kernel so a DXE driver can expose it
++  // as a read-only block device for UniXNU.
++  //
++  if (mEldenPayload.Size != 0) {
++    BuildGuidDataHob (&mEldenPayloadHobGuid, &mEldenPayload, sizeof (mEldenPayload));
++  }
++#endif
++
+   if (ArmIsMpCore ()) {
+     // Only MP Core platform need to produce gArmMpCoreInfoPpiGuid
+     Status = GetPlatformPpi (&gArmMpCoreInfoPpiGuid, (VOID **)&ArmMpCoreInfoPpi);
+@@ -246,12 +294,44 @@ PeiContinueBoot(VOID* ARGS)
+ }
+ 
+ VOID
+-CEntryPoint ()
++CEntryPoint (
++#ifdef ELDEN_EMBEDDED_PAYLOAD
++  IN UINT64  MpId,
++  IN UINT64  PayloadBase,
++  IN UINT64  PayloadSize
++#elif defined (ELDEN_INITRD_HANDOFF)
++  IN UINT64  MpId,
++  IN UINT64  Fdt
++#endif
++  )
+ {
+   UINT64  StartTimeStamp;
+   EFI_STATUS Status;
+   ARM_MEMORY_REGION_DESCRIPTOR_EX UefiFd;
+ 
++#ifdef ELDEN_EMBEDDED_PAYLOAD
++  //
++  // Keep the first payload description: a later scheduler re-entry must not
++  // replace it.
++  //
++  (VOID)MpId;
++  if (mEldenPayload.Size == 0) {
++    mEldenPayload.Base = PayloadBase;
++    mEldenPayload.Size = PayloadSize;
++  }
++#endif
++
++#ifdef ELDEN_INITRD_HANDOFF
++  //
++  // The primary core enters first with the bootloader FDT.  Keep the first
++  // plausible value: a later scheduler re-entry must not replace it.
++  //
++  (VOID)MpId;
++  if (mEntryFdt == 0) {
++    mEntryFdt = Fdt;
++  }
++#endif
++
+   // Initialize the platform specific controllers
+   ArmPlatformInitialize (0);
+ 
+diff --git a/Platforms/PakalaPkg/Device/lenovo-y700g4/APRIORI.inc b/Platforms/PakalaPkg/Device/lenovo-y700g4/APRIORI.inc
+index 936ef9de..106a243d 100644
+--- a/Platforms/PakalaPkg/Device/lenovo-y700g4/APRIORI.inc
++++ b/Platforms/PakalaPkg/Device/lenovo-y700g4/APRIORI.inc
+@@ -19,6 +19,12 @@ APRIORI DXE {
+     INF ArmPkg/Drivers/TimerDxe/TimerDxe.inf
+ 
+     INF AndromedaPkg/Driver/RamPartitionDxe/RamPartitionDxe.inf
++!ifndef ELDEN_PHASE2
++    INF EldenPhase1Pkg/EldenRamDiskDxe.inf
++!endif
++!ifdef ELDEN_PHASE2
++    INF EldenPhase2Pkg/EldenPayloadDxe.inf
++!endif
+     INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/SmemDxe/SmemDxe.inf
+     
+     INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/DALSYSDxe/DALSYSDxe.inf
+@@ -73,7 +79,7 @@ APRIORI DXE {
+     INF MdeModulePkg/Universal/Disk/UnicodeCollation/EnglishDxe/EnglishDxe.inf
+     INF MdeModulePkg/Universal/FvSimpleFileSystemDxe/FvSimpleFileSystemDxe.inf
+     INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/SdccDxe/SdccDxe.inf
+-    INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PatchedBinaries/UFSDxe.inf
++    # UFSDxe is intentionally omitted: phase 1 publishes its FAT payload via EldenRamDiskDxe.
+ 
+     INF FatPkg/EnhancedFatDxe/Fat.inf
+     
+diff --git a/Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.dsc.inc b/Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.dsc.inc
+index 41843e98..8d6a7321 100644
+--- a/Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.dsc.inc
++++ b/Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.dsc.inc
+@@ -1,4 +1,18 @@
+ [Components.common]
++!ifndef ELDEN_PHASE2
++EldenPhase1Pkg/EldenRamDiskDxe.inf
++!endif
++!ifdef ELDEN_PHASE2
++EldenPhase2Pkg/EldenPayloadDxe.inf
++!endif
++UniXNUPkg/Application/UniXNU/UniXNU.inf
++UniXNUPkg/Driver/UniXNUDxe/UniXNUDxe.inf
++UniXNUPkg/Driver/AdvancedLogDxe/AdvancedLogDxe.inf {
++  <LibraryClasses>
++    QrEncoderLib|MsGraphicsPkg/Library/QrEncoderLib/QrEncoderLib.inf
++}
++DarwinBootPkg/Driver/DarwinBoot.inf
++
+ AndromedaPkg/Driver/RamPartitionDxe/RamPartitionDxe.inf
+ 
+ $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/EnvDxe/EnvDxeEnhanced.inf
+@@ -80,7 +94,7 @@ $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/MailboxDxe/Mail
+ 
+ # Patched Binaries
+ #$(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PatchedBinaries/ButtonsDxe.inf
+-$(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PatchedBinaries/UFSDxe.inf
++# UFSDxe is intentionally omitted: phase 1 publishes its FAT payload via EldenRamDiskDxe.
+ $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PatchedBinaries/UsbConfigDxe.inf
+ $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PatchedBinaries/ClockDxe.inf
+ $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PatchedBinaries/PmicDxeLa.inf
+@@ -89,3 +103,22 @@ $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PatchedBinaries/QcomWDogDxe.inf
+ #$(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PatchedBinaries/DisplayDxe.inf
+ #AndromedaPkg/Driver/DisplayCallerDxe/DisplayCallerDxe.inf
+ AndromedaPkg/Driver/SimpleFbDxe/SimpleFbDxe.inf
++
++# --- elden serial logging: collect source-built DXE output into AdvLogger ---
++[LibraryClasses.common.DXE_CORE]
++  AdvancedLoggerLib|AdvLoggerPkg/Library/AdvancedLoggerLib/DxeCore/AdvancedLoggerLib.inf
++  DebugLib|AdvLoggerPkg/Library/BaseDebugLibAdvancedLogger/BaseDebugLibAdvancedLogger.inf
++  AssertLib|AdvLoggerPkg/Library/AssertLib/AssertLib.inf
++  AdvancedLoggerHdwPortLib|AdvLoggerPkg/Library/AdvancedLoggerHdwPortLib/AdvancedLoggerHdwPortLib.inf
++
++[LibraryClasses.common.DXE_DRIVER, LibraryClasses.common.UEFI_DRIVER, LibraryClasses.common.UEFI_APPLICATION]
++  AdvancedLoggerLib|AdvLoggerPkg/Library/AdvancedLoggerLib/Dxe/AdvancedLoggerLib.inf
++  DebugLib|AdvLoggerPkg/Library/BaseDebugLibAdvancedLogger/BaseDebugLibAdvancedLogger.inf
++  AssertLib|AdvLoggerPkg/Library/AssertLib/AssertLib.inf
++  AdvancedLoggerHdwPortLib|AdvLoggerPkg/Library/AdvancedLoggerHdwPortLib/AdvancedLoggerHdwPortLib.inf
++
++[LibraryClasses.common.DXE_RUNTIME_DRIVER]
++  AdvancedLoggerLib|AdvLoggerPkg/Library/AdvancedLoggerLib/Runtime/AdvancedLoggerLib.inf
++  DebugLib|AdvLoggerPkg/Library/BaseDebugLibAdvancedLogger/BaseDebugLibAdvancedLogger.inf
++  AssertLib|AdvLoggerPkg/Library/AssertLib/AssertLib.inf
++  AdvancedLoggerHdwPortLib|AdvLoggerPkg/Library/AdvancedLoggerHdwPortLib/AdvancedLoggerHdwPortLib.inf
+diff --git a/Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.inc b/Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.inc
+index 41424448..b5a23df4 100644
+--- a/Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.inc
++++ b/Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.inc
+@@ -4,6 +4,16 @@
+ #}
+ 
+ INF AndromedaPkg/Driver/SimpleFbDxe/SimpleFbDxe.inf
++!ifndef ELDEN_PHASE2
++INF EldenPhase1Pkg/EldenRamDiskDxe.inf
++!endif
++!ifdef ELDEN_PHASE2
++INF EldenPhase2Pkg/EldenPayloadDxe.inf
++!endif
++INF UniXNUPkg/Application/UniXNU/UniXNU.inf
++INF UniXNUPkg/Driver/UniXNUDxe/UniXNUDxe.inf
++INF DarwinBootPkg/Driver/DarwinBoot.inf
++INF UniXNUPkg/Driver/AdvancedLogDxe/AdvancedLogDxe.inf
+ INF AndromedaPkg/Driver/RamPartitionDxe/RamPartitionDxe.inf
+ INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/EnvDxe/EnvDxeEnhanced.inf
+ INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/ParserDxe/ParserEnhancedDxe.inf
+@@ -55,7 +65,7 @@ INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/QcomPkg/Drivers/QupDxe/QupD
+ 
+ # Patched Binaries
+ #INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PatchedBinaries/ButtonsDxe.inf
+-INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PatchedBinaries/UFSDxe.inf
++# UFSDxe is intentionally omitted: phase 1 publishes its FAT payload via EldenRamDiskDxe.
+ INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PatchedBinaries/UsbConfigDxe.inf
+ INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PatchedBinaries/ClockDxe.inf
+ INF $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PatchedBinaries/PmicDxeLa.inf
+@@ -94,6 +104,13 @@ FILE FREEFORM = A91D838E-A5FA-4138-825D-455E23030794 {
+     SECTION RAW = $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Binaries/RawFiles/logo1.bmp
+ }
+ 
++!ifndef ELDEN_PHASE2
++FILE FREEFORM = 6A6B6F43-2AE5-4A7E-9C4E-7C9A9136D2B0 {
++    SECTION UI = "elden-phase1-payload.img"
++    SECTION RAW = EldenPhase1Pkg/Payload/payload.img
++}
++!endif
++
+ 
+ FILE FREEFORM = 8CAE2C55-FC5A-410B-812B-8CA22F572F36 {
+     SECTION UI = "Panel_truly_wqxga_dsc_cmd.xml"
+diff --git a/Platforms/PakalaPkg/Device/lenovo-y700g4/PcdsFixedAtBuild.dsc.inc b/Platforms/PakalaPkg/Device/lenovo-y700g4/PcdsFixedAtBuild.dsc.inc
+index 1ac713e1..aa1eb8ec 100644
+--- a/Platforms/PakalaPkg/Device/lenovo-y700g4/PcdsFixedAtBuild.dsc.inc
++++ b/Platforms/PakalaPkg/Device/lenovo-y700g4/PcdsFixedAtBuild.dsc.inc
+@@ -15,6 +15,14 @@ gAndromedaPkgTokenSpaceGuid.PcdSmbiosBoardModel|"NULL"
+ 
+ gAndromedaPkgTokenSpaceGuid.PcdABLProduct|"sun"
+ 
++# AdvancedLogDxe export file name (<model>-<date>.log)
++gUniXNUPkgTokenSpaceGuid.PcdUniXNUDeviceModel|"elden"
++
++# Advanced Logger jump pointer (ADVANCED_LOGGER_PTR) pinned at a
++# fixed PA so post-mortem tools can reach the DXE log buffer. 0xC2000000 =
++# ramoops reserved window, survives warm reset, below CopyTo [0xC2400000,...).
++gAdvLoggerPkgTokenSpaceGuid.PcdAdvancedLoggerBase|0xC2000000
++
+ [PcdsDynamicDefault.common]
+ gEfiMdeModulePkgTokenSpaceGuid.PcdVideoHorizontalResolution|1904
+ gEfiMdeModulePkgTokenSpaceGuid.PcdVideoVerticalResolution|3040
+diff --git a/Platforms/PakalaPkg/PakalaNoSb.dsc b/Platforms/PakalaPkg/PakalaNoSb.dsc
+index 8fe8d123..e63db0c5 100644
+--- a/Platforms/PakalaPkg/PakalaNoSb.dsc
++++ b/Platforms/PakalaPkg/PakalaNoSb.dsc
+@@ -82,6 +82,8 @@
+   AndromedaPkg/Driver/SimpleFbDxe/SimpleFbDxe.inf
+ 
+ [LibraryClasses.common]
++  UniXNULib|UniXNUPkg/Library/UniXNULib/UniXNULib.inf
++
+   # Move PlatformMemoryMapLib form Silicon/QC/QCxxxx/Library to Device/<device>/Library
+   PlatformMemoryMapLib|$(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/Library/PlatformMemoryMapLib/PlatformMemoryMapLib.inf
+ 
+@@ -93,3 +95,9 @@
+ !include $(PACKAGE_NAME)/Device/$(TARGET_DEVICE)/PcdsFixedAtBuild.dsc.inc
+ !include AndromedaPkg/Andromeda.dsc.inc
+ !include AndromedaPkg/Frontpage.dsc.inc
++
++!ifdef ELDEN_PHASE2
++[BuildOptions]
++  *_*_AARCH64_CC_FLAGS = -DELDEN_EMBEDDED_PAYLOAD=1
++  *_*_AARCH64_PP_FLAGS = -DELDEN_EMBEDDED_PAYLOAD=1
++!endif
+diff --git a/Platforms/PakalaPkg/PlatformBuild.py b/Platforms/PakalaPkg/PlatformBuild.py
+index 98dddc5d..e21ddf52 100644
+--- a/Platforms/PakalaPkg/PlatformBuild.py
++++ b/Platforms/PakalaPkg/PlatformBuild.py
+@@ -46,6 +46,8 @@ class CommonPlatform():
+     WorkspaceRoot = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+     PackagesPath = (
+         "Platforms",
++        "../UniXNU/package",
++        "../UniXNU/drivers/DarwinBoot",
+         "MU_BASECORE",
+         "Common/MU",
+         "Common/MU_TIANO",
+diff --git a/Platforms/PakalaPkg/PlatformBuildNoSb.py b/Platforms/PakalaPkg/PlatformBuildNoSb.py
+index 85243763..1b478073 100644
+--- a/Platforms/PakalaPkg/PlatformBuildNoSb.py
++++ b/Platforms/PakalaPkg/PlatformBuildNoSb.py
+@@ -46,6 +46,8 @@ class CommonPlatform():
+     WorkspaceRoot = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+     PackagesPath = (
+         "Platforms",
++        "../UniXNU/package",
++        "../UniXNU/drivers/DarwinBoot",
+         "MU_BASECORE",
+         "Common/MU",
+         "Common/MU_TIANO",
+diff --git a/Platforms/PakalaPkg/PythonLibs/mkbootimg.py b/Platforms/PakalaPkg/PythonLibs/mkbootimg.py
+index 250f22f1..184cf360 100644
+--- a/Platforms/PakalaPkg/PythonLibs/mkbootimg.py
++++ b/Platforms/PakalaPkg/PythonLibs/mkbootimg.py
+@@ -63,7 +63,7 @@ def get_recovery_dtbo_offset(args):
+ 
+ 
+ def write_header_v3(args):
+-    BOOT_IMAGE_HEADER_V3_SIZE = 1596
++    BOOT_IMAGE_HEADER_V3_SIZE = 1580
+     BOOT_MAGIC = 'ANDROID!'.encode()
+     args.output.write(pack('8s', BOOT_MAGIC))
+     args.output.write(pack(

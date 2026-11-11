@@ -1,0 +1,138 @@
+[
+  {
+    "repository": "UniXNU",
+    "head": "73a793d20f7dd9d36f3dc05f63ecf6c30dd45c7c",
+    "remotes": [
+      "origin\thttps://github.com/UniXNU/UniXNU.git (fetch) [blob:none]",
+      "origin\thttps://github.com/UniXNU/UniXNU.git (push)"
+    ],
+    "tracked": [
+      "package/UniXNUPkg/Library/UniXNULib/Inject.c",
+      "package/UniXNUPkg/Library/UniXNULib/Main.c",
+      "package/UniXNUPkg/Library/UniXNULib/UniXNULib.inf",
+      "package/UniXNUPkg/Test/HelloPayload/HelloPayload.c",
+      "package/UniXNUPkg/Test/HelloPayload/HelloPayload.inf"
+    ],
+    "added": [
+      {
+        "path": "package/EldenBluetoothBoard.h",
+        "sha256": "b9bb749cb0e4a9092315c4c6ba1bb79251355e6f5d4df9de2223429df0055599"
+      },
+      {
+        "path": "package/EldenDataBoard.h",
+        "sha256": "1871f62ef8dff76af16f1053b5b236461c5aa883e2d8075c30dba166052e3866"
+      },
+      {
+        "path": "package/EldenTouchBoard.h",
+        "sha256": "aaddf2d19b174d9401dccb3232c96ed220d919c481ad174d49db007c71e60bce"
+      },
+      {
+        "path": "package/EldenWifiFirmwareInputs.h",
+        "sha256": "af10266b3cdfdba42d5636956aee8d1458f8814cfc6211693868e8a653935709"
+      },
+      {
+        "path": "package/UniXNUPkg/Driver/UniXNURamDiskDxe/LICENSE",
+        "sha256": "2b031880c646006165194888f9814806719ab4c91c26d330c4eb71e1983f0187"
+      },
+      {
+        "path": "package/UniXNUPkg/Driver/UniXNURamDiskDxe/UniXNURamDiskDxe.c",
+        "sha256": "03f3f68000213ea9eb6a6b0e232e3ec416bb6f8276135746c8e71725b3ac7379"
+      },
+      {
+        "path": "package/UniXNUPkg/Driver/UniXNURamDiskDxe/UniXNURamDiskDxe.inf",
+        "sha256": "28491c49992134008d55fc0efe7e0792814d517d323ebfb7b70adc27c725e94a"
+      },
+      {
+        "path": "package/UniXNUPkg/Library/UniXNULib/Main.c.bak.connectall",
+        "sha256": "747e2b7a64636a6ffb006079d744338fe18a5313ad1b0df83ea13d55e53ef95e"
+      }
+    ],
+    "excluded": [
+      "drivers/NativeAES/",
+      "drivers/NativeAdreno/",
+      "drivers/NativeGeniSpi/",
+      "drivers/NativeHidInput/",
+      "drivers/NativeKeyStoreEvents/",
+      "drivers/NativeMetal/",
+      "drivers/NativeMobileDisplay/",
+      "drivers/NativeRamBlock/",
+      "drivers/NativeUfs/",
+      "drivers/NativeVirtioBlock/",
+      "drivers/NativeVirtioConsole/",
+      "kits/NativePrelink/"
+    ]
+  },
+  {
+    "repository": "DarwinBoot",
+    "head": "d099354d0eab34df5088ca1ba89c9c88bc3260bb",
+    "remotes": [
+      "origin\thttps://github.com/UniXNU/DarwinBoot.git (fetch)",
+      "origin\thttps://github.com/UniXNU/DarwinBoot.git (push)"
+    ],
+    "tracked": [],
+    "added": [],
+    "excluded": [
+      "Test/__pycache__/packed_ramdisk.cpython-312.pyc"
+    ]
+  },
+  {
+    "repository": "mu_wide_platforms",
+    "head": "3e1d052064beb6e59cda3cfba87d50e6cc088174",
+    "remotes": [
+      "origin\thttps://github.com/sunflower2333/mu_wide_platforms.git (fetch) [blob:none]",
+      "origin\thttps://github.com/sunflower2333/mu_wide_platforms.git (push)"
+    ],
+    "tracked": [
+      "BootShim/BootShim.S",
+      "Platforms/AndromedaPkg/PrePi/AArch64/ModuleEntryPoint.S",
+      "Platforms/AndromedaPkg/PrePi/PeiUniCore.inf",
+      "Platforms/AndromedaPkg/PrePi/PrePi.c",
+      "Platforms/PakalaPkg/Device/lenovo-y700g4/APRIORI.inc",
+      "Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.dsc.inc",
+      "Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.inc",
+      "Platforms/PakalaPkg/Device/lenovo-y700g4/PcdsFixedAtBuild.dsc.inc",
+      "Platforms/PakalaPkg/PakalaNoSb.dsc",
+      "Platforms/PakalaPkg/PlatformBuild.py",
+      "Platforms/PakalaPkg/PlatformBuildNoSb.py",
+      "Platforms/PakalaPkg/PythonLibs/mkbootimg.py"
+    ],
+    "added": [
+      {
+        "path": "Platforms/EldenPhase1Pkg/EldenRamDiskDxe.c",
+        "sha256": "35f0705f4439c31889cc3a641d4aefd762f19aa3270662b60dbd9bf18d2a83b5"
+      },
+      {
+        "path": "Platforms/EldenPhase1Pkg/EldenRamDiskDxe.inf",
+        "sha256": "c796dedc55aa4d15cbc3f72a6d9178c59302e812cbef35fdbef5b94313b95791"
+      },
+      {
+        "path": "Platforms/EldenPhase2Pkg/EldenPayloadDxe.c",
+        "sha256": "841e9a17381a2ef409aaa6c1dbbc0896813b1de467ea7e3a650cfbe923d58654"
+      },
+      {
+        "path": "Platforms/EldenPhase2Pkg/EldenPayloadDxe.inf",
+        "sha256": "13fe1c5d7861b4b1ae4512f51884f8d10e21c060a5fe9957830aec4d844f9f38"
+      },
+      {
+        "path": "Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.dsc.inc.bak-serial",
+        "sha256": "edffa9444fc60ec0067da227002fabcc519ae7cb48204b310b53dd223a0e9c87"
+      },
+      {
+        "path": "Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.inc.bak-serial",
+        "sha256": "5bcd5dd37c08c0281209a9d1623f1a5b94a83dfdfb899aaee732a75275b60581"
+      },
+      {
+        "path": "Platforms/PakalaPkg/Device/lenovo-y700g4/PcdsFixedAtBuild.dsc.inc.bak-serial",
+        "sha256": "4fc4ffdf217fae4d5c5fd1e2513309ad794805f38574115097b7434bbd5c4df2"
+      },
+      {
+        "path": "Platforms/PakalaPkg/Device/lenovo-y700g4/PcdsFixedAtBuild.dsc.inc.bak.advlog",
+        "sha256": "465ddf13f680b0e4ea9d9b9d3aeb5b329dc6901dfe5a020681748e16320afe19"
+      }
+    ],
+    "excluded": [
+      "Platforms/PakalaPkg/Device/lenovo-y700g4/PatchedBinaries/PmicDxeLA.efi",
+      "Platforms/PakalaPkg/Device/nubia-nx789j/PatchedBinaries/PmicDxeLA.efi"
+    ]
+  }
+]

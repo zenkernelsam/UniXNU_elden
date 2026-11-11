@@ -1,0 +1,171 @@
+{
+  "reference": "ArmadaOS-Freedom/armadaos-freedom",
+  "commit": "885fd1fdaa373f266b9a3207997b91c67aa22e6d",
+  "subdirectory": "devices/lenovo-tb323fu/boot/kshim-success-source",
+  "overlay": [
+    {
+      "path": "README.md",
+      "sha256": "d13e168322540abd4ebb43a75f2be24f9c79103ab50f8ba05fc5da42555dfa44",
+      "base_sha256": "0dab76a7399405cc6a7dca4a226415fabcbc8e20f1a2f30e6efee32460529f15"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "1ee1376767ccff509be3242547b18bd903410c56b63e09abadae5c3893e22252",
+      "base_sha256": "68dcb60c88c69e44c5fbecf33a05722a3943b99e329caed52584e38651271eee"
+    },
+    {
+      "path": "tests/menu_locale_test.c",
+      "sha256": "d56ba19523d5e2596614cc71d40bd4ab78004300d98c2e207feae2a7ff2b43ca",
+      "base_sha256": "29221adfab9727c4aab756f48e9f7fa0fd21f645cb2cfa3493a016c6aeb526c7"
+    },
+    {
+      "path": "tests/ui_preview_test.c",
+      "sha256": "a819d93bac0a7fe9f701553d21ab397474df14bb215d69956b8dc543b5ead283",
+      "base_sha256": "4765e11688c18e27ca54582327293d974135fc898319b16f697cc65ab79c65e2"
+    },
+    {
+      "path": "tests/CMakeLists.txt",
+      "sha256": "cb3ddde52e5f890d8317d282ac54cfe22ef450206df9a6d84f4e4bfaeb94202d",
+      "base_sha256": "35f1a0dce50b5e078717a79cde288d0e9aa6339acf6dd439fccc83667f8bb9e0"
+    },
+    {
+      "path": "tests/platform_menu_test.c",
+      "sha256": "5546983e61900aac51cbe927124a3a35a7c362fd0621b506f96d525bdfda6d47",
+      "base_sha256": "67300d787aa63adecc2fd25d76b1ccc8689c739f714603bb562b9d29e810eefc"
+    },
+    {
+      "path": "tests/storage_ufs_settings_test.c",
+      "sha256": "a4bd53e6fee322c840b7b5e220dfb152daa0337c12e4464d08b99645b6eaefa0",
+      "base_sha256": "5e16f98ce6e64a6eb89243195c9e0e8514d514af125ba403e77fb6b3f35ccc37"
+    },
+    {
+      "path": "tests/storage_ufs_test.c",
+      "sha256": "bc7d4970e2d6c08005f8e562d81d20528b51b44cc181ce26d2beb86e22c92a63",
+      "base_sha256": "ad3cdec55c6939197e35cbb743620f8c708852950613df5cc6e0ec576abdccb9"
+    },
+    {
+      "path": "tests/storage_settings_native_test.c",
+      "sha256": "900f30521ee0e58b65fd3d72241456c556607e9b6814d20afec7590d9c0c6886",
+      "base_sha256": "3de3713e448395a3ffc3c7bf6cfe4c7cc4d0f5e2456c80ff8cfee79c0b80502a"
+    },
+    {
+      "path": "ports/crdk/patches/0001-cranepkg-driver-fixes.patch",
+      "sha256": "43d33752f133c4baa99683591032c5acaabf88b91939fe2217cd1713f2aed668",
+      "base_sha256": "9432e8150a394de2b60cf00eb65b01bd7035199c9ec37923982666b34e815447"
+    },
+    {
+      "path": "ports/crdk/patches/0002-freestanding-resources.patch",
+      "sha256": "1951ca741f750c3ea6cb0f3f129bec8482680f0c3452489c41482bf2656ca230",
+      "base_sha256": "bb4fad971e48ccab290d4b971a943f9a8eb2fc734010972ed897005f9ab8b1b1"
+    },
+    {
+      "path": "configs/tb322fc_android_ufsprobe_defconfig",
+      "sha256": "4053ed7c37dbbf313d559ae45e831ecc7d725c169368f702d40a4d548ad77de8",
+      "base_sha256": null
+    },
+    {
+      "path": "src/core/main.c",
+      "sha256": "7b82f3ca43b50fa132681f478f37063d92962482ed26e21ae965cc2a6cde22b5",
+      "base_sha256": "fa8d353049b4e6a80ecf1822684d9412c5267d9529fad7090b47f29a0888fbab"
+    },
+    {
+      "path": "src/core/platform.c",
+      "sha256": "b818912b1dcf5a2a71587dd737d0104083dc81670c4812522ae3c4ae61a40e90",
+      "base_sha256": "d972161dff11247b0b2440ec8a37bff328c5479d86393a93954091843691ac94"
+    },
+    {
+      "path": "src/core/menu_locale.c",
+      "sha256": "2bb8b6d27e488803557f9e103660e692e7b5108df05716e98e84b09b9342190d",
+      "base_sha256": "e86be8e881019d8f46dc825011dffb51e1a9430bb36bd1672f86b996f6ea3c0d"
+    },
+    {
+      "path": "src/arch/arm64/storage_settings_native.c",
+      "sha256": "650b993f6dca9ba15576db10d4aaf2b8551ae3d5b31fdf0694f30f85bc3bab98",
+      "base_sha256": "5ddb314283f7990701d84cbf75737b78ea15f476bf218fb5a7ad45d9ba3165e8"
+    },
+    {
+      "path": "src/include/menu_locale.h",
+      "sha256": "f35e85c628b4f7ead71d5545f3067d4dd02fdf682ccd559dcef17e7c47638bba",
+      "base_sha256": "9d935c4d0f213c95d7739c7a09c77856ae37a28914b402864d2df07fee5fdb4f"
+    },
+    {
+      "path": "src/include/storage_ufs_settings.h",
+      "sha256": "381f6f5eb4190c1a62b20e0c5ee07e61e97a73e0f5573898eb0b906a02ab5a43",
+      "base_sha256": "6a18f3c12a6f53ce5d74f53832e6e127a0f5267ebec848e0f082e50838e28b74"
+    },
+    {
+      "path": "src/include/storage_ufs.h",
+      "sha256": "6d49825112bdd046082c51094c55eeb3608ef49fbcb24ea4af8e4f15879a65bb",
+      "base_sha256": "99343e08e0d8bab24ad0425bbddbee3e2790d4b7369a81309a39839b9380805d"
+    },
+    {
+      "path": "src/include/qcom_reboot.h",
+      "sha256": "aedda8b72a09c18281981b73fa6bd97776fcb5d2f8b9345755e33c604eb461a4",
+      "base_sha256": "0f3d220ac7bac4afa003835ecef482d4470a71d938f95e59eb8726ef085e0bee"
+    },
+    {
+      "path": "src/include/storage_ufs_read_probe.h",
+      "sha256": "c0276e9df93b5429f775eec1b9f530776007bc3d3ba6dc9dfa1cfea7b556ed4e",
+      "base_sha256": "32917bf2a4558b452e449fddc135825c19688d6b39a6177fa01ecff9ebc560bc"
+    },
+    {
+      "path": "src/include/storage_settings_native.h",
+      "sha256": "00398c8038000da7193948c3beb9a7ca8b57c7e477b59ad324616dfd91d92642",
+      "base_sha256": "6292682393eaa20f0cf39fd225ceb19be3cf287b542594f08a242440411ce69c"
+    },
+    {
+      "path": "src/include/lvgl_port.h",
+      "sha256": "5b9389f4f97492d3e00e35b847911e6b00e75858ed3b4db65dea21a441060716",
+      "base_sha256": "625e8972f1e40201837c9cb580c327ffec38609d9e20683a504c4447066655b7"
+    },
+    {
+      "path": "src/ui/lvgl_port.c",
+      "sha256": "89a3897e63997b657e0d4f98dea987e4d427e6c4239b2e8a59bb56351017bb8b",
+      "base_sha256": "ba7a8227575b6295aab6d995b88080a7f9a692a79961fe373ff7cdf792ba45e7"
+    },
+    {
+      "path": "src/ui/menu_design_port.h",
+      "sha256": "2bb2902a5a770b1ee716dab50f52d3898c73061f9c67c5ea2f9e3c46770402a9",
+      "base_sha256": "9edb3d9c72c783570c567d04932631fd2d7ed47c08b7539ac166b04dc58162da"
+    },
+    {
+      "path": "src/ui/fonts/lxgw_wenkai_menu.provenance.json",
+      "sha256": "b0084c6c900db2c5f4f7b197822b98c370bf5cebe9f8cf83619c5b88eeb403c1",
+      "base_sha256": "cfe3b2cdbcb9a64474371cc9c963cc9c104fb62cd5896aff75182bc7db7910df"
+    },
+    {
+      "path": "src/drivers/storage_ufs.c",
+      "sha256": "3c0a5f6cccdb17f2467194c5ba32a6aa3d80d2d0b663ce75f44637778323a36b",
+      "base_sha256": "8a552c0dd708059f168738df29ffe9f8bb4de6a0c45cef21d1983a2fe8acffaa"
+    },
+    {
+      "path": "src/drivers/storage_probe.c",
+      "sha256": "ae477ed04dd30f1182cbadfcfc977415a9139a1c7471c168b95913cdada4c75a",
+      "base_sha256": "5c9cebe738659ae9eea4f7f0035647cfd162e0eb1a2f76c7165612028e57ae89"
+    },
+    {
+      "path": "src/drivers/qcom_reboot.c",
+      "sha256": "f704ca01bf87006c91ff88d18cfbb5a982fc9e59afa464abb8da56486869addc",
+      "base_sha256": "f428b30af99c8daa6e3f3e4587b5dce71a98077d22792a893d840eb85b6596e4"
+    },
+    {
+      "path": "src/drivers/storage_ufs_read_probe.c",
+      "sha256": "e7dac1c48bdaaf7346e596b76f0cc5b05a67101ad3f63e46dc6d37dae851854c",
+      "base_sha256": "2517def6ec792be5edebbe5aec723811640f901092119f1ec01ec7817220b2b7"
+    },
+    {
+      "path": "src/drivers/storage_ufs_settings.c",
+      "sha256": "ed121fec6b0681fea5c6cfe6f05d46c45fa7f2e217986e986a79a6f6f5a2f90c",
+      "base_sha256": "611621aa315464f61e0fbb75a4ee803118dd311e97e7188064f29006cd665b03"
+    }
+  ],
+  "not_imported": [],
+  "status": "Historical optional KShimC path; not the current v91 boot path",
+  "external_generated_assets": [
+    {
+      "path": "src/ui/fonts/lxgw_wenkai_menu.ksf",
+      "sha256": "c70b2dea50c4a305ec7976708ae835f69bf9e05265ad8a4358fe507a7737a675",
+      "base_sha256": "6d6f08fcb3f7d528562d76ad256c4f36abe9937a2b96e207ab4989b472b9e55c"
+    }
+  ]
+}

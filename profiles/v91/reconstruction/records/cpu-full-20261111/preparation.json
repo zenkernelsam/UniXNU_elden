@@ -1,0 +1,16 @@
+{
+  "source_tree": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/out/elden/ipados-17.7.11-21H461/elden-ufs_ipados/tree",
+  "isolated_tree": "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-full-20261111/tree",
+  "baseline_sources": {
+    "osfmk/arm64/start.s": "837c29dbd72fbbbcf5e142821a3de773d727ef8072eccb6a980b84cb7e99091f",
+    "osfmk/arm64/machine_routines.c": "6a807f9cbf557a81740a3f3e7a59aaea3d6bdd89c36dbbe543ed6ed62b483f92",
+    "pexpert/pexpert/arm64/board_config.h": "450c444e69f1ad0af23865e5cfc9b56366c51afba59387ffb8c6e3b3ca18f87e",
+    "pexpert/pexpert/arm64/BCM2837.h": "3c1bdce63c7d7b8c45d01b58e414f7ab0012a07e66c6ab7b75dba15cc6eebe34",
+    "osfmk/arm64/proc_reg.h": "ba73bb4e48d59d630d1d86493601355d57457025f03ba96294da48b80208c741",
+    "osfmk/kern/sched_clutch.c": "5b0eb62e83bc8d04aa92068caabe07a64a5dc91e9d3217806e016707781f8bc0"
+  },
+  "capacity_patch_sha256": "0f039b8ed699d4b2e6de3d4d15b48567510ffb9da6660d8d8cdac9b28e52f8bf",
+  "armcpu_source_sha256": "815868520794ce7d7230adac373928a107a2bae6d427cc4513daa533919896dc",
+  "old_objects_excluded_from_new_objroot": true,
+  "device_operation": false
+}

@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/UniXNU/UniXNU-sheng",
+  "commit": "9109d4ca01bbf28d89170fc26ae4115fb7c1e117",
+  "files": {
+    "GeniI2c.c": "34eb6effebb1750a538cf092ce68ceddd4855b7d44678a71305a02e454bf8b7b",
+    "GeniI2c.h": "2ade734ab7cdbd41fcea68c7f7ff4392b779b2d04666118407a1533e22258e7c",
+    "LICENSE": "5b1d3d911103cb0f41641ec0964c5ac1f7e229f57aa072b6ac38bae913a1307b"
+  },
+  "modified": false
+}

@@ -1,0 +1,27 @@
+--- a/osfmk/arm64/sleh.c
++++ b/osfmk/arm64/sleh.c
+@@ -1225,6 +1225,7 @@
+ 
+ #if DEVELOPMENT || DEBUG
+ #include <vm/vm_shared_region.h>
++extern void elden_usb_display_fault(int,int,const void *) __attribute__((weak));
+ extern void elden_usb_user_meta(int,uint64_t,uint32_t,int,const void *) __attribute__((weak));
+ extern int elden_usb_fault_enabled(void) __attribute__((weak));
+ extern void elden_usb_user_fault(int, const char *, uint32_t, uint64_t, uint64_t,
+@@ -1241,6 +1242,16 @@
+         uint8_t instruction[16] = {0};
+         int copy_error = copyin(get_saved_state_pc(state), instruction, sizeof(instruction));
+         elden_usb_user_meta(proc_pid(current_proc()), get_saved_state_pc(state), slide, copy_error, instruction);
++        /* Exact 21H461 FBSDisplayMode validity-check BRK, verified against the
++         * original cache. x19 retains the mode object: only its 72 bytes of
++         * dimensions/scaling/refresh/colour/rotation are observed, no ISA. */
++        if (elden_usb_display_fault && slide != UINT32_MAX && !copy_error &&
++            get_saved_state_pc(state) - slide == 0x19f3d0744ULL &&
++            !memcmp(instruction, "\x00\x00\x20\xd4\x20\x00\x20\xd4", 8)) {
++            uint8_t mode[72] = {0};
++            int error = copyin(saved_state64(state)->x[19] + 8, mode, sizeof(mode));
++            elden_usb_display_fault(proc_pid(current_proc()), error, mode);
++        }
+     }
+     uint64_t start = 0, offset = 0;
+     vm_map_t map = current_thread()->map;

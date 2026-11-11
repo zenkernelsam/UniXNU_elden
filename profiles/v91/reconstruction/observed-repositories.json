@@ -1,0 +1,302 @@
+[
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/mu_wide_platforms",
+    "head": "3e1d052064beb6e59cda3cfba87d50e6cc088174",
+    "remote": [
+      "origin\thttps://github.com/sunflower2333/mu_wide_platforms.git (fetch) [blob:none]",
+      "origin\thttps://github.com/sunflower2333/mu_wide_platforms.git (push)"
+    ],
+    "status": [
+      " M BootShim/BootShim.S",
+      " M Platforms/AndromedaPkg/PrePi/AArch64/ModuleEntryPoint.S",
+      " M Platforms/AndromedaPkg/PrePi/PeiUniCore.inf",
+      " M Platforms/AndromedaPkg/PrePi/PrePi.c",
+      " M Platforms/PakalaPkg/Device/lenovo-y700g4/APRIORI.inc",
+      " M Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.dsc.inc",
+      " M Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.inc",
+      " M Platforms/PakalaPkg/Device/lenovo-y700g4/PatchedBinaries/PmicDxeLA.efi",
+      " M Platforms/PakalaPkg/Device/lenovo-y700g4/PcdsFixedAtBuild.dsc.inc",
+      " M Platforms/PakalaPkg/Device/nubia-nx789j/PatchedBinaries/PmicDxeLA.efi",
+      " M Platforms/PakalaPkg/PakalaNoSb.dsc",
+      " M Platforms/PakalaPkg/PlatformBuild.py",
+      " M Platforms/PakalaPkg/PlatformBuildNoSb.py",
+      " M Platforms/PakalaPkg/PythonLibs/mkbootimg.py",
+      "?? Platforms/EldenPhase1Pkg/",
+      "?? Platforms/EldenPhase2Pkg/",
+      "?? Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.dsc.inc.bak-serial",
+      "?? Platforms/PakalaPkg/Device/lenovo-y700g4/DXE.inc.bak-serial",
+      "?? Platforms/PakalaPkg/Device/lenovo-y700g4/PcdsFixedAtBuild.dsc.inc.bak-serial",
+      "?? Platforms/PakalaPkg/Device/lenovo-y700g4/PcdsFixedAtBuild.dsc.inc.bak.advlog"
+    ]
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU",
+    "head": "73a793d20f7dd9d36f3dc05f63ecf6c30dd45c7c",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/UniXNU.git (fetch) [blob:none]",
+      "origin\thttps://github.com/UniXNU/UniXNU.git (push)"
+    ],
+    "status": [
+      " ? drivers/DarwinBoot",
+      " M package/UniXNUPkg/Library/UniXNULib/Inject.c",
+      " M package/UniXNUPkg/Library/UniXNULib/Main.c",
+      " M package/UniXNUPkg/Library/UniXNULib/UniXNULib.inf",
+      " M package/UniXNUPkg/Test/HelloPayload/HelloPayload.c",
+      " M package/UniXNUPkg/Test/HelloPayload/HelloPayload.inf",
+      "?? drivers/NativeAES/",
+      "?? drivers/NativeAdreno/",
+      "?? drivers/NativeGeniSpi/",
+      "?? drivers/NativeHidInput/",
+      "?? drivers/NativeKeyStoreEvents/",
+      "?? drivers/NativeMetal/",
+      "?? drivers/NativeMobileDisplay/",
+      "?? drivers/NativeRamBlock/",
+      "?? drivers/NativeUfs/",
+      "?? drivers/NativeVirtioBlock/",
+      "?? drivers/NativeVirtioConsole/",
+      "?? kits/NativePrelink/",
+      "?? package/EldenBluetoothBoard.h",
+      "?? package/EldenDataBoard.h",
+      "?? package/EldenTouchBoard.h",
+      "?? package/EldenWifiFirmwareInputs.h",
+      "?? package/UniXNUPkg/Driver/UniXNURamDiskDxe/",
+      "?? package/UniXNUPkg/Library/UniXNULib/Main.c.bak.connectall"
+    ]
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/ShengUfs",
+    "head": "af785c1777161a62931425c2faaa536ce0bebd5b",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/ShengUfs.git (fetch)",
+      "origin\thttps://github.com/UniXNU/ShengUfs.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/NativeRamBlock",
+    "head": "d4d22d9819b0162eda49f6402235dddc2279410d",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/NativeRamBlock.git (fetch)",
+      "origin\thttps://github.com/UniXNU/NativeRamBlock.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/ArmVirtPlatform",
+    "head": "532de8c017e394e69a0b48dc0ffc4ac0d0701177",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/ArmVirtPlatform.git (fetch)",
+      "origin\thttps://github.com/UniXNU/ArmVirtPlatform.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/VirtioMmioBlock",
+    "head": "98909eb9198a4360d7a43be831887cb8b74d814d",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/VirtioMmioBlock.git (fetch)",
+      "origin\thttps://github.com/UniXNU/VirtioMmioBlock.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/NativeVirtioConsole",
+    "head": "066f9bded311233ed56824e13a5628077619efda",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/NativeVirtioConsole.git (fetch)",
+      "origin\thttps://github.com/UniXNU/NativeVirtioConsole.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/ShengHidInput",
+    "head": "ba03e5d147452b2166aab7435d219fa10877672b",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/ShengHidInput.git (fetch)",
+      "origin\thttps://github.com/UniXNU/ShengHidInput.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/NativeGeniSpi",
+    "head": "b5399b5646c4d7415deec6d887fd51715a97a024",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/NativeGeniSpi.git (fetch)",
+      "origin\thttps://github.com/UniXNU/NativeGeniSpi.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/QcomGeniSpi",
+    "head": "b5399b5646c4d7415deec6d887fd51715a97a024",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/QcomGeniSpi.git (fetch)",
+      "origin\thttps://github.com/UniXNU/QcomGeniSpi.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/NativeAdreno",
+    "head": "b686b9054f57d393c80195b82568a09f8ca106a2",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/NativeAdreno.git (fetch)",
+      "origin\thttps://github.com/UniXNU/NativeAdreno.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/GopFramebuffer",
+    "head": "8666a9950c9699b368931d18cac92c0fdb2ce9c0",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/GopFramebuffer.git (fetch)",
+      "origin\thttps://github.com/UniXNU/GopFramebuffer.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/NativeUfs",
+    "head": "af785c1777161a62931425c2faaa536ce0bebd5b",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/NativeUfs.git (fetch)",
+      "origin\thttps://github.com/UniXNU/NativeUfs.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/AdrenoMetal",
+    "head": "c6d29caad6d880cc8204ebe3bc34d77479a3255d",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/AdrenoMetal.git (fetch)",
+      "origin\thttps://github.com/UniXNU/AdrenoMetal.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/AppleKeyStoreState",
+    "head": "e59bac4ad1ac8825919ae94da8440a64d8ab90b3",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/AppleKeyStoreState.git (fetch)",
+      "origin\thttps://github.com/UniXNU/AppleKeyStoreState.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/SoftwareAES",
+    "head": "a34964b8c2fec2e83c8e4f68fb7d6fb7e4b2227b",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/SoftwareAES.git (fetch)",
+      "origin\thttps://github.com/UniXNU/SoftwareAES.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/ArmDTPlatform",
+    "head": "0d544705c2e89725caabc0542bb96bc8febd8c70",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/ArmDTPlatform.git (fetch)",
+      "origin\thttps://github.com/UniXNU/ArmDTPlatform.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/VirtioMmioConsole",
+    "head": "066f9bded311233ed56824e13a5628077619efda",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/VirtioMmioConsole.git (fetch)",
+      "origin\thttps://github.com/UniXNU/VirtioMmioConsole.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/NativeMobileDisplay",
+    "head": "8666a9950c9699b368931d18cac92c0fdb2ce9c0",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/NativeMobileDisplay.git (fetch)",
+      "origin\thttps://github.com/UniXNU/NativeMobileDisplay.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/DarwinBoot",
+    "head": "d099354d0eab34df5088ca1ba89c9c88bc3260bb",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/DarwinBoot.git (fetch)",
+      "origin\thttps://github.com/UniXNU/DarwinBoot.git (push)"
+    ],
+    "status": [
+      "?? Test/__pycache__/"
+    ]
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/NativeVirtioBlock",
+    "head": "98909eb9198a4360d7a43be831887cb8b74d814d",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/NativeVirtioBlock.git (fetch)",
+      "origin\thttps://github.com/UniXNU/NativeVirtioBlock.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/RamBlock",
+    "head": "d4d22d9819b0162eda49f6402235dddc2279410d",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/RamBlock.git (fetch)",
+      "origin\thttps://github.com/UniXNU/RamBlock.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/Adreno740",
+    "head": "b686b9054f57d393c80195b82568a09f8ca106a2",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/Adreno740.git (fetch)",
+      "origin\thttps://github.com/UniXNU/Adreno740.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/NativeMetal",
+    "head": "c6d29caad6d880cc8204ebe3bc34d77479a3255d",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/NativeMetal.git (fetch)",
+      "origin\thttps://github.com/UniXNU/NativeMetal.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/ArmCpu",
+    "head": "1951cc8444b340d7d8879e9418220cf29eb711d7",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/ArmCpu.git (fetch)",
+      "origin\thttps://github.com/UniXNU/ArmCpu.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/NativeKeyStoreEvents",
+    "head": "e59bac4ad1ac8825919ae94da8440a64d8ab90b3",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/NativeKeyStoreEvents.git (fetch)",
+      "origin\thttps://github.com/UniXNU/NativeKeyStoreEvents.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/NativeHidInput",
+    "head": "ba03e5d147452b2166aab7435d219fa10877672b",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/NativeHidInput.git (fetch)",
+      "origin\thttps://github.com/UniXNU/NativeHidInput.git (push)"
+    ],
+    "status": []
+  },
+  {
+    "path": "/Users/ciscohe/Desktop/UniXNU_elden/third_party/UniXNU/drivers/NativeAES",
+    "head": "a34964b8c2fec2e83c8e4f68fb7d6fb7e4b2227b",
+    "remote": [
+      "origin\thttps://github.com/UniXNU/NativeAES.git (fetch)",
+      "origin\thttps://github.com/UniXNU/NativeAES.git (push)"
+    ],
+    "status": []
+  }
+]

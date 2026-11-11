@@ -1,0 +1,17 @@
+--- a/RootCommands.h
++++ b/RootCommands.h
+@@ -193,8 +193,12 @@
+   if (!cdb || !cdbLength || cdbLength > 16 || dataBytes > kDataMax || direction > 2 ||
+       (dataBytes & 3) || (dataBytes ? !direction : direction)) return kIOReturnBadArgument;
+ #if defined(NATIVE_UFS_READ_ONLY) && NATIVE_UFS_READ_ONLY
+-  if (direction == 1 || (cdb[0] != 0 && cdb[0] != 0x12 && cdb[0] != 0x25 && cdb[0] != 0x28 &&
+-      !(cdbLength == 6 && cdb[0] == 0x1b && !cdb[1] && !cdb[2] && !cdb[3] && cdb[4] == 0x10 && !cdb[5])))
++  bool recoveryCommand=false;
++#if defined(ELDEN_BOOT_RECOVERY) && ELDEN_BOOT_RECOVERY
++  recoveryCommand=elden_bcb::command(gEldenBcbWritePermit,lun,cdb,cdbLength,direction,dataBytes);
++#endif
++  if (!recoveryCommand && (direction == 1 || (cdb[0] != 0 && cdb[0] != 0x12 && cdb[0] != 0x25 && cdb[0] != 0x28 &&
++      !(cdbLength == 6 && cdb[0] == 0x1b && !cdb[1] && !cdb[2] && !cdb[3] && cdb[4] == 0x10 && !cdb[5]))))
+     return kIOReturnBadArgument;
+ #endif
+   if (!hostClearUcd ()) return kIOReturnNotReady;

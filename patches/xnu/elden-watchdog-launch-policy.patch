@@ -1,0 +1,22 @@
+--- a/bsd/kern/kern_exec.c
++++ b/bsd/kern/kern_exec.c
+@@ -7906,6 +7906,10 @@
+ volatile int elden_init_exec_accepted = 0;
+ #endif
+ 
++#if defined(XNU_OWNER_DATA_MOUNT) && XNU_OWNER_DATA_MOUNT
++#include "EldenWatchdogPolicy.inc"
++#endif
++
+ static int
+ load_init_program_at_path(proc_t p, user_addr_t scratch_addr, const char* path, user_addr_t envp)
+ {
+@@ -8061,6 +8065,8 @@
+ 	int data_error = native_owner_data_prepare(p, (user_addr_t)scratch_addr);
+ 	boot_progress_stage("Data mount returned");
+ 	if (data_error) panic("offline scratch Data mount failed: %d stage=%d", data_error, native_owner_data_stage);
++	int elden_policy_error = elden_watchdog_policy(p, (user_addr_t)scratch_addr);
++	if (elden_policy_error) panic("ELDEN watchdog launch policy failed: %d", elden_policy_error);
+ #if defined(XNU_BOOT_PROGRESS) && XNU_BOOT_PROGRESS
+ 	extern int sheng_boot_watchdog_policy(void *, uint64_t);
+ 	boot_progress_stage("temporary watchdog launch policy enter");

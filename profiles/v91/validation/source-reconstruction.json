@@ -1,0 +1,15 @@
+{
+  "xnu_commit": "d8b80295118ef25ac3a784134bcf95cd8e88109f",
+  "source_files_verified": 650,
+  "snapshot_xnu_files_applied": 17,
+  "source_reconstruction_passed": true,
+  "kernel_compiled": false,
+  "boot_image_created": false,
+  "device_operation": false,
+  "remaining": [
+    "Regenerate external binary headers",
+    "Build all native driver archives",
+    "Build and prelink XNU without historical object dependencies",
+    "Package and qualify with owner-supplied external assets"
+  ]
+}
