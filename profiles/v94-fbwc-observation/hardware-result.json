@@ -1,0 +1,43 @@
+{
+  "image_sha256": "cea9703fdb9a98a8bf48ea9a885242fe7caafee5de20c62279682f0ff2b4bc80",
+  "session": "bc0a28dcaf1688e2",
+  "raw_sha256": "b97e748763f54fb274225f7500b953601737264fd90cbb1b08ed5bd81b810f0f",
+  "captured_bytes": 4960298,
+  "drop_max": 40,
+  "capture_end": "ClearCommError failed (PermissionError(13, '\u8bbe\u5907\u4e0d\u8bc6\u522b\u6b64\u547d\u4ee4\u3002', None, 22))",
+  "mapping_policy": [
+    "ELDEN_FBWC policy=1 console=1 physbase=8c007c000 physsize=180000000",
+    "ELDEN_FBWC policy=1 console=1 physbase=8c007c000 physsize=180000000",
+    "ELDEN_FBWC policy=1 console=1 physbase=8c007c000 physsize=180000000"
+  ],
+  "translation_check": "ELDEN_FBWC mapping=0 page=1614000 par=44000000fde14b00 mair=c0804ff00bb44ff",
+  "read_and_write_pages_verified": 5653,
+  "counter_hz": 19200000,
+  "copy_samples": 17,
+  "copy_ticks_median": 2575428,
+  "copy_ms_median": 134.136875,
+  "baseline_samples": 17,
+  "baseline_copy_ms_median": 716.64734375,
+  "copy_speedup": 5.342657220469762,
+  "settings_frame_id": 10,
+  "settings_crc32": "3bd2f297",
+  "settings_png_sha256": "d0e28f117d989dba33e8eaa090540bde9fce18adb40f0aa0de5ff3d5b4c077c3",
+  "settings_pixels_equal_v91": true,
+  "software_settings_passed": true,
+  "reset_after_sync": true,
+  "actual_fastboot_observed": true,
+  "stock_restored_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "physical_touch_verified": false,
+  "full_peripheral_goal_complete": false,
+  "limits": [
+    "Copy timing is not end-to-end FPS",
+    "One portrait software Settings operation; no physical finger or rotation/long-run claim",
+    "v93 faint final capture not accepted; v94 changes only preview budgets"
+  ],
+  "preview_dimensions": [
+    238,
+    380
+  ],
+  "preview_format": "RGB565, one sample per8x8 pixels",
+  "physical_touch_availability": "Owner currently unavailable; continue offline"
+}

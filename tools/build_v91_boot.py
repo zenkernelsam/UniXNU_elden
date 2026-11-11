@@ -15,6 +15,7 @@ from build_boot_shim import extract_alloc_sections
 from darwinboot_preflight import adt_walk,parse_kernel
 from verify_v91_assets import verify_loader,verify_packed_seed
 from firmware_contract import verify_firmware
+from fbwc_boot import template as boot_template,qualify as qualify_fbwc
 HASHES={'fd':'e50e1d6e2be51367225d76d4e97b90d51ba7812193d99fd4d4d7dd9fdc2ee534','loader':'ae8e5938b22766b921f43f68e2ea63db028fb57ec1f3791edaf7db10f5825299','data':'483125a27280f17d91de594f951cee4216f4888b764525b74db0f61ed62d34b3'}
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def encode_adt(node):
@@ -30,6 +31,7 @@ def main():
     for name in ('kernel','entry-report','fd','loader','data','library','agent','stock-boot','avbtool','key','output'):p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--clang',default='clang');p.add_argument('--wsl-distro',help='Use Linux filesystem/signing tools in this Windows WSL distribution')
     p.add_argument('--data-report',type=Path,help='Source-built Data seed filesystem/manifest verification')
+    p.add_argument('--fbwc-report',type=Path,help='Explicit qualified v93 framebuffer build; adds only the bare fbwc option')
     a=p.parse_args();out=a.output.resolve()
     def path(v):
         s=str(Path(v).resolve())
@@ -48,6 +50,7 @@ def main():
     stock=check_image(a.stock_boot,'boot_a')
     if stock.sha256!='8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890':raise RuntimeError('Wrong stock contract')
     entry=json.loads(a.entry_report.read_text())
+    fbwc=qualify_fbwc(a.fbwc_report,a.entry_report) if a.fbwc_report else None
     if sha(a.kernel)!=entry['derivative_sha256'] or entry['stub_bytes']!=104:raise RuntimeError('Kernel entry-transform identity mismatch')
     parse_kernel(a.kernel.read_bytes());out.mkdir(parents=True);assets=out/'files/EFI/UniXNU';payloads=assets/'Payloads';payloads.mkdir(parents=True)
     adt_config=json.loads((PROFILE/'adt.json').read_text());adt=encode_adt(adt_config['tree'])
@@ -65,7 +68,7 @@ def main():
     if hashlib.sha256(trust).hexdigest()!=tc['expected_v91_sha256']:raise RuntimeError('Trustcache is not the v91 contract')
     (payloads/'kernel.macho.trustcache').write_bytes(trust)
     for source,dest in [(a.kernel,payloads/'kernel.macho'),(a.data,payloads/'data.packed'),(a.loader,assets/'EldenPayloadLoader.efi')]:shutil.copyfile(source,dest)
-    template=(PROFILE/'unixnu.toml.in').read_text()
+    template=boot_template(bool(fbwc))
     identity=a.kernel.read_bytes()+template.encode()+adt+hashlib.sha256(trust).digest()
     for input_file in (a.fd,a.loader,a.data):identity+=bytes.fromhex(sha(input_file))
     session=hashlib.sha256(identity).hexdigest()[:16];menu=template.replace('@SESSION@',session)
@@ -98,5 +101,6 @@ def main():
     run(cmd);checked=check_image(signed,'boot_a')
     if metadata(signed)['props']!=meta['props'] or checked.bytes!=100663296:raise RuntimeError('Stock signing properties changed')
     result={'kernel_sha256':sha(a.kernel),'image_sha256':checked.sha256,'rollback_index':checked.index,'footer_location':checked.location,'session':session,'fat_files':expected,'bootshim_sha256':hashlib.sha256(shim).hexdigest(),'external_assets':{name:sha(getattr(a,name)) for name in HASHES},'firmware_contract':firmware_contract,'loader_contract':loader_contract,'data_contract':data_contract,'assembled_without_old_boot_carrier':True,'hardware_tested':False,'device_operation':False,'full_asset_source_closure':not data_contract.get('legacy_frozen_seed',False)}
+    if fbwc:result['framebuffer_experiment']=fbwc
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:result[k] for k in ('image_sha256','rollback_index','footer_location','session','full_asset_source_closure')},indent=2))
 if __name__=='__main__':main()

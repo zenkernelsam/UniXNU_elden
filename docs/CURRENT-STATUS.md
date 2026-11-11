@@ -44,3 +44,10 @@ Boot rollback floor 始终为 **1738713600 / footer location 0**，父链 locati
 生成器与打包器现在都读取原始APFS inode验证233项所有者，不能再只依赖stat视图。
 详见 `DATA-SEED-OWNERSHIP.md` 和 `profiles/v91/validation/source-rebuilt-hardware.json`。
 这是一次软件交互验收；物理触控、约0.7秒整屏拷贝、持久Data及其余外设继续按PLAN。
+
+## 后续显示映射优化
+
+v94通过帧缓冲全部5653页读写翻译检查，17次整屏copy中位数为134.14ms，
+对照716.65ms，约5.34倍。采样Settings截图CRC3bd2f297与原图一致；不是全分辨率
+像素校验或整体FPS。4960298B日志/drop40，会话RPC同步回fastboot和stock全SHA恢复通过。
+当前用户要求继续离线，真实手指待方便时再验。详见FRAMEBUFFER-WC.md。

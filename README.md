@@ -5,6 +5,9 @@ Lenovo Legion Y700 Gen4 / TB322FC / SM8750 的 UniXNU 适配源码。
 **最近已验：v91 运行 iPadOS 17.7.11 (21H461)，通过软件上滑和短按打开有内容的 Settings。**
 真实手指交互、显示流畅度、持久 Data、完整充电、无线等仍在推进，尚非完整可用的 iPad。
 
+后续帧缓冲映射优化已实测：整屏CPU拷贝中位数716.65→134.14ms，软件Settings
+采样画面保持一致；这不是整体FPS或实指验收。见 [记录](docs/FRAMEBUFFER-WC.md)。
+
 - [当前实测状态与边界](docs/CURRENT-STATUS.md)
 - [源码复现与已通过的构建验证](docs/REPRODUCIBILITY.md)
 - [下一阶段计划](docs/PLAN.md)

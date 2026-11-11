@@ -9,6 +9,7 @@ from darwinboot_preflight import parse_kernel,adt_walk
 import make_entry_probe_kernel as maker
 from verify_v91_assets import verify_loader,verify_packed_seed
 from firmware_contract import verify_firmware
+from fbwc_boot import template as boot_template,qualify as qualify_fbwc
 def sha(b):return hashlib.sha256(b).hexdigest()
 def main():
     if sys.flags.optimize:raise SystemExit('Run without -O; validation assertions must remain enabled')
@@ -16,6 +17,8 @@ def main():
     for name in ('image','entry-kernel','stock-boot','parent-vbmeta','output'):p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--baseline-kernel',type=Path,help='Optional original hardware baseline; otherwise use its checked-in entry-body fingerprint')
     p.add_argument('--data-report',type=Path)
+    p.add_argument('--fbwc-report',type=Path)
+    p.add_argument('--entry-report',type=Path)
     a=p.parse_args();checked=check_image(a.image,'boot_a');stock=check_image(a.stock_boot,'boot_a');check_image(a.parent_vbmeta,'vbmeta')
     if stock.sha256!='8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890':raise RuntimeError('Unknown stock contract')
     if metadata(a.image)['props']!=metadata(a.stock_boot)['props']:raise RuntimeError('AVB properties changed')
@@ -63,7 +66,10 @@ def main():
         elif sha(content)!=h:raise RuntimeError('Frozen payload changed: '+name)
     tree=adt_walk(fat.read(prefix+'Payloads/kernel.macho.adt'))
     if tree['window']!=0x180000000 or tree['gpuaddon'] is not None:raise RuntimeError('Memory/GPU configuration changed')
-    text=fat.read(prefix+'unixnu.toml').decode();cfg=tomllib.loads(text);template=(ROOT/'profiles/v91/boot-build/unixnu.toml.in').read_text()
+    if a.fbwc_report and not a.entry_report:raise RuntimeError('Framebuffer audit requires the entry transformation report')
+    fbwc=qualify_fbwc(a.fbwc_report,a.entry_report) if a.fbwc_report else None
+    if fbwc and json.loads(a.entry_report.read_text())['derivative_sha256']!=sha(kernel):raise RuntimeError('Framebuffer entry report mismatch')
+    text=fat.read(prefix+'unixnu.toml').decode();cfg=tomllib.loads(text);template=boot_template(bool(fbwc))
     import re
     sessions=re.findall(r'elden-debug-session=([0-9a-f]{16})',text)
     if len(set(sessions))!=1 or text!=template.replace('@SESSION@',sessions[0]) or cfg['boot']['timeout']!=8 or cfg['boot']['default']!='xnu':raise RuntimeError('Menu or session policy differs')
@@ -71,6 +77,7 @@ def main():
     for content in (raw[128:0x400080],fat.read(prefix+'EldenPayloadLoader.efi'),fat.read(prefix+'Payloads/data.packed')):identity+=hashlib.sha256(content).digest()
     if sessions[0]!=hashlib.sha256(identity).hexdigest()[:16]:raise RuntimeError('Debug session is not bound to all payload inputs')
     report={'accepted_static':True,'image_sha256':checked.sha256,'kernel_sha256':sha(kernel),'rollback_index':checked.index,'footer_location':checked.location,'parent_boot_chain_location':3,'fat_mirrors_equal':True,'entry_body_100_bytes_equal_hardware_baseline':True,'entry_branch_target_equal':True,'entry_address':hex(now['address']),'entry_return_target':hex(new_return),'session':sessions[0],'memory_window_bytes':tree['window'],'firmware_contract':firmware_contract,'hardware_tested':False,'device_operation':False,'full_asset_source_closure':rebuilt_seed}
+    if fbwc:report['framebuffer_experiment']=fbwc
     if a.output.exists():raise RuntimeError('Audit output must be new')
     a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
 if __name__=='__main__':main()

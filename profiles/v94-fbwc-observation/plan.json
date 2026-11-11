@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "profile": "v94-fbwc-observation",
+  "virtual_root": "/Users/ciscohe/Desktop/UniXNU_elden",
+  "parent_core_profile": "4c17a857c5dd22d95b205ddf3179de8f3226b1d4f62bb75fb650f6fa5145c8f8",
+  "parent_native_profile": "2242750f53ea98118388131f2811c7921dd2d07183cc28bab8a08716822edbbf",
+  "parent_image_profile": "84dcd495ac130a36a5cc53cb9a7bd61c01e1615b933a0f9efa1321db78cff24c",
+  "sources": {
+    "EldenDisplayGlue.cpp": "7414c13c1132c63ebdc0f5bb7fdcb90e23e19cadad5a2a70d283bd31dd0c2fba",
+    "EldenSdamRecovery.inc": "85928bf0212ed86b27edbfb49c01807d2ef710adf668f0be9f2fd80fac7f9aec",
+    "MappingCheck.c": "c969fc1b1137aa2a7f468320adac6c1dce82928acc3df8a176a2e7df84479cf7",
+    "NativeLegacyDisplay.cpp": "780a5ea64e3348ab0edbfb0c6bce525947acb7da21826cee2815e03e29d97d00",
+    "SmpGuard.inc": "b9cb4004d114243cf30bf4796e18b6f1415d5aea9c7f895af88a5a9373d24c84",
+    "TestWcPolicy.c": "23fd5d2f71269d1f5851eb1cceef6c5e997097f2f508f2f74512bd2fee439300",
+    "video_console.c": "9c7525a67b438f254cc3a69045b28cd536a111ae0b85d19ac715ec2df9771f66",
+    "WcPolicy.h": "88b9a814dcf470f88170296ba67febd9e2dd6637c99e58ebbb6c244516799a46"
+  },
+  "archives": {
+    "ShengUfs": {
+      "archive": "libShengUfs.a",
+      "jobs": [
+        582,
+        585,
+        583,
+        584,
+        586
+      ]
+    },
+    "display": {
+      "archive": "libNativeLegacyDisplay.late.a",
+      "jobs": [
+        587,
+        588,
+        589,
+        590,
+        591,
+        592,
+        593,
+        594,
+        595,
+        596,
+        597,
+        598,
+        599,
+        600,
+        601,
+        602,
+        603,
+        604,
+        605,
+        606
+      ]
+    }
+  },
+  "added_exports": [
+    "_elden_fb_check_mapping",
+    "_elden_fb_console_state",
+    "_elden_smp_framebuffer_ready",
+    "_native_legacy_fb_cache_mode"
+  ],
+  "scope": "GOP framebuffer single mapping; watchdog gate; suppress text-console alias; read and write PAR proof on every page before pixels",
+  "hardware_tested": false,
+  "observation_only_delta": {
+    "after_input_frames": [
+      4,
+      5
+    ],
+    "maximum_frames": [
+      10,
+      12
+    ]
+  },
+  "inherit_sources": "v93-fbwc"
+}

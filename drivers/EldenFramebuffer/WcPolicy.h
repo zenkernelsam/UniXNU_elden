@@ -4,6 +4,10 @@
 #define ELDEN_FB_PA UINT64_C(0xfc800000)
 #define ELDEN_FB_BYTES UINT64_C(23152640)
 #define ELDEN_FB_MAP_BYTES ((ELDEN_FB_BYTES+4095)&~UINT64_C(4095))
+static inline int elden_fb_wc_span(uint64_t address,uint64_t length)
+{
+    return address && !(address&4095) && length==ELDEN_FB_BYTES && address<=UINT64_MAX-ELDEN_FB_MAP_BYTES;
+}
 static inline int elden_fb_wc_layout(uint64_t pa,uint64_t bytes,uint32_t width,uint32_t height,uint32_t stride,uint32_t depth,uint32_t rotate,uint64_t physBase,uint64_t physSize,uint64_t consoleState)
 {
     if(pa!=ELDEN_FB_PA||bytes!=ELDEN_FB_BYTES||width!=1904||height!=3040||stride!=7616||depth!=32||rotate)return 0;
@@ -16,4 +20,11 @@ static inline unsigned elden_fb_par_check(uint64_t par,uint64_t expected)
     if((par&UINT64_C(0x0000fffffffff000))!=expected)return 2;
     if((par>>56)!=0x44)return 3;
     return 0;
+}
+static inline unsigned elden_fb_par_pair(uint64_t read_par,uint64_t write_par,uint64_t expected,uint64_t *reported)
+{
+    unsigned result=elden_fb_par_check(read_par,expected);
+    if(result){*reported=read_par;return result;}
+    *reported=write_par;result=elden_fb_par_check(write_par,expected);
+    return result?result+8:0;
 }

@@ -37,7 +37,7 @@ def desktop(image,reference,box=(186,138,205,157),search=0):
  return False
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--workbench',type=Path,required=True);p.add_argument('--run',type=Path,required=True);p.add_argument('--session',required=True);p.add_argument('--desktop-settle-seconds',type=int,default=0);p.add_argument('--lock-settle-seconds',type=int,default=45);p.add_argument('--entry-gesture',choices=('swipe-up','home'),default='swipe-up');p.add_argument('--desktop-reference',type=Path,required=True);p.add_argument('--desktop-box',type=int,nargs=4,default=(186,138,205,157));p.add_argument('--desktop-search',type=int,default=0);a=p.parse_args();assert 0<=a.desktop_settle_seconds<=90 and 0<=a.desktop_search<=8 and 0<=a.lock_settle_seconds<=90
+ p=argparse.ArgumentParser();p.add_argument('--workbench',type=Path,required=True);p.add_argument('--run',type=Path,required=True);p.add_argument('--session',required=True);p.add_argument('--desktop-settle-seconds',type=int,default=0);p.add_argument('--lock-settle-seconds',type=int,default=45);p.add_argument('--entry-gesture',choices=('swipe-up','home'),default='swipe-up');p.add_argument('--desktop-reference',type=Path,required=True);p.add_argument('--desktop-box',type=int,nargs=4,default=(186,138,205,157));p.add_argument('--desktop-search',type=int,default=0);p.add_argument('--finish-after-tap-seconds',type=int,default=180);a=p.parse_args();assert 0<=a.desktop_settle_seconds<=90 and 0<=a.desktop_search<=8 and 0<=a.lock_settle_seconds<=90 and 15<=a.finish_after_tap_seconds<=180
  root=a.workbench.resolve(strict=True);run=a.run.resolve();assert run.is_relative_to(root/'edl_work')
  assert len(a.session)==16 and all(x in '0123456789abcdef' for x in a.session)
  run.mkdir(parents=True,exist_ok=True);out=run/'trial-frames';out.mkdir(exist_ok=True)
@@ -49,6 +49,7 @@ def main():
  desktop_at=None;desktop_frame=0;report['desktop_settle_seconds']=a.desktop_settle_seconds
  report['lock_settle_seconds']=a.lock_settle_seconds
  report['entry_gesture']=a.entry_gesture
+ report['finish_after_tap_seconds']=a.finish_after_tap_seconds
  import hashlib
  report['desktop_reference']=dict(path=str(reference_path),sha256=hashlib.sha256(reference_path.read_bytes()).hexdigest(),box=a.desktop_box,search=a.desktop_search)
  def event(kind,**fields):
@@ -98,7 +99,7 @@ def main():
    command('icon-settings-once','tap-settings');tap_at=time.monotonic();tap_frame=desktop_frame
   if lock_at is not None and swipe_at is None and time.monotonic()-lock_at>=a.lock_settle_seconds and 'ELDEN_ICON_CPU stage=ready' in text:
    request_frame=max(seen,default=0);command('icon-unlock-once',a.entry_gesture);swipe_at=time.monotonic()
-  if tap_at is not None and not finished and time.monotonic()-tap_at>=180:
+  if tap_at is not None and not finished and time.monotonic()-tap_at>=a.finish_after_tap_seconds:
    command('icon-trial-finish','fastboot');finished=True
   time.sleep(.5)
  else:event('watcher-timeout; console and target deadlines retained')

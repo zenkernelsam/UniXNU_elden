@@ -1,0 +1,30 @@
+{
+  "candidate_sha256": "6daf96ee24529dc8eae6b5fa07a6ef5a10d32e1b857c5d67fb7b11e690920e27",
+  "session": "e961d015f4a2626c",
+  "raw_sha256": "2b14c7166b952dc16f61390e63cdfec5f2e61432dc1c5332caa97b06c8125f97",
+  "bytes": 4959224,
+  "drop_max": 38,
+  "mapping_checks": [
+    "ELDEN_FBWC policy=1 console=1 physbase=8c007c000 physsize=180000000",
+    "ELDEN_FBWC policy=1 console=1 physbase=8c007c000 physsize=180000000",
+    "ELDEN_FBWC policy=1 console=1 physbase=8c007c000 physsize=180000000",
+    "ELDEN_FBWC mapping=0 page=1614000 par=44000000fde14b00 mair=c0804ff00bb44ff"
+  ],
+  "copy_samples": 17,
+  "copy_ticks_median": 2575602,
+  "copy_ms_median": 134.1459375,
+  "baseline_ticks_median": 13759629,
+  "copy_speedup": 5.342296286460408,
+  "verified_frame_count": 10,
+  "last_frame_metadata": {
+    "session": "e961d015f4a2626c",
+    "source_frame": 16,
+    "end": 1043331217
+  },
+  "last_frame_crc": "3e2ff891",
+  "visual_assessment": "Frames7/8 show tapped desktop icon,9 white launch window,10 faint Settings fade-in; no full-contrast final frame captured",
+  "pixel_parity_accepted": false,
+  "reset_after_sync": true,
+  "stock_restored": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "next": "v94 changes only two preview counters (4 to5 after input,10 to12 total), retaining mapping/copy/clock/power code"
+}
