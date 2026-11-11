@@ -27,14 +27,40 @@ def sections(p):
         at+=length
     return result
 
+def global_symbols(p):
+    """Normalize exported/undefined/absolute bindings, excluding debug stabs."""
+    b=p.read_bytes();at=32;section_rows=[];symtab=None
+    if len(b)<32 or struct.unpack_from('<I',b)[0]!=0xfeedfacf:raise ValueError('Expected Mach-O')
+    for _ in range(struct.unpack_from('<I',b,16)[0]):
+        cmd,length=struct.unpack_from('<II',b,at)
+        if cmd==0x19:
+            for j in range(struct.unpack_from('<I',b,at+64)[0]):
+                x=at+72+j*80;name=b[x:x+16].split(b'\0')[0].decode();seg=b[x+16:x+32].split(b'\0')[0].decode()
+                section_rows.append((seg+'/'+name,struct.unpack_from('<Q',b,x+32)[0]))
+        elif cmd==2:symtab=struct.unpack_from('<4I',b,at+8)
+        at+=length
+    if symtab is None:return {}
+    offset,count,strings,_=symtab;out={}
+    def string(i):return b[strings+i:b.index(b'\0',strings+i)].decode()
+    for i in range(count):
+        name,kind,section,desc,value=struct.unpack_from('<IBBHQ',b,offset+i*16)
+        if kind&0xe0 or not kind&1:continue
+        key=string(name);target='-'
+        if kind&0x0e==0x0e:target,base=section_rows[section-1];value-=base
+        elif kind&0x0e==0x0a:value=string(value)
+        out[key]=[kind,target,value,desc]
+    return out
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--capture',type=Path,required=True);p.add_argument('--historical-root',required=True)
     p.add_argument('--output',type=Path,required=True);p.add_argument('--payload-header',type=Path,required=True)
+    p.add_argument('--nvt-header',type=Path,help='Regenerated stock NT36536 header when the capture uses it')
     p.add_argument('--only',help='Comma-separated job indices for initial validation')
     p.add_argument('--jobs',type=int,default=4,choices=range(1,9));p.add_argument('--resume',action='store_true')
     p.add_argument('--compare-old',action='store_true',help='Read original objects only to compare loaded sections')
     p.add_argument('--xnu-repository',type=Path,required=True,help='Repository containing the pinned XNU host-tool sources')
+    p.add_argument('--llvm-objcopy',type=Path,help='LLVM objcopy for recorded late-initializer transforms')
     a=p.parse_args();capture=json.loads(a.capture.read_text());out=a.output.resolve();old=a.historical_root.rstrip('/')
     if capture['missing'] or capture['no_dependency_records']:raise RuntimeError('Capture has incomplete dependencies')
     stamp=sha(a.capture)
@@ -55,6 +81,9 @@ def main():
     count=0
     for name,item in capture['files'].items():
         source=a.payload_header if name.endswith('/EldenIconCpuPayload.h') else Path(item['path'])
+        if name.endswith('/EldenNvtFirmware.h'):
+            if not a.nvt_header:raise RuntimeError('Regenerate and supply --nvt-header')
+            source=a.nvt_header
         if sha(source)!=item['sha256']:raise RuntimeError('Input SHA mismatch: '+str(source))
         data=source.read_bytes()
         if source.suffix in ('.o','.cpo','.a','.macho','.bin','.img') or b'\0' in data:raise RuntimeError('Compiled/binary input forbidden: '+str(source))
@@ -115,7 +144,7 @@ def main():
         if '/libsa/DEVELOPMENT/' in rec['original_object']:post=[['-s','__TEXT','-n','__KLD'],['-i','__KLD','-n','__KLDDATA']]
         if name=='lastkernelconstructor.o':post=[['-s','__DATA','-n','__LASTDATA_CONST']]
         prior=results.get(str(i))
-        if prior and prior.get('accepted') and prior.get('runner_sha256')==runner_sha256:
+        if prior and prior.get('accepted') and prior.get('runner_sha256')==runner_sha256 and (not a.compare_old or prior.get('global_symbols_equal')):
             previous=Path(prior['output'])
             if previous.exists() and sha(previous)==prior.get('sha256'):return i,dict(prior,reused=True)
         attempt=len(list(logs.glob(str(i)+'*.log')))+1
@@ -146,9 +175,9 @@ def main():
             def logical(v):
                 return re.sub(re.escape(str(project))+r'/(records/)?',lambda m:old+('/research/' if m[1] else '/'),v)
             cmd=[logical(v) for v in invocations[0]]+['-ivfsoverlay',str(overlay_path)]
-        if prior and prior.get('accepted') and prior.get('postprocess',[])==post and normalized(prior['command'])==normalized(cmd):
+        if prior and prior.get('accepted') and prior.get('postprocess',[])==post and prior.get('objcopy',[])==rec.get('objcopy',[]) and normalized(prior['command'])==normalized(cmd):
             previous=Path(prior['output'])
-            if previous.exists() and sha(previous)==prior.get('sha256') and (not a.compare_old or prior.get('loaded_sections_equal')):
+            if previous.exists() and sha(previous)==prior.get('sha256') and (not a.compare_old or (prior.get('loaded_sections_equal') and prior.get('global_symbols_equal'))):
                 return i,dict(prior,reused=True,runner_sha256=runner_sha256)
         logpath=logs/(str(i)+'-attempt'+str(attempt)+'.log')
         with logpath.open('x') as log:
@@ -160,12 +189,23 @@ def main():
             transformed=obj.with_name(obj.stem+'-segments'+str(step_index)+obj.suffix)
             subprocess.run([str(segment_tool),*step,'-o',str(transformed),str(obj)],check=True,capture_output=True)
             obj=transformed;result['output']=str(obj)
+        flags=rec.get('objcopy',[]);result['objcopy']=flags
+        if flags:
+            if not a.llvm_objcopy or flags[0]!='--remove-section=__DATA,__mod_init_func' or any(not v.startswith('--globalize-symbol=__GLOBAL__sub_I_') for v in flags[1:]):raise ValueError('Unsupported objcopy transform')
+            transformed=obj.with_name(obj.stem+'-late'+obj.suffix)
+            subprocess.run([str(a.llvm_objcopy),*flags,str(obj),str(transformed)],check=True,capture_output=True)
+            obj=transformed;result['output']=str(obj)
         result['sha256']=sha(obj);result['accepted']=True
         if a.compare_old or 'expected_sections' in rec:
             left=sections(obj);right=rec['expected_sections'] if 'expected_sections' in rec else sections(Path(rec['original_object']))
             result['loaded_sections_equal']=left==right
             result['different_sections']=[k for k in sorted(set(left)|set(right)) if left.get(k)!=right.get(k)]
             result['accepted']=left==right
+            if not result['accepted']:stop.set()
+        if a.compare_old or 'expected_symbols' in rec:
+            expected=rec['expected_symbols'] if 'expected_symbols' in rec else global_symbols(Path(rec['original_object']))
+            result['global_symbols_equal']=global_symbols(obj)==expected
+            result['accepted']=result['accepted'] and result['global_symbols_equal']
             if not result['accepted']:stop.set()
         return i,result
     completed=0

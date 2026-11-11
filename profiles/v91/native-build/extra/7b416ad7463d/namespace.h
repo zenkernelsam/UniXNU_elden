@@ -1,0 +1,2 @@
+#define current_uthread pthread519_current_uthread
+#define pthread_kern pthread519_pthread_kern

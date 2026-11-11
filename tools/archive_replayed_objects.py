@@ -20,7 +20,7 @@ def main():
     for i in layout['jobs']:
         job=capture['jobs'][i];result=results[str(i)];source=Path(result['output']).resolve(strict=True)
         if not source.is_relative_to(root/'objects'):raise RuntimeError('Object is outside the new build')
-        if not result.get('accepted') or not result.get('loaded_sections_equal') or sha(source)!=result['sha256']:raise RuntimeError('Unqualified object')
+        if not result.get('accepted') or not result.get('loaded_sections_equal') or not result.get('global_symbols_equal') or sha(source)!=result['sha256']:raise RuntimeError('Unqualified object')
         member=Path(job['original_object']).name
         if not re.fullmatch(r'[A-Za-z0-9_][A-Za-z0-9_.+-]*',member):raise ValueError('Invalid member filename')
         inputs.append((source,member))
@@ -34,7 +34,7 @@ def main():
         return sorted(set(s.strip() for s in lines if s.startswith('_')))
     if symbols('-U')!=layout['exports'] or symbols('-u')!=layout['imports']:raise RuntimeError('Archive symbol sets differ from the frozen layout')
     result={'archive':name,'sha256':sha(archive),'members':len(inputs),'copied_original_objects':0,
-            'loadable_object_sections_equal':True,'public_symbol_sets_equal':True,'native_linked':False,'device_operation':False}
+            'loadable_object_sections_equal':True,'global_and_absolute_object_bindings_equal':True,'public_symbol_sets_equal':True,'native_linked':False,'device_operation':False}
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))
 
 if __name__=='__main__':main()

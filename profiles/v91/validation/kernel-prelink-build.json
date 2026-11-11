@@ -1,0 +1,16 @@
+{
+  "native_sha256": "91319caef46017deebd9e27d9e053b74c923a25aedd3c5ee47a41499002b6d5c",
+  "kernel_sha256": "49c09aa84e0ee23c359dfd7e15e4e2d6983cfbbfc93115f68e910ae37f7cf449",
+  "native_loadable_sections_equal": true,
+  "native_immutable_commands_equal": true,
+  "native_global_symbols_equal": true,
+  "original_apple_executable_components": 30,
+  "original_apple_executables_unchanged": true,
+  "core_objects": 1010,
+  "project_archives": 14,
+  "image_plan_sha256": "84dcd495ac130a36a5cc53cb9a7bd61c01e1615b933a0f9efa1321db78cff24c",
+  "prelink_commit": "2b6ffb50117eee820b98aca9bd51b5c7dfb2970e",
+  "boot_packaged": false,
+  "device_operation": false,
+  "actual_original_executable_ranges_hashed": 30
+}

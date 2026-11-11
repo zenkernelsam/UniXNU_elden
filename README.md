@@ -16,7 +16,8 @@ Lenovo Legion Y700 Gen4 / TB322FC / SM8750 的 UniXNU 适配源码。
 `tools/legacy-workbench/` 保存旧配方源码，其宿主路径和增量依赖尚在迁移，不能当作通用刷机入口。
 
 已经从全新目录重编 v91 的 owned dylib，并从自备原始系统文件重建载荷头，SHA 均与实机版本一致。
-XNU 源码重建也已通过；**完整干净整核构建和最终 boot 打包尚未重新验收**。
+XNU 对象、14 个原生库、native 链接和 prelink 的独立源码构建也已通过；
+**最终 entry 转换、ADT/FAT/固件封装和签名 boot 尚未闭环**。
 默认 `board.toml` / `unixnu.lock` 仍是早期配置，不能据此声称一键得到 v91。
 
 原始 iPadOS/固件、签名密钥、设备备份与生成的二进制载荷头不提交到本仓。
