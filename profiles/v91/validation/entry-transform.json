@@ -1,0 +1,41 @@
+{
+  "source_sha256": "49c09aa84e0ee23c359dfd7e15e4e2d6983cfbbfc93115f68e910ae37f7cf449",
+  "derivative_sha256": "6c8ae4c3759ba592878156e982a7f916041856c9f3f8e3fa9d7de5ef1e80227e",
+  "allowed_ranges": [
+    [
+      16,
+      24
+    ],
+    [
+      5888,
+      5960
+    ],
+    [
+      4605064,
+      4605068
+    ],
+    [
+      28585212,
+      28585216
+    ]
+  ],
+  "changed_existing_bytes": 39,
+  "stub_bytes": 104,
+  "entry": {
+    "segment": "__ELDEN_PROBE",
+    "stub_va": 18446744005129256960,
+    "stub_file_offset": 52838400,
+    "stub_bytes": 104,
+    "entry_va": 18446744005112136840,
+    "entry_word": 335546101,
+    "entry_target": 18446744005112143964,
+    "entry_jump": "0xfffffff007468488 -> 0xfffffff0084bc000, back to 0xfffffff00746a05c"
+  },
+  "amfi": {
+    "address": "0xfffffff004aaecfc",
+    "before": "0xaa1503e0",
+    "after": "0x17ffffd4"
+  },
+  "device_operation": false,
+  "boot_packaged": false
+}

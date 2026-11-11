@@ -20,7 +20,12 @@
 7. 正式仓入口完成 native 链接和 prelink：50 个 native 装载节的内容、地址、属性和全局符号对齐；
    实际读取并哈希确认 30 个原始 Apple 组件的执行区保持不变。见 [image-build](../profiles/v91/image-build/README.md)。
 
-**源码到 prelinked kernel 已闭环；最终 entry 转换、ADT/FAT/固件封装和签名 boot 包尚未闭环。**
+8. entry 转换、ADT/菜单/信任缓存再生、FAT16 与签名 boot 的工具已实现，并生成通过独立静态核验的候选。
+   详情见 [boot-build](../profiles/v91/boot-build/README.md)。没有刷机或硬件验收。
+
+**源码到 prelinked kernel 已闭环；完整 boot 的资产源码链仍未闭环。**
+当前候选使用三个明确列出的固定外部资产：已验 UEFI FD、独立 EFI 与 Data seed。
+不能把“已生成并签名”说成这些资产也已独立源码重建。
 新内核允许 UUID、调试链接信息及 `_PrelinkKCID` 随构建变化，不宣称整文件 SHA 与旧像相同。
 历史打包入口仍依赖旧资产和增量记录，不能直接当作新的完整复现入口。
 `board.toml` / `unixnu.lock` 的默认值仍是早期引导配置，不能作为 v91 的一键复现入口。
@@ -69,7 +74,7 @@ python3 tools/build_v91_xnu_objects.py --xnu-source /path/to/new-source-output/x
 
 ## 剩余验收
 
-- 固件、ADT/payload、Data seed 和签名输入的来源/生成方法继续补齐。
-- 完成已验 entry/AMFI 转换、最终 boot 打包及独立资格验证；当前 prelink 执行区不变的结论不涵盖之后的 AMFI 单指令转换。
+- 独立复核三个固定外部资产的源码/生成方法，见 boot-build/external-inputs.json。
+- 完整资产闭环后再做最终候选资格；当前 prelink 执行区不变的结论不涵盖之后的 AMFI 单指令转换。
 - 消除有效配方对旧工作台路径的依赖，保留原始证据哈希。
 - 完整重建后核对导出、模块 ABI、签名 floor 和 boot 资格，再宣称 Jerry 可以复现最终镜像。

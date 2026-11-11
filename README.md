@@ -17,7 +17,8 @@ Lenovo Legion Y700 Gen4 / TB322FC / SM8750 的 UniXNU 适配源码。
 
 已经从全新目录重编 v91 的 owned dylib，并从自备原始系统文件重建载荷头，SHA 均与实机版本一致。
 XNU 对象、14 个原生库、native 链接和 prelink 的独立源码构建也已通过；
-**最终 entry 转换、ADT/FAT/固件封装和签名 boot 尚未闭环**。
+entry 转换、ADT/菜单/FAT 和签名 boot 的工具也已生成通过静态核验的候选；
+**UEFI FD、独立 EFI 和 Data seed 三项固定外部资产的源码生成链仍未闭环**。
 默认 `board.toml` / `unixnu.lock` 仍是早期配置，不能据此声称一键得到 v91。
 
 原始 iPadOS/固件、签名密钥、设备备份与生成的二进制载荷头不提交到本仓。

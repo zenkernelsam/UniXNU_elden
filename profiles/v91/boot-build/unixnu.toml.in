@@ -1,0 +1,28 @@
+version = 1
+[boot]
+timeout = 8
+fallback_timeout = 120
+default = "xnu"
+[kits]
+autoload = false
+[ui]
+scale = 4
+[[entry]]
+id = "xnu"
+title = "CPU8 protected startup - TEST"
+type = "xnu"
+path = "Payloads/kernel.macho"
+initrd = "Payloads/data.packed"
+args = "-v elden-return-fastboot=1 elden-panic-delay=180 elden-disable-watchdogd=1 elden-userfault-log=1 serial=3 debug=0x14e -no_slto_panic security-mode-change-enable=1 amfi_get_out_of_my_way=1 elden-gop-console=1 native-ufs-root=1 elden-usb-debug=1 elden-usb-required=1 elden-debug-session=@SESSION@ offline-mobile-graphics-load=1 offline-legacy-register=1 offline-legacy-phase=4 offline-legacy-gop=1 offline-legacy-pm=1 offline-legacy-validate=1 offline-legacy-transfer=1 offline-legacy-cpu-present=1 sheng-vsync=60 sheng-vsync-fixed=1 elden-frame-preview=1 elden-key-events=1 elden-key-state=1 elden-disable-unported-services=1 elden-hid=1 elden-adsp=2 elden-pmic=1 elden-ucsi-query=1 elden-ucsi-init=2 elden-pmic-notify=1 elden-usb-icl=2 elden-power-votes=1 elden-charge-control=1 elden-touch=7 elden-touch-hid=1 elden-ui-replay=1 elden-touch-helper=1 elden-touch-id-base=1 elden-ucsi-pdos=1 elden-thermal=2 elden-autoreturn=900 elden-icon-cpu=1 vdog=2 cpus=8 sheng-smp=1 armcpu-self-ipi=1 smp-hold=240 elden-ui=1"
+[[entry]]
+id = "basic-off"
+title = "iPadOS basic drivers - OFF"
+type = "xnu"
+path = "Payloads/kernel.macho"
+initrd = "Payloads/data.packed"
+args = "-v elden-return-fastboot=1 elden-panic-delay=180 elden-disable-watchdogd=1 elden-userfault-log=1 serial=3 debug=0x14e armcpu-diagnostics=1 -no_slto_panic security-mode-change-enable=1 amfi_get_out_of_my_way=1 elden-gop-console=1 -enable_kprintf_spam native-ufs-root=1 native-ufs-lun=0 native-ufs-diagnostics=1 elden-usb-debug=1 elden-usb-required=1 elden-debug-session=@SESSION@ offline-mobile-graphics-load=1 offline-legacy-register=1 offline-legacy-phase=4 offline-legacy-gop=1 offline-legacy-pm=1 offline-legacy-validate=1 offline-legacy-transfer=1 offline-legacy-cpu-present=1 sheng-vsync=60 sheng-vsync-fixed=1 elden-frame-preview=1 elden-user-wait=1 elden-key-events=1 elden-key-state=1 elden-disable-unported-services=1 elden-hid=1 "
+[[entry]]
+id = "reset"
+title = "Restart"
+type = "action"
+action = "reset"

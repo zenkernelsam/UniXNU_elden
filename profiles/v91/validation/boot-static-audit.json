@@ -1,0 +1,18 @@
+{
+  "accepted_static": true,
+  "image_sha256": "0665b77c81ae250e1465301b0f2ba12190b3caed2d6399f1b69f7bb256533177",
+  "kernel_sha256": "6c8ae4c3759ba592878156e982a7f916041856c9f3f8e3fa9d7de5ef1e80227e",
+  "rollback_index": 1738713600,
+  "footer_location": 0,
+  "parent_boot_chain_location": 3,
+  "fat_mirrors_equal": true,
+  "entry_body_100_bytes_equal_hardware_baseline": true,
+  "entry_branch_target_equal": true,
+  "entry_address": "0xfffffff0084bc000",
+  "entry_return_target": "0xfffffff00746a05c",
+  "session": "d137a23455deee7f",
+  "memory_window_bytes": 6442450944,
+  "hardware_tested": false,
+  "device_operation": false,
+  "full_asset_source_closure": false
+}
