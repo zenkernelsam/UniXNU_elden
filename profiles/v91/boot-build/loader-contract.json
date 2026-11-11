@@ -1,0 +1,10 @@
+{
+  "bytes": 31744,
+  "debug_guid_offset": 28924,
+  "debug_guid_bytes": 16,
+  "normalized_sha256": "7149eabb1ea723d3210002282d3adb65b35fc5d93a72ee58804f10258c17c676",
+  "baseline_sha256": "ae8e5938b22766b921f43f68e2ea63db028fb57ec1f3791edaf7db10f5825299",
+  "rebuilt_sha256": "966a8345df96a9b8463445ec187feb1056d38d1c86361ad5e18c295a8d6734f2",
+  "different_byte_count": 8,
+  "all_other_bytes_equal": true
+}

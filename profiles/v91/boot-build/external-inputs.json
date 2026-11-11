@@ -5,14 +5,21 @@
       "bytes": 4194304,
       "sha256": "e50e1d6e2be51367225d76d4e97b90d51ba7812193d99fd4d4d7dd9fdc2ee534",
       "source_evidence": "Accepted FD contains EldenPayloadDxe, UniXNU, UniXNUDxe and DarwinBoot. Its debug paths identify the Mac Pakala DEBUG_CLANGPDB build. Sources/overlays are retained in the repository.",
-      "recipes": ["scripts/build_phase2_firmware.py", "scripts/build_direct_edk2.py"],
+      "recipes": [
+        "scripts/build_phase2_firmware.py",
+        "scripts/build_direct_edk2.py"
+      ],
       "remaining": "Reconcile the exact accepted source/toolchain state and independently rebuild; the newer phase2.3 FD has a different hash and is not substituted."
     },
     "payload_loader": {
       "bytes": 31744,
       "sha256": "ae8e5938b22766b921f43f68e2ea63db028fb57ec1f3791edaf7db10f5825299",
-      "recipes": ["scripts/build-payload-loader.py", "drivers/EldenPayloadLoader/EldenPayloadLoader.dsc"],
-      "remaining": "Build in a new isolated EDK output and verify against the accepted loader."
+      "recipes": [
+        "tools/build_v91_payload_loader.py",
+        "drivers/EldenPayloadLoader/EldenPayloadLoader.dsc"
+      ],
+      "remaining": "No source-rebuild gap; reconstructed EFI is accepted only by the exact normalized whole-file contract in loader-contract.json.",
+      "status": "independent-source-rebuild-verified-except-codeview-guid"
     },
     "data_seed": {
       "bytes": 1212512,
@@ -21,8 +28,13 @@
       "expanded_sha256": "5489da6ec3db4c96219b9cc3990798106b1246502bc934cadd5de83bdb76f044",
       "volume_uuid": "E5D06647-CCB4-491D-A897-3C21B55703CF",
       "original_os_sha256": "d8808bea18b949142b3e47bbcb780c3f22faaacd9b40a88f77c23557181edc9c",
-      "recipes": ["tools/legacy-workbench/prepare_ram_data_macos.py", "tools/legacy-workbench/pack_ram_data.py", "tools/legacy-workbench/prepare_skip_setup_macos.py"],
-      "remaining": "Reconstruct and verify the blank OS-derived APFS seed/provisioning and its fixed volume identity without copying personal data."
+      "recipes": [
+        "tools/build_v91_data_seed.py",
+        "profiles/v91/boot-build/data-seed.json",
+        "tools/verify_v91_assets.py"
+      ],
+      "remaining": "No source-generation gap for logical fixture; filesystem allocation/checkpoint metadata and hash can differ. Full tablet acceptance remains pending.",
+      "status": "independent-source-generation-logically-verified"
     }
   }
 }

@@ -1,0 +1,22 @@
+{
+  "packed_reconstruction_sha256": "2c5b103d0608648061e7218fd7b1320484af78cf9eb1da468174fbfad4cf66cc",
+  "packed_reconstruction_matches_raw": true,
+  "apfs_feature_flags_match_baseline": true,
+  "features": {
+    "container": [
+      0,
+      0,
+      2
+    ],
+    "volume": [
+      [
+        2,
+        0,
+        1
+      ]
+    ]
+  },
+  "fsck_returncode": 0,
+  "fsck_log_sha256": "78d6ca601ee5645fc69ebb623fadfe468d32aea4c40200235e3333325da79e61",
+  "readonly_virtual_image_only": true
+}

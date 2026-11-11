@@ -7,11 +7,13 @@ from avb_guard import check_image,metadata
 from boot_formats import Fat
 from darwinboot_preflight import parse_kernel,adt_walk
 import make_entry_probe_kernel as maker
+from verify_v91_assets import verify_loader,verify_packed_seed
 def sha(b):return hashlib.sha256(b).hexdigest()
 def main():
     if sys.flags.optimize:raise SystemExit('Run without -O; validation assertions must remain enabled')
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('image','entry-kernel','baseline-kernel','stock-boot','parent-vbmeta','output'):p.add_argument('--'+name,type=Path,required=True)
+    p.add_argument('--data-report',type=Path)
     a=p.parse_args();checked=check_image(a.image,'boot_a');stock=check_image(a.stock_boot,'boot_a');check_image(a.parent_vbmeta,'vbmeta')
     if stock.sha256!='8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890':raise RuntimeError('Unknown stock contract')
     if metadata(a.image)['props']!=metadata(a.stock_boot)['props']:raise RuntimeError('AVB properties changed')
@@ -44,13 +46,21 @@ def main():
     if struct.unpack_from('<I',kernel,maker.locate(kernel,0xfffffff004aaecfc)[1])[0]!=0x17ffffd4:raise RuntimeError('AMFI transform differs')
     expected={'Payloads/kernel.macho.adt':'169ea871e483d8ca989f6725c79f28698ebda937eeb9ca4514d85cec0354a9e3','Payloads/kernel.macho.trustcache':'583b2012d14c45f74532bccc0ec6eaf35143ba47b4dfbfabbe7dff5ced7ee67e','Payloads/data.packed':'483125a27280f17d91de594f951cee4216f4888b764525b74db0f61ed62d34b3','EldenPayloadLoader.efi':'ae8e5938b22766b921f43f68e2ea63db028fb57ec1f3791edaf7db10f5825299'}
     for name,h in expected.items():
-        if sha(fat.read(prefix+name))!=h:raise RuntimeError('Frozen payload changed: '+name)
+        content=fat.read(prefix+name)
+        if name=='EldenPayloadLoader.efi':verify_loader(content)
+        elif name=='Payloads/data.packed' and sha(content)!=h:
+            if not a.data_report:raise RuntimeError('Rebuilt Data seed verification is missing')
+            verify_packed_seed(content,a.data_report)
+        elif sha(content)!=h:raise RuntimeError('Frozen payload changed: '+name)
     tree=adt_walk(fat.read(prefix+'Payloads/kernel.macho.adt'))
     if tree['window']!=0x180000000 or tree['gpuaddon'] is not None:raise RuntimeError('Memory/GPU configuration changed')
     text=fat.read(prefix+'unixnu.toml').decode();cfg=tomllib.loads(text);template=(ROOT/'profiles/v91/boot-build/unixnu.toml.in').read_text()
     import re
     sessions=re.findall(r'elden-debug-session=([0-9a-f]{16})',text)
     if len(set(sessions))!=1 or text!=template.replace('@SESSION@',sessions[0]) or cfg['boot']['timeout']!=8 or cfg['boot']['default']!='xnu':raise RuntimeError('Menu or session policy differs')
+    identity=kernel+template.encode()+fat.read(prefix+'Payloads/kernel.macho.adt')+hashlib.sha256(fat.read(prefix+'Payloads/kernel.macho.trustcache')).digest()
+    for content in (raw[128:0x400080],fat.read(prefix+'EldenPayloadLoader.efi'),fat.read(prefix+'Payloads/data.packed')):identity+=hashlib.sha256(content).digest()
+    if sessions[0]!=hashlib.sha256(identity).hexdigest()[:16]:raise RuntimeError('Debug session is not bound to all payload inputs')
     report={'accepted_static':True,'image_sha256':checked.sha256,'kernel_sha256':sha(kernel),'rollback_index':checked.index,'footer_location':checked.location,'parent_boot_chain_location':3,'fat_mirrors_equal':True,'entry_body_100_bytes_equal_hardware_baseline':True,'entry_branch_target_equal':True,'entry_address':hex(now['address']),'entry_return_target':hex(new_return),'session':sessions[0],'memory_window_bytes':tree['window'],'hardware_tested':False,'device_operation':False,'full_asset_source_closure':False}
     if a.output.exists():raise RuntimeError('Audit output must be new')
     a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))

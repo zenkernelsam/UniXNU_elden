@@ -1,0 +1,22 @@
+{
+  "logical_manifest_sha256": "06b91a2291c419ba28c59d3f9a13edbd38db4678e632245f46d0d09b74393fe7",
+  "logical_entries_verified": 232,
+  "volume_uuid": "E5D06647-CCB4-491D-A897-3C21B55703CF",
+  "raw_sha256": "2c5b103d0608648061e7218fd7b1320484af78cf9eb1da468174fbfad4cf66cc",
+  "packed_sha256": "1280e66db00456d31009c115e8b5be76085b622692a95a66d9e0edbd0458e070",
+  "packed_bytes": 1138784,
+  "expanded_bytes": 536870912,
+  "extent_count": 4,
+  "retagged_superblocks": [
+    1781760,
+    2613248,
+    2695168,
+    2707456
+  ],
+  "only_new_image_files_modified": true,
+  "host_journal_contents_not_copied": true,
+  "hardware_tested": false,
+  "tablet_operation": false,
+  "fsck_returncode": 0,
+  "apfs_feature_flags_match_baseline": true
+}

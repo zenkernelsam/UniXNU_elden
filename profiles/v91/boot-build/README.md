@@ -13,11 +13,12 @@ The 100-byte drawing body matches the device-tested v91 body. Its final branch
 may be relocated as the image end changes; the return target must remain the
 same. This stage is distinct from the prelink executable-unchanged check.
 
-Three **pinned external binary inputs** still prevent declaring full source
-closure: the accepted UEFI FD, standalone payload loader and packed Data seed.
-They are not bundled in Git. Their source paths and pending work are recorded in
-`external-inputs.json`; the old source recipes are retained, but have not yet
-been validated as independent replacements for these exact assets.
+The accepted **UEFI FD** still prevents declaring full source closure. The
+standalone EFI now rebuilds with only the permitted CodeView GUID difference;
+the Data seed now rebuilds from the original OS with the same required logical
+contents, ownership, permissions, volume identity and APFS feature flags. These
+binary outputs are not bundled in Git. See `ASSET-REBUILD.md` and
+`external-inputs.json` for the qualified contracts and remaining firmware work.
 
 `tools/build_v91_boot.py --help` lists the explicit inputs. On Windows it can use
 `--wsl-distro Ubuntu-22.04` for clang, mkfs.fat, mtools, Python/OpenSSL and avbtool.
@@ -30,6 +31,9 @@ embedded asset hashes, memory/menu policy, entry-body identity and the relocated
 return target. It performs no QEMU or hardware run. Static acceptance is not
 device acceptance, nor does it complete the remaining asset-source work.
 
-The first candidate passed these static checks with image SHA
+The first candidate, retaining all three historical binary inputs, passed with image SHA
 `0665b77c81ae250e1465301b0f2ba12190b3caed2d6399f1b69f7bb256533177`.
-It has not been flashed. The full maintenance/peripheral Goal remains active.
+The candidate using the source-built loader and Data seed also passed with SHA
+`1fc119f130d2c96b5a277a0d79127eda340b0597eb99df21c696484e8645198e`.
+Its session identity also binds firmware, loader, trust and Data inputs.
+Neither has been flashed. The full maintenance/peripheral Goal remains active.

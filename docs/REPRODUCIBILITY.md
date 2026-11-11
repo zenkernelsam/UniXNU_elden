@@ -24,8 +24,8 @@
    详情见 [boot-build](../profiles/v91/boot-build/README.md)。没有刷机或硬件验收。
 
 **源码到 prelinked kernel 已闭环；完整 boot 的资产源码链仍未闭环。**
-当前候选使用三个明确列出的固定外部资产：已验 UEFI FD、独立 EFI 与 Data seed。
-不能把“已生成并签名”说成这些资产也已独立源码重建。
+已验 UEFI FD 仍是固定外部资产。独立 EFI 与 Data seed 的源码生成、逻辑/布局约束及离线验证
+已完成，并已用于第二份静态核验通过的候选。不能把这说成新候选已完成设备验收。
 新内核允许 UUID、调试链接信息及 `_PrelinkKCID` 随构建变化，不宣称整文件 SHA 与旧像相同。
 历史打包入口仍依赖旧资产和增量记录，不能直接当作新的完整复现入口。
 `board.toml` / `unixnu.lock` 的默认值仍是早期引导配置，不能作为 v91 的一键复现入口。
@@ -74,7 +74,7 @@ python3 tools/build_v91_xnu_objects.py --xnu-source /path/to/new-source-output/x
 
 ## 剩余验收
 
-- 独立复核三个固定外部资产的源码/生成方法，见 boot-build/external-inputs.json。
+- 完成剩余 UEFI FD 的独立源码重建，见 boot-build/external-inputs.json。
 - 完整资产闭环后再做最终候选资格；当前 prelink 执行区不变的结论不涵盖之后的 AMFI 单指令转换。
 - 消除有效配方对旧工作台路径的依赖，保留原始证据哈希。
 - 完整重建后核对导出、模块 ABI、签名 floor 和 boot 资格，再宣称 Jerry 可以复现最终镜像。
