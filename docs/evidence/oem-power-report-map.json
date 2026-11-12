@@ -1,0 +1,160 @@
+{
+  "firmware_sha256": "9edad6f458caa609a189b916694eecec99bb0c01fa8d2bd02c630552a7dbba75",
+  "disassembly_sha256": "16bf1c895df9b72af95c6afba6c15bd71fa0bb9f18200575e9d7b6fd14f82221",
+  "checks": {
+    "platform3": true,
+    "usb_get_dispatch": true,
+    "wls_get_dispatch": true,
+    "usb_callback": true,
+    "wls_callback": true,
+    "usb_property_stride": true,
+    "usb_property_base": true,
+    "wls_property_stride": true,
+    "wls_property_base": true,
+    "second_input_index": true,
+    "first_input_online_test": true,
+    "skip_second_usb_only_when_first_online": true,
+    "second_falls_through_usb_update": true,
+    "usb_online_updated_from_selected_report": true,
+    "second_report_updates_wls_online": true,
+    "wls_lower_result_saved": true,
+    "wls_error_test": true,
+    "wls_wrapper_returns_zero_after_log": true,
+    "usb_wrapper_preserves_result": true
+  },
+  "ranges": {
+    "platform-selector": {
+      "va": "0x6004db1c",
+      "end_exclusive": "0x6004db38",
+      "firmware_bytes_sha256": "0c6c1fdf693a565e61681a6e8f5cc7d2c2f5f99db56a2b78da10fe9b60f4ec51",
+      "listing_sha256": "fea6492653e280fe07c595502dfad4ad18c916a9e62578581427af08c3cf4786"
+    },
+    "callback-registration": {
+      "va": "0x6004dc18",
+      "end_exclusive": "0x6004dc38",
+      "firmware_bytes_sha256": "be108363c0937f397a8e1d31527e512d72504190e4f6e8ed1a461f5e55d2fa49",
+      "listing_sha256": "0704443e2856d8b6e99d6a7597efaf7bd40bf4600c39198a99af35c590b9a6d1"
+    },
+    "usb-get-dispatch": {
+      "va": "0x600bac44",
+      "end_exclusive": "0x600bac78",
+      "firmware_bytes_sha256": "bdaf8ce6d7b8a4ab2e7dbcddb82074d7e9778af50416596853a7e18e85bacc9e",
+      "listing_sha256": "919de49da38eb5999ba80344e01d9a8fb3662d9e148e55b18a8292b2cc10980a"
+    },
+    "wls-get-dispatch": {
+      "va": "0x600bae54",
+      "end_exclusive": "0x600bae88",
+      "firmware_bytes_sha256": "55a3b7f0bf678dcb291b3709bb6e19621508ac794ebed5babd573890360ef8cf",
+      "listing_sha256": "6e4b99f4896eb74155218e72f1cbbb38b8ded8d35bf0c2e9d27c99779ac157af"
+    },
+    "usb-get-wrapper": {
+      "va": "0x601ea670",
+      "end_exclusive": "0x601ea6e0",
+      "firmware_bytes_sha256": "baf416733248620729e661961f4f543ab8538a18cc5426eae248c29f5da8051e",
+      "listing_sha256": "7193489ab4a2d8e5455f284562758d84e27d696b448424114371fc6f2b9025a9"
+    },
+    "wls-get-wrapper": {
+      "va": "0x601ea930",
+      "end_exclusive": "0x601eaa64",
+      "firmware_bytes_sha256": "30c3638a85f11ee27cb8d070cc951ceee7d07888fef3bfc5202de04029cd049f",
+      "listing_sha256": "1d74a6183c01dcccf39fcba217a4d4b6186a189f0f5314fdf7415224dbac0047"
+    },
+    "usb-property-load": {
+      "va": "0x60068820",
+      "end_exclusive": "0x60068850",
+      "firmware_bytes_sha256": "e4e4e72034856522180a2f5d7521e8b0ae679baa095fdc3aefef2a98506af6fe",
+      "listing_sha256": "f2ed422dbc5806e0a91eb6b051aa88d62fc92da3419de1f2be6eb324ebeeba73"
+    },
+    "wls-property-load": {
+      "va": "0x60068bac",
+      "end_exclusive": "0x60068bdc",
+      "firmware_bytes_sha256": "98f42b777a0e045c9a6d33c89140529b95237e187e3a3094b8835236fa23e8dc",
+      "listing_sha256": "f3250810f95b129f5ab8a42be7e5062838ee8af02fc55793127b8a1688804880"
+    },
+    "report-priority": {
+      "va": "0x60066af0",
+      "end_exclusive": "0x60066b4c",
+      "firmware_bytes_sha256": "8cc5e7af6451c66e88a63b4d5330756bded0361473657cd72c12df3f57dac262",
+      "listing_sha256": "774de340537ce6a6472f0278d921c40c244d110f8e0483eaf6ba0fad4f089d88"
+    },
+    "usb-online-report": {
+      "va": "0x60066b94",
+      "end_exclusive": "0x60066bd8",
+      "firmware_bytes_sha256": "1197eec97a4668fdc2700d62838ab30c1eb20b5dfa6b85c4e4ae1bf3c8d98d8e",
+      "listing_sha256": "039c929b3cfbf16eef9e864658395e4ef6998bbc165d5bc4052dbd90cb05c774"
+    },
+    "second-online-report": {
+      "va": "0x60066f48",
+      "end_exclusive": "0x60066f90",
+      "firmware_bytes_sha256": "7e10aed3aea22443e011a4044792da1072abd00ea9c24d1b9d06f2a0b23d4eb9",
+      "listing_sha256": "036243a827f65b7fc0bca32447071c47f11b340b47eed9419cbbe814ace4c7d1"
+    }
+  },
+  "property_fields": {
+    "USB_GET_0x32": {
+      "online": {
+        "property": 0,
+        "context_offset": "0x724"
+      },
+      "voltage_now": {
+        "property": 1,
+        "context_offset": "0x728"
+      },
+      "current_now": {
+        "property": 3,
+        "context_offset": "0x730"
+      },
+      "current_max": {
+        "property": 4,
+        "context_offset": "0x734"
+      },
+      "input_current_limit": {
+        "property": 5,
+        "context_offset": "0x738"
+      },
+      "type": {
+        "property": 6,
+        "context_offset": "0x73c"
+      },
+      "adapter": {
+        "property": 7,
+        "context_offset": "0x740"
+      },
+      "real_type": {
+        "property": 11,
+        "context_offset": "0x750"
+      }
+    },
+    "WLS_GET_0x34": {
+      "online": {
+        "property": 0,
+        "context_offset": "0x758"
+      },
+      "voltage_now": {
+        "property": 1,
+        "context_offset": "0x75c"
+      },
+      "current_now": {
+        "property": 3,
+        "context_offset": "0x764"
+      },
+      "input_current_limit": {
+        "property": 8,
+        "context_offset": "0x778"
+      },
+      "temperature": {
+        "property": 10,
+        "context_offset": "0x780"
+      }
+    }
+  },
+  "decision": "USB-online is a priority-selected logical report, not exclusively the long-edge connector. Port1 also updates USB fields when port0 is offline. Do not broaden charge-policy admission merely by OR-ing WLS-online as a guessed short-edge fix.",
+  "limits": [
+    "Static report handling does not prove FET selection or reverse-current protection.",
+    "WLS wrapper masks lower getter errors after logging; successful envelope alone is insufficient for physical input proof.",
+    "Online fields may additionally be forced off by firmware states8/9; no state meaning is assumed here.",
+    "Exact post-disconnect reports were not captured in the historical meter trial."
+  ],
+  "driver_changed": false,
+  "device_operations": false
+}

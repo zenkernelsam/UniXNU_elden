@@ -22,6 +22,34 @@
 `lab/records/charge-control-route-20261111/`、`edl_work/charge-modes-input-fix-20261109/`。
 最新v94电源观察与候选身份见[电池候选记录](evidence/v96-battery-ui.json)。
 
+## 原厂online属性的准确语义
+
+进一步对精确原ADSP固件完成19处锚点复核，结果见
+[电源报告映射](evidence/oem-power-report-map.json)。USB GET0x32由platform3回调
+`0x600684c0`读取context+0x724+4×property；WLS GET0x34由`0x60068850`
+读取context+0x758+4×property。这些是软件报告字段，不是逐口硬件测量地址。
+
+原报告循环先处理输入0；输入0在线时，输入1跳过USB报告更新。输入0离线时，
+输入1仍会更新USB-online/type等字段，然后更新第二路报告。
+所以当前ChargePolicy检查USB-online，**不等于只允许长边电脑口供电**。
+尚无证据表明应把该门改成 `USB-online || WLS-online` 来修短边模式；本轮未做这项修改。
+两口身份不能只从属性名推断，仍应结合原厂49/50、UCSI、输入选择与实际功率。
+
+WLS GET包装函数`0x601ea930`会在底层返回错误后记录日志，并在合法参数路径返回0；
+USB包装函数则保留底层返回码。协议应答成功只说明该层成功，不证明WLS数值已采样正确。
+两组online还可能被固件状态8/9置零；这里没有给这两个状态猜名称。
+保留现有双FG校验与原厂保护，不据此伪造数据、重试已拒绝WRITE或增加控制权限。
+
+离线复核入口（只读私有输入，证据输出到新的lab目录）：
+
+```text
+python tools/analysis/audit_oem_power_reports.py --firmware STOCK_ADSP_MBN --assembly CHARGER_PD_DISASSEMBLY --output NEW_EVIDENCE_DIRECTORY
+```
+
+工具绑定原件与完整反汇编SHA，输出所用字段映射和每段原机器码SHA；没有执行固件。
+下一项充电硬件证据仍是准确捕获切换后的逻辑online、合同/投票、实际功率和恢复，
+当前离线约束下不重复刷写。v94/v95/v96均未因此换料或产生新版本。
+
 ## 当前GUI菜单缺少电池发布
 
 v94日志明确显示 `ELDEN_BATTERY qualified data-only; UI disabled`，启动菜单确实没有

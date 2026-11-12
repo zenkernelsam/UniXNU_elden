@@ -8,6 +8,13 @@ arbitration and complete protection cycles remain unqualified. The v94 GUI
 diagnostic menu disables battery UI; v96 restores its existing scalar contract
 without changing any driver or charger control. v96 is signed but unflashed.
 
+The OEM USB-online report is priority-selected across both inputs: input1 can
+populate it while input0 is offline. It is not exclusively the PC connector.
+Do not replace the charge-policy gate with USB-or-WLS based on connector names.
+The OEM WLS GET wrapper can also mask lower getter errors; a successful response
+envelope is not a physical measurement guarantee. The exact field/callback map
+and offline reproducer are linked from CHARGING-STATUS.md.
+
 `ChargeRead` implements only scalar property GET messages. It emits no charger,
 power-path, firmware update, GPIO or shipping command. `PmicClient` now uses the
 original sheng ADSP/GLINK transport, with one channel owner, fresh link epochs,
