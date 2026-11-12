@@ -38,7 +38,9 @@ Wi-Fi现状和下一步见[WIFI-STATUS.md](WIFI-STATUS.md)：原认证服务已�
 未安装/联网；本机Linux已有独立Peach配置，不能照搬未实测的整片QCC2072映射。
 Peach要求固件OL-CPR处理先于TME-Lite；已将新适配统一到已有WcnPower规划/发送代码，
 但发送器当前只有BT owner资格，Wi-Fi QMI→原生WLAN owner路由仍缺，不得用假成功或BT上电流程替代。
-继续将这项依赖与9文件驱动差异回移到官方锁定的Linux7.0.14。
+9文件Peach差异已回移到官方锁定的Linux7.0.14，6个变化C单元及输入/流程检查通过，
+见[回移说明](../drivers/EldenWifi/peach/README.md)。下一步合并完整OS适配并重编剩余栈，
+接入真实WLAN owner/PCIe/MHI；不能把部分编译或0x53非致命例外当作已联网。
 蓝牙常驻模式已补离线停止接口与上行背压退出，见[WCN-SHUTDOWN.md](WCN-SHUTDOWN.md)；
 v97已完成整核/恢复钩子的静态资格，见[构建档](../profiles/v97-wcn/README.md)，尚未entry转换/签包。
 随后仍需真实WCN/HCI及daemon验证。现有候选不自动换料。

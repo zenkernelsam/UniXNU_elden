@@ -1,0 +1,13 @@
+{
+  "commit": "458c6079fc1d41d564c37679c8ace02cd83ee817",
+  "paths": [
+    "COPYING",
+    "include",
+    "drivers/net/wireless/ath/ath12k"
+  ],
+  "tar_sha256": "8022835bbe4686bce5272031310875de3508ba25621ed86b55e39be2607385df",
+  "gzip_sha256": "62317f7a476735756d5448f5a8ead992729e18b0d63edfe427f1a5fa9b6dc3f8",
+  "tar_bytes": 54548480,
+  "git_blob_entries_verified": 6703,
+  "archive_eol": "raw Git blobs; autocrlf disabled explicitly"
+}

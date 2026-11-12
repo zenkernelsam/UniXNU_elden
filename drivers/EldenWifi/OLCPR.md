@@ -3,8 +3,10 @@
 The TB322FC Linux change
 [`dc7d14dc64c8d4f86220b30cd126b17d805c8474`](https://github.com/h0cheung/tb322fc-linux-kernel/commit/dc7d14dc64c8d4f86220b30cd126b17d805c8474)
 does more than add PCI110e. Its QMI target-capability handler requires successful
-firmware-directed PDC configuration before TME-Lite; TME-Lite failure and later
-QDSS configuration failure stop firmware bring-up. There is no valid port that
+firmware-directed PDC configuration before TME-Lite. OL-CPR, ordinary TME and
+QDSS failures stop bring-up; the reference explicitly logs and continues on
+TME hardware-restricted response0x53, without claiming a successful load.
+See [backport evidence](peach/README.md). There is no valid port that
 replaces those results with an unconditional success.
 
 The existing `EldenBluetooth/WcnPower.c` already contained this planner and its
@@ -59,5 +61,7 @@ workbench `lab/records/wifi-peach-backport-20261112`; results are in
 `lab/wcn-cpr-shared-20261112/native2`. Link `libEldenWcnPower.a` once plus
 `OlCprPlan.o`; omit a second WcnPower.o from Bluetooth/Wi-Fi archives. The frozen
 v99 image retains its original implementation and its recorded source commit.
-QMI/backport integration, native WLAN ownership, PCIe/MHI and networking remain
-pending; no new kernel/image was linked or device accessed.
+The later nine-file backport and six changed C-unit builds are recorded
+separately in `peach/README.md`. Full QMI/runtime integration, native WLAN
+ownership, PCIe/MHI and networking remain pending; no new kernel/image was
+linked or device accessed.

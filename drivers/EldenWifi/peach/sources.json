@@ -1,0 +1,69 @@
+{
+  "origin": "https://github.com/h0cheung/tb322fc-linux-kernel",
+  "origin_commit": "dc7d14dc64c8d4f86220b30cd126b17d805c8474",
+  "base_commit": "458c6079fc1d41d564c37679c8ace02cd83ee817",
+  "base_version": "7.0.14",
+  "patch_sha256": "daa142488c96846fdabebb549a9c6de48ee6be9ba8ac9af4c69035be2025caa2",
+  "files": {
+    "drivers/net/wireless/ath/ath12k/core.c": {
+      "upstream_status": "modified",
+      "base_sha256": "a2a0cd02e05ff3b8b24b496289353634d56c9960cf1e1010dfe358440c2b5131",
+      "upstream_blob_sha1": "1f655a28b66ff57499431eee9b6d47a51f92149b",
+      "upstream_patch_sha256": "4607db6eb46c35990081ac36581e9a8596322e4e9af695d9b45a3274908456db"
+    },
+    "drivers/net/wireless/ath/ath12k/core.h": {
+      "upstream_status": "modified",
+      "base_sha256": "32c61fa89207e2072fd5308a39510272ffc9319bc1a2d537a95c23a1228a65e1",
+      "upstream_blob_sha1": "604ebdc76e29589bda9b06abebd69c08ae8d614f",
+      "upstream_patch_sha256": "38b3392e6ba2fa52bc627d87f8343e98fd4acf5284fed5544fb92d286918815e"
+    },
+    "drivers/net/wireless/ath/ath12k/hw.h": {
+      "upstream_status": "modified",
+      "base_sha256": "701faaadb6db33efb2065552e18f292d15e4ffdc6db0a6e7d505e96f2d7a4538",
+      "upstream_blob_sha1": "e4ab3d6db55b346c26ecb9bd04fd375d59b68646",
+      "upstream_patch_sha256": "46b6dcb73378165f84f8ea934dc5d24ce81ff61379fd9a4befa5c19fd6679951"
+    },
+    "drivers/net/wireless/ath/ath12k/pci.c": {
+      "upstream_status": "modified",
+      "base_sha256": "8fa3019421b65b983371596f8c2bf7f0ce73797fe2cbdcdddacc175a2261e892",
+      "upstream_blob_sha1": "9c3f52578c8bae91abe8dfb2c31f0009b0c22ca6",
+      "upstream_patch_sha256": "c299d4038ec73864856fb25b875348df335aa0cf0d441bbf1ef32d0c97642154"
+    },
+    "drivers/net/wireless/ath/ath12k/qmi.c": {
+      "upstream_status": "modified",
+      "base_sha256": "f338113110533a9f41bf3ffa8a44a6bb42dc8dbf36271144bf907cfd633a8db6",
+      "upstream_blob_sha1": "f2d34d984c72d782aff21a8f5db04eb98c9758c9",
+      "upstream_patch_sha256": "ba2c6b34c2e531388e4780d956a8f8661a9c1b618c6ba17767b069f93e9113b8"
+    },
+    "drivers/net/wireless/ath/ath12k/qmi.h": {
+      "upstream_status": "modified",
+      "base_sha256": "55879b7cab142c3f1be07f09fce7567f0ede616e92b5ec52a1d400844c2f8327",
+      "upstream_blob_sha1": "7fceb44091ce4cb904dbdd89a2165635ff795237",
+      "upstream_patch_sha256": "8c20f00fee5fae744a5b269ec9ef8875f3fa82ccbb1f27445327e79860edaa84"
+    },
+    "drivers/net/wireless/ath/ath12k/wifi7/hal.c": {
+      "upstream_status": "modified",
+      "base_sha256": "cebf3c943ed00b9f9945431602fb50aaa66353f34934db04cc7401cb9d13378c",
+      "upstream_blob_sha1": "708592a5c2dac1343fddb85be6ef01d967a1e93a",
+      "upstream_patch_sha256": "de8b83a8d1b5f7a943fbef2c736804043437f95d5cad1bd9673d88973c7bf600"
+    },
+    "drivers/net/wireless/ath/ath12k/wifi7/hw.c": {
+      "upstream_status": "modified",
+      "base_sha256": "ac2590222ab4e51d7553d41fcb669ab8991f89b35f83818a5146b1b5cb19bc7c",
+      "upstream_blob_sha1": "a80569ebf75d77af8164756c2d8814b3220b47a2",
+      "upstream_patch_sha256": "d5309e10d50c1552402011207fe3d6eda52829f153d830916fbf86d1df006c6a"
+    },
+    "drivers/net/wireless/ath/ath12k/wifi7/pci.c": {
+      "upstream_status": "modified",
+      "base_sha256": "da602c1e7210a710be9eb84f3f08379f956fcf50101ae3c83a40ce52626c3113",
+      "upstream_blob_sha1": "311a10815957bbd7b9d3c2abd53db4a459a37c62",
+      "upstream_patch_sha256": "59cd4b9473926705e10bbed75ddd4e60e5cddaff927c777b9eae8206030abc8d"
+    },
+    "include/linux/pwrseq/qcom_wcn.h": {
+      "upstream_status": "added",
+      "base_sha256": null,
+      "upstream_blob_sha1": "c3795d70e7c706dbb50c48f06a78f9fb3ebb9f6c",
+      "upstream_patch_sha256": "38c2d2353a06e168227361e069ae903e9f0a18b58957c392ddb2f429309ef100"
+    }
+  }
+}

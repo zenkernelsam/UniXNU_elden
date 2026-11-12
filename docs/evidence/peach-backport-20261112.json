@@ -1,0 +1,121 @@
+{
+  "base_commit": "458c6079fc1d41d564c37679c8ace02cd83ee817",
+  "origin_commit": "dc7d14dc64c8d4f86220b30cd126b17d805c8474",
+  "component_revision": "5f7f5a8a9f02f7ab45ed10a2f226e348c519a838",
+  "linux_tar_sha256": "8022835bbe4686bce5272031310875de3508ba25621ed86b55e39be2607385df",
+  "prepared_files": {
+    "drivers/net/wireless/ath/ath12k/core.c": {
+      "base_sha256": "a2a0cd02e05ff3b8b24b496289353634d56c9960cf1e1010dfe358440c2b5131",
+      "output_sha256": "d3db43d17a45c92cb0e8f61e56e65f9caa6cb72e785b3fee55a6973bd1481f31"
+    },
+    "drivers/net/wireless/ath/ath12k/core.h": {
+      "base_sha256": "32c61fa89207e2072fd5308a39510272ffc9319bc1a2d537a95c23a1228a65e1",
+      "output_sha256": "7722379bd1af0ada38013351081159dbe580cfdd0977f5d3573fce446058ac45"
+    },
+    "drivers/net/wireless/ath/ath12k/hw.h": {
+      "base_sha256": "701faaadb6db33efb2065552e18f292d15e4ffdc6db0a6e7d505e96f2d7a4538",
+      "output_sha256": "e5add7fbe907ee303e8b52280951e9a992b0184780e913ad074518d32dcf1e4d"
+    },
+    "drivers/net/wireless/ath/ath12k/pci.c": {
+      "base_sha256": "8fa3019421b65b983371596f8c2bf7f0ce73797fe2cbdcdddacc175a2261e892",
+      "output_sha256": "73d73c5b4dc7be0ce3d76dc46315addd74438810a676c743147385dad2c4e8be"
+    },
+    "drivers/net/wireless/ath/ath12k/qmi.c": {
+      "base_sha256": "f338113110533a9f41bf3ffa8a44a6bb42dc8dbf36271144bf907cfd633a8db6",
+      "output_sha256": "242a219e4922321b8a954d284228fe7fbb474fa6060aa07e077df518fe21d591"
+    },
+    "drivers/net/wireless/ath/ath12k/qmi.h": {
+      "base_sha256": "55879b7cab142c3f1be07f09fce7567f0ede616e92b5ec52a1d400844c2f8327",
+      "output_sha256": "248c16ac68e3d593381f74cb2fa69b1bf109f96d23854db7e0755f3e2fac8ec1"
+    },
+    "drivers/net/wireless/ath/ath12k/wifi7/hal.c": {
+      "base_sha256": "cebf3c943ed00b9f9945431602fb50aaa66353f34934db04cc7401cb9d13378c",
+      "output_sha256": "08ad25eb9e2ddace5502a97207f1c89dbd9e404bef45cdd63e40086ee19c0b4e"
+    },
+    "drivers/net/wireless/ath/ath12k/wifi7/hw.c": {
+      "base_sha256": "ac2590222ab4e51d7553d41fcb669ab8991f89b35f83818a5146b1b5cb19bc7c",
+      "output_sha256": "e6959fdbb028b0e105ea3e1165a9eda78640e20a7f903e4f77dc092ba4708628"
+    },
+    "drivers/net/wireless/ath/ath12k/wifi7/pci.c": {
+      "base_sha256": "da602c1e7210a710be9eb84f3f08379f956fcf50101ae3c83a40ce52626c3113",
+      "output_sha256": "db0a577f79e6a9095441059217e5e0991aa3abdba563725a742ece229b999826"
+    },
+    "include/linux/pwrseq/qcom_wcn.h": {
+      "base_sha256": null,
+      "output_sha256": "09d5313e43cdcc0a57426d5aea26e25aea8a124411440c4cf3dd29a675319a1a"
+    }
+  },
+  "compiled_objects": {
+    "core.c": {
+      "source_sha256": "d3db43d17a45c92cb0e8f61e56e65f9caa6cb72e785b3fee55a6973bd1481f31",
+      "object_sha256": "4bfa0b6dd72330e4d593f446bc909f2e1e63031bdea615eef11f55f26ef362fd",
+      "scalar": true
+    },
+    "pci.c": {
+      "source_sha256": "73d73c5b4dc7be0ce3d76dc46315addd74438810a676c743147385dad2c4e8be",
+      "object_sha256": "24dbc1a8576f95901448b5821a01a87d02dcab1b4b44ab198d7250594a438f81",
+      "scalar": true
+    },
+    "qmi.c": {
+      "source_sha256": "242a219e4922321b8a954d284228fe7fbb474fa6060aa07e077df518fe21d591",
+      "object_sha256": "5e7e9e9e8e0b95810380444b076bfff839b3a17ad788ff8af90a3f4a105bcac4",
+      "scalar": true
+    },
+    "wifi7/hal.c": {
+      "source_sha256": "08ad25eb9e2ddace5502a97207f1c89dbd9e404bef45cdd63e40086ee19c0b4e",
+      "object_sha256": "cf31e0de7ddb94ef8187ea4d1a76b0b8f309336ccb393e6c1c6897339e35c87a",
+      "scalar": true
+    },
+    "wifi7/hw.c": {
+      "source_sha256": "e6959fdbb028b0e105ea3e1165a9eda78640e20a7f903e4f77dc092ba4708628",
+      "object_sha256": "c3ed18353481534a7f47d5d7ef91eaf990d06708c8296c4c269a4aea3e0cbda6",
+      "scalar": true
+    },
+    "wifi7/pci.c": {
+      "source_sha256": "db0a577f79e6a9095441059217e5e0991aa3abdba563725a742ece229b999826",
+      "object_sha256": "96027cac07aad90a1b0cd45df773f0ccbfcb2b6075570f686123d482c9645c9a",
+      "scalar": true
+    }
+  },
+  "pwrseq_external_required": true,
+  "verified_compile_inputs": {
+    "backport": 10,
+    "compiler-header": 17,
+    "component": 75,
+    "generated": 2,
+    "linux": 22,
+    "linux-copy": 45
+  },
+  "compile_input_count": 171,
+  "compiler_builtin_headers_recorded_not_git_matched": true,
+  "warnings": {
+    "unchanged_header_source": 294,
+    "unchanged_driver_source": 294,
+    "changed_driver_source": 25
+  },
+  "changed_warning_categories": {
+    "debug enum signedness": 16,
+    "error pointer to int": 2,
+    "guarded firmware size to u32": 3,
+    "bounded request result to int": 2,
+    "PCI wildcard macro": 2
+  },
+  "warning_free": false,
+  "flow_test": {
+    "passed": true,
+    "qmi_sha256": "242a219e4922321b8a954d284228fe7fbb474fa6060aa07e077df518fe21d591",
+    "function_sha256": {
+      "ath12k_qmi_apply_ol_cpr": "fc763084ddd408fe55ebfc4fe12e29ee4c3fd635ddb316443754e4f7982e529b",
+      "ath12k_qmi_wlanfw_tme_lite_info_send": "3b621b6ef8fd5868160e1d5a6add495699cc36b610295e230b3048851a5c3650",
+      "ath12k_qmi_event_load_bdf": "78549595f20f5c8ef240301ac5b76e5c61987481188f63ff9234e1224f42531f"
+    },
+    "target_capability_gate_checked": true,
+    "stdout": "Prepared QMI bodies: mandatory failure ordering, cancellation,0x53-only exception, non-Peach AUX and OL-CPR bounds/copy/lifetime passed\n",
+    "scope": "Extracted QMI sequencing/copy/error handling; transport and kernel contexts mocked, not TLV encoding or device execution.",
+    "hardware_operations": false
+  },
+  "all_stack_objects_built": false,
+  "native_wlan_gateway_implemented": false,
+  "kernel_linked": false,
+  "hardware_operations": false
+}
