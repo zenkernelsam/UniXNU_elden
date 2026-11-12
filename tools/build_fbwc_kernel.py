@@ -11,8 +11,13 @@ from link_v91_kernel import native_identity,verify_original_executables
 ROOT=Path(__file__).resolve().parents[1]
 PROFILE=ROOT/'profiles/v93-fbwc'
 def source_file(name):
-    local=PROFILE/'sources'/name
-    return local if local.is_file() else ROOT/'profiles/v93-fbwc/sources'/name
+    parents={'v95-fbwc-pairs':'v94-fbwc-observation','v94-fbwc-observation':'v93-fbwc'}
+    folder=PROFILE.name
+    while True:
+        local=ROOT/'profiles'/folder/'sources'/name
+        if local.is_file():return local
+        if folder not in parents:raise ValueError('Profile source missing: '+name)
+        folder=parents[folder]
 
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def read(p):return json.loads(p.read_text())
@@ -72,7 +77,7 @@ def external(cap,suffix):
 def main():
     global PROFILE
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--profile',choices=('v93-fbwc','v94-fbwc-observation'),default='v93-fbwc')
+    p.add_argument('--profile',choices=('v93-fbwc','v94-fbwc-observation','v95-fbwc-pairs'),default='v93-fbwc')
     for n in ('v91-core','v91-native','v91-image','xnu-repository','prelink-repository','original-kernelcache','llvm','output'):p.add_argument('--'+n,type=Path,required=True)
     p.add_argument('--resume',action='store_true',help='Resume only the same source profile before archive/link creation')
     a=p.parse_args();PROFILE=ROOT/'profiles'/a.profile;plan=read(PROFILE/'plan.json');out=a.output.resolve()
@@ -100,6 +105,14 @@ def main():
         result=subprocess.run([str(host/'test-policy')],capture_output=True,text=True,check=True)
         write(host/'result.json',{'passed':True,'stdout':result.stdout,'stderr':result.stderr})
     elif not read(host/'result.json')['passed']:raise ValueError('Host policy test failed')
+    if 'TestCopyPairs.c' in plan['sources'] and not (host/'copy-result.json').exists():
+        virtual=nc['jobs'][587]['file'].rsplit('/',1)[0]+'/NativeLegacyRequest.h'
+        item=nc['files'][virtual];original=Path(item['path'])
+        if sha(original)!=item['sha256']:raise ValueError('Copy bounds header changed')
+        shutil.copyfile(original,host/'NativeLegacyRequest.h')
+        subprocess.run(['xcrun','--sdk','macosx','clang','-std=c11','-O1','-fsanitize=address,undefined','-I'+str(host),str(source_file('TestCopyPairs.c')),'-o',str(host/'test-copy')],check=True)
+        trial=subprocess.run([str(host/'test-copy')],capture_output=True,text=True,check=True)
+        write(host/'copy-result.json',{'passed':True,'stdout':trial.stdout,'stderr':trial.stderr,'bounds_header_sha256':item['sha256']})
     payload=external(cc,'EldenIconCpuPayload.h');nvt=external(nc,'EldenNvtFirmware.h')
 
     def replace_file(cap,virtual,name):
@@ -123,6 +136,8 @@ def main():
     replace_file(ncap,ncap['jobs'][0]['file'].rsplit('/',1)[0]+'/EldenSdamRecovery.inc','EldenSdamRecovery.inc')
     for job,name in zip(ncap['jobs'][1:],('NativeLegacyDisplay.cpp','EldenDisplayGlue.cpp')):
         replace_file(ncap,job['file'],name);replace_file(ncap,job['file'].rsplit('/',1)[0]+'/WcPolicy.h','WcPolicy.h')
+    if 'CopyPairs.h' in plan['sources']:
+        replace_file(ncap,ncap['jobs'][1]['file'].rsplit('/',1)[0]+'/CopyPairs.h','CopyPairs.h')
     compiled=[]
     for name,cap in [('core',ccap),('native',ncap)]:
         target=out/name;target.mkdir(exist_ok=True)
@@ -150,6 +165,12 @@ def main():
             parent_asm=subprocess.check_output([str(llvm/'llvm-objdump'),'--disassemble','--reloc',cr['237']['output']],text=True)
             write(out/'console-guard-audit.json',check_console_early_return(asm,parent_asm))
         elif bad:raise ValueError('Unexpected FP/SIMD code: '+name+str(bad[:3]))
+        if name=='display' and 'CopyPairs.h' in plan['sources']:
+            funcs,_=console_vectors(asm)
+            found=[v for k,v in funcs.items() if 'elden_fb_copy_pairs' in k]
+            if len(found)!=1 or not re.search(r'\bstp\s+x\d+, x\d+, \[x\d+', '\n'.join(found[0])):
+                raise ValueError('Paired data-store implementation missing')
+            write(out/'pair-codegen.json',{'paired_data_stores_present':True,'scalar_function':True,'function_lines':found[0]})
         if name=='mapping':
             for mnemonic in ('s1e1r','s1e1w','par_el1','mair_el1'):
                 if mnemonic not in asm.lower():raise ValueError('Missing translation instruction: '+mnemonic)

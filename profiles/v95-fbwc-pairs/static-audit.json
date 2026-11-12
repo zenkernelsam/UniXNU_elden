@@ -1,0 +1,30 @@
+{
+  "accepted_static": true,
+  "image_sha256": "e25f1ed425308d48ac043d7488587ab9e7e60759eb14c7e06bc5b34b47dc4f79",
+  "kernel_sha256": "aee44b2bc8bd04868f654e19b004f121caaa6de6a8c6648638950d123057b124",
+  "rollback_index": 1738713600,
+  "footer_location": 0,
+  "parent_boot_chain_location": 3,
+  "fat_mirrors_equal": true,
+  "entry_body_100_bytes_equal_hardware_baseline": true,
+  "entry_branch_target_equal": true,
+  "entry_address": "0xfffffff0084c0000",
+  "entry_return_target": "0xfffffff00746a05c",
+  "session": "b7908e55c27262ee",
+  "memory_window_bytes": 6442450944,
+  "firmware_contract": {
+    "sha256": "aba76d8a8374e1356e41c0c97b9e4f83691108b8eb7767a5ead28b0d2b2a7b35",
+    "contract_sha256": "c3287ed4949e54529b6ad6cda482b28d1ee749439282ab1574f5ae9f643f84aa",
+    "all_executable_bytes_equal": true,
+    "hardware_tested": false
+  },
+  "hardware_tested": false,
+  "device_operation": false,
+  "full_asset_source_closure": true,
+  "framebuffer_experiment": {
+    "profile": "v95-fbwc-pairs",
+    "profile_sha256": "6142ca58a1e53e76cee43334bacc298703be62c19a018b7c1da526b6311474c1",
+    "pre_entry_kernel_sha256": "b81fbae23d86dbf8e2a044900a07f773afdfd73bd740c7cd73174fc474ea5e49",
+    "boot_option": "fbwc"
+  }
+}

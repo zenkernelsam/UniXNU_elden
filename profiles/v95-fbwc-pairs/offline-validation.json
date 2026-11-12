@@ -1,0 +1,18 @@
+{
+  "profile_sha256": "6142ca58a1e53e76cee43334bacc298703be62c19a018b7c1da526b6311474c1",
+  "host_validation": {
+    "passed": true,
+    "stdout": "PASS 469 padded rectangles, tails, eligibility, overlap and bounds; hardware speed untested\n",
+    "stderr": "",
+    "bounds_header_sha256": "81e89e1f40f2f1d0919567f53bc0564c650488843082693d00b9ea256cafae21"
+  },
+  "display_instructions": 3154,
+  "display_fp_simd": false,
+  "paired_data_stores_confirmed": true,
+  "original_apple_executable_components_hashed": 30,
+  "static_candidate_sha256": "e25f1ed425308d48ac043d7488587ab9e7e60759eb14c7e06bc5b34b47dc4f79",
+  "session": "b7908e55c27262ee",
+  "hardware_tested": false,
+  "performance_gain_measured": false,
+  "reason_not_run": "Owner requested offline work"
+}
