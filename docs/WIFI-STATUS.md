@@ -10,7 +10,7 @@
 `lab/records/wifi-elden-20261108/inputs.json`，不是PCIe/MHI已启动的证据。
 
 官方Ath12kWifi已克隆到Windows和Mac各自Y700项目的`research/Ath12kWifi`。
-正式参考清单现为42仓。采用固定提交
+正式参考清单现为43仓，包括后续所需的固定Linux7.0.14源。组件采用固定提交
 `5f7f5a8a9f02f7ab45ed10a2f226e348c519a838`，不自动替换已有候选输入。
 其README记录的实机范围是sheng/24A446上的开关、扫描、WPA2、DHCP及流量，
 不能转记为本机或21H461已通过。
@@ -53,6 +53,16 @@ Pagani的`peach.py`明确标有未验证推测，README最近实机仍停在S7I�
 可借鉴拆分方法，不能直接复制其七rail、低地址DMA池、跳过读回或整片QCC2072映射。
 后续应逐项移植本机独立Peach配置及其QMI/固件依赖，再验证实际PCI身份、供电、DMA/MSI和启动。
 来源与字段对照见[Peach记录](evidence/wifi-peach-profile-20261112.json)。
+
+进一步追到原Y700补丁：QMI收到目标能力后，先应用固件OL-CPR电压请求，成功才可继续TME-Lite。
+新[OL-CPR计算组件](../drivers/EldenWifi/OLCPR.md)已按原算法/DTS映射实现，20,128组数值对照及边界测试、
+ARM64无导入/无SIMD对象编译通过。它只产生计划，没有电源发送器、没有调压，也尚未接入QMI。
+不能把缺少的回调改成成功来绕过这个前置条件。
+
+官方栈锁定Linux7.0.14，而上述Y700源码是7.2.8；独立Peach条目还涉及9个ath12k文件和电源序列接口。
+新`research/linux-ath12k-7.0.14`固定在458c6079…供逐项回移，未更换官方栈的锁定版本。
+Windows该克隆有8个netfilter头文件因大小写冲突显示修改，原样保留；消费源码应从Git对象核对，
+不reset、不将这些路径的工作树视图冒称逐字原版。它们不是本次OL-CPR组件的输入。
 
 ## 复现与下一步
 

@@ -62,6 +62,11 @@
       "observed_head": "c58470091712d02975fc3671c62004522eb9c74b"
     },
     {
+      "name": "linux-ath12k-7.0.14",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+      "observed_head": "458c6079fc1d41d564c37679c8ace02cd83ee817"
+    },
+    {
       "name": "ltbox",
       "url": "https://github.com/miner7222/LTBox",
       "observed_head": "8f6d141c467e6039d2d605b2b1324cbada56b8f1"

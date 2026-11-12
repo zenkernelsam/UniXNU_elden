@@ -1,0 +1,39 @@
+{
+  "source_commit": "dc7d14dc64c8d4f86220b30cd126b17d805c8474",
+  "arithmetic_cases": 20128,
+  "linux_arithmetic_sha256": "f960bbe1d70be4808a3455a49c23653ca1af95a13058179353dbee3b244aea18",
+  "dts_sha256": "0a4361f3f2225befd954dd5420216f357bfa8a68294c28c895ec2478ebea3ba3",
+  "maps": {
+    "vreg-pdc-map": {
+      "s5f": "rf",
+      "s4d": "bb",
+      "s3g": "rf",
+      "s7i": "rf"
+    },
+    "pmu-vreg-map": {
+      "VDDD_AON_0P9": "s5f",
+      "VDDA_RFA_1P9": "s3g",
+      "VDDA_RFA_1P3": "s7i",
+      "VDDA_RFA_0P9": "s5f",
+      "VDDD_WLMX_0P9": "s4d",
+      "VDDD_WLCX_0P9": "s5f",
+      "VDDD_BTCX_0P9": "s5f",
+      "VDDD_BTCMX_0P9": "s5f",
+      "VDDA_PCIE_1P2": "s7i",
+      "VDDA_PCIE_0P9": "s7i"
+    }
+  },
+  "source_sha256": {
+    "OlCprPlan.c": "23dda637e1b90f6cf6e0ca9c7ead30187c1af2bab5347fe3d8d5ff13196428c9",
+    "OlCprPlan.h": "613fb15e96cbf51c43fe0dcafc652c23059a5eed943020fa22578268552e4911",
+    "TestOlCprPlan.c": "f7a660d6f5244351d528150f0e1e753535816c522509c97f6f6dd56919113ed3"
+  },
+  "native_object_sha256": "1e366f6ef210ddbffe237502d211aa4a0c497722e1e374c87365e8c524da9982",
+  "scalar": true,
+  "native_imports": [],
+  "planner_only": true,
+  "qmi_hook_integrated": false,
+  "pdc_executor_integrated": false,
+  "hardware_operations": false,
+  "kernel_linked": false
+}
