@@ -12,6 +12,7 @@ from firmware_contract import verify_firmware
 from fbwc_boot import template as boot_template,qualify as qualify_fbwc
 from battery_boot import verify as verify_battery_menu
 import bt_runtime_boot
+import hid_delivery_boot
 def sha(b):return hashlib.sha256(b).hexdigest()
 def main():
     if sys.flags.optimize:raise SystemExit('Run without -O; validation assertions must remain enabled')
@@ -24,9 +25,11 @@ def main():
     p.add_argument('--battery-ui',action='store_true')
     p.add_argument('--wcn-report',type=Path)
     p.add_argument('--bt-runtime',type=Path)
+    p.add_argument('--hid-report',type=Path)
     a=p.parse_args();checked=check_image(a.image,'boot_a');stock=check_image(a.stock_boot,'boot_a');check_image(a.parent_vbmeta,'vbmeta')
-    if bool(a.wcn_report)!=bool(a.bt_runtime) or (a.wcn_report and (a.fbwc_report or a.battery_ui)):raise ValueError('Ambiguous runtime audit')
+    if bool(a.wcn_report)!=bool(a.bt_runtime) or (a.wcn_report and (a.fbwc_report or a.battery_ui or a.hid_report)) or (a.hid_report and (a.fbwc_report or a.battery_ui)):raise ValueError('Ambiguous runtime audit')
     bt=bt_runtime_boot.qualify(a.wcn_report,a.entry_report,a.bt_runtime) if a.wcn_report else None
+    hid=hid_delivery_boot.qualify(a.hid_report,a.entry_report) if a.hid_report else None
     if stock.sha256!='8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890':raise RuntimeError('Unknown stock contract')
     if metadata(a.image)['props']!=metadata(a.stock_boot)['props']:raise RuntimeError('AVB properties changed')
     b=a.image.read_bytes()
@@ -57,7 +60,7 @@ def main():
         prior,oldcode=stub(old)
         if sha(oldcode[:100])!=contract['body_sha256'] or maker.branch_target(struct.unpack_from('<I',oldcode,100)[0],prior['address']+100)!=old_return:raise RuntimeError('Baseline disagrees with the recorded entry contract')
     new_return=maker.branch_target(struct.unpack_from('<I',code,100)[0],now['address']+100)
-    qualified_return=int(bt['entry_return_target'],16) if bt else old_return
+    qualified_return=int((bt or hid)['entry_return_target'],16) if bt or hid else old_return
     if new_return!=qualified_return:raise RuntimeError('Relocated entry branch has a different qualified return target')
     parsed=parse_kernel(kernel);word=struct.unpack_from('<I',kernel,parsed['entry_file_offset'])[0]
     if maker.branch_target(word,parsed['entry'])!=now['address']:raise RuntimeError('Entry branch misses stub')
@@ -83,7 +86,8 @@ def main():
     if a.fbwc_report and not a.entry_report:raise RuntimeError('Framebuffer audit requires the entry transformation report')
     fbwc=qualify_fbwc(a.fbwc_report,a.entry_report) if a.fbwc_report else None
     if fbwc and json.loads(a.entry_report.read_text())['derivative_sha256']!=sha(kernel):raise RuntimeError('Framebuffer entry report mismatch')
-    text=fat.read(prefix+'unixnu.toml').decode();cfg=tomllib.loads(text);template=boot_template(bool(fbwc))
+    text=fat.read(prefix+'unixnu.toml').decode();cfg=tomllib.loads(text);template=boot_template(bool(fbwc or hid))
+    if hid and json.loads(a.entry_report.read_text())['derivative_sha256']!=sha(kernel):raise ValueError('HID entry report mismatch')
     if bt:
         if json.loads(a.entry_report.read_text())['derivative_sha256']!=sha(kernel):raise ValueError('v99 entry mismatch')
         template=bt_runtime_boot.menu()
@@ -103,6 +107,7 @@ def main():
     if fbwc:report['framebuffer_experiment']=fbwc
     if battery_ui:report['battery_ui']=battery_ui
     if bt:report['bluetooth_runtime']=bt
+    if hid:report['touch_delivery']=hid
     if a.output.exists():raise RuntimeError('Audit output must be new')
     a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
 if __name__=='__main__':main()

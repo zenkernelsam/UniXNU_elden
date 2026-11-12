@@ -29,9 +29,10 @@ def entry(data):
     return p['entry'],target,word
 def main():
     p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--profile',choices=('v99-bt-runtime','v100-hid-delivery'),default='v99-bt-runtime')
     for n in ('baseline','build','core','output'):p.add_argument('--'+n,type=Path,required=True)
-    a=p.parse_args();contract=json.loads((ROOT/'profiles/v99-bt-runtime/entry-assembly.json').read_text())
-    plan=json.loads((ROOT/'profiles/v99-bt-runtime/plan.json').read_text())
+    a=p.parse_args();contract=json.loads((ROOT/'profiles'/a.profile/'entry-assembly.json').read_text())
+    plan=json.loads((ROOT/'profiles'/a.profile/'plan.json').read_text())
     if sha(a.baseline/'kernel.macho')!=plan['baseline_kernel_sha256']:raise ValueError('Wrong entry baseline')
     cap=json.loads((a.core/'capture.json').read_text());results=json.loads((a.core/'build/results.json').read_text())
     index=contract['object_index'];job=cap['jobs'][index];r=results[str(index)];obj=Path(r['output'])

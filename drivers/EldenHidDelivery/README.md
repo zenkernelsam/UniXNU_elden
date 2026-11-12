@@ -1,5 +1,8 @@
 # Reliable Elden touch delivery — offline component preparation
 
+This component work is now included in the separately audited, signed
+[v100 candidate](../../profiles/v100-hid-delivery/README.md). It remains unflashed.
+
 Two failures are reproduced from the exact v94 input source, without a tablet:
 
 - An allocation failure on the final lift updates `lastSeq` and clears the old
@@ -65,8 +68,8 @@ not a new automatic kernel initializer.
 
 Windows records: paired workbench `lab/records/hid-delivery-20261112/`.
 Mac final result: project-local `lab/hid-delivery-20261112/native3/`; earlier
-failed builder attempts remain there. No new kernel link, signed boot or device
-test exists yet. v94 and v95/v96/v99 candidates remain unchanged.
+failed builder attempts remain there. Later v100 link/boot records are separate
+from this component audit. v94 and v95/v96/v99 remain unchanged.
 
 ## Reproduce
 

@@ -106,3 +106,10 @@ prelink 的执行区不变结论不涵盖之后明确列出的 AMFI 单指令转
 两个原生钩子和两个核心C对象已重编并完成整像核验。布局移动导致启动地址变化，
 须先用 `audit_entry_relocation.py` 证明沿用相同start.s对象和符号关系，再做entry/boot核验。
 该签名候选未上机，会尝试真实WCN上电；旧候选不自动替换。
+
+[v100-hid-delivery](../profiles/v100-hid-delivery/README.md)将两处触控投递修复合入v94。
+先用`build_hid_delivery.py`构建两组件，再由`link_hid_delivery.py`核对对象节/符号指纹、
+仅替换对应归档成员并链接/prelink。`audit_hid_kernel.py`核新绑定和30原Apple执行区，
+入口证明用`audit_entry_relocation.py --profile v100-hid-delivery`。
+打包和整像审计均显式传`--hid-report`，保留v94菜单/其他资产；不得混用其他实验选项。
+候选已独立签核、未上机，不能把故障注入或整像静态证据当成真实触控验收。

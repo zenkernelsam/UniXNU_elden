@@ -18,6 +18,7 @@ from firmware_contract import verify_firmware
 from fbwc_boot import template as boot_template,qualify as qualify_fbwc
 from battery_boot import template as battery_template,verify as verify_battery_menu
 import bt_runtime_boot
+import hid_delivery_boot
 HASHES={'fd':'e50e1d6e2be51367225d76d4e97b90d51ba7812193d99fd4d4d7dd9fdc2ee534','loader':'ae8e5938b22766b921f43f68e2ea63db028fb57ec1f3791edaf7db10f5825299','data':'483125a27280f17d91de594f951cee4216f4888b764525b74db0f61ed62d34b3'}
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def encode_adt(node):
@@ -37,6 +38,7 @@ def main():
     p.add_argument('--battery-ui',action='store_true',help='Restore qualified battery UI; compact existing numeric-one flags without dropping options')
     p.add_argument('--wcn-report',type=Path)
     p.add_argument('--bt-runtime',type=Path)
+    p.add_argument('--hid-report',type=Path,help='Explicit v100 result-bearing touch delivery build; retains the v94 menu')
     a=p.parse_args();out=a.output.resolve()
     def path(v):
         s=str(Path(v).resolve())
@@ -55,8 +57,9 @@ def main():
     stock=check_image(a.stock_boot,'boot_a')
     if stock.sha256!='8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890':raise RuntimeError('Wrong stock contract')
     entry=json.loads(a.entry_report.read_text())
-    if bool(a.wcn_report)!=bool(a.bt_runtime) or (a.wcn_report and (a.fbwc_report or a.battery_ui)):raise ValueError('Select either v99 runtime or the older display/battery options')
+    if bool(a.wcn_report)!=bool(a.bt_runtime) or (a.wcn_report and (a.fbwc_report or a.battery_ui or a.hid_report)) or (a.hid_report and (a.fbwc_report or a.battery_ui)):raise ValueError('Select one qualified kernel profile')
     bt=bt_runtime_boot.qualify(a.wcn_report,a.entry_report,a.bt_runtime) if a.wcn_report else None
+    hid=hid_delivery_boot.qualify(a.hid_report,a.entry_report) if a.hid_report else None
     fbwc=qualify_fbwc(a.fbwc_report,a.entry_report) if a.fbwc_report else None
     if sha(a.kernel)!=entry['derivative_sha256'] or entry['stub_bytes']!=104:raise RuntimeError('Kernel entry-transform identity mismatch')
     parse_kernel(a.kernel.read_bytes());out.mkdir(parents=True);assets=out/'files/EFI/UniXNU';payloads=assets/'Payloads';payloads.mkdir(parents=True)
@@ -79,7 +82,7 @@ def main():
         if hashlib.sha256(trust).hexdigest()!=bt['trust_sha256']:raise ValueError('Runtime trust cache differs')
     (payloads/'kernel.macho.trustcache').write_bytes(trust)
     for source,dest in [(a.kernel,payloads/'kernel.macho'),(a.data,payloads/'data.packed'),(a.loader,assets/'EldenPayloadLoader.efi')]:shutil.copyfile(source,dest)
-    template=boot_template(bool(fbwc))
+    template=boot_template(bool(fbwc or hid))
     if bt:template=bt_runtime_boot.menu()
     battery_ui=None
     if a.battery_ui:
@@ -119,5 +122,6 @@ def main():
     if fbwc:result['framebuffer_experiment']=fbwc
     if battery_ui:result['battery_ui']=battery_ui
     if bt:result['bluetooth_runtime']=bt
+    if hid:result['touch_delivery']=hid
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:result[k] for k in ('image_sha256','rollback_index','footer_location','session','full_asset_source_closure')},indent=2))
 if __name__=='__main__':main()

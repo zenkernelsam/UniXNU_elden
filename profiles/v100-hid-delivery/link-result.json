@@ -1,0 +1,124 @@
+{
+  "profile": "v100-hid-delivery",
+  "profile_sha256": "91de6a193ea0776b8ac93c0d0f70175cc1f4afd1d74ebadd32f0788aa5d275c4",
+  "kernel_sha256": "a785f1d4116b1f640622f8a3b84df975f7927fff5d75facffcc14f070a31d470",
+  "native_sha256": "ffc12d98962a211b5ba3227b5eeeaa4e49535a9c1668e3c9fdc0f8de1d590e13",
+  "baseline_kernel_sha256": "aae04d7d5ad6c4a014999152241e928eb9b08ab95d1880565a7e8c7f1f3fb6e7",
+  "delivery_build_sha256": "378e09cf09c754f766fc6fa0988ab2389e937917d02bef3713d098dbcf978587",
+  "changed_archive_members": [
+    "EldenHidGlue.o",
+    "NativeHidInput.late.o"
+  ],
+  "archive_members": {
+    "NativeLegacyDisplay.late.o": {
+      "before": "e55bd52ffa15310c6e42a24c0f1a907b035e59ce6375accbc4515965dc1fa184",
+      "after": "e55bd52ffa15310c6e42a24c0f1a907b035e59ce6375accbc4515965dc1fa184",
+      "archived_after": "e55bd52ffa15310c6e42a24c0f1a907b035e59ce6375accbc4515965dc1fa184"
+    },
+    "original-bindings.o": {
+      "before": "3650732909f83fc31951f9dfea24eae435e89004d7a5c391ee2888f11fad5773",
+      "after": "3650732909f83fc31951f9dfea24eae435e89004d7a5c391ee2888f11fad5773",
+      "archived_after": "3650732909f83fc31951f9dfea24eae435e89004d7a5c391ee2888f11fad5773"
+    },
+    "EldenDisplayGlue.o": {
+      "before": "681785b17ea117bce298a93264ce032fbf12bccce08e53fdfa0fe54c9c1d70dc",
+      "after": "681785b17ea117bce298a93264ce032fbf12bccce08e53fdfa0fe54c9c1d70dc",
+      "archived_after": "681785b17ea117bce298a93264ce032fbf12bccce08e53fdfa0fe54c9c1d70dc"
+    },
+    "EldenUserWaitProbe.o": {
+      "before": "afd19b2ba439e511b27bc2227b3dae27867263f5a0850bdea44c4a44f8ee4489",
+      "after": "afd19b2ba439e511b27bc2227b3dae27867263f5a0850bdea44c4a44f8ee4489",
+      "archived_after": "afd19b2ba439e511b27bc2227b3dae27867263f5a0850bdea44c4a44f8ee4489"
+    },
+    "NativeKeyStoreEvents.late.o": {
+      "before": "52b231e37cf630361055e45f0e7427bda0825473bacfd83929d201427080a51b",
+      "after": "52b231e37cf630361055e45f0e7427bda0825473bacfd83929d201427080a51b",
+      "archived_after": "52b231e37cf630361055e45f0e7427bda0825473bacfd83929d201427080a51b"
+    },
+    "EldenKeyEventsGlue.o": {
+      "before": "005634ca2435a5a9dfcf519ebe3eeb606c9b26ce158e4fa3bf65848a59060a66",
+      "after": "005634ca2435a5a9dfcf519ebe3eeb606c9b26ce158e4fa3bf65848a59060a66",
+      "archived_after": "005634ca2435a5a9dfcf519ebe3eeb606c9b26ce158e4fa3bf65848a59060a66"
+    },
+    "NativeHidInput.late.o": {
+      "before": "843cc1dffd7cc668a10dd16bfd25f2c418b60486bd76870aaf798201a8472cbb",
+      "after": "a04019f90bd917dff03662b6c44ee56651e129868bb8610e78f478fdc3d01a76",
+      "archived_after": "edccdd8cd3b0ea4c89991d648986aef2a779afaddd1f5b9e80762b3811b6f67b"
+    },
+    "hid-original-bindings.o": {
+      "before": "d6290d09b1830369a8b4f637ef73357a8c1272a8d7136a15fdc2c7f4a2be7d6b",
+      "after": "d6290d09b1830369a8b4f637ef73357a8c1272a8d7136a15fdc2c7f4a2be7d6b",
+      "archived_after": "d6290d09b1830369a8b4f637ef73357a8c1272a8d7136a15fdc2c7f4a2be7d6b"
+    },
+    "EldenHidGlue.o": {
+      "before": "4b951d546eb2168241581aa88e812d0cb519cef914c2c440f516abefe9a596b0",
+      "after": "8fd3687ddbf6738f86bb0d9cc821d5a5aa429c34e64d8a3ef33cf5d5cb4320b2",
+      "archived_after": "8fd3687ddbf6738f86bb0d9cc821d5a5aa429c34e64d8a3ef33cf5d5cb4320b2"
+    },
+    "EldenNvtProtocol.o": {
+      "before": "a41f5da2300aa921d8a546b9d5801909ef26f401c3caa24962a90df3fa9bc3be",
+      "after": "a41f5da2300aa921d8a546b9d5801909ef26f401c3caa24962a90df3fa9bc3be",
+      "archived_after": "a41f5da2300aa921d8a546b9d5801909ef26f401c3caa24962a90df3fa9bc3be"
+    },
+    "EldenNvtPoints.o": {
+      "before": "52bea0b3f2be2cefe7eda04493c53386ce286e23dc264e540a7dd7ffe0b36579",
+      "after": "52bea0b3f2be2cefe7eda04493c53386ce286e23dc264e540a7dd7ffe0b36579",
+      "archived_after": "52bea0b3f2be2cefe7eda04493c53386ce286e23dc264e540a7dd7ffe0b36579"
+    },
+    "EldenNvtPlatform.o": {
+      "before": "5d6c60791142853db5546638f6ed1c3f329f23f5ff22767ebad63f65dd1ced0d",
+      "after": "5d6c60791142853db5546638f6ed1c3f329f23f5ff22767ebad63f65dd1ced0d",
+      "archived_after": "5d6c60791142853db5546638f6ed1c3f329f23f5ff22767ebad63f65dd1ced0d"
+    },
+    "EldenNvtGeni.o": {
+      "before": "c8c00562907c91fdac0f98cef3b02cc5e55bab483e53241d0786c99473a33230",
+      "after": "c8c00562907c91fdac0f98cef3b02cc5e55bab483e53241d0786c99473a33230",
+      "archived_after": "c8c00562907c91fdac0f98cef3b02cc5e55bab483e53241d0786c99473a33230"
+    },
+    "EldenNvtDmaRoute.o": {
+      "before": "a3c28baf085839972db099a55ad9e2eec24ea163823dea3206f8325ba13ad6b6",
+      "after": "a3c28baf085839972db099a55ad9e2eec24ea163823dea3206f8325ba13ad6b6",
+      "archived_after": "a3c28baf085839972db099a55ad9e2eec24ea163823dea3206f8325ba13ad6b6"
+    },
+    "EldenNvtDmaTransfer.o": {
+      "before": "f1b923d26d177d69c5ada5b6d23867781daef0ffdb931772e47aaefc46b614ee",
+      "after": "f1b923d26d177d69c5ada5b6d23867781daef0ffdb931772e47aaefc46b614ee",
+      "archived_after": "f1b923d26d177d69c5ada5b6d23867781daef0ffdb931772e47aaefc46b614ee"
+    },
+    "EldenNvtDmaCache.o": {
+      "before": "5beeb4dc9e507c56f08163b7a319e6bd67b83b4f127935e456bcb472c7f55c6c",
+      "after": "5beeb4dc9e507c56f08163b7a319e6bd67b83b4f127935e456bcb472c7f55c6c",
+      "archived_after": "5beeb4dc9e507c56f08163b7a319e6bd67b83b4f127935e456bcb472c7f55c6c"
+    },
+    "EldenNvtRuntime.o": {
+      "before": "f0fb0663f5f4ba98ae9d937ffbb7b6b62872a7a1dbd89b7f5882e7d2865e89a1",
+      "after": "f0fb0663f5f4ba98ae9d937ffbb7b6b62872a7a1dbd89b7f5882e7d2865e89a1",
+      "archived_after": "f0fb0663f5f4ba98ae9d937ffbb7b6b62872a7a1dbd89b7f5882e7d2865e89a1"
+    },
+    "EldenNvtDmaBuffer.o": {
+      "before": "054f8a04935aea240b96fed9b07d52d3cbea647de2ace353b249411abb143a34",
+      "after": "054f8a04935aea240b96fed9b07d52d3cbea647de2ace353b249411abb143a34",
+      "archived_after": "054f8a04935aea240b96fed9b07d52d3cbea647de2ace353b249411abb143a34"
+    },
+    "EldenWifiModemFiles.o": {
+      "before": "fca1f6e9e7c793097a739e3ee6cf8d5eaeca08458a8a83a8c3df32de38f18c39",
+      "after": "fca1f6e9e7c793097a739e3ee6cf8d5eaeca08458a8a83a8c3df32de38f18c39",
+      "archived_after": "fca1f6e9e7c793097a739e3ee6cf8d5eaeca08458a8a83a8c3df32de38f18c39"
+    },
+    "EldenWifiFirmwareCheck.o": {
+      "before": "bbe4b5b47a27ba6ef104cba6b374f98cb25a6ddcbe3c174983c8c5058daad8a1",
+      "after": "bbe4b5b47a27ba6ef104cba6b374f98cb25a6ddcbe3c174983c8c5058daad8a1",
+      "archived_after": "bbe4b5b47a27ba6ef104cba6b374f98cb25a6ddcbe3c174983c8c5058daad8a1"
+    },
+    "MappingCheck.o": {
+      "before": "9e8b03c6b1931357cbb357416826aff02c859a4e20d75278bd0d819af9e27358",
+      "after": "9e8b03c6b1931357cbb357416826aff02c859a4e20d75278bd0d819af9e27358",
+      "archived_after": "9e8b03c6b1931357cbb357416826aff02c859a4e20d75278bd0d819af9e27358"
+    }
+  },
+  "core_filelist_equal": true,
+  "original_apple_executables_hashed": 30,
+  "hardware_tested": false,
+  "boot_packaged": false,
+  "device_operations": false
+}

@@ -12,14 +12,15 @@
 先对照 sheng 成功实现和现有日志，再选择一轮能改变决策的功能测试：
 稳定画面、正确触点、点击 Settings、上滑/退出编辑，以及可用的串口回程。
 v92原稿保留。其后续v93/v94已完成映射与软件Settings验证，整屏拷贝中位数
-716.65→134.14ms；见FRAMEBUFFER-WC.md。下一次实指测试可用已验v94，
+716.65→134.14ms；见FRAMEBUFFER-WC.md。v94继续保留为已验显示/软件输入基线，
 不能把采样截图一致或copy提速直接当作实际手势、60fps或长期稳定性验收。
 离线输入审计见[INPUT-STATUS.md](INPUT-STATUS.md)：v94软件短按的UIKit组间隔约100ms，
-没有重现旧版数秒拉长；坐标/ID暂不改。实指窗口使用v94并关闭自动注入watcher，
+没有重现旧版数秒拉长；坐标/ID暂不改。实指窗口关闭自动注入watcher，
 一次完成上滑、Settings短按与滚动释放。v95保留为单独的未验性能候选。
 离线故障注入另确认了失败抬指丢失与并发快照覆盖，已完成两组件修复和原生对象核验，
-见[EldenHidDelivery](../drivers/EldenHidDelivery/README.md)。下一步合入独立完整候选并核验，
-不把未签包的对象或主机测试当成实指通过；已验v94基线继续保留。
+见[EldenHidDelivery](../drivers/EldenHidDelivery/README.md)。[v100](../profiles/v100-hid-delivery/README.md)
+已完成独立完整候选签核，仅替换两个触控对象；静态通过不等于实指通过。
+用户解除离线限制后用v100做一次上述功能验证；若需回归对照再用v94，不默认重复两轮。
 
 CPU 同时记录实际上线、调度/IRQ 与负载，UFS 记录真实 I/O 延迟和吞吐。
 吐日志慢不直接等同存储慢；开启所有核也不能替代阻塞定位。
