@@ -11,6 +11,7 @@ extern "C" int elden_dc_noop_request_stop(void) __attribute__((weak_import));
 extern "C" int elden_dc_native_request_stop(void) __attribute__((weak_import));
 extern "C" int elden_ulog_filter_request_stop(void) __attribute__((weak_import));
 extern "C" int elden_backlight_request_stop(void) __attribute__((weak_import));
+extern "C" int elden_wcn_request_stop(void) __attribute__((weak_import));
 #if defined(ELDEN_TOUCH_RUNTIME) && ELDEN_TOUCH_RUNTIME
 extern "C" int elden_touch_request_stop(void);
 #endif
@@ -102,6 +103,11 @@ extern "C" int elden_recovery_rpc_ready(void){
 }
 static void eldenRecoveryShutdown(void){
   __atomic_store_n(&gEldenRpcHoldLogs,0,__ATOMIC_RELEASE);
+  if(elden_wcn_request_stop){
+    int stopped=elden_wcn_request_stop();
+    eldenSdamLog(stopped?"\nELDEN_WCN RPC stop=1; radio/UART stopped, boot-shared votes retained\n":
+        "\nELDEN_WCN RPC stop=0; held or bounded wait expired, continuing reset\n");
+  }
   if(elden_ulog_filter_request_stop){
     int stopped=elden_ulog_filter_request_stop();
     eldenSdamLog(stopped?"\nELDEN_ULOG_FILTER stop=1; cold log defaults acknowledged\n":

@@ -384,6 +384,8 @@ if os.environ.get('ELDEN_BLUETOOTH_BUILD')=='1':
         bt_compile += [('EldenWcnPower',bt/'WcnPower.c'),('EldenWcnFirmware',fw_data),('EldenWcnRpmh',rpm_source),
                        ('EldenWcnQmp',wcn_reference/'Sm8750AossQmp.c'),('EldenWcnSpmi',wcn_reference/'BtPmic.c')]
     native_bt=os.environ.get('ELDEN_BT_NATIVE_BUILD')=='1'
+    require(not wcn_build or (hci_build and uart_build),'WCN power build requires its real HCI and UART adapters')
+    require(not native_bt or wcn_build,'Native Bluetooth host requires the real WCN power/stop provider')
     if native_bt:
         bridge=Path(os.environ['ELDEN_BT_BRIDGE_SOURCE'])
         includes+=['-I',str(bridge)]
@@ -414,7 +416,7 @@ if os.environ.get('ELDEN_BLUETOOTH_BUILD')=='1':
         power=bt/'WcnPowerNative.cpp';cmd,directory=compiler(power,OUT/'EldenWcnPowerNative.o');cmd+=includes
         if native_bt:cmd+=['-DELDEN_BT_NATIVE_BUILD=1']
         run(cmd,cwd=directory,stderr=subprocess.STDOUT);bluetooth_objects.append(OUT/'EldenWcnPowerNative.o')
-        bluetooth_sources += [power,bt/'WcnPower.h',wcn_reference/'Sm8750Rpmh.h',
+        bluetooth_sources += [power,bt/'WcnPower.h',bt/'RunControl.h',wcn_reference/'Sm8750Rpmh.h',
                               wcn_reference/'Sm8750AossQmp.h',wcn_reference/'BtPmic.h',
                               wcn_reference/'PaganiBtBoard.h']
     if native_bt:

@@ -2,6 +2,7 @@
 // Kernel transport adapter, based on pinned canonical PaganiBtHost c888efd3.
 // Wire framing/flow/guards remain in canonical PBBridge, with scoped fixes.
 #include "NativeHost.h"
+#include "RunControl.h"
 extern "C" {
 #include "BtBridge.h"
 #include "BtTlv.h"
@@ -150,6 +151,7 @@ static void finish(Host *h){
 }
 extern "C" int elden_bt_host_publish(const EldenWcnStartupIo *uart,const uint8_t address[6],
     const PbH4Rx *rx,const uint8_t *rest,size_t bytes){
+    if(elden_wcn_stop_requested())return -125;
     if(gEldenBtHost||!uart||!uart->write||!uart->read||!address||!rx||bytes>512||(!rest&&bytes))return -22;
     Host *h=static_cast<Host *>(IOMallocZero(sizeof(Host)));if(!h)return -12;
     h->lock=IOLockAlloc();if(!h->lock){IOFree(h,sizeof(Host));return -12;}
@@ -165,6 +167,9 @@ extern "C" void elden_bt_host_run(void){
     Host *h=gEldenBtHost;if(!h)return;
     uint64_t report_at=now_ms(h)+60000;
     for(;;){
+        // Do not rely on another UART read noticing a revoked power lease:
+        // client backpressure can intentionally prevent reads indefinitely.
+        if(elden_wcn_stop_requested()){pb_bridge_fail(&h->bridge);break;}
         int ms=pb_bridge_step(&h->bridge);if(ms<0)break;
         uint64_t now=now_ms(h);
         if(now>=report_at){

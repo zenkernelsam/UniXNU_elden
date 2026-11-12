@@ -4,9 +4,11 @@
 #define ELDEN_WCN_HCI_TEST_MAIN hci_fixture_main
 #include "TestWcn7861Hci.c"
 #include "UartPlatform.h"
+#include "RunControl.h"
 #include "EldenBluetoothBoard.h"
 typedef struct {
     HciModel controller;
+    EldenWcnRunControl lifecycle;
     uint32_t gcc[0x60000/4],pins[4],se[0x4000/4];
     uint8_t tx[128],rx[128],wire[65536];
     unsigned tx_head,tx_count,rx_head,rx_count,wire_bytes,tx_remaining;
@@ -110,7 +112,7 @@ static uint64_t uart_time(void *p){UartModel *m=p;return m->counter_stuck?0:m->u
 static int uart_admit(void *p,EldenWcnUartAdmission op){
     UartModel *m=p;
     if(op==EldenWcnUartRadioStopped)return m->radio_stopped?0:-11;
-    return m->power_valid?0:-11;
+    return m->power_valid&&elden_wcn_run_live(&m->lifecycle)?0:-11;
 }
 static uint32_t uart_parent(void *p,unsigned source){
     UartModel *m=p;return m->bad_parent?0:source==1?600000000:300000000;
@@ -121,6 +123,7 @@ static int uart_lock(void *p,bool acquire){
 }
 static UartModel *fresh_uart(EldenWcnUart *u){
     UartModel *m=calloc(1,sizeof(*m));CHECK(m);
+    CHECK(elden_wcn_run_queue(&m->lifecycle)&&elden_wcn_run_enter(&m->lifecycle));
     m->power_valid=true;m->gcc[(ELDEN_BT_RCG+4)/4]=0x2601;
     m->gcc[(ELDEN_BT_RCG+8)/4]=384;m->gcc[(ELDEN_BT_RCG+12)/4]=~(15625-384)&65535;
     m->gcc[(ELDEN_BT_RCG+16)/4]=~15625u&65535;
@@ -220,6 +223,29 @@ int main(int argc,char **argv){
         m->se[PB_SE_S_IRQ_STATUS/4]|=PB_IRQ_RX_WR_ERR;
         CHECK(elden_wcn_uart_read(&u,&byte,1,&bytes)<0&&u.quarantined);
         m->radio_stopped=true;CHECK(!elden_wcn_uart_release(&u));free(m);
+    }
+    {
+        EldenWcnUart u;UartModel *m=fresh_uart(&u);cases++;
+        CHECK(elden_wcn_run_stop(&m->lifecycle)==EldenWcnStopping);
+        CHECK(elden_wcn_uart_acquire(&u)==EldenWcnUartAgain&&!m->writes&&!m->se_reads);
+        CHECK(!elden_wcn_run_queue(&m->lifecycle));
+        elden_wcn_run_complete(&m->lifecycle,false);
+        CHECK(elden_wcn_run_stop(&m->lifecycle)==EldenWcnStopped);free(m);
+    }
+    {
+        EldenWcnUart u;UartModel *m=fresh_uart(&u);cases++;
+        CHECK(!elden_wcn_uart_acquire(&u));
+        CHECK(elden_wcn_run_stop(&m->lifecycle)==EldenWcnStopping);
+        unsigned writes=m->writes;uint8_t byte=0xfd;size_t got=0;
+        CHECK(elden_wcn_uart_write(&u,&byte,1,1000)==EldenWcnUartAgain&&m->writes==writes);
+        CHECK(elden_wcn_uart_read(&u,&byte,1,&got)<0&&m->writes==writes);
+        CHECK(elden_wcn_uart_release(&u)==EldenWcnUartAgain&&m->writes==writes);
+        CHECK(elden_wcn_run_state(&m->lifecycle)==EldenWcnStopping);
+        m->radio_stopped=true;
+        CHECK(!elden_wcn_uart_release(&u)&&!u.acquired&&!u.quarantined);
+        CHECK(m->gcc[ELDEN_BT_GCC_VOTE/4]&(1u<<18));
+        elden_wcn_run_complete(&m->lifecycle,false);
+        CHECK(elden_wcn_run_stop(&m->lifecycle)==EldenWcnStopped);free(m);
     }
     for(unsigned i=0;i<5;i++)free(fw[i]);
     printf("PASS %u UART/platform scenarios, %u FIFO/wire/clock/lease assertions\n",cases,checks);

@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-12",
+  "host_uart_scenarios": 17,
+  "host_bridge_scenarios": 12,
+  "host_evidence_sha256": "3d411e8048f61d53250e470977921f0dbb580a7811ff63d0d5fe4686345f0a7a",
+  "native_evidence_sha256": "b4fcccfb150274761698cdd21f4a9cda4fe6d3959276a2c5cdd05e6c34839385",
+  "native_objects": {
+    "WcnPowerNative": {
+      "source_sha256": "53dacf25d27ac8bdca662b3b1bf60c769f3691245ba4b73ba24d4dded148ee02",
+      "object_sha256": "eac43349a566447325696331e7a245ea117eeb5e447ab79d01c04e2268fa9fcd",
+      "instructions": 2322,
+      "fp_simd": false
+    },
+    "NativeHost": {
+      "source_sha256": "c52d607eea97b2700c3c3abbeefc92b79d856ca68a224de098b6476454eaee51",
+      "object_sha256": "d3eda0dfabf54012f9a66c286d3217d6b1cfd16de9b7403b665a5a868e74c72b",
+      "instructions": 943,
+      "fp_simd": false
+    }
+  },
+  "sources": {
+    "drivers/EldenBluetooth/RunControl.h": "955a6caa262040f9cea4879e8c61199c941a8a7c629704d99cc6e49830e4efdb",
+    "drivers/EldenBluetooth/WcnPowerNative.cpp": "53dacf25d27ac8bdca662b3b1bf60c769f3691245ba4b73ba24d4dded148ee02",
+    "drivers/EldenBluetooth/NativeHost.cpp": "c52d607eea97b2700c3c3abbeefc92b79d856ca68a224de098b6476454eaee51",
+    "drivers/EldenBluetooth/TestLiveBridge.c": "6a5fe624bfba5acdf85f613a7ef5b8bb959903a62b89354c5f2dd2fa0361d726",
+    "drivers/EldenBluetooth/TestUartPlatform.c": "2f538df2196eeaca70dd62d5bf1022bd544026aa779ab0dc2af231afa7a238fd",
+    "scripts/build-elden-gop.py": "40d06a46ee1edd1e894607849c49b5f6b410d79e5d17a5f7d4f2631a9d95806f",
+    "scripts/driver-patches/EldenSdamRecovery.inc": "5402faf09b64c39411a34ecf4ba9979402c00316a35cd2db2a9330d186b2b0ec",
+    "tools/qualify_wcn_shutdown.py": "a6e197f56f2ddec537977db23034eebe5e9e2e2db7305d16d9bb5af1d0c42daf"
+  },
+  "existing_public_exports_present": true,
+  "new_provider_consumer_matched": true,
+  "hardware_tested": false,
+  "new_boot_candidate": false,
+  "kernel_linked": false,
+  "recovery_hook_full_native_build_pending": true,
+  "device_operations": false,
+  "scope": [
+    "Stop closes new UART acquire/live leases, not the validated reset/release lease.",
+    "Native host explicitly exits on stop, including when backpressure suppresses UART reads.",
+    "Only the existing worker resets BT_EN and releases UART; inherited shared rail votes remain.",
+    "RPC wait is bounded to900 ten-millisecond sleeps; held/timeouts remain reported unconfirmed.",
+    "No firmware, regulator voltage, GPIO value, audio, GPU or current candidate input changed."
+  ],
+  "remaining": [
+    "Full native kernel link and recovery-hook ABI/codegen qualification in the next Bluetooth profile.",
+    "Actual WCN power/UART/HCI, native daemon setup, scanning/pairing and physical stop verification.",
+    "Persistent keys and shared-supply low-power references; this change does not implement system sleep."
+  ]
+}

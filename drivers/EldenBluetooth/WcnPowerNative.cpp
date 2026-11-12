@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: BSD-2-Clause-Patent
 // Explicit WCN power owner. No physical operation in mode zero.
 #include "WcnPower.h"
+#include "RunControl.h"
 #include "UartBackend.h"
 #include "Wcn7861Hci.h"
 #if defined(ELDEN_BT_NATIVE_BUILD)
@@ -33,7 +34,8 @@ __attribute__((weak)) volatile uint32_t sm8750_aoss_qmp_owner;
 }
 namespace {
 constexpr uint32_t AossOwner=0x57434e50u;
-static unsigned attempted,published_state;
+static unsigned published_state;
+static EldenWcnRunControl run_control;
 static uint64_t published_epoch,next_epoch;
 static void log(const char *format,...){
     char line[320];va_list a;va_start(a,format);vsnprintf(line,sizeof(line),format,a);va_end(a);
@@ -153,7 +155,8 @@ static int rail_read(void *p,EldenWcnRail rail,EldenWcnRailState *out){
     int apid=pb_spmi_find(&c->spmi,spec.ppid,&owner_id);if(apid<0)return apid;
     const uint8_t regs[]={8,0x46,0x45,0x40,0x41};uint8_t values[5];
     for(unsigned i=0;i<5;i++){
-        int rc=pb_spmi_read8(&c->spmi,apid,regs[i],&values[i]);if(rc)return rc;
+        int rc=pb_spmi_read8(&c->spmi,apid,regs[i],&values[i]);
+        if(rc){c->spmi_uncertain=true;return rc;}
     }
     *out={(uint16_t)(values[3]|(uint16_t)values[4]<<8),values[0],values[1],values[2]};return 0;
 }
@@ -231,8 +234,10 @@ static bool prepare_firmware(Context *c,unsigned mode){
 }
 static void worker(void *arg,wait_result_t){
     unsigned mode=(unsigned)(uintptr_t)arg;
-    for(unsigned i=0;i<12000&&(!elden_recovery_armed()||native_owner_data_status||!elden_init_exec_accepted);i++)IOSleep(10);
-    if(!elden_recovery_armed()||native_owner_data_status||!elden_init_exec_accepted)goto done;
+    bool retained=false;
+    if(!elden_wcn_run_enter(&run_control))goto done;
+    for(unsigned i=0;i<12000&&!elden_wcn_stop_requested()&&(!elden_recovery_armed()||native_owner_data_status||!elden_init_exec_accepted);i++)IOSleep(10);
+    if(elden_wcn_stop_requested()||!elden_recovery_armed()||native_owner_data_status||!elden_init_exec_accepted)goto done;
     {
         Context *c=new Context;
         if(!c||!prepare_firmware(c,mode)){if(c)delete c;log("\nELDEN_WCN refused firmware/address preflight\n");goto done;}
@@ -251,13 +256,17 @@ static void worker(void *arg,wait_result_t){
             EldenWcnRailState s={};rc=rail_read(c,(EldenWcnRail)i,&s);
             log("\nELDEN_WCN supply=%u rc=%d mv=%u enable=%02x mode=%02x status=%02x\n",i,rc,s.mv,s.enable,s.mode,s.status);
         }
-        if(rc||mode==1){delete c;goto done;}
+        if(rc||mode==1||elden_wcn_stop_requested()){
+            retained=c->spmi_uncertain||c->aoss_uncertain||c->rsc_uncertain;
+            if(retained)active=c;else delete c;
+            goto done;
+        }
         active=c;uint64_t epoch=__atomic_add_fetch(&next_epoch,1ULL,__ATOMIC_ACQ_REL);
         rc=elden_wcn_power_acquire(&c->power,epoch);publish(c);
         log("\nELDEN_WCN prepare=%d stage=%u epoch=%llu\n",rc,c->power.stage,(unsigned long long)epoch);
-        if(rc)goto done; // maps and uncertain shared votes remain held
+        if(rc){retained=true;goto done;} // maps and uncertain shared votes remain held
         void *uart=nullptr;EldenWcnStartupIo io={};
-        if(mode>=3){
+        if(mode>=3&&!elden_wcn_stop_requested()){
             rc=elden_wcn_uart_backend_open(epoch,&io,&uart);
             if(!rc)rc=elden_wcn_startup_prepare(&c->startup,&io,elden_wcn_patch,sizeof(elden_wcn_patch),
                 elden_wcn_nvm,sizeof(elden_wcn_nvm),elden_wcn_tmel,sizeof(elden_wcn_tmel));
@@ -267,7 +276,7 @@ static void worker(void *arg,wait_result_t){
             if(!rc)rc=elden_wcn_hci_run(&c->hci);
             log("\nELDEN_WCN hci=%d ready=%u patch=%04x segments=%u\n",rc,c->hci.ready,c->hci.reported_patch,c->hci.segments);
 #if defined(ELDEN_BT_NATIVE_BUILD)
-            if(!rc&&mode==4){
+            if(!rc&&mode==4&&!elden_wcn_stop_requested()){
                 rc=elden_bt_host_publish(&io,c->address,&c->startup.h4,
                     c->startup.receive+c->startup.position,c->startup.received-c->startup.position);
                 log("\nELDEN_WCN native-host=%d\n",rc);
@@ -277,11 +286,14 @@ static void worker(void *arg,wait_result_t){
         }
         int stopped=elden_wcn_power_stop(&c->power,epoch);publish(c);
         int closed=stopped?stopped:uart?elden_wcn_uart_backend_close(uart):0;
-        if(!stopped&&!closed){elden_wcn_power_finish(&c->power,epoch);publish(c);}
+        int finished=0;
+        if(!stopped&&!closed){finished=elden_wcn_power_finish(&c->power,epoch);publish(c);}
+        retained=stopped||closed||finished;
         log("\nELDEN_WCN stop=%d uart-close=%d state=%u boot-shared-votes-retained=1\n",stopped,closed,c->power.state);
         // Context remains the inherited/shared vote ledger until platform reset.
     }
 done:
+    elden_wcn_run_complete(&run_control,retained);
     thread_terminate(current_thread());
 }
 }
@@ -289,7 +301,7 @@ extern "C" int elden_wcn_power_lease_check(uint64_t epoch,unsigned operation){
     unsigned state=__atomic_load_n(&published_state,__ATOMIC_ACQUIRE);
     if(!active||epoch!=__atomic_load_n(&published_epoch,__ATOMIC_ACQUIRE))return -11;
     if(operation==3)return state==EldenWcnPowerStopped?0:-11;
-    if(operation==1||operation==2)return state==EldenWcnPowerReady?0:-11;
+    if(operation==1||operation==2)return elden_wcn_run_live(&run_control)&&state==EldenWcnPowerReady?0:-11;
     return -22;
 }
 extern "C" uint32_t elden_wcn_power_parent_hz(uint64_t epoch,unsigned source){
@@ -302,10 +314,25 @@ extern "C" uint32_t elden_wcn_power_parent_hz(uint64_t epoch,unsigned source){
 }
 extern "C" void elden_wcn_power_start(void){
     unsigned mode=0;PE_parse_boot_argn("elden-wcn-power",&mode,sizeof(mode));
-    if(!mode||mode>4||__atomic_exchange_n(&attempted,1u,__ATOMIC_ACQ_REL))return;
+    if(!mode||mode>4)return;
 #if !defined(ELDEN_BT_NATIVE_BUILD)
     if(mode==4)return;
 #endif
+    if(!elden_wcn_run_queue(&run_control))return;
     thread_t t=nullptr;
     if(kernel_thread_start(worker,(void *)(uintptr_t)mode,&t)==KERN_SUCCESS)thread_deallocate(t);
+    else elden_wcn_run_complete(&run_control,false);
+}
+extern "C" int elden_wcn_stop_requested(void){
+    return elden_wcn_run_state(&run_control)>=EldenWcnStopping;
+}
+extern "C" int elden_wcn_request_stop(void){
+    unsigned state=elden_wcn_run_stop(&run_control);
+    // UART live/acquire leases are now closed. The existing executor observes
+    // this at its next operation; only that executor resets BT_EN and releases
+    // UART. A timeout/held result still lets the established platform reset run.
+    for(unsigned i=0;i<900&&state==EldenWcnStopping;i++){
+        IOSleep(10);state=elden_wcn_run_state(&run_control);
+    }
+    return state==EldenWcnStopped;
 }

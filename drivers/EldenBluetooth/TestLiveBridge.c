@@ -10,7 +10,7 @@ static unsigned checks;
 typedef struct {
     PbBridge bridge;PbBridgeIo io;uint64_t now;
     uint8_t rx[128],socket[128];unsigned rx_bytes,rx_pos,socket_bytes,writes;
-    uint16_t last_opcode;bool locked,overflow;
+    uint16_t last_opcode;bool locked,overflow,backpressure;
 } Model;
 static void lock(void *p,int take){Model *m=p;CHECK(take?!m->locked:m->locked);m->locked=take;}
 static uint64_t now(void *p){return ((Model *)p)->now;}
@@ -27,6 +27,7 @@ static uint32_t read(void *p,uint8_t *out,uint32_t max){
 }
 static int put(void *p,uint32_t unit,const uint8_t *b,uint32_t n){
     Model *m=p;CHECK(m->locked&&unit==1&&m->socket_bytes+n<=sizeof(m->socket));
+    if(m->backpressure)return 1;
     memcpy(m->socket+m->socket_bytes,b,n);m->socket_bytes+=n;return 0;
 }
 static void kick(void *p){CHECK(((Model *)p)->locked);}
@@ -111,5 +112,19 @@ int main(void){
         CHECK(pb_bridge_step(&m.bridge)>=0&&!m.bridge.pending&&m.bridge.ready);
         CHECK(m.socket_bytes==sizeof(credit)+sizeof(complete));
     }
-    printf("PASS 11 live bridge scenarios, %u command/reply/generation/bounds assertions\n",checks);
+    {
+        Model m={0};open(&m);m.backpressure=true;
+        /* Fill with valid credit frames while bluetoothd stops reading. */
+        const uint8_t credit[]={4,14,3,1,0,0};
+        for(unsigned i=0;i<PbBridgeRingBytes/sizeof(credit)&&!m.bridge.rx_paused;i++){
+            memcpy(m.rx,credit,sizeof(credit));m.rx_pos=0;m.rx_bytes=sizeof(credit);
+            CHECK(pb_bridge_step(&m.bridge)>=0);
+        }
+        CHECK(m.bridge.rx_paused&&m.bridge.link==PbLinkUp&&!m.socket_bytes);
+        command(&m,0x1001);unsigned writes=m.writes;
+        pb_bridge_fail(&m.bridge); /* NativeHost's explicit stop branch */
+        CHECK(pb_bridge_step(&m.bridge)==PbBridgeStop&&m.writes==writes);
+        CHECK(m.bridge.kill_pid==42&&pb_bridge_connect(&m.bridge,2,43)==PbBridgeRefused);
+    }
+    printf("PASS 12 live bridge scenarios, %u command/reply/generation/bounds assertions\n",checks);
 }

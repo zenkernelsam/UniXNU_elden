@@ -1,5 +1,12 @@
 # Elden Bluetooth firmware adapter
 
+Latest offline change: [WCN shutdown](../../docs/WCN-SHUTDOWN.md) connects the
+native radio worker to the maintained recovery template, revokes new UART
+work on stop, and exits the host even under socket backpressure.17 UART and12
+bridge host scenarios plus two ARM64 scalar object builds pass. Full kernel
+link/recovery-hook qualification and hardware remain pending; existing boot
+candidates are unchanged. This is not radio, pairing or system-sleep acceptance.
+
 Adapts sheng VFS loading to TB322FC WCN7861 with exactly the five Armada firmware paths.
 Runtime APIs sheng_bt_firmware_read/release remain intact. Uses the qualified Elden RAM Data readiness
 instead of the GPU addon gate. No startup or HCI download occurs from this archive by itself.
@@ -68,8 +75,8 @@ The old false-ready case was reproduced. The actual fixed bridge passes eleven
 ASan/UBSan scenarios and compiles as an ARM64/iOS17 object with unchanged exports
 and no FP/SIMD. No firmware, power, clocks, daemon text or hardware state changed.
 The fix is wired into the next explicit native Bluetooth build, but is not in
-the v77 UI candidate and has not been linked into a new boot image or tested on
-the controller. See the paired workbench's `research/bt-completion-20261111/`.
+the old v77 UI candidate and has not been linked into a new boot image or tested on
+the controller. See the paired workbench's `lab/records/bt-completion-20261111/`.
 
 ## UART14 native backend
 
