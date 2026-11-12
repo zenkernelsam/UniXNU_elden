@@ -1,6 +1,6 @@
 # 当前状态 · 2026-11-12
 
-最近已验基线为 **v91**：iPadOS 17.7.11 (21H461) 在 Y700 Gen4 / TB322FC 上进入
+最近已验基线为 **v94**（继承v91功能）：iPadOS 17.7.11 (21H461) 在 Y700 Gen4 / TB322FC 上进入
 SpringBoard，通过一次软件上滑、一次短按 Settings，收到实际渲染的 Settings/General 页面。
 这证明该软件输入路径可用，尚不能宣布真实手指操作或日用性能验收。
 
@@ -8,7 +8,7 @@ SpringBoard，通过一次软件上滑、一次短按 Settings，收到实际渲
 | --- | --- | --- |
 | 根卷与用户态 | UFS 上的 iPadOS 根卷、RAM Data、launchd、SpringBoard、Settings | 持久 Data、完整应用场景 |
 | USB 调试与回程 | 内核日志、帧回读、会话绑定 RPC、panic 后定时定向 fastboot | 断线及供电变化下的完整长期稳定性 |
-| CPU | CPU8 配置及保护、调度/IRQ 调查已进入冻结基线 | 不能用配置核数代替持续在线/负载实测；性能仍待定位 |
+| CPU | v94准入online/work/timers/ipis均ff，八核实际参与检查 | 持续在线/负载、DVFS与长期稳定性仍待实测 |
 | 显示与输入 | GOP CPU 显示、软件上滑/短按、触点/HID 链已推进 | 真实手指准确操作、流畅性和鬼触排除 |
 | 电源 | 电池状态、背光、原厂 ADSP/GLINK、UCSI 事件及 PD 流程已有实测 | 双口共享 500mA 约束、完整快充/回退/保护工况 |
 | Wi-Fi / 蓝牙 | 已有板级资源、固件与部分传输组件 | 联网、配对和持续使用验收 |
@@ -43,7 +43,7 @@ Boot rollback floor 始终为 **1738713600 / footer location 0**，父链 locati
 
 生成器与打包器现在都读取原始APFS inode验证233项所有者，不能再只依赖stat视图。
 详见 `DATA-SEED-OWNERSHIP.md` 和 `profiles/v91/validation/source-rebuilt-hardware.json`。
-这是一次软件交互验收；物理触控、约0.7秒整屏拷贝、持久Data及其余外设继续按PLAN。
+这是一次软件交互验收；该轮约0.7秒整屏拷贝后来由v94优化，物理触控、持久Data及其余外设继续按PLAN。
 
 ## 后续显示映射优化
 
@@ -55,3 +55,8 @@ v94通过帧缓冲全部5653页读写翻译检查，17次整屏copy中位数为1
 离线v95 paired-store候选已完成469组host验证、ARM64无FP/SIMD与静态打包检查，
 未上机、没有进一步提速结论。它继承v94映射及观察规则，保留原copy回退。
 当前稳定功能证据仍属于v94，后续按用户离线约束处理。
+
+离线输入复核复用同一v94日志：软件短按间隔101099µs，UIKit两组首条间隔100034µs；
+四条hook记录计数完整，但全日志drop40，严格观察仍不完整。控制器7579帧/invalid0，
+本轮物理变化0；28次HID成功含软件输入，不当实指成功。坐标转换与固定Linux报文相符，
+不新增猜测性输入补丁。详细来源、未验证错误路径和一次实指验收流程见[INPUT-STATUS.md](INPUT-STATUS.md)。

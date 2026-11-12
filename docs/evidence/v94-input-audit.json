@@ -1,0 +1,185 @@
+{
+  "audit_date": "2026-11-12",
+  "offline_only": true,
+  "source_commit": "73c71cd928392d327e06db7de1b001117d059975",
+  "session": "bc0a28dcaf1688e2",
+  "boot_nonce": "566852fb669e2b76",
+  "image_sha256": "cea9703fdb9a98a8bf48ea9a885242fe7caafee5de20c62279682f0ff2b4bc80",
+  "raw_path": "edl_work/live-fbwc-v94-20261112/usb/20261111-230741.bin",
+  "raw_sha256": "b97e748763f54fb274225f7500b953601737264fd90cbb1b08ed5bd81b810f0f",
+  "raw_bytes": 4960298,
+  "metadata_sha256": "01427e94e6bf22797b3a45808978b084d84200f887ee3b2df533911ab31d5d63",
+  "dropped": 40,
+  "discontinuities": [],
+  "transport_complete": false,
+  "captured_hook_record_accounting_complete": true,
+  "observation": {
+    "complete_observation": false,
+    "arms": [
+      1
+    ],
+    "summaries": [
+      {
+        "total": 4,
+        "saved": 4,
+        "overflow": 0,
+        "springboard": 4,
+        "preferences": 0,
+        "restored": 1,
+        "revoked": 0,
+        "emit_fail": 0
+      }
+    ],
+    "events": [
+      {
+        "index": 0,
+        "name": "SpringBoard",
+        "pid": 27,
+        "unique": 27,
+        "tid": 320,
+        "us": 1819,
+        "arg1": 65536,
+        "arg2": 3480455240,
+        "event_type": 0,
+        "subtype": 0,
+        "collection_count": 1,
+        "physical_key_event": false,
+        "touch_routing_policy_based": false
+      },
+      {
+        "index": 1,
+        "name": "SpringBoard",
+        "pid": 27,
+        "unique": 27,
+        "tid": 320,
+        "us": 5476,
+        "arg1": 65536,
+        "arg2": 3480455240,
+        "event_type": 0,
+        "subtype": 0,
+        "collection_count": 1,
+        "physical_key_event": false,
+        "touch_routing_policy_based": false
+      },
+      {
+        "index": 2,
+        "name": "SpringBoard",
+        "pid": 27,
+        "unique": 27,
+        "tid": 320,
+        "us": 101853,
+        "arg1": 65536,
+        "arg2": 3482396351,
+        "event_type": 0,
+        "subtype": 0,
+        "collection_count": 1,
+        "physical_key_event": false,
+        "touch_routing_policy_based": false
+      },
+      {
+        "index": 3,
+        "name": "SpringBoard",
+        "pid": 27,
+        "unique": 27,
+        "tid": 320,
+        "us": 102957,
+        "arg1": 65536,
+        "arg2": 3482396351,
+        "event_type": 0,
+        "subtype": 0,
+        "collection_count": 1,
+        "physical_key_event": false,
+        "touch_routing_policy_based": false
+      }
+    ],
+    "malformed_markers": 0,
+    "springboard_dispatch_observed": true,
+    "preferences_dispatch_observed": false,
+    "settings_content_verified": false,
+    "physical_touch_verified": false,
+    "next_evidence": "Use the same capture UI frames, process lifecycle and IconServices results. Generic sendEvent is not a generic down/up pair, and absence alone does not identify a missing driver."
+  },
+  "timing": {
+    "down_call_us": 92,
+    "software_down_to_up_us": 101099,
+    "up_call_us": 88,
+    "uikit_first_record_between_groups_us": 100034,
+    "arg2_difference": 1941111,
+    "event_interval_us_if_19_2MHz": 101099.53125,
+    "conversion_coefficient_dynamically_verified": false,
+    "explicit_uikit_down_up_trace": false
+  },
+  "physical": {
+    "controller_frames": 7579,
+    "published_changes": 0,
+    "stop": {
+      "error": 0,
+      "protocol_stage": 8,
+      "platform_stage": 5,
+      "released": 0,
+      "quarantine": 0,
+      "reports": 0,
+      "invalid": 0
+    },
+    "observed_hid_reports": 28,
+    "observed_hid_failures": 0,
+    "hid_reports_include_software_input": true,
+    "physical_touch_verified": false
+  },
+  "smp_admission_record": "ELDEN_SMP action=2 phase=3 reason=0 expected=ff online=ff work=ff timers=ff ipis=ff error=0 vdog=1",
+  "continuous_smp_load_verified": false,
+  "sources": {
+    "drivers/EldenNvt36536/PointReport.c": "6588e579847642b151f32c009327461b9818aac54214700356e907e697f19680",
+    "drivers/EldenNvt36536/Runtime.cpp": "2d9f97ce84fc24d693974d4d0e6c362c44d7a5bff8255fc850a17c3c427ed92b",
+    "scripts/driver-patches/EldenHidGlue.cpp": "4b4551bec0dbe5a211f2c94951d2d458c38a66f36d867520eae7f53c9265432f",
+    "profiles/v91/sources/tree/scripts/driver-patches/EldenHidGlue.cpp": "2d91ac1c37befe12a50e4c7182acc8d2c0a7f79ec56f7341598591e5b611efb8",
+    "profiles/v91/sources/tree/build/sheng-hid-input/src/NativeHidInput.cpp": "79f92e4f75994fcd99af1495f3d058c3fef50d6bc2c3241fc1a31dd0f3258bdb",
+    "profiles/v91/sources/xnu/EldenUiDispatchCore.h": "961590a6e85e4cba95512e763d4627f46f7eb55fcc115d27d0ab66074df12b15",
+    "profiles/v91/sources/xnu/EldenUiDispatch.inc": "7f5c40c16094ae5deec25cb56dadaaa02eb486034fbac613a25d75504b3b9d9b",
+    "tools/legacy-workbench/assess_ui_dispatch.py": "914515175c14adb9408c5a2d5117063312d02854822fefd8e2f444204e05eb4e"
+  },
+  "input_source_relation": "PointReport/Runtime are byte-identical to v91; frozen EldenHidGlue additionally arms the existing UIKit observer in three lines. Active build uses the frozen source.",
+  "prior_evidence": {
+    "sendEvent.asm": "13bb04f55647adfde3ac35c5d40097db8a757f58b559065eb7f1f6e4500f95e8",
+    "event-field-symbols.json": "e5d6820e71d9221bc5253403d6159caec64799c8454f98ff8b0aec7e1acba320",
+    "event-timestamp-conversion.asm": "d4f9f93c629f87e9aa7f933b5ae206c5df480ae4c47cd34d2e02c332bebeaef8",
+    "delivery-delay-v91.json": "efd64bf24fc521576a175acf8f7078a9e7eb6d3e3269dcb7e75cc40c014a4d95",
+    "delivery-delay-v77.json": "2459090d79fd62dad8dcb175e9d474b04fedda9da762eff261142aa0ce366e32"
+  },
+  "references": [
+    {
+      "repo": "ShengHidInput",
+      "commit": "114061452959a547aaa08f9ca5aa54033394ca2f",
+      "files": {
+        "NativeHidInput.cpp": "7c04b245e64518cfa73666f88515f937d2db3cd278762c165bb54c71c733621c"
+      }
+    },
+    {
+      "repo": "ShengNovatekTouch",
+      "commit": "69fdd6223ed2572aa8bd8351e77c53a238276130",
+      "files": {
+        "NvtTouchCore.c": "8149cc1990663b6a4b84c275a81c34b443c8d1d90b4d4508ebd05641932ba00d"
+      }
+    },
+    {
+      "repo": "tb322fc-linux-kernel",
+      "commit": "bf96c3d4048973298ede78487177c6f1b4f6bc0f",
+      "files": {
+        "arch/arm64/boot/dts/qcom/sm8750-lenovo-elden.dts": "0a33949581664bcfcf7f194c0b36182a6eb68c9f09c2c4225726ed86d7d1cecb"
+      }
+    }
+  ],
+  "linux_protocol": {
+    "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+    "path": "drivers/input/touchscreen/novatek-nvt36xxx-spi.c",
+    "sha256": "67295bfd775d8eafdd09e07db9d70c690054dec72dcae0c922345944dd1b1a66"
+  },
+  "limits": [
+    "Whole capture lost 40 bytes; hook accounting does not prove every OS event was captured.",
+    "Generic sendEvent groups are not an explicit touch-down/touch-up record.",
+    "The UIKit conversion coefficient was not read dynamically; 19.2MHz conversion is conditional.",
+    "Controller frame sampling with zero published changes is not a physical touch functional test.",
+    "Eight-core admission succeeded; sustained loading, DVFS and long-run SMP remain unqualified.",
+    "No device access, new firmware candidate or input driver changes during this audit."
+  ]
+}
