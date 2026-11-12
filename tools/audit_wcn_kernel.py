@@ -7,8 +7,9 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--profile',choices=('v97-wcn','v98-bt-bootstrap'),default='v97-wcn')
     for n in ('build','firmware','llvm','output'):p.add_argument('--'+n,type=Path,required=True)
-    a=p.parse_args();profile=ROOT/'profiles/v97-wcn/plan.json';plan=json.loads(profile.read_text())
+    a=p.parse_args();profile=ROOT/'profiles'/a.profile/'plan.json';plan=json.loads(profile.read_text())
     result=json.loads((a.build/'result.json').read_text());kernel=a.build/'kernel.macho';native=a.build/'native.macho'
     if result['profile_sha256']!=sha(profile) or sha(kernel)!=result['kernel_sha256'] or sha(native)!=result['native_sha256']:
         raise ValueError('Build identity differs')
@@ -22,6 +23,14 @@ def main():
               '_elden_bt_host_publish','_elden_bt_host_run','_sm8750_aoss_qmp_owner','_sm8750_gcc_vote_owner']
     for name in required:
         if len(symbols.get(name,[]))!=1:raise ValueError('Missing or duplicated provider: '+name)
+    if a.profile=='v98-bt-bootstrap':
+        for name in ('_elden_bt_bootstrap_publish','_sysctl__kern_elden_bt_bootstrap','_elden_bt_host_state'):
+            if len(symbols.get(name,[]))!=1:raise ValueError('Bootstrap status provider missing')
+        relocs=subprocess.check_output([str(a.llvm/'llvm-objdump'),'--reloc',str(a.build/'objects/BootstrapStatus.o')],text=True)
+        registration=re.search(r'RELOCATION RECORDS FOR \[__init_entry_set\]:\n(.*?)(?:\n\n|\Z)',relocs,re.S)
+        if not registration or '_sysctl_register_oid_early' not in registration[1] or '_sysctl__kern_elden_bt_bootstrap' not in registration[1]:
+            raise ValueError('Read-only status registration is missing')
+        if not re.search(r'ARM64_RELOC_BRANCH26\s+_elden_bt_host_state\b',relocs):raise ValueError('Host availability gate is absent')
     data=native.read_bytes();at=32;code=[]
     for _ in range(struct.unpack_from('<I',data,16)[0]):
         command,length=struct.unpack_from('<II',data,at)
@@ -31,8 +40,9 @@ def main():
                 flags=struct.unpack_from('<I',data,off+64)[0]
                 if flags&0x80000400:code.append((va,size,fileoff))
         at+=length
-    targets={symbols[name][0][0]:name for name in required[:3]}
-    branches={name:[] for name in required[:3]}
+    call_names=required[:3]+(['_elden_bt_bootstrap_publish','_elden_bt_host_state'] if a.profile=='v98-bt-bootstrap' else [])
+    targets={symbols[name][0][0]:name for name in call_names}
+    branches={name:[] for name in call_names}
     for va,size,fileoff in code:
         for offset in range(0,size-3,4):
             word=struct.unpack_from('<I',data,fileoff+offset)[0]
@@ -75,6 +85,7 @@ def main():
             'firmware':firmware,'original_apple_executables_hashed':30,
             'generated_source_hashes':{n:sha(a.build/'source'/n) for n in ('BtBridge.c','BtBridge.h','Sm8750Rpmh.c','EldenWcnFirmware.c','EldenWcnFirmware.h')},
             'boot_options_audited':False,'hardware_tested':False,'boot_packaged':False,'device_operations':False}
+    if a.profile=='v98-bt-bootstrap':report['bootstrap_status']={'oid':'kern.elden_bt_bootstrap','registration':'sysctl_register_oid_early','host_availability_gate_bound':True,'abi_bytes':32}
     if a.output.exists():raise ValueError('Audit output must be new')
     a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report,indent=2))

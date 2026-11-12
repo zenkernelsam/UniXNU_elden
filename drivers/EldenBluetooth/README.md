@@ -1,5 +1,12 @@
 # Elden Bluetooth firmware adapter
 
+[v98 bootstrap preparation](../../profiles/v98-bt-bootstrap/README.md) now adds
+the read-only, hardware-derived status and signed arm64/iOS17 BlueTool service.
+The exact original21H461 message ABI and optional address format are verified;
+the original daemon is unchanged.74 protocol cases and full static kernel
+checks pass. Runtime/trust/launchd installation, native routing, pairing and
+active sleep are pending; the tablet has not been accessed.
+
 The follow-up [v97-wcn profile](../../profiles/v97-wcn/README.md) now rebuilds
 the full19-object stack and links startup/stop into v94. Its native/prelinked
 calls, shared owners, five unique firmware payloads and30 original Apple text

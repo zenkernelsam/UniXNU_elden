@@ -1,0 +1,54 @@
+{
+  "file_sha256": "3f1e4493ea6a76976625f7af58a8f330c0c90d82d9020b11110b4f3f5b758df4",
+  "uuid": "0f836381d07b36e49dbb8a44782b9c14",
+  "architecture": "arm64",
+  "literals": {
+    "service": {
+      "address": "0x1007d8c0c",
+      "value": "com.apple.BlueTool"
+    },
+    "script": {
+      "address": "0x1007d8c1f",
+      "value": "script"
+    },
+    "command": {
+      "address": "0x1007d8c30",
+      "value": "RunBuiltinScript"
+    },
+    "result": {
+      "address": "0x1007d8c41",
+      "value": "result"
+    },
+    "firmware": {
+      "address": "0x1007d8c48",
+      "value": "firmware"
+    },
+    "manufacturer": {
+      "address": "0x1007d8c51",
+      "value": "manufacturer"
+    },
+    "address": {
+      "address": "0x1007d8c26",
+      "value": "btaddress"
+    },
+    "address_format": {
+      "address": "0x1007ec897",
+      "value": "%02X:%02X:%02X:%02X:%02X:%02X"
+    }
+  },
+  "envelope_keys": [
+    "kMsgId",
+    "kMsgArgs"
+  ],
+  "pointer_format": 6,
+  "result_type": "int64",
+  "manufacturer_type": "int64",
+  "firmware_type": "string",
+  "F2_unchanged": true,
+  "F3_unchanged": true,
+  "hardware_tested": false,
+  "bluetoothd_modified": false,
+  "limits": [
+    "Message ABI match does not prove chipset routing, Skywalk/stream transport or HCI command compatibility."
+  ]
+}

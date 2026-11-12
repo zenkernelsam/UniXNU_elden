@@ -10,6 +10,8 @@ int elden_bt_host_publish(const EldenWcnStartupIo *,const uint8_t address[6],
     const PbH4Rx *,const uint8_t *rest,size_t rest_bytes);
 /* Runs the single UART executor; returns after guarded withdrawal. */
 void elden_bt_host_run(void);
+/* 0 unpublished, 1 service/control available, 2 withdrawing or withdrawn. */
+unsigned elden_bt_host_state(void);
 #ifdef __cplusplus
 }
 #endif

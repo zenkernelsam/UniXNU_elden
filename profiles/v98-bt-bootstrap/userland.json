@@ -1,0 +1,38 @@
+{
+  "kernel_sha256": "a61abbfd7b2c8bc8221b271d8c7b494934d5eea55fa0220de369cc54abf43669",
+  "kernel_profile": "v98-bt-bootstrap",
+  "BlueTool_sha256": "464432d5308fa0998f9b25ed77ff0c2b9a7751377dc0cc992679a32dc7cc571e",
+  "BlueTool_cdhash": "e88b9aee568d043baf7a20caf4696c051b2ca802",
+  "architecture": "arm64",
+  "minimum_os": "17.0",
+  "bootstrap_abi_bytes": 32,
+  "host_protocol_cases": 74,
+  "asan_ubsan": true,
+  "host_sources": {
+    "drivers/EldenBluetooth/userland/BootReply.c": "7ae9c8c18d56a4ff99db8873b63d1c86f807967a8f9232359c971eb34a25d7e1",
+    "drivers/EldenBluetooth/userland/BootReply.h": "78f47f6ab49917337c2ec7b67ec14aeeef73b802969d6fb02faf51c7ce837796",
+    "drivers/EldenBluetooth/userland/TestBootReply.c": "e4c4ec635d4cfaa2ee7f85c369861cfb65f3c3f75334fe02985b542895b4b746",
+    "drivers/EldenBluetooth/BootstrapStatus.h": "95695a6ac331b5f5aba0c7ae928146ab02cc8038d13c95e29780cb746d17eb24"
+  },
+  "original_client_sha256": "3f1e4493ea6a76976625f7af58a8f330c0c90d82d9020b11110b4f3f5b758df4",
+  "original_client_architecture": "arm64",
+  "original_client_pointer_format": 6,
+  "original_client_modified": false,
+  "F2_skipped": false,
+  "installed": false,
+  "hardware_tested": false,
+  "deep_sleep_while_active_supported": false,
+  "boot_packaged": false,
+  "runtime_gates": [
+    "HCI ready and original Read_BD_ADDR matched",
+    "Host service/control published, not withdrawing",
+    "Same snapshot epoch; exact ABI version/size/reserved fields",
+    "Optional requested address matches network-order controller address"
+  ],
+  "remaining": [
+    "Signed launchd-cache and runtime union/trust integration",
+    "21H461 chipset routing and Skywalk/stream adaptation",
+    "Actual WCN/HCI/XPC/initialization tests",
+    "Power toggle, sleep and persistent pairing"
+  ]
+}

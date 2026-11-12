@@ -1,5 +1,9 @@
 # v97 WCN build profile — offline, unbooted
 
+Reproduce this exact profile at commit `94b6d8c219d792c88c903fc17e178ef819c6627c`.
+Later development changes the owned WCN sources; the v97 hash guard deliberately
+refuses those changed inputs. The next bootstrap-status work uses v98 explicitly.
+
 This profile compiles the real WCN stack and connects its existing startup and
 new shutdown paths to the tested v94 display/recovery baseline. It is a kernel
 build profile, not a flashable or hardware-qualified boot candidate.

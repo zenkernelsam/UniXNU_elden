@@ -2,6 +2,7 @@
 // Explicit WCN power owner. No physical operation in mode zero.
 #include "WcnPower.h"
 #include "RunControl.h"
+#include "BootstrapStatus.h"
 #include "UartBackend.h"
 #include "Wcn7861Hci.h"
 #if defined(ELDEN_BT_NATIVE_BUILD)
@@ -235,6 +236,9 @@ static bool prepare_firmware(Context *c,unsigned mode){
 static void worker(void *arg,wait_result_t){
     unsigned mode=(unsigned)(uintptr_t)arg;
     bool retained=false;
+    unsigned boot_state=EldenBtBootUnavailable;
+    uint64_t boot_epoch=0;uint16_t boot_manufacturer=0,boot_patch=0;
+    uint8_t boot_address[6]={};
     if(!elden_wcn_run_enter(&run_control))goto done;
     for(unsigned i=0;i<12000&&!elden_wcn_stop_requested()&&(!elden_recovery_armed()||native_owner_data_status||!elden_init_exec_accepted);i++)IOSleep(10);
     if(elden_wcn_stop_requested()||!elden_recovery_armed()||native_owner_data_status||!elden_init_exec_accepted)goto done;
@@ -262,6 +266,8 @@ static void worker(void *arg,wait_result_t){
             goto done;
         }
         active=c;uint64_t epoch=__atomic_add_fetch(&next_epoch,1ULL,__ATOMIC_ACQ_REL);
+        boot_epoch=epoch;boot_state=EldenBtBootStarting;
+        elden_bt_bootstrap_publish(boot_state,boot_epoch,0,0,nullptr);
         rc=elden_wcn_power_acquire(&c->power,epoch);publish(c);
         log("\nELDEN_WCN prepare=%d stage=%u epoch=%llu\n",rc,c->power.stage,(unsigned long long)epoch);
         if(rc){retained=true;goto done;} // maps and uncertain shared votes remain held
@@ -277,22 +283,32 @@ static void worker(void *arg,wait_result_t){
             log("\nELDEN_WCN hci=%d ready=%u patch=%04x segments=%u\n",rc,c->hci.ready,c->hci.reported_patch,c->hci.segments);
 #if defined(ELDEN_BT_NATIVE_BUILD)
             if(!rc&&mode==4&&!elden_wcn_stop_requested()){
-                rc=elden_bt_host_publish(&io,c->address,&c->startup.h4,
-                    c->startup.receive+c->startup.position,c->startup.received-c->startup.position);
-                log("\nELDEN_WCN native-host=%d\n",rc);
-                if(!rc)elden_bt_host_run();
+                if(!c->hci.ready){rc=-71;}
+                else{
+                    boot_manufacturer=(uint16_t)c->hci.local_version[4]|(uint16_t)c->hci.local_version[5]<<8;
+                    boot_patch=c->hci.reported_patch;boot_state=EldenBtBootReady;
+                    pb_bdaddr_written(c->hci.local_address,boot_address);
+                    elden_bt_bootstrap_publish(boot_state,boot_epoch,boot_manufacturer,boot_patch,boot_address);
+                    rc=elden_bt_host_publish(&io,c->address,&c->startup.h4,
+                        c->startup.receive+c->startup.position,c->startup.received-c->startup.position);
+                    log("\nELDEN_WCN native-host=%d\n",rc);
+                    if(!rc)elden_bt_host_run();
+                }
             }
 #endif
         }
+        elden_bt_bootstrap_publish(EldenBtBootStopping,boot_epoch,boot_manufacturer,boot_patch,boot_address);
         int stopped=elden_wcn_power_stop(&c->power,epoch);publish(c);
         int closed=stopped?stopped:uart?elden_wcn_uart_backend_close(uart):0;
         int finished=0;
         if(!stopped&&!closed){finished=elden_wcn_power_finish(&c->power,epoch);publish(c);}
         retained=stopped||closed||finished;
+        boot_state=retained?EldenBtBootFailed:EldenBtBootStopped;
         log("\nELDEN_WCN stop=%d uart-close=%d state=%u boot-shared-votes-retained=1\n",stopped,closed,c->power.state);
         // Context remains the inherited/shared vote ledger until platform reset.
     }
 done:
+    elden_bt_bootstrap_publish(retained?EldenBtBootFailed:boot_state,boot_epoch,boot_manufacturer,boot_patch,boot_address);
     elden_wcn_run_complete(&run_control,retained);
     thread_terminate(current_thread());
 }
@@ -319,9 +335,13 @@ extern "C" void elden_wcn_power_start(void){
     if(mode==4)return;
 #endif
     if(!elden_wcn_run_queue(&run_control))return;
+    elden_bt_bootstrap_publish(EldenBtBootStarting,0,0,0,nullptr);
     thread_t t=nullptr;
     if(kernel_thread_start(worker,(void *)(uintptr_t)mode,&t)==KERN_SUCCESS)thread_deallocate(t);
-    else elden_wcn_run_complete(&run_control,false);
+    else{
+        elden_bt_bootstrap_publish(EldenBtBootFailed,0,0,0,nullptr);
+        elden_wcn_run_complete(&run_control,false);
+    }
 }
 extern "C" int elden_wcn_stop_requested(void){
     return elden_wcn_run_state(&run_control)>=EldenWcnStopping;

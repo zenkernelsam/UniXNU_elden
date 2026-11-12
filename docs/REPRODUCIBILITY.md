@@ -95,3 +95,8 @@ prelink 的执行区不变结论不涵盖之后明确列出的 AMFI 单指令转
 `tools/build_wcn_kernel.py`从固定来源和外部固件重建19个对象，重编2个既有对象，完成native/prelink。
 `tools/audit_wcn_kernel.py`独立读取实际分支目标、共享owner、五固件完整唯一副本与30个原始执行区。
 这是未上机的内核构建，不包含新的签名boot或daemon验收；旧候选保持不变。
+
+[v98-bt-bootstrap](../profiles/v98-bt-bootstrap/README.md)增加只读内核状态和owned BlueTool服务，
+使用上述构建/审计工具的 `--profile v98-bt-bootstrap`。服务由 `build_elden_bluetool.py` 构建并签名，
+客户端原件由 `audit_bluetool17_abi.py` 仅读核对。原21H461为arm64/链格式6，不能用27版arm64e布局。
+服务尚未合入Data/trust/launchd或上机；bootstrap成功不代表完整蓝牙能力或深度休眠。

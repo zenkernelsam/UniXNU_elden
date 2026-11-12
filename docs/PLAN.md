@@ -33,6 +33,8 @@ Wi-Fi、蓝牙以 sheng 成功驱动规范为先，具体接线、时钟、复�
 蓝牙常驻模式已补离线停止接口与上行背压退出，见[WCN-SHUTDOWN.md](WCN-SHUTDOWN.md)；
 v97已完成整核/恢复钩子的静态资格，见[构建档](../profiles/v97-wcn/README.md)，尚未entry转换/签包。
 随后仍需真实WCN/HCI及daemon验证。现有候选不自动换料。
+v98已离线构建只读HCI/主机状态接口和arm64/iOS17 BlueTool服务，原21H461 XPC协议及地址格式已核。
+下一步补齐签名runtime/launchd合并与准确版本的transport/chipset适配；不直接套用27版arm64e补丁。
 触控稳定后加入休眠/唤醒及双击亮屏，随后推进持久 Data、容量/内存、时间和日常应用稳定性。
 
 ## 3. 高风险和后续功能

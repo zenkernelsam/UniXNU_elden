@@ -416,7 +416,9 @@ if os.environ.get('ELDEN_BLUETOOTH_BUILD')=='1':
         power=bt/'WcnPowerNative.cpp';cmd,directory=compiler(power,OUT/'EldenWcnPowerNative.o');cmd+=includes
         if native_bt:cmd+=['-DELDEN_BT_NATIVE_BUILD=1']
         run(cmd,cwd=directory,stderr=subprocess.STDOUT);bluetooth_objects.append(OUT/'EldenWcnPowerNative.o')
-        bluetooth_sources += [power,bt/'WcnPower.h',bt/'RunControl.h',wcn_reference/'Sm8750Rpmh.h',
+        bootstrap=bt/'BootstrapStatus.cpp';cmd,directory=compiler(bootstrap,OUT/'EldenBtBootstrapStatus.o');cmd+=includes
+        run(cmd,cwd=directory,stderr=subprocess.STDOUT);bluetooth_objects.append(OUT/'EldenBtBootstrapStatus.o')
+        bluetooth_sources += [power,bootstrap,bt/'BootstrapStatus.h',bt/'WcnPower.h',bt/'RunControl.h',wcn_reference/'Sm8750Rpmh.h',
                               wcn_reference/'Sm8750AossQmp.h',wcn_reference/'BtPmic.h',
                               wcn_reference/'PaganiBtBoard.h']
     if native_bt:

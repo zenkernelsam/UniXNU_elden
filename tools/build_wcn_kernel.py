@@ -17,10 +17,12 @@ def write(p,value):p.write_text(json.dumps(value,indent=2)+'\n')
 def exports(p):return {n for n,v in global_symbols(p).items() if v[0]&0x0e!=0}
 
 def main():
+    global PROFILE
     p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--profile',choices=('v97-wcn','v98-bt-bootstrap'),default='v97-wcn')
     for n in ('v94-build','dependency','firmware','xnu-source','prelink-repository','original-kernelcache','llvm','output'):
         p.add_argument('--'+n,type=Path,required=True)
-    a=p.parse_args();plan=read(PROFILE/'plan.json');base=a.v94_build.resolve();out=a.output.resolve()
+    a=p.parse_args();PROFILE=ROOT/'profiles'/a.profile;plan=read(PROFILE/'plan.json');base=a.v94_build.resolve();out=a.output.resolve()
     if out.exists():raise ValueError('Output must be new')
     if sha(base/'kernel.macho')!=plan['baseline_kernel_sha256'] or sha(base/'native.macho')!=plan['baseline_native_sha256']:
         raise ValueError('Not the qualified v94 baseline')
@@ -178,6 +180,10 @@ def main():
     with (logs/'link.log').open('x') as log:subprocess.run(command,cwd=out,env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
     expected=exports(base/'native.macho')
     for path in map(Path,btmembers):expected|=exports(path)
+    if a.profile=='v98-bt-bootstrap':
+        oid='_sysctl__kern_elden_bt_bootstrap'
+        if not global_symbols(obj/'BootstrapStatus.o')[oid][0]&0x10:raise ValueError('Expected private sysctl OID')
+        expected.remove(oid) # ld localizes this standard private-external OID.
     if exports(target)!=expected:raise ValueError('Linked exports differ from exact WCN addition')
     pre=ip['prelink'];kit=out/'prelink-tool';kit.mkdir()
     raw=subprocess.check_output(['git','-C',str(a.prelink_repository),'archive',pre['commit']])
@@ -187,8 +193,8 @@ def main():
     for v in pre['early_security_initializers']:command+=['--early-security-init',v]
     with (logs/'prelink.log').open('x') as log:subprocess.run(command,cwd=out,stdout=log,stderr=subprocess.STDOUT,check=True)
     verify_original_executables(kernel,read(kernel.with_suffix('.json')),pre['original_executable_sha256'])
-    result={'profile':'v97-wcn','profile_sha256':sha(PROFILE/'plan.json'),'native_sha256':sha(target),'kernel_sha256':sha(kernel),
-            'new_objects':19,'recompiled_existing_objects':2,'original_apple_executables_hashed':30,'new_object_fp_simd':False,
+    result={'profile':a.profile,'profile_sha256':sha(PROFILE/'plan.json'),'native_sha256':sha(target),'kernel_sha256':sha(kernel),
+            'new_objects':len(btmembers),'recompiled_existing_objects':2,'original_apple_executables_hashed':30,'new_object_fp_simd':False,
             'radio_enabled':False,'boot_packaged':False,'hardware_tested':False,'device_operations':False,'sources':records}
     write(out/'result.json',result);print(json.dumps(result,indent=2))
 

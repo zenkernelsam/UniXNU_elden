@@ -36,6 +36,7 @@ struct Host{
     uint32_t kick=0,room=0;bool withdrawing=false;
 };
 static Host *gEldenBtHost;
+static unsigned host_public_state;
 static void log(const char *line){for(const char *p=line;*p;p++)elden_usb_log_putc(*p);elden_usb_log_putc('\n');}
 static uint64_t now_ms(void *){uint64_t ns;absolutetime_to_nanoseconds(mach_absolute_time(),&ns);return ns/1000000;}
 static uint64_t deadline(unsigned ms){uint64_t value;clock_interval_to_deadline(ms,kMillisecondScale,&value);return value;}
@@ -118,10 +119,13 @@ static bool publish(Host *h,const uint8_t wire[6]){
         node->setProperty("transport-speed",&baud,4)&&node->attach(parent);
     if(ok&&!node->start(parent)){node->detach(parent);ok=false;}
     if(!ok){node->release();return false;}
-    node->registerService();h->service=node;return true;
+    h->service=node;
+    __atomic_store_n(&host_public_state,1u,__ATOMIC_RELEASE);
+    node->registerService();return true;
 }
 static void retract(Host *h){
     __atomic_store_n(&h->withdrawing,true,__ATOMIC_RELEASE);
+    __atomic_store_n(&host_public_state,2u,__ATOMIC_RELEASE);
     if(h->chosen&&h->chosen->getProperty("mac-address-bluetooth0")==h->address_property){
         if(h->old_address)h->chosen->setProperty("mac-address-bluetooth0",h->old_address);
         else h->chosen->removeProperty("mac-address-bluetooth0");
@@ -181,3 +185,4 @@ extern "C" void elden_bt_host_run(void){
     }
     finish(h);
 }
+extern "C" unsigned elden_bt_host_state(void){return __atomic_load_n(&host_public_state,__ATOMIC_ACQUIRE);}
