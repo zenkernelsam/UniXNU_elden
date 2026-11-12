@@ -32,7 +32,7 @@ def main():
         return value
     binary=a.output/'test-olcpr';source=ROOT/'drivers/EldenWifi'
     command=[a.compiler,'-std=c11','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-omit-frame-pointer',
-        '-I'+path(source),'-I'+path(a.output),path(source/'TestOlCprPlan.c'),path(source/'OlCprPlan.c'),'-o',path(binary)]
+        '-I'+path(source),'-I'+path(ROOT/'drivers/EldenBluetooth'),'-I'+path(a.output),path(source/'TestOlCprPlan.c'),path(source/'OlCprPlan.c'),path(ROOT/'drivers/EldenBluetooth/WcnPower.c'),'-o',path(binary)]
     prefix=['wsl','-d',a.wsl_distro,'--'] if a.wsl_distro else []
     if a.wsl_distro:command[1:1]=['-fno-pie','-no-pie']
     build=subprocess.run(prefix+command,capture_output=True)
@@ -43,6 +43,7 @@ def main():
     report={'passed':True,'source_revision':commit['sha'],'dts_sha256':sha(a.board_dts),'maps':maps,
             'linux_arithmetic_sha256':hashlib.sha256(reference.encode()).hexdigest(),
             'source_sha256':{n:sha(source/n) for n in ('OlCprPlan.c','OlCprPlan.h','TestOlCprPlan.c')},
+            'shared_provider_sha256':{n:sha(ROOT/'drivers/EldenBluetooth'/n) for n in ('WcnPower.c','WcnPower.h')},
             'stdout':result.stdout.decode(),'stderr':result.stderr.decode(),'hardware_operations':False,'applied_voltage':False}
     (a.output/'result.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
 if __name__=='__main__':main()

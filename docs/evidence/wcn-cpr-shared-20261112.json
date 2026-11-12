@@ -1,0 +1,68 @@
+{
+  "legacy_revision": "174365f537be6ce34bd000c6e688d9160e7d0f3f",
+  "comparisons": "4096 legacy/new comparisons plus all8 command-failure positions passed; command bytes, errors, epochs and quarantine preserved\n",
+  "original_sequence_checks": "PASS 12 power scenarios, 321 sequence/lease/rail/PLL/OL-CPR assertions\n",
+  "linux_arithmetic_comparisons": 20128,
+  "objects": {
+    "WcnPower": {
+      "source_sha256": "19e64e67d29de4bd5b532268c964fd49ed034a1b5e07c7f52c6b7cb493a0022f",
+      "object_sha256": "2647dd0b082f7e64522aeab6d1ab3afdbf47adee6b9f9a4dbfd84a37ea74ec46",
+      "exports": [
+        "_elden_wcn_cpr_adjust",
+        "_elden_wcn_cpr_pdc_name",
+        "_elden_wcn_cpr_plan",
+        "_elden_wcn_cpr_plan_details",
+        "_elden_wcn_cpr_rail_name",
+        "_elden_wcn_parent_decode",
+        "_elden_wcn_power_acquire",
+        "_elden_wcn_power_check",
+        "_elden_wcn_power_cpr",
+        "_elden_wcn_power_finish",
+        "_elden_wcn_power_stop",
+        "_elden_wcn_rail_specs"
+      ],
+      "imports": [
+        "_strcmp"
+      ],
+      "scalar": true
+    },
+    "OlCprPlan": {
+      "source_sha256": "08d7dd9ee21228a194582fd1bea5a0b319007e8be58fb1f1a1a1282e9c449896",
+      "object_sha256": "f1841e648495c24a61e593f4b044cfc3d654623a95b486e402fbd88acc9a3845",
+      "exports": [
+        "_elden_olcpr_adjust",
+        "_elden_olcpr_pdc_name",
+        "_elden_olcpr_prepare",
+        "_elden_olcpr_rail_name"
+      ],
+      "imports": [
+        "_bzero",
+        "_elden_wcn_cpr_adjust",
+        "_elden_wcn_cpr_pdc_name",
+        "_elden_wcn_cpr_plan_details",
+        "_elden_wcn_cpr_rail_name"
+      ],
+      "scalar": true
+    }
+  },
+  "headers_sha256": {
+    "WcnPower.h": "010d1923a032fd294dc2da4089a244c8250e21c90640d569c2007959479e6c5e",
+    "OlCprPlan.h": "613fb15e96cbf51c43fe0dcafc652c23059a5eed943020fa22578268552e4911"
+  },
+  "shared_provider_bound": true,
+  "provider_archive_sha256": "71833a3aef40fab77b6a0f4a67f89a33d74772a56b522f9f5761c19715da860c",
+  "remaining_imports": [
+    "_bzero",
+    "_strcmp"
+  ],
+  "existing_sender_preserved": true,
+  "native_runtime_gateway_added": false,
+  "kernel_linked": false,
+  "hardware_operations": false,
+  "test_source_sha256": {
+    "WcnPower.c": "19e64e67d29de4bd5b532268c964fd49ed034a1b5e07c7f52c6b7cb493a0022f",
+    "WcnPower.h": "010d1923a032fd294dc2da4089a244c8250e21c90640d569c2007959479e6c5e",
+    "TestCprCompatibility.c": "dadbe6945d5121210df44e2272cd50df9ff1cab8ee300009047b431d63d979f0",
+    "TestWcnPower.c": "6318b2452ea17de2aef74a71eda00c33853bb5fb5727e576500e8b5209022b65"
+  }
+}

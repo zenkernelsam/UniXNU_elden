@@ -123,13 +123,18 @@ static const PinMap map[]={
     {"VDDA_RFA_0P9",0},{"VDDD_WLMX_0P9",1},{"VDDD_WLCX_0P9",0},
     {"VDDD_BTCX_0P9",0},{"VDDD_BTCMX_0P9",0},{"VDDA_PCIE_1P2",3},{"VDDA_PCIE_0P9",3}
 };
-static int adjusted(uint32_t value,unsigned ir,uint32_t *out){
+static const char *const cpr_rails[]={"s5f","s4d","s3g","s7i"};
+static const char *const cpr_pdcs[]={"rf","bb","rf","rf"};
+const char *elden_wcn_cpr_rail_name(unsigned i){return i<4?cpr_rails[i]:NULL;}
+const char *elden_wcn_cpr_pdc_name(unsigned i){return i<4?cpr_pdcs[i]:NULL;}
+int elden_wcn_cpr_adjust(uint32_t value,unsigned ir,uint32_t *out){
+    if(!out)return EldenWcnPowerArgument;
     if(value>UINT32_MAX-3)return EldenWcnPowerArgument;
     uint32_t rounded=(value+3)&~3u;
     if(rounded<16||rounded-16>UINT32_MAX-ir)return EldenWcnPowerArgument;
     *out=rounded-16+ir;return 0;
 }
-int elden_wcn_cpr_plan(const EldenWcnPmuParam *params,size_t count,EldenWcnPdcVote out[4]){
+int elden_wcn_cpr_plan_details(const EldenWcnPmuParam *params,size_t count,EldenWcnPdcVote out[4],EldenWcnCprCounts *details){
     if(!params||!out||!count||count>16)return EldenWcnPowerArgument;
     EldenWcnPdcVote votes[4]={{0}};unsigned valid=0,mapped=0;
     for(size_t i=0;i<count;i++){
@@ -141,26 +146,28 @@ int elden_wcn_cpr_plan(const EldenWcnPmuParam *params,size_t count,EldenWcnPdcVo
         for(unsigned n=0;n<sizeof(map)/sizeof(map[0]);n++)if(!strcmp(p->pin,map[n].pin))rail=(int)map[n].rail;
         if(rail<0)continue;
         uint32_t wake=0,sleep=0;
-        if((p->wake_valid&&adjusted(p->wake,30,&wake))||
-           (p->sleep_valid&&adjusted(p->sleep,10,&sleep)))return EldenWcnPowerArgument;
+        if((p->wake_valid&&elden_wcn_cpr_adjust(p->wake,30,&wake))||
+           (p->sleep_valid&&elden_wcn_cpr_adjust(p->sleep,10,&sleep)))return EldenWcnPowerArgument;
         if(p->wake_valid){votes[rail].wake_valid=true;if(wake>votes[rail].wake)votes[rail].wake=wake;}
         if(p->sleep_valid){votes[rail].sleep_valid=true;if(sleep>votes[rail].sleep)votes[rail].sleep=sleep;}
         mapped++;
     }
     if(valid&&!mapped)return EldenWcnPowerIdentity;
-    memcpy(out,votes,sizeof(votes));return 0;
+    memcpy(out,votes,sizeof(votes));
+    if(details)*details=(EldenWcnCprCounts){valid,mapped,valid-mapped};
+    return 0;
+}
+int elden_wcn_cpr_plan(const EldenWcnPmuParam *params,size_t count,EldenWcnPdcVote out[4]){
+    return elden_wcn_cpr_plan_details(params,count,out,NULL);
 }
 static int message(char out[64],unsigned rail,bool wake,uint32_t value){
-    static const char *const prefixes[]={
-        "{class: wlan_pdc, ss: rf, res: s5f.v, ",
-        "{class: wlan_pdc, ss: bb, res: s4d.v, ",
-        "{class: wlan_pdc, ss: rf, res: s3g.v, ",
-        "{class: wlan_pdc, ss: rf, res: s7i.v, "
-    };
+    if(rail>=4)return EldenWcnPowerArgument;
+    const char *parts[]={"{class: wlan_pdc, ss: ",cpr_pdcs[rail],", res: ",cpr_rails[rail],".v, ",wake?"upval: ":"dwnval: "};
     char digits[10];unsigned count=0;do{digits[count++]=(char)('0'+value%10);value/=10;}while(value&&count<10);
-    const char *prefix=prefixes[rail],*direction=wake?"upval: ":"dwnval: ";size_t n=0;
-    while(*prefix)out[n++]=*prefix++;
-    while(*direction)out[n++]=*direction++;
+    size_t n=0;
+    for(unsigned i=0;i<sizeof(parts)/sizeof(parts[0]);++i){
+        const char *part=parts[i];while(*part)out[n++]=*part++;
+    }
     if(n+count+2>=64)return EldenWcnPowerArgument;
     while(count)out[n++]=digits[--count];
     out[n++]='}';out[n]=0;return 0;

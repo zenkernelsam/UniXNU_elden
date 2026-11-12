@@ -55,8 +55,10 @@ Pagani的`peach.py`明确标有未验证推测，README最近实机仍停在S7I�
 来源与字段对照见[Peach记录](evidence/wifi-peach-profile-20261112.json)。
 
 进一步追到原Y700补丁：QMI收到目标能力后，先应用固件OL-CPR电压请求，成功才可继续TME-Lite。
-新[OL-CPR计算组件](../drivers/EldenWifi/OLCPR.md)已按原算法/DTS映射实现，20,128组数值对照及边界测试、
-ARM64无导入/无SIMD对象编译通过。它只产生计划，没有电源发送器、没有调压，也尚未接入QMI。
+新[OL-CPR适配](../drivers/EldenWifi/OLCPR.md)已统一复用原WcnPower算法/DTS映射，去除上一轮重复计算。
+20,128组Linux数值对照、4,096组新旧兼容及原12电源场景通过，两个ARM64对象绑定到同一提供者。
+原C层发送器已有，仍受BT Ready/epoch/失败隔离限制；Wi-Fi的QMI→原生WLAN owner路由尚未接通。
+适配器只产生计划，本轮没有调压。
 不能把缺少的回调改成成功来绕过这个前置条件。
 
 官方栈锁定Linux7.0.14，而上述Y700源码是7.2.8；独立Peach条目还涉及9个ath12k文件和电源序列接口。

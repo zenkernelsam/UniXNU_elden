@@ -1,5 +1,9 @@
 # v99 Bluetooth runtime candidate — signed, untested
 
+Reproduce this exact source profile at commit `7f0704c657ca3e671007cc00034e096b54892042`.
+Later shared-planner changes deliberately fail its old owned-source hashes;
+do not update those hashes or silently replace this unflashed candidate.
+
 The runtime, entry transformation and96MiB signed boot candidate now build
 offline. This profile selects `elden-wcn-power=4`: it attempts real WCN power,
 UART and HCI initialization after its gates. It is **not read-only** and has

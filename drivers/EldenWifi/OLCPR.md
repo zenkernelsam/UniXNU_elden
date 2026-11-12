@@ -7,8 +7,11 @@ firmware-directed PDC configuration before TME-Lite; TME-Lite failure and later
 QDSS configuration failure stop firmware bring-up. There is no valid port that
 replaces those results with an unconditional success.
 
-`OlCprPlan.c` implements only the computation used by that power-sequencing
-driver, with the ten PMU aliases and four PDC targets from the fixed TB322FC DTS.
+The existing `EldenBluetooth/WcnPower.c` already contained this planner and its
+BT-owner-scoped sender. The initial Wi-Fi implementation duplicated the math;
+it is now a thin adapter to that shared provider. `OlCprPlan.c` accepts decoded
+PMU fields, not serialized QMI TLV bytes. The shared core owns the ten aliases,
+rounding, maxima and four PDC target names from the fixed TB322FC DTS.
 Source lineage is `drivers/power/sequencing/pwrseq-qcom-wcn.c`, GPL-2.0-only,
 Copyright (C)2024 Linaro Ltd.; the board mapping is from
 `6f97250ead155fc3b980856323e99a4623dae73d`.
@@ -23,29 +26,38 @@ Copyright (C)2024 Linaro Ltd.; the board mapping is from
 - Complete validation precedes output publication; errors leave the caller's
   plan unchanged. A successful empty plan means no voltage was requested.
 
-This component does not send QMP/RPMh, touch registers, set a voltage or claim an
-applied vote. Runtime integration still needs the actual QMI reply, shared WCN
-ownership, board limit/current-state checks, command acknowledgment and failure
-handling. The existing Bluetooth/charging candidates do not include this code.
+The Wi-Fi adapter does not send QMP/RPMh, touch registers, set a voltage or claim
+an applied vote. The existing WcnPower sender retains its Ready/epoch/quarantine
+checks. Its native Context is still BT-worker owned: there is no Wi-Fi QMI
+gateway, and BT acquire must not substitute for WLAN power-on. Runtime work
+still needs the actual QMI reply, WLAN ownership and acknowledged execution.
 
 Host ASan/UBSan checks compare20,128 inputs against the exact extracted Linux
 arithmetic body and cover all aliases, maximum aggregation, invalid/unknown
-names and failure preservation. The ARM64/iOS17 object is scalar with no imports.
-See [evidence](../../docs/evidence/wifi-olcpr-20261112.json). Neither compilation
-nor these synthetic inputs qualify a real firmware voltage request.
+names and failure preservation. After consolidation,4096 legacy/new comparisons,
+all eight command-failure positions and the original12 power scenarios/321
+assertions also pass. Old public APIs, error codes, command bytes and quarantine
+behavior are preserved. Both ARM64/iOS17 objects are scalar; the adapter imports
+four shared helpers, with bzero/strcmp left for the existing kernel.
+See [current evidence](../../docs/evidence/wcn-cpr-shared-20261112.json); the
+[initial standalone evidence](../../docs/evidence/wifi-olcpr-20261112.json) remains historical.
+Neither compilation nor synthetic inputs qualify a real firmware voltage request.
 
 ```sh
 python3 tools/test_olcpr_plan.py --linux-commit-json /path/to/pinned-commit.json \
   --board-dts /path/to/verified/sm8750-lenovo-elden.dts --output /path/to/new-host
-xcrun --sdk iphoneos clang -target arm64-apple-ios17.0 -O2 -Wall -Wextra -Werror \
-  -ffreestanding -fno-builtin -mgeneral-regs-only \
-  -c drivers/EldenWifi/OlCprPlan.c -o /path/to/new/OlCprPlan.o
+python3 tools/test_wcn_cpr_compatibility.py --output /path/to/new-compatibility
+python3 tools/build_shared_wcn_cpr.py --llvm /path/to/llvm/bin --output /path/to/new-native
 ```
 
 For Windows host tests add `--wsl-distro Ubuntu-22.04 --compiler gcc` and use
 Windows TEMP for the new output. The test validates the Linux arithmetic hash
 and exact DTS hash before compiling the oracle. Source evidence is in the paired
 workbench `lab/records/wifi-peach-backport-20261112`; results are in
-`lab/records/wifi-olcpr-20261112`. Mac object/results are project-local
-`lab/olcpr-20261112`. QMI/backport integration, executor, PCIe/MHI and networking
-are still pending; no new boot image was built or device accessed.
+`lab/records/wifi-olcpr-20261112`. New shared results are in
+`lab/records/wcn-cpr-shared-20261112`; Mac final objects are project-local
+`lab/wcn-cpr-shared-20261112/native2`. Link `libEldenWcnPower.a` once plus
+`OlCprPlan.o`; omit a second WcnPower.o from Bluetooth/Wi-Fi archives. The frozen
+v99 image retains its original implementation and its recorded source commit.
+QMI/backport integration, native WLAN ownership, PCIe/MHI and networking remain
+pending; no new kernel/image was linked or device accessed.

@@ -54,6 +54,13 @@ typedef struct {
     bool wake_valid,sleep_valid;
 } EldenWcnPmuParam;
 typedef struct {uint32_t wake,sleep;bool wake_valid,sleep_valid;} EldenWcnPdcVote;
+typedef struct {uint32_t requested,mapped,unknown;} EldenWcnCprCounts;
+/* Shared computation provider; legacy error codes and vote layout remain. */
+int elden_wcn_cpr_adjust(uint32_t value,unsigned ir_drop,uint32_t *out);
+int elden_wcn_cpr_plan_details(const EldenWcnPmuParam *,size_t,EldenWcnPdcVote out[4],EldenWcnCprCounts *);
+/* Four PDC vote slots (s5f,s4d,s3g,s7i), not the six EldenWcnRail indices. */
+const char *elden_wcn_cpr_rail_name(unsigned);
+const char *elden_wcn_cpr_pdc_name(unsigned);
 /* Pure whole-input OL-CPR preflight, mapped max aggregation, no sends on error. */
 int elden_wcn_cpr_plan(const EldenWcnPmuParam *,size_t,EldenWcnPdcVote out[4]);
 int elden_wcn_power_cpr(EldenWcnPower *,uint64_t,const EldenWcnPmuParam *,size_t);
