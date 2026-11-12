@@ -1,0 +1,63 @@
+{
+  "component_revision": "5f7f5a8a9f02f7ab45ed10a2f226e348c519a838",
+  "release_sha256": "08e23937e16d0155e55cab2b51f51fbe10d80a1aa91c4e15442645059b737ef6",
+  "target": {
+    "architecture": "arm64",
+    "minimum_os": "17.0",
+    "sha256": "f54eb63475c7f3b3cb0d1d1ed78728a941fb8c07e363f88cf8c5095a69adecb7"
+  },
+  "cdhash": "b02572b5f0fd9e79790645ad33df708b24530295",
+  "recipe_changes": {
+    "tools/prepare-supplicant.py": {
+      "before": "5f1866c09d5c747983dc55e6b3af9f4fa03ca4326c4acf7a188f1f737d3d7d70",
+      "after": "ed50ffc322865411eda00719679c9961065ebae4b985ee59f9c9f21626f10534"
+    },
+    "tools/build-supplicant.py": {
+      "before": "53c8ada0293dd4aacbf52ba4bc51a518e8fc4018b655129a20edfdf1313cefa1",
+      "after": "58a67f3f146525dce78c79765f6d58b79cb121976c08347a5498bd4a04838da0"
+    }
+  },
+  "unchanged_release_files": 899,
+  "authentication_algorithms_modified": false,
+  "adapter_sha256": {
+    "userspace/driver_sheng.c": "f9d9e52dceefe2889f69d9a4a1e8f69cc0c2cac74d03a2c3349352301ce64e3e",
+    "userspace/l2_packet_sheng.c": "f233302ed2f7288c210607974b4cf5eb2983d17c4b0347c4a6d32e675c292b18",
+    "userspace/linux/types.h": "7613d230b413e267b8b225a17e603bd74bb9675f64508020f41c9b8d0beef95b",
+    "userspace/nw_control_client.c": "9443823ce06bed2155e34c314da7ac95fe90a574dabe136b6f758c98dbe6a7ab",
+    "userspace/nw_control_client.h": "c6625abe9dcd4353b679dfe794a3eeb57836b30b67a1901b90be923465e0e54e",
+    "userspace/nw_darwin_control.h": "4511a5254617ca0898c9dc47827b07a12c8c2332e3f5b77adb2e62a35ae9e084",
+    "userspace/nw_supplicant_frontend.c": "2c188b8640c952daadb4e04dd81a580c1fbe3773a8a4ef3481b97cd7a4772ae2",
+    "userspace/nw_supplicant_frontend.h": "ec1935eddefcfe06a6addf9fdc701d41fb44c1457eaf11ba957b6f8e3c69706c",
+    "userspace/nw_wireless_event.c": "edcfbca111d2dacc136d075a51e2a96930deeeeb36c2ea80e9e4bb9fccdd15bf",
+    "userspace/supplicant.config": "eeeda650b01ad4bd22e8b75a8ab7de37f9dd2b7ae3e17856cfee80c55f0f2e17",
+    "include/nw_control.h": "c895836cd8792a6844227da30c9eb91e598dd2fe8b865e53c69b9740bb68dab1",
+    "src/nw_control_wire.c": "5296e45b05703da453f41972a21db917b894adf6d133ee85fc676047e0a6f792"
+  },
+  "original_registration_changes": {
+    "src/drivers/drivers.mak": {
+      "original_sha256": "a62bc56d6dee9ec8719c8b37854b02ffe5fd30fa8ef7fcf71a2f6958d15373fb",
+      "staged_sha256": "573462d80c5c4c96a63995f4ec03e05ee4933c718a613b681fcb0836f040559a"
+    },
+    "src/drivers/drivers.c": {
+      "original_sha256": "557ed7944f1294f0248b32e87c9d95eadc7485d330c7696617bd4358571abb9a",
+      "staged_sha256": "f6f905a3ef038c0cc67c8d7ed9913b6ac9ef183ff81eac79140cf3c1501fdf06"
+    },
+    "wpa_supplicant/wpa_supplicant.c": {
+      "original_sha256": "38711194c4e60c05244e863cecff6acd13351a871eac46411662ef3291025364",
+      "staged_sha256": "ed3488161583f2798d38fb2fb5b64822bf57b94180a2449a4bf2bfc99cbd29d1"
+    }
+  },
+  "control_endpoint": "org.unixnu.wifi.control",
+  "files": {
+    "unixnu-wpa_supplicant": "f54eb63475c7f3b3cb0d1d1ed78728a941fb8c07e363f88cf8c5095a69adecb7",
+    "entitlements.plist": "cd1358e7c8c3b01da98b5544e3c2ffcdc9d92cf9a3191e45038e8691ef2021ca",
+    "org.unixnu.wifi.supplicant.plist": "9fcc217f1f19b755d485dc1829a860b587ee4110d9e7198f75abacf52aa50c0a",
+    "wpa_supplicant.conf": "c18936105445cf6a6ab1a5b2078a248dcd1874a96d7b2b43bf332a99f1fa7036"
+  },
+  "runtime_installed": false,
+  "trust_cache_updated": false,
+  "launchd_cache_merged": false,
+  "kernel_endpoint_verified": false,
+  "hardware_tested": false,
+  "device_operations": false
+}

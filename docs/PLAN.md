@@ -34,6 +34,8 @@ CPU 同时记录实际上线、调度/IRQ 与负载，UFS 记录真实 I/O 延�
 v96只恢复既有UI发布器，尚未实测；双口输入仲裁仍需原厂证据，不把它当快充修复。
 
 Wi-Fi、蓝牙以 sheng 成功驱动规范为先，具体接线、时钟、复位、寄存器采用本机源码与实测。
+Wi-Fi现状和下一步见[WIFI-STATUS.md](WIFI-STATUS.md)：原认证服务已适配arm64/iOS17并离线签名，
+未安装/联网；本机Linux已有独立Peach配置，不能照搬未实测的整片QCC2072映射。
 蓝牙常驻模式已补离线停止接口与上行背压退出，见[WCN-SHUTDOWN.md](WCN-SHUTDOWN.md)；
 v97已完成整核/恢复钩子的静态资格，见[构建档](../profiles/v97-wcn/README.md)，尚未entry转换/签包。
 随后仍需真实WCN/HCI及daemon验证。现有候选不自动换料。

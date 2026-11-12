@@ -1,0 +1,58 @@
+{
+  "repository": "h0cheung/tb322fc-linux-kernel",
+  "revision": "6f97250ead155fc3b980856323e99a4623dae73d",
+  "sources": {
+    "drivers/net/wireless/ath/ath12k/wifi7/hw.c": "49f3cedc660c0b9f633f346ab0bef409b610255e6fb943b1f614d227d9ef965a",
+    "drivers/net/wireless/ath/ath12k/wifi7/pci.c": "db0a577f79e6a9095441059217e5e0991aa3abdba563725a742ece229b999826",
+    "drivers/net/wireless/ath/ath12k/wifi7/hal.c": "18360772dc5a5f8e5a4314f752eded10beaa232a3f2f5bd5b280c07847159c53"
+  },
+  "profiles": {
+    "qcc2072 hw1.0": {
+      "hw_rev": "ATH12K_HW_QCC2072_HW10",
+      "dir": "\"QCC2072/hw1.0\"",
+      "board_size": "256 * 1024",
+      "cal_offset": "256 * 1024",
+      "m3_loader": "ath12k_m3_fw_loader_driver",
+      "download_aux_ucode": "true",
+      "download_tme_lite": null,
+      "board_api1_only": null,
+      "internal_sleep_clock": "true",
+      "hw_ops": "&qcc2072_ops",
+      "host_ce_config": "ath12k_wifi7_host_ce_config_wcn7850",
+      "target_ce_config": "ath12k_wifi7_target_ce_config_wlan_wcn7850",
+      "mhi_config": "&ath12k_wifi7_mhi_config_wcn7850",
+      "qmi_cnss_feature_bitmap": "BIT(CNSS_QDSS_CFG_MISS_V01) | BIT(CNSS_PCIE_PERST_NO_PULL_V01) | BIT(CNSS_AUX_UC_SUPPORT_V01)"
+    },
+    "peach hw2.0": {
+      "hw_rev": "ATH12K_HW_PEACH_HW20",
+      "dir": "\"PEACH/hw2.0\"",
+      "board_size": "256 * 1024",
+      "cal_offset": "256 * 1024",
+      "m3_loader": "ath12k_m3_fw_loader_driver",
+      "download_aux_ucode": "true",
+      "download_tme_lite": "true",
+      "board_api1_only": "true",
+      "internal_sleep_clock": "false",
+      "hw_ops": "&qcc2072_ops",
+      "host_ce_config": "ath12k_wifi7_host_ce_config_wcn7850",
+      "target_ce_config": "ath12k_wifi7_target_ce_config_wlan_wcn7850",
+      "mhi_config": "&ath12k_wifi7_mhi_config_wcn7850",
+      "qmi_cnss_feature_bitmap": "BIT(CNSS_WLAN_EN_SUPPORT_V01) | BIT(CNSS_AUX_UC_SUPPORT_V01)"
+    }
+  },
+  "different_fields": [
+    "hw_rev",
+    "dir",
+    "download_tme_lite",
+    "board_api1_only",
+    "internal_sleep_clock",
+    "qmi_cnss_feature_bitmap"
+  ],
+  "pci_device": "0x110e",
+  "required_soc_major": 2,
+  "unknown_version_rejected": true,
+  "decision": "Port the dedicated Peach profile and its feature dependencies. QCC2072 datapath sharing does not make the whole QCC2072 hardware profile interchangeable.",
+  "runtime_changed": false,
+  "hardware_tested": false,
+  "device_operations": false
+}

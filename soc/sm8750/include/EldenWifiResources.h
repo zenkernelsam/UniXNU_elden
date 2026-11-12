@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: BSD-2-Clause-Patent */
 #pragma once
 /* Fixed Y700 source/stock GPT; no controller activation is granted here.
- * Full PCIe/SID/MSI board evidence: work research/wifi-elden-20261108/inputs.json.
+ * Full PCIe/SID/MSI board evidence: work lab/records/wifi-elden-20261108/inputs.json.
  */
 #define ELDEN_WIFI_MODEM_LUN 4u
 #define ELDEN_WIFI_MODEM_FIRST 4870ull

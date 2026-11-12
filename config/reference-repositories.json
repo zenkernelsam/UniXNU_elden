@@ -37,6 +37,11 @@
       "observed_head": "83969cd874503e65997ff7639f7dcf3d0a92cd17"
     },
     {
+      "name": "Ath12kWifi",
+      "url": "https://github.com/UniXNU/Ath12kWifi.git",
+      "observed_head": "5f7f5a8a9f02f7ab45ed10a2f226e348c519a838"
+    },
+    {
       "name": "data-a-live",
       "url": "https://github.com/ShueiTsuki/data-a-live",
       "observed_head": "d2c7089b0a2e6da2b1e7e843337b503ec032b2c5"
