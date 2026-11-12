@@ -17,6 +17,7 @@ from verify_v91_assets import verify_loader,verify_packed_seed
 from firmware_contract import verify_firmware
 from fbwc_boot import template as boot_template,qualify as qualify_fbwc
 from battery_boot import template as battery_template,verify as verify_battery_menu
+import bt_runtime_boot
 HASHES={'fd':'e50e1d6e2be51367225d76d4e97b90d51ba7812193d99fd4d4d7dd9fdc2ee534','loader':'ae8e5938b22766b921f43f68e2ea63db028fb57ec1f3791edaf7db10f5825299','data':'483125a27280f17d91de594f951cee4216f4888b764525b74db0f61ed62d34b3'}
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def encode_adt(node):
@@ -34,6 +35,8 @@ def main():
     p.add_argument('--data-report',type=Path,help='Source-built Data seed filesystem/manifest verification')
     p.add_argument('--fbwc-report',type=Path,help='Explicit qualified v93 framebuffer build; adds only the bare fbwc option')
     p.add_argument('--battery-ui',action='store_true',help='Restore qualified battery UI; compact existing numeric-one flags without dropping options')
+    p.add_argument('--wcn-report',type=Path)
+    p.add_argument('--bt-runtime',type=Path)
     a=p.parse_args();out=a.output.resolve()
     def path(v):
         s=str(Path(v).resolve())
@@ -52,11 +55,14 @@ def main():
     stock=check_image(a.stock_boot,'boot_a')
     if stock.sha256!='8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890':raise RuntimeError('Wrong stock contract')
     entry=json.loads(a.entry_report.read_text())
+    if bool(a.wcn_report)!=bool(a.bt_runtime) or (a.wcn_report and (a.fbwc_report or a.battery_ui)):raise ValueError('Select either v99 runtime or the older display/battery options')
+    bt=bt_runtime_boot.qualify(a.wcn_report,a.entry_report,a.bt_runtime) if a.wcn_report else None
     fbwc=qualify_fbwc(a.fbwc_report,a.entry_report) if a.fbwc_report else None
     if sha(a.kernel)!=entry['derivative_sha256'] or entry['stub_bytes']!=104:raise RuntimeError('Kernel entry-transform identity mismatch')
     parse_kernel(a.kernel.read_bytes());out.mkdir(parents=True);assets=out/'files/EFI/UniXNU';payloads=assets/'Payloads';payloads.mkdir(parents=True)
     adt_config=json.loads((PROFILE/'adt.json').read_text());adt=encode_adt(adt_config['tree'])
     if hashlib.sha256(adt).hexdigest()!=adt_config['sha256']:raise RuntimeError('ADT encoding differs from v91')
+    if bt:adt=encode_adt(bt_runtime_boot.adt(adt_config)['tree'])
     tree=adt_walk(adt)
     if tree['window']!=0x180000000 or tree['gpuaddon'] is not None:raise RuntimeError('Unexpected memory/GPU configuration')
     (payloads/'kernel.macho.adt').write_bytes(adt)
@@ -68,9 +74,13 @@ def main():
     if hashlib.sha256(trust).hexdigest()!=tc['base_sha256']:raise RuntimeError('Original trust metadata mismatch')
     trust,_=append_trust(trust,a.library.read_bytes());trust,_=append_trust(trust,a.agent.read_bytes())
     if hashlib.sha256(trust).hexdigest()!=tc['expected_v91_sha256']:raise RuntimeError('Trustcache is not the v91 contract')
+    if bt:
+        trust,_=append_trust(trust,(a.bt_runtime/'BlueTool').read_bytes())
+        if hashlib.sha256(trust).hexdigest()!=bt['trust_sha256']:raise ValueError('Runtime trust cache differs')
     (payloads/'kernel.macho.trustcache').write_bytes(trust)
     for source,dest in [(a.kernel,payloads/'kernel.macho'),(a.data,payloads/'data.packed'),(a.loader,assets/'EldenPayloadLoader.efi')]:shutil.copyfile(source,dest)
     template=boot_template(bool(fbwc))
+    if bt:template=bt_runtime_boot.menu()
     battery_ui=None
     if a.battery_ui:
         before=template;template=battery_template(before);battery_ui=verify_battery_menu(before,template)
@@ -108,5 +118,6 @@ def main():
     result={'kernel_sha256':sha(a.kernel),'image_sha256':checked.sha256,'rollback_index':checked.index,'footer_location':checked.location,'session':session,'fat_files':expected,'bootshim_sha256':hashlib.sha256(shim).hexdigest(),'external_assets':{name:sha(getattr(a,name)) for name in HASHES},'firmware_contract':firmware_contract,'loader_contract':loader_contract,'data_contract':data_contract,'assembled_without_old_boot_carrier':True,'hardware_tested':False,'device_operation':False,'full_asset_source_closure':not data_contract.get('legacy_frozen_seed',False)}
     if fbwc:result['framebuffer_experiment']=fbwc
     if battery_ui:result['battery_ui']=battery_ui
+    if bt:result['bluetooth_runtime']=bt
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:result[k] for k in ('image_sha256','rollback_index','footer_location','session','full_asset_source_closure')},indent=2))
 if __name__=='__main__':main()

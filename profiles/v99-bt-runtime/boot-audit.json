@@ -1,0 +1,35 @@
+{
+  "accepted_static": true,
+  "image_sha256": "d385e428b0753c13a09c2befd479a98a8d5ead287545604139164aec214f8215",
+  "kernel_sha256": "75fe6d69ccc0bc00f264573cd6f60a489db12e228bc3c23b73c18355c1b1c80f",
+  "rollback_index": 1738713600,
+  "footer_location": 0,
+  "parent_boot_chain_location": 3,
+  "fat_mirrors_equal": true,
+  "entry_body_100_bytes_equal_hardware_baseline": true,
+  "entry_branch_target_equal": false,
+  "entry_branch_target_qualified": true,
+  "entry_address": "0xfffffff008538000",
+  "entry_return_target": "0xfffffff0074ce05c",
+  "session": "3d74d3ccaed21f53",
+  "memory_window_bytes": 6442450944,
+  "firmware_contract": {
+    "sha256": "aba76d8a8374e1356e41c0c97b9e4f83691108b8eb7767a5ead28b0d2b2a7b35",
+    "contract_sha256": "c3287ed4949e54529b6ad6cda482b28d1ee749439282ab1574f5ae9f643f84aa",
+    "all_executable_bytes_equal": true,
+    "hardware_tested": false
+  },
+  "hardware_tested": false,
+  "device_operation": false,
+  "full_asset_source_closure": true,
+  "bluetooth_runtime": {
+    "profile": "v99-bt-runtime",
+    "profile_sha256": "864c0f38b0ec7739a2a7cb534cf0b0e841c402089d323180b5f0da8c66169f63",
+    "trust_sha256": "a6758681cd8ce0f364411bf65fc1207514b3470b0c16699e2c1a0d12f22a2c65",
+    "helper_sha256": "464432d5308fa0998f9b25ed77ff0c2b9a7751377dc0cc992679a32dc7cc571e",
+    "entry_return_target": "0xfffffff0074ce05c",
+    "entry_assembly_sha256": "818ed81e39f38ee6f13bdbf4f166e9e7a5d72f4b7a652d52872e2ba85ea53cc1",
+    "mode": 4,
+    "hardware_tested": false
+  }
+}

@@ -100,3 +100,9 @@ prelink 的执行区不变结论不涵盖之后明确列出的 AMFI 单指令转
 使用上述构建/审计工具的 `--profile v98-bt-bootstrap`。服务由 `build_elden_bluetool.py` 构建并签名，
 客户端原件由 `audit_bluetool17_abi.py` 仅读核对。原21H461为arm64/链格式6，不能用27版arm64e布局。
 服务尚未合入Data/trust/launchd或上机；bootstrap成功不代表完整蓝牙能力或深度休眠。
+
+[v99-bt-runtime](../profiles/v99-bt-runtime/README.md)已接入RAM Data只读union和helper信任条目，
+保留原launchd任务/缓存；签名身份限定的F3页面修补选择已有普通流传输，F2不跳过。
+两个原生钩子和两个核心C对象已重编并完成整像核验。布局移动导致启动地址变化，
+须先用 `audit_entry_relocation.py` 证明沿用相同start.s对象和符号关系，再做entry/boot核验。
+该签名候选未上机，会尝试真实WCN上电；旧候选不自动替换。

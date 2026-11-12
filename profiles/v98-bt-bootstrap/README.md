@@ -1,5 +1,8 @@
 # v98 Bluetooth bootstrap preparation — offline, not installed
 
+Reproduce this exact source profile at commit `8ff98eab5f14ed1077d4e1bbebd2ffeebe82c617`.
+The following runtime-stage changes use v99 explicitly; do not relax v98's old source hashes.
+
 This extends v97 with a read-only kernel bootstrap status and an owned BlueTool
 XPC service. It preserves the original21H461 bluetoothd; no F2 return-success
 patch or F3 transport patch was applied. It is not yet a complete Bluetooth runtime.

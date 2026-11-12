@@ -11,6 +11,7 @@ from verify_v91_assets import verify_loader,verify_packed_seed
 from firmware_contract import verify_firmware
 from fbwc_boot import template as boot_template,qualify as qualify_fbwc
 from battery_boot import verify as verify_battery_menu
+import bt_runtime_boot
 def sha(b):return hashlib.sha256(b).hexdigest()
 def main():
     if sys.flags.optimize:raise SystemExit('Run without -O; validation assertions must remain enabled')
@@ -21,7 +22,11 @@ def main():
     p.add_argument('--fbwc-report',type=Path)
     p.add_argument('--entry-report',type=Path)
     p.add_argument('--battery-ui',action='store_true')
+    p.add_argument('--wcn-report',type=Path)
+    p.add_argument('--bt-runtime',type=Path)
     a=p.parse_args();checked=check_image(a.image,'boot_a');stock=check_image(a.stock_boot,'boot_a');check_image(a.parent_vbmeta,'vbmeta')
+    if bool(a.wcn_report)!=bool(a.bt_runtime) or (a.wcn_report and (a.fbwc_report or a.battery_ui)):raise ValueError('Ambiguous runtime audit')
+    bt=bt_runtime_boot.qualify(a.wcn_report,a.entry_report,a.bt_runtime) if a.wcn_report else None
     if stock.sha256!='8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890':raise RuntimeError('Unknown stock contract')
     if metadata(a.image)['props']!=metadata(a.stock_boot)['props']:raise RuntimeError('AVB properties changed')
     b=a.image.read_bytes()
@@ -52,12 +57,19 @@ def main():
         prior,oldcode=stub(old)
         if sha(oldcode[:100])!=contract['body_sha256'] or maker.branch_target(struct.unpack_from('<I',oldcode,100)[0],prior['address']+100)!=old_return:raise RuntimeError('Baseline disagrees with the recorded entry contract')
     new_return=maker.branch_target(struct.unpack_from('<I',code,100)[0],now['address']+100)
-    if new_return!=old_return:raise RuntimeError('Relocated entry branch has a different return target')
+    qualified_return=int(bt['entry_return_target'],16) if bt else old_return
+    if new_return!=qualified_return:raise RuntimeError('Relocated entry branch has a different qualified return target')
     parsed=parse_kernel(kernel);word=struct.unpack_from('<I',kernel,parsed['entry_file_offset'])[0]
     if maker.branch_target(word,parsed['entry'])!=now['address']:raise RuntimeError('Entry branch misses stub')
     if struct.unpack_from('<I',kernel,maker.locate(kernel,0xfffffff004aaecfc)[1])[0]!=0x17ffffd4:raise RuntimeError('AMFI transform differs')
     expected={'Payloads/kernel.macho.adt':'169ea871e483d8ca989f6725c79f28698ebda937eeb9ca4514d85cec0354a9e3','Payloads/kernel.macho.trustcache':'583b2012d14c45f74532bccc0ec6eaf35143ba47b4dfbfabbe7dff5ced7ee67e','Payloads/data.packed':'483125a27280f17d91de594f951cee4216f4888b764525b74db0f61ed62d34b3','EldenPayloadLoader.efi':'ae8e5938b22766b921f43f68e2ea63db028fb57ec1f3791edaf7db10f5825299'}
     rebuilt_seed=False
+    if bt:
+        from build_v91_boot import encode_adt
+        baseline_adt=json.loads((ROOT/'profiles/v91/boot-build/adt.json').read_text())
+        if sha(encode_adt(baseline_adt['tree']))!=baseline_adt['sha256']:raise ValueError('Base ADT changed')
+        expected['Payloads/kernel.macho.adt']=sha(encode_adt(bt_runtime_boot.adt(baseline_adt)['tree']))
+        expected['Payloads/kernel.macho.trustcache']=bt['trust_sha256']
     for name,h in expected.items():
         content=fat.read(prefix+name)
         if name=='EldenPayloadLoader.efi':verify_loader(content)
@@ -72,6 +84,9 @@ def main():
     fbwc=qualify_fbwc(a.fbwc_report,a.entry_report) if a.fbwc_report else None
     if fbwc and json.loads(a.entry_report.read_text())['derivative_sha256']!=sha(kernel):raise RuntimeError('Framebuffer entry report mismatch')
     text=fat.read(prefix+'unixnu.toml').decode();cfg=tomllib.loads(text);template=boot_template(bool(fbwc))
+    if bt:
+        if json.loads(a.entry_report.read_text())['derivative_sha256']!=sha(kernel):raise ValueError('v99 entry mismatch')
+        template=bt_runtime_boot.menu()
     import re
     sessions=re.findall(r'elden-debug-session=([0-9a-f]{16})',text)
     battery_ui=None
@@ -84,9 +99,10 @@ def main():
     identity=kernel+template.encode()+fat.read(prefix+'Payloads/kernel.macho.adt')+hashlib.sha256(fat.read(prefix+'Payloads/kernel.macho.trustcache')).digest()
     for content in (raw[128:0x400080],fat.read(prefix+'EldenPayloadLoader.efi'),fat.read(prefix+'Payloads/data.packed')):identity+=hashlib.sha256(content).digest()
     if sessions[0]!=hashlib.sha256(identity).hexdigest()[:16]:raise RuntimeError('Debug session is not bound to all payload inputs')
-    report={'accepted_static':True,'image_sha256':checked.sha256,'kernel_sha256':sha(kernel),'rollback_index':checked.index,'footer_location':checked.location,'parent_boot_chain_location':3,'fat_mirrors_equal':True,'entry_body_100_bytes_equal_hardware_baseline':True,'entry_branch_target_equal':True,'entry_address':hex(now['address']),'entry_return_target':hex(new_return),'session':sessions[0],'memory_window_bytes':tree['window'],'firmware_contract':firmware_contract,'hardware_tested':False,'device_operation':False,'full_asset_source_closure':rebuilt_seed}
+    report={'accepted_static':True,'image_sha256':checked.sha256,'kernel_sha256':sha(kernel),'rollback_index':checked.index,'footer_location':checked.location,'parent_boot_chain_location':3,'fat_mirrors_equal':True,'entry_body_100_bytes_equal_hardware_baseline':True,'entry_branch_target_equal':new_return==old_return,'entry_branch_target_qualified':True,'entry_address':hex(now['address']),'entry_return_target':hex(new_return),'session':sessions[0],'memory_window_bytes':tree['window'],'firmware_contract':firmware_contract,'hardware_tested':False,'device_operation':False,'full_asset_source_closure':rebuilt_seed}
     if fbwc:report['framebuffer_experiment']=fbwc
     if battery_ui:report['battery_ui']=battery_ui
+    if bt:report['bluetooth_runtime']=bt
     if a.output.exists():raise RuntimeError('Audit output must be new')
     a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
 if __name__=='__main__':main()

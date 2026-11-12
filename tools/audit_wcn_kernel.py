@@ -7,7 +7,8 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--profile',choices=('v97-wcn','v98-bt-bootstrap'),default='v97-wcn')
+    p.add_argument('--profile',choices=('v97-wcn','v98-bt-bootstrap','v99-bt-runtime'),default='v97-wcn')
+    p.add_argument('--runtime',type=Path)
     for n in ('build','firmware','llvm','output'):p.add_argument('--'+n,type=Path,required=True)
     a=p.parse_args();profile=ROOT/'profiles'/a.profile/'plan.json';plan=json.loads(profile.read_text())
     result=json.loads((a.build/'result.json').read_text());kernel=a.build/'kernel.macho';native=a.build/'native.macho'
@@ -23,7 +24,7 @@ def main():
               '_elden_bt_host_publish','_elden_bt_host_run','_sm8750_aoss_qmp_owner','_sm8750_gcc_vote_owner']
     for name in required:
         if len(symbols.get(name,[]))!=1:raise ValueError('Missing or duplicated provider: '+name)
-    if a.profile=='v98-bt-bootstrap':
+    if a.profile in ('v98-bt-bootstrap','v99-bt-runtime'):
         for name in ('_elden_bt_bootstrap_publish','_sysctl__kern_elden_bt_bootstrap','_elden_bt_host_state'):
             if len(symbols.get(name,[]))!=1:raise ValueError('Bootstrap status provider missing')
         relocs=subprocess.check_output([str(a.llvm/'llvm-objdump'),'--reloc',str(a.build/'objects/BootstrapStatus.o')],text=True)
@@ -40,7 +41,10 @@ def main():
                 flags=struct.unpack_from('<I',data,off+64)[0]
                 if flags&0x80000400:code.append((va,size,fileoff))
         at+=length
-    call_names=required[:3]+(['_elden_bt_bootstrap_publish','_elden_bt_host_state'] if a.profile=='v98-bt-bootstrap' else [])
+    call_names=required[:3]+(['_elden_bt_bootstrap_publish','_elden_bt_host_state'] if a.profile!='v97-wcn' else [])
+    if a.profile=='v99-bt-runtime':
+        if len(symbols.get('_elden_bt_runtime_ready',[]))!=1:raise ValueError('Runtime readiness provider missing')
+        call_names+=['_elden_bt_runtime_ready']
     targets={symbols[name][0][0]:name for name in call_names}
     branches={name:[] for name in call_names}
     for va,size,fileoff in code:
@@ -85,7 +89,13 @@ def main():
             'firmware':firmware,'original_apple_executables_hashed':30,
             'generated_source_hashes':{n:sha(a.build/'source'/n) for n in ('BtBridge.c','BtBridge.h','Sm8750Rpmh.c','EldenWcnFirmware.c','EldenWcnFirmware.h')},
             'boot_options_audited':False,'hardware_tested':False,'boot_packaged':False,'device_operations':False}
-    if a.profile=='v98-bt-bootstrap':report['bootstrap_status']={'oid':'kern.elden_bt_bootstrap','registration':'sysctl_register_oid_early','host_availability_gate_bound':True,'abi_bytes':32}
+    if a.profile!='v97-wcn':report['bootstrap_status']={'oid':'kern.elden_bt_bootstrap','registration':'sysctl_register_oid_early','host_availability_gate_bound':True,'abi_bytes':32}
+    if a.profile=='v99-bt-runtime':
+        if not a.runtime:raise ValueError('Runtime audit input required')
+        helper=(a.runtime/'BlueTool').read_bytes()
+        if hashlib.sha256(helper).hexdigest()!=plan['runtime_helper_sha256'] or image.count(helper)!=1:raise ValueError('Helper payload identity/count differs')
+        report['runtime_helper_complete_copies']=1
+        report['core_delta_objects']={n:sha(a.build/'objects'/(n+'.o')) for n in ('kern_exec','ubc_subr')}
     if a.output.exists():raise ValueError('Audit output must be new')
     a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report,indent=2))

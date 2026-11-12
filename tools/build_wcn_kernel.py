@@ -19,7 +19,8 @@ def exports(p):return {n for n,v in global_symbols(p).items() if v[0]&0x0e!=0}
 def main():
     global PROFILE
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--profile',choices=('v97-wcn','v98-bt-bootstrap'),default='v97-wcn')
+    p.add_argument('--profile',choices=('v97-wcn','v98-bt-bootstrap','v99-bt-runtime'),default='v97-wcn')
+    p.add_argument('--runtime',type=Path,help='Verified BlueTool-only runtime input for v99')
     for n in ('v94-build','dependency','firmware','xnu-source','prelink-repository','original-kernelcache','llvm','output'):
         p.add_argument('--'+n,type=Path,required=True)
     a=p.parse_args();PROFILE=ROOT/'profiles'/a.profile;plan=read(PROFILE/'plan.json');base=a.v94_build.resolve();out=a.output.resolve()
@@ -38,6 +39,14 @@ def main():
         original=ROOT/item['path']
         if sha(original)!=item['sha256']:raise ValueError('Owned source changed: '+name)
         shutil.copyfile(original,source/name);records[name]=item['sha256']
+    if a.profile=='v99-bt-runtime':
+        if not a.runtime:raise ValueError('v99 requires its runtime input')
+        runtime=read(a.runtime/'report.json')
+        if runtime['helper_sha256']!=plan['runtime_helper_sha256'] or sha(a.runtime/'EldenBtRuntimePayload.h')!=plan['runtime_header_sha256'] or sha(a.runtime/'runtime.trustcache')!=plan['runtime_trust_sha256']:
+            raise ValueError('Runtime payload identity differs')
+        shutil.copyfile(a.runtime/'EldenBtRuntimePayload.h',source/'EldenBtRuntimePayload.h')
+        shutil.copyfile(source/'Runtime.inc',source/'EldenBtRuntime.inc')
+        shutil.copyfile(source/'TextGuard.h',source/'EldenBtTextGuard.h')
     for name,item in plan['dependency']['files'].items():
         data=subprocess.check_output(['git','-C',str(a.dependency),'show',plan['dependency']['revision']+':'+item['path']])
         if hashlib.sha256(data).hexdigest()!=item['sha256']:raise ValueError('Dependency changed: '+name)
@@ -93,13 +102,20 @@ def main():
     with ThreadPoolExecutor(max_workers=4) as pool:
         for name,item in pool.map(compile_c,plan['c_units']):audit[name]=item
     extra=out/'extra-headers';extra.mkdir();added_headers={}
-    def compile_cpp(name,prior,cap,build,filename=None,overrides=None,defines=()):
+    def compile_cpp(name,prior,cap,build,filename=None,overrides=None,defines=(),source_override=None,scalar=False):
         if sha(Path(prior['output']))!=prior['sha256']:raise ValueError('Parent object changed')
         command=list(prior['command']);overlay=read(Path(command[command.index('-ivfsoverlay')+1]))
         if overlay.get('fallthrough') is not False:raise ValueError('Expected closed compiler input overlay')
         if filename:
             command=[str(source/filename) if x==prior['source'] else x for x in command]
             if '-main-file-name' in command:command[command.index('-main-file-name')+1]=filename
+        if source_override:
+            selected=[x for x in overlay['roots'] if x['name']==prior['source']]
+            if len(selected)!=1:raise ValueError('Core source overlay is ambiguous')
+            old_file=selected[0]['external-contents']
+            if sha(Path(old_file))!=cap['files'][prior['source']]['sha256']:raise ValueError('Core parent changed')
+            for entry in overlay['roots']:
+                if entry['external-contents']==old_file:entry['external-contents']=str(source_override)
         for key,path in (overrides or {}).items():
             matched=0
             for entry in overlay['roots']:
@@ -112,6 +128,7 @@ def main():
         vfs=out/(name+'-overlay.json');write(vfs,overlay);command[command.index('-ivfsoverlay')+1]=str(vfs)
         target=obj/(name+'.o');command[command.index('-o')+1]=str(target)
         command[2:2]=['-I',str(source),'-I',str(extra)]+sum((['-D',v+'=1'] for v in defines),[])
+        if scalar:command+=['-target-feature','-neon','-target-feature','-fp-armv8']
         job=next(j for j in cap['jobs'] if j['file']==prior['source']);old=bp['virtual_root']
         rel=Path(job['directory']).relative_to(old).as_posix()
         if rel.startswith('research/'):rel='records/'+rel[9:]
@@ -134,7 +151,21 @@ def main():
     prior=next(v for v in nr.values() if v['source'].endswith('/CpuPerfSurvey.cpp'))
     for filename in plan['cpp_units']:
         name=Path(filename).stem
-        audit[name]=compile_cpp(name,prior,nc,Path(inputs['native'])/'build',filename,defines=('ELDEN_BT_NATIVE_BUILD','ELDEN_BLUETOOTH_HCI_BUILD'))
+        defines=('ELDEN_BT_NATIVE_BUILD','ELDEN_BLUETOOTH_HCI_BUILD')+(('ELDEN_BT_RUNTIME_BUILD',) if a.profile=='v99-bt-runtime' else ())
+        audit[name]=compile_cpp(name,prior,nc,Path(inputs['native'])/'build',filename,defines=defines)
+    core_replacements={}
+    if a.profile=='v99-bt-runtime':
+        from SourcePatch import patch
+        for filename in ('kern_exec.c','ubc_subr.c'):
+            selected=[(i,j) for i,j in enumerate(cc['jobs']) if j['file'].endswith('/'+filename)]
+            if len(selected)!=1:raise ValueError('Core job is ambiguous')
+            index,job=selected[0];body=Path(cc['files'][job['file']]['path']).read_bytes()
+            derived=source/filename;derived.write_bytes(patch(filename,body))
+            name=Path(filename).stem
+            audit[name]=compile_cpp(name,cr[str(index)],cc,Path(inputs['core'])/'build',source_override=derived,scalar=True)
+            expected=exports(Path(cr[str(index)]['output']))|({'_elden_bt_runtime_ready'} if filename=='kern_exec.c' else set())
+            if exports(obj/(name+'.o'))!=expected:raise ValueError('Core exports changed unexpectedly')
+            core_replacements[index]=obj/(name+'.o')
     parent=read(base/'native/build/results.json');pcap=read(base/'native/capture.json')
     audit['ShengUfs']=compile_cpp('ShengUfs',parent['0'],pcap,base/'native/build',overrides={'EldenSdamRecovery.inc':PROFILE/'EldenSdamRecovery.inc'})
     if sha(ROOT/plan['display_glue_path'])!=plan['display_glue_sha256']:raise ValueError('Display glue changed')
@@ -165,11 +196,11 @@ def main():
                 archives[name]=file
     video=read(base/'core/build/results.json')['0'];filelist=out/'link.filelist'
     if sha(Path(video['output']))!=video['sha256']:raise ValueError('Video object changed')
-    filelist.write_text(''.join(str(Path(video['output']) if i==237 else Path(cr[str(i)]['output']))+'\n' for i in ip['filelist_jobs']))
+    filelist.write_text(''.join(str(core_replacements.get(i,Path(video['output']) if i==237 else Path(cr[str(i)]['output'])))+'\n' for i in ip['filelist_jobs']))
     target=out/'native.macho'
     def expand(v):
         v=v.replace('@CLANGXX@',clang).replace('@FILELIST@',str(filelist)).replace('@OUTPUT@',str(target)).replace('@RUNTIME@',str(image/'runtime'))
-        v=re.sub(r'@OBJECT:([0-9]+)@',lambda m:str(Path(video['output']) if int(m[1])==237 else Path(cr[m[1]]['output'])),v)
+        v=re.sub(r'@OBJECT:([0-9]+)@',lambda m:str(core_replacements.get(int(m[1]),Path(video['output']) if int(m[1])==237 else Path(cr[m[1]]['output']))),v)
         v=re.sub(r'@ARCHIVE:([^@]+)@',lambda m:str(archives[m[1]]),v)
         v=re.sub(r'@LINK_INPUT:([^@]+)@',lambda m:str(image/m[1]),v)
         if '@' in v:raise ValueError('Unresolved link input')
@@ -180,10 +211,11 @@ def main():
     with (logs/'link.log').open('x') as log:subprocess.run(command,cwd=out,env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
     expected=exports(base/'native.macho')
     for path in map(Path,btmembers):expected|=exports(path)
-    if a.profile=='v98-bt-bootstrap':
+    if a.profile in ('v98-bt-bootstrap','v99-bt-runtime'):
         oid='_sysctl__kern_elden_bt_bootstrap'
         if not global_symbols(obj/'BootstrapStatus.o')[oid][0]&0x10:raise ValueError('Expected private sysctl OID')
         expected.remove(oid) # ld localizes this standard private-external OID.
+    if a.profile=='v99-bt-runtime':expected.add('_elden_bt_runtime_ready')
     if exports(target)!=expected:raise ValueError('Linked exports differ from exact WCN addition')
     pre=ip['prelink'];kit=out/'prelink-tool';kit.mkdir()
     raw=subprocess.check_output(['git','-C',str(a.prelink_repository),'archive',pre['commit']])
@@ -196,6 +228,7 @@ def main():
     result={'profile':a.profile,'profile_sha256':sha(PROFILE/'plan.json'),'native_sha256':sha(target),'kernel_sha256':sha(kernel),
             'new_objects':len(btmembers),'recompiled_existing_objects':2,'original_apple_executables_hashed':30,'new_object_fp_simd':False,
             'radio_enabled':False,'boot_packaged':False,'hardware_tested':False,'device_operations':False,'sources':records}
+    if core_replacements:result['recompiled_core_objects']=len(core_replacements);result['runtime_input']=runtime
     write(out/'result.json',result);print(json.dumps(result,indent=2))
 
 if __name__=='__main__':main()

@@ -1,5 +1,11 @@
 # Elden Bluetooth firmware adapter
 
+[v99 runtime candidate](../../profiles/v99-bt-runtime/README.md) now packages
+the helper, original-job preservation and exact-CDHash stream fixup into a
+signed offline boot. Full image/entry-relocation checks pass. It selects real
+WCN mode4 and is not a read-only probe; no device run has occurred. Native
+initialization, pairing, active sleep and original-job lifecycle remain pending.
+
 [v98 bootstrap preparation](../../profiles/v98-bt-bootstrap/README.md) now adds
 the read-only, hardware-derived status and signed arm64/iOS17 BlueTool service.
 The exact original21H461 message ABI and optional address format are verified;

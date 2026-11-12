@@ -31,6 +31,9 @@ extern "C" {
 void elden_usb_log_putc(char);
 int elden_recovery_armed(void);
 extern volatile int native_owner_data_status,elden_init_exec_accepted;
+#if defined(ELDEN_BT_RUNTIME_BUILD) && ELDEN_BT_RUNTIME_BUILD
+int elden_bt_runtime_ready(void);
+#endif
 __attribute__((weak)) volatile uint32_t sm8750_aoss_qmp_owner;
 }
 namespace {
@@ -242,6 +245,9 @@ static void worker(void *arg,wait_result_t){
     if(!elden_wcn_run_enter(&run_control))goto done;
     for(unsigned i=0;i<12000&&!elden_wcn_stop_requested()&&(!elden_recovery_armed()||native_owner_data_status||!elden_init_exec_accepted);i++)IOSleep(10);
     if(elden_wcn_stop_requested()||!elden_recovery_armed()||native_owner_data_status||!elden_init_exec_accepted)goto done;
+#if defined(ELDEN_BT_RUNTIME_BUILD) && ELDEN_BT_RUNTIME_BUILD
+    if(mode==4&&!elden_bt_runtime_ready()){log("\nELDEN_WCN refused: Bluetooth runtime not prepared\n");goto done;}
+#endif
     {
         Context *c=new Context;
         if(!c||!prepare_firmware(c,mode)){if(c)delete c;log("\nELDEN_WCN refused firmware/address preflight\n");goto done;}
