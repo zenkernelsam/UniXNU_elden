@@ -1,0 +1,47 @@
+{
+  "upstream_revision": "114061452959a547aaa08f9ca5aa54033394ca2f",
+  "normal_trace_equal": true,
+  "normal_trace": "551842de3d172b8c reports=5",
+  "original_failures_reproduced": [
+    "lost lift after allocation failure",
+    "unconsumed down overwritten by concurrent publisher"
+  ],
+  "verified_error_cases": [
+    "transient allocation",
+    "exhausted allocation attempts",
+    "handleReport failure",
+    "event driver unavailable",
+    "missing sink"
+  ],
+  "objects": {
+    "NativeHidInput.cpp": {
+      "parent_job_index": 593,
+      "source_sha256": "a09dd7056f4855b47bdb6fdeebdd95d995b8ca5e26617823b707a8b5f63d0e3c",
+      "object_sha256": "a04019f90bd917dff03662b6c44ee56651e129868bb8610e78f478fdc3d01a76",
+      "scalar": true,
+      "exports_checked": true,
+      "objcopy": [
+        "--remove-section=__DATA,__mod_init_func",
+        "--globalize-symbol=__GLOBAL__sub_I_NativeHidInput.cpp"
+      ]
+    },
+    "EldenHidGlue.cpp": {
+      "parent_job_index": 595,
+      "source_sha256": "86ad1a7e842308a7990b5228ae2f8760ec697c6dd5f5251edfdcd47d37c1784f",
+      "object_sha256": "8fd3687ddbf6738f86bb0d9cc821d5a5aa429c34e64d8a3ef33cf5d5cb4320b2",
+      "scalar": true,
+      "exports_checked": true,
+      "objcopy": []
+    }
+  },
+  "versioned_callback_pair": true,
+  "callback": "elden_touch_set_sink_v2",
+  "maximum_attempts": 4,
+  "maximum_explicit_sleep_ms": 24,
+  "native_record_sha256": "378e09cf09c754f766fc6fa0988ab2389e937917d02bef3713d098dbcf978587",
+  "host_record_sha256": "0931accb31dab8868f70a25cbc52052b4a106d49789d43cc8efe3377e41c8a4d",
+  "kernel_linked": false,
+  "boot_packaged": false,
+  "hardware_tested": false,
+  "device_operations": false
+}
