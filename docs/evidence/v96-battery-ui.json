@@ -1,0 +1,108 @@
+{
+  "version": "v96",
+  "purpose": "Restore the existing qualified battery UI; no charging-control change",
+  "image_sha256": "1a9e76212c77fe2d6eb4f8e402804f313048774c3998631267612db2563372da",
+  "session": "30a09b6552dc35e4",
+  "kernel_sha256": "3fe39a54f2ff31683511dce6871a05853b6e6ad8aa487c290be497501bf8be60",
+  "same_kernel_as": "v94-fbwc-observation",
+  "same_external_assets_as_v94": true,
+  "changed_fat_files": [
+    "EFI/UniXNU/unixnu.toml"
+  ],
+  "boot_args_bytes": 1020,
+  "original_numeric_one_options_compacted": 34,
+  "battery_options": {
+    "elden-battery": "1",
+    "elden-battery-profile": "1",
+    "elden-battery-current": "-1"
+  },
+  "actual_parser_sha256": "814d2f779300bfbf7ef13c8c830ae0f98ada271586518b808d43a019a7e7db3a",
+  "actual_parser_checks": 420,
+  "actual_parser_result_sha256": "112fe60e2fd401ea20e1b2dbbc8a3110c0328e2bf3a2ad642173cc6944341c60",
+  "independent_audit_sha256": "c89e3c4d81e3c32eebaf5ac4408c8fecfdfe019339f89faabd52b6c2ee8d4c34",
+  "rollback_index": 1738713600,
+  "footer_location": 0,
+  "parent_boot_chain_location": 3,
+  "hardware_tested": false,
+  "device_operations": false,
+  "fixes_dual_port_charging": false,
+  "v94_power_observation": {
+    "raw_sha256": "b97e748763f54fb274225f7500b953601737264fd90cbb1b08ed5bd81b810f0f",
+    "capture_dropped": 40,
+    "ui_disabled": true,
+    "last_ten_cycles": [
+      [
+        57,
+        4412000,
+        406000,
+        2570
+      ],
+      [
+        58,
+        4412000,
+        402000,
+        2570
+      ],
+      [
+        59,
+        4412000,
+        401000,
+        2570
+      ],
+      [
+        60,
+        4412000,
+        413000,
+        2570
+      ],
+      [
+        61,
+        4412000,
+        405000,
+        2570
+      ],
+      [
+        62,
+        4412000,
+        399000,
+        2570
+      ],
+      [
+        63,
+        4412000,
+        398000,
+        2570
+      ],
+      [
+        64,
+        4413000,
+        398000,
+        2570
+      ],
+      [
+        65,
+        4412000,
+        397000,
+        2570
+      ],
+      [
+        66,
+        4412000,
+        397000,
+        2570
+      ]
+    ],
+    "fields": [
+      "cycle",
+      "voltage_uV",
+      "aggregate_current_uA",
+      "temperature_centi_C"
+    ],
+    "median_raw_current_uA": 400000.0,
+    "positive_raw_means": "net discharge",
+    "limits": [
+      "Historical capture, not present battery state",
+      "No same-workload power comparison or physical per-port inference"
+    ]
+  }
+}

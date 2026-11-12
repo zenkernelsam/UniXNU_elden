@@ -10,6 +10,7 @@ import make_entry_probe_kernel as maker
 from verify_v91_assets import verify_loader,verify_packed_seed
 from firmware_contract import verify_firmware
 from fbwc_boot import template as boot_template,qualify as qualify_fbwc
+from battery_boot import verify as verify_battery_menu
 def sha(b):return hashlib.sha256(b).hexdigest()
 def main():
     if sys.flags.optimize:raise SystemExit('Run without -O; validation assertions must remain enabled')
@@ -19,6 +20,7 @@ def main():
     p.add_argument('--data-report',type=Path)
     p.add_argument('--fbwc-report',type=Path)
     p.add_argument('--entry-report',type=Path)
+    p.add_argument('--battery-ui',action='store_true')
     a=p.parse_args();checked=check_image(a.image,'boot_a');stock=check_image(a.stock_boot,'boot_a');check_image(a.parent_vbmeta,'vbmeta')
     if stock.sha256!='8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890':raise RuntimeError('Unknown stock contract')
     if metadata(a.image)['props']!=metadata(a.stock_boot)['props']:raise RuntimeError('AVB properties changed')
@@ -72,12 +74,19 @@ def main():
     text=fat.read(prefix+'unixnu.toml').decode();cfg=tomllib.loads(text);template=boot_template(bool(fbwc))
     import re
     sessions=re.findall(r'elden-debug-session=([0-9a-f]{16})',text)
+    battery_ui=None
+    if a.battery_ui:
+        if len(set(sessions))!=1:raise RuntimeError('Ambiguous battery menu session')
+        candidate_template=text.replace(sessions[0],'@SESSION@')
+        battery_ui=verify_battery_menu(template,candidate_template)
+        template=candidate_template
     if len(set(sessions))!=1 or text!=template.replace('@SESSION@',sessions[0]) or cfg['boot']['timeout']!=8 or cfg['boot']['default']!='xnu':raise RuntimeError('Menu or session policy differs')
     identity=kernel+template.encode()+fat.read(prefix+'Payloads/kernel.macho.adt')+hashlib.sha256(fat.read(prefix+'Payloads/kernel.macho.trustcache')).digest()
     for content in (raw[128:0x400080],fat.read(prefix+'EldenPayloadLoader.efi'),fat.read(prefix+'Payloads/data.packed')):identity+=hashlib.sha256(content).digest()
     if sessions[0]!=hashlib.sha256(identity).hexdigest()[:16]:raise RuntimeError('Debug session is not bound to all payload inputs')
     report={'accepted_static':True,'image_sha256':checked.sha256,'kernel_sha256':sha(kernel),'rollback_index':checked.index,'footer_location':checked.location,'parent_boot_chain_location':3,'fat_mirrors_equal':True,'entry_body_100_bytes_equal_hardware_baseline':True,'entry_branch_target_equal':True,'entry_address':hex(now['address']),'entry_return_target':hex(new_return),'session':sessions[0],'memory_window_bytes':tree['window'],'firmware_contract':firmware_contract,'hardware_tested':False,'device_operation':False,'full_asset_source_closure':rebuilt_seed}
     if fbwc:report['framebuffer_experiment']=fbwc
+    if battery_ui:report['battery_ui']=battery_ui
     if a.output.exists():raise RuntimeError('Audit output must be new')
     a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
 if __name__=='__main__':main()

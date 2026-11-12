@@ -1,10 +1,18 @@
 # Elden PMIC GLINK board adapter
 
+Current status and the offline battery-UI candidate are in
+[CHARGING-STATUS.md](../../docs/CHARGING-STATUS.md). UCSI init2/DA65, the five-step
+charge-mode sequence and stock restore have hardware evidence. Short-port-only
+PD input reached about15W in the owner's meter test; full charging, dual-port
+arbitration and complete protection cycles remain unqualified. The v94 GUI
+diagnostic menu disables battery UI; v96 restores its existing scalar contract
+without changing any driver or charger control. v96 is signed but unflashed.
+
 `ChargeRead` implements only scalar property GET messages. It emits no charger,
 power-path, firmware update, GPIO or shipping command. `PmicClient` now uses the
 original sheng ADSP/GLINK transport, with one channel owner, fresh link epochs,
 complete45-field polls, timeout quarantine and two-port UCSI GET/command ACK.
-The full chain is compiled and signed; device charging remains unqualified.
+The full chain is compiled and signed; complete device charging remains unqualified.
 
 The explicit `elden-ucsi-init=1` profile now completes the stock v1.1 PPM reset
 and basic notifications before querying both ports. It was device-tested with
@@ -30,7 +38,8 @@ USB/WLS inputs, averages unequal cells or publishes guessed AdapterDetails.
 Loss of telemetry withdraws charge/current confirmation, marks unavailable and
 retains the last measured capacity. It does not change hardware charging.
 
-See `docs/BATTERY-TELEMETRY-20261108.md` and the work-repository research handover.
+Historical details are in `docs/archive/pre-cleanup-20261111/` and the workbench
+`archive/research-notes/`; current evidence belongs in `lab/records/`.
 
 The optional `elden-charge-control=1` controller uses the original Lenovo
 GET 0x60 / SET 0x61 interface. `ChargePolicy` captures the original protection
