@@ -1,5 +1,11 @@
 # Elden Bluetooth firmware adapter
 
+The follow-up [v97-wcn profile](../../profiles/v97-wcn/README.md) now rebuilds
+the full19-object stack and links startup/stop into v94. Its native/prelinked
+calls, shared owners, five unique firmware payloads and30 original Apple text
+ranges pass static checks. It is an unsigned, unbooted kernel; hardware, native
+daemon and pairing remain pending. Earlier pending-link notes below are history.
+
 Latest offline change: [WCN shutdown](../../docs/WCN-SHUTDOWN.md) connects the
 native radio worker to the maintained recovery template, revokes new UART
 work on stop, and exits the host even under socket backpressure.17 UART and12

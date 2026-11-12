@@ -1,0 +1,63 @@
+{
+  "accepted_static": true,
+  "kernel_sha256": "418e7d0ccdd8040b4f198d934bc1e01d028f72d4ec327600f17943bd43509b3d",
+  "native_sha256": "746fd6e045c2cfe8dcc833a1b191a402b134fa26e1a3212578a1be36b678d4cd",
+  "profile_sha256": "4e68e31543514d9f3d88d7f106631023416138e2e04d54f3ea29f4c5f454998e",
+  "callers": {
+    "ShengUfs": "_elden_wcn_request_stop",
+    "EldenDisplayGlue": "_elden_wcn_power_start",
+    "NativeHost": "_elden_wcn_stop_requested"
+  },
+  "linked_branches": {
+    "_elden_wcn_request_stop": [
+      "0xfffffff007a3e130"
+    ],
+    "_elden_wcn_stop_requested": [
+      "0xfffffff007a91e9c",
+      "0xfffffff007a928a8",
+      "0xfffffff007a92934"
+    ],
+    "_elden_wcn_power_start": [
+      "0xfffffff007a4adbc"
+    ]
+  },
+  "prelinked_call_bytes_equal": true,
+  "single_shared_owner_symbols": {
+    "_sm8750_aoss_qmp_owner": "0xfffffff007b80f24",
+    "_sm8750_gcc_vote_owner": "0xfffffff007b80f30"
+  },
+  "firmware": {
+    "qca/brhbtfw20.tlv": {
+      "sha256": "837aea39d33e95a4ba272ef2a2306e5ecf9848853332d2f7b8002901d6af771d",
+      "complete_copies": 1
+    },
+    "qca/lenovo/tb322fc/brhbtnv20.bin": {
+      "sha256": "f91354b0872f1f7680142df6852b2c8e67e3151ee2ad406b3d183a2fb539702e",
+      "complete_copies": 1
+    },
+    "qca/brhperifw20.tlv": {
+      "sha256": "9a8de09a127a5943f8c23d4ee6005531b900f085740a292c9ab5a20e76db6cb5",
+      "complete_copies": 1
+    },
+    "qca/brhperinv20.bin": {
+      "sha256": "3c73215352ba6422a9f2639124d27f64ec83a4d2aa91b388439ca88ea31098d0",
+      "complete_copies": 1
+    },
+    "qca/tmel_peach_20.elf": {
+      "sha256": "a175c8d9d0e6b38b5ae23ff0175da795b14b8268919463d2b6e1cb2bfeebc9f8",
+      "complete_copies": 1
+    }
+  },
+  "original_apple_executables_hashed": 30,
+  "generated_source_hashes": {
+    "BtBridge.c": "7fddbf007f66d1055dd463432358708c5db4c8f743bab5a4985e2b88d86dd571",
+    "BtBridge.h": "762c5dd0335f2c062ba1a191868ddce597280793da0eb1a148a5f76f73f91c24",
+    "Sm8750Rpmh.c": "8d4d7196b922512633ec37915fee24a96a735c5b9892de400055ab7c3c96f565",
+    "EldenWcnFirmware.c": "306965ec92b360aa86589d7bdfa633cf0ad0ea06ca7c963b8445f9f27d493e2d",
+    "EldenWcnFirmware.h": "7afc671b0ed6d3681c4a6c4d8493bd486d63974ed2061151f7abac87ae839522"
+  },
+  "boot_options_audited": false,
+  "hardware_tested": false,
+  "boot_packaged": false,
+  "device_operations": false
+}

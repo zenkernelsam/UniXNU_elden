@@ -88,3 +88,10 @@ firmware-build，独立加载器/Data 使用 boot-build/ASSET-REBUILD.md。输�
 完整候选检查保留模块 ABI、执行区、FAT 双表、签名 floor、父链和所有载荷会话绑定。
 prelink 的执行区不变结论不涵盖之后明确列出的 AMFI 单指令转换。
 物理触控、性能、持久 Data 与剩余外设仍按 PLAN 推进，完整外围 Goal 未完成。
+
+## WCN后续构建
+
+[v97-wcn](../profiles/v97-wcn/README.md)在已验v94父输出上新增蓝牙完整栈并接入启动/停止钩子。
+`tools/build_wcn_kernel.py`从固定来源和外部固件重建19个对象，重编2个既有对象，完成native/prelink。
+`tools/audit_wcn_kernel.py`独立读取实际分支目标、共享owner、五固件完整唯一副本与30个原始执行区。
+这是未上机的内核构建，不包含新的签名boot或daemon验收；旧候选保持不变。
