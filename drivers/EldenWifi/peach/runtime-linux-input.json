@@ -1,0 +1,22 @@
+{
+  "commit": "458c6079fc1d41d564c37679c8ace02cd83ee817",
+  "paths": [
+    "COPYING",
+    "include",
+    "drivers/net/wireless/ath",
+    "drivers/bus/mhi",
+    "net/qrtr",
+    "net/mac80211",
+    "net/wireless",
+    "net/core/skbuff.c",
+    "drivers/soc/qcom/qmi_interface.c",
+    "drivers/soc/qcom/qmi_encdec.c",
+    "lib/rbtree.c",
+    "lib/crypto/arc4.c"
+  ],
+  "tar_sha256": "47221e41534334b847f5dd4c22e1418eaa60a093f8e10df0b6a56ef89782e664",
+  "gzip_sha256": "a96ffa1917dc6087f3ddd0d9d1f84676be3de42eb1a53138f574e08fcb77edb7",
+  "tar_bytes": 70594560,
+  "git_blob_entries_verified": 7281,
+  "archive_eol": "raw Git blobs; autocrlf disabled explicitly"
+}

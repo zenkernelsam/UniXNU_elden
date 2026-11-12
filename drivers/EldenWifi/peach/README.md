@@ -5,6 +5,10 @@ Six changed C units compile as scalar ARM64/iOS17 objects. This is **not** a
 complete125-object stack build, native WLAN gateway, kernel image or hardware
 qualification. The owner's offline-only restriction remains in force.
 
+The subsequent [full runtime build](../RUNTIME.md) now covers125 objects with
+the official OS preparation flow. Its broader evidence and remaining warning/
+native-power/board integration limits are recorded separately from this stage.
+
 `sources.json` pins Linux458c6079 and the complete nine-driver-file plus power
 header delta from h0cheung's `dc7d14dc64c8d4f86220b30cd126b17d805c8474`.
 `upstream-peach.patch` preserves that original delta and its source licenses.

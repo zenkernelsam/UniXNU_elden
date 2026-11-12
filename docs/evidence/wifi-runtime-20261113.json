@@ -1,0 +1,81 @@
+{
+  "component_revision": "5f7f5a8a9f02f7ab45ed10a2f226e348c519a838",
+  "board_builder_revision": "e8937177309d88c93b305a57bad147fd5fac8a86",
+  "original_builder_sha256": "0e90298f791ae9a422a45b728d0be6421c70e9598a12d147b52bf161c7a4ee16",
+  "derived_builder_sha256": "a55fed93fe9b81594d95ed3d9fa987469a5267b8c13d9f96dc5dff60cdf55085",
+  "runtime": "mainline",
+  "objects": 125,
+  "unique_consumed_inputs": 456,
+  "renaming_preserves_code_data_and_bindings": true,
+  "duplicate_definitions": {},
+  "imports": [
+    "_bzero",
+    "_memcmp",
+    "_memcpy",
+    "_memmove",
+    "_memset",
+    "_pwrseq_qcom_wcn_set_ol_cpr",
+    "_snprintf",
+    "_sscanf",
+    "_strchr",
+    "_strcmp",
+    "_strlen",
+    "_strncpy",
+    "_strtoul",
+    "_vsnprintf"
+  ],
+  "imports_missing_from_reference_kernel": [
+    "_pwrseq_qcom_wcn_set_ol_cpr"
+  ],
+  "kernel_reference_sha256": "ffc12d98962a211b5ba3227b5eeeaa4e49535a9c1668e3c9fdc0f8de1d590e13",
+  "power_provider_external_required": true,
+  "warnings": 9334,
+  "warning_free": false,
+  "retired_generated_entries": 17,
+  "kernel_linked": false,
+  "native_wlan_gateway_implemented": false,
+  "hardware_operations": false,
+  "native_result_sha256": "5e25e066432f1c9b528e76a7cfa1223ce70fa5ef592d36deb3a526ade1d2d3f1",
+  "host_runtime": {
+    "original_test_sha256": "70eff03acecc8c6f68f12251240bc5f6ddef335f2344eabf1ba7a158991dde17",
+    "derived_recipe_sha256": "638b65b6d7e2a5e384750aa05e40c84322ff18543786d1fe11d224dbc7f644ce",
+    "report_sha256": "d957fba261b4bac5eebb9fa1c052022bc0869e305e52fff37c520db48da02c06",
+    "passed": true,
+    "upstream_fixture_assertions_unchanged": true,
+    "fixture_original_sha256": "4d06e2195d54bb6e0f71ad72616b92943b83f37fc12df7c40df8251b96178c3d",
+    "fixture_fixed_sha256": "393a23e1a593294ca65c773f7707a41e9b7397433e273d54f67861275e2b6d94",
+    "fixture_abi_changes": [
+      "config: add int radio_idx",
+      "set_rts_threshold: add int radio_idx",
+      "compile-time pointer type assertions"
+    ],
+    "radio_simulated": true,
+    "output": "mainline runtime: original cfg80211/mac80211 lifecycle, radio off/on, retained TX ownership/bounds/epoch, data progress under wiphy lock, nonlinear RX without linearization, original CQM notification encoding, stale-event rejection and complete teardown passed (radio operations simulated)\n",
+    "scope": "Official cfg80211/mac80211 lifecycle and simulated radio; excludes real ath12k/MHI/QMI transport and board power.",
+    "hardware_operations": false
+  },
+  "host_and_final_runtime_dependencies_equal": 261,
+  "qmi_flow_bodies_unchanged": {
+    "ath12k_qmi_apply_ol_cpr": "fc763084ddd408fe55ebfc4fe12e29ee4c3fd635ddb316443754e4f7982e529b",
+    "ath12k_qmi_wlanfw_tme_lite_info_send": "3b621b6ef8fd5868160e1d5a6add495699cc36b610295e230b3048851a5c3650",
+    "ath12k_qmi_event_load_bdf": "78549595f20f5c8ef240301ac5b76e5c61987481188f63ff9234e1224f42531f"
+  },
+  "warning_categories": {
+    "-Wshorten-64-to-32": 886,
+    "-Wimplicit-int-conversion": 3232,
+    "-Wsign-conversion": 4561,
+    "-Wmacro-redefined": 220,
+    "-Wconditional-uninitialized": 124,
+    "-Wduplicate-decl-specifier": 4,
+    "-Waddress-of-packed-member": 26,
+    "-Wvisibility": 196,
+    "-Wincompatible-pointer-types": 29,
+    "-Wpointer-sign": 25,
+    "-Wc23-extensions": 6,
+    "-Wshadow": 22,
+    "-Wmissing-declarations": 2,
+    "-Wgnu-variable-sized-type-not-at-end": 1
+  },
+  "unresolved_warning_positions": 33,
+  "warning_review_complete": false
+}
