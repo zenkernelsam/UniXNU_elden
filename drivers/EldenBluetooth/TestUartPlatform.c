@@ -180,6 +180,16 @@ int main(int argc,char **argv){
     CHECK(argc==6);uint8_t *fw[5];size_t size[5];for(unsigned i=0;i<5;i++)fw[i]=load(argv[i+1],&size[i]);
     combined(fw,size,false);combined(fw,size,true);
     unsigned cases=2;
+    {
+        EldenWcnUart u;UartModel *m=fresh_uart(&u);cases++;
+        CHECK(!elden_wcn_uart_acquire(&u));
+        const uint8_t pending[]={0xfc,0xfd};
+        push(&m->controller.peripheral,pending,sizeof(pending));tick(m,1000);
+        m->radio_stopped=true;
+        CHECK(!elden_wcn_uart_release(&u)&&u.discarded_rx==sizeof(pending));
+        CHECK(u.first_discarded_rx==0xfc&&!m->rx_count);
+        free(m);
+    }
     for(unsigned scenario=0;scenario<9;scenario++){
         EldenWcnUart u;UartModel *m=fresh_uart(&u);cases++;
         if(scenario==0)m->power_valid=false;

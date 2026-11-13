@@ -87,7 +87,22 @@ static size_t receive(void *p,uint8_t *data,size_t capacity){
 }
 static int flow(void *p,bool ready){return elden_wcn_uart_flow(&static_cast<Context *>(p)->uart,ready);}
 static int baud(void *p,uint32_t value){return elden_wcn_uart_baud(&static_cast<Context *>(p)->uart,value);}
-static void report(void *,unsigned stage,int error){log("\nELDEN_BT_UART protocol-stage=%u error=%d\n",stage,error);}
+static void report(void *p,unsigned stage,int error){
+    log("\nELDEN_BT_UART protocol-stage=%u error=%d\n",stage,error);
+    Context *c=static_cast<Context *>(p);
+    if(!error||!c->uart.acquired||c->uart.quarantined||
+       elden_wcn_power_lease_check(c->epoch,EldenWcnUartLive))return;
+    /* Read only registers already used by this active owner. Do not pop FIFO,
+     * acknowledge an IRQ, wait or retry after a protocol failure. */
+    Region &se=c->regions[EldenWcnUartSe];
+    log("\nELDEN_BT_UART failure status=%08x fifo=%08x sirq=%08x sen=%08x rfr=%08x\n",
+        se.read(PB_SE_STATUS),se.read(PB_SE_RX_FIFO_STATUS),se.read(PB_SE_S_IRQ_STATUS),
+        se.read(PB_SE_S_IRQ_EN),se.read(PB_SE_UART_MANUAL_RFR));
+    log("\nELDEN_BT_UART failure clock=%08x/%08x level=%08x pack=%08x/%08x gran=%08x stale=%08x global=%08x tx=%u rx=%u\n",
+        se.read(PB_SE_M_CLK_CFG),se.read(PB_SE_S_CLK_CFG),se.read(PB_SE_CLK_SEL),
+        se.read(PB_SE_RX_PACK0),se.read(PB_SE_RX_PACK1),se.read(PB_SE_BYTE_GRAN),
+        se.read(PB_SE_UART_RX_STALE),se.read(0xe1c),c->uart.tx_bytes,c->uart.rx_bytes);
+}
 static void dispose(Context *c){
     active_context=nullptr;delete c;__atomic_store_n(&lease,0u,__ATOMIC_RELEASE);
 }
@@ -117,7 +132,8 @@ extern "C" int elden_wcn_uart_backend_open(uint64_t epoch,EldenWcnStartupIo *out
 extern "C" int elden_wcn_uart_backend_close(void *handle){
     if(!handle||handle!=active_context)return EldenWcnUartArgument;
     Context *c=static_cast<Context *>(handle);int rc=elden_wcn_uart_release(&c->uart);
-    log("\nELDEN_BT_UART release=%d tx=%u rx=%u dropped-on-stop=%u quarantine=%u\n",
-        rc,c->uart.tx_bytes,c->uart.rx_bytes,c->uart.discarded_rx,c->uart.quarantined);
+    log("\nELDEN_BT_UART release=%d tx=%u rx=%u dropped-on-stop=%u quarantine=%u first-dropped-byte=%02x\n",
+        rc,c->uart.tx_bytes,c->uart.rx_bytes,c->uart.discarded_rx,c->uart.quarantined,
+        c->uart.first_discarded_rx);
     if(!rc)dispose(c);return rc;
 }

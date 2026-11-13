@@ -30,6 +30,7 @@ typedef struct {
     uint32_t vote,rcg[5],pin[4],configuration[40];
     uint32_t baud,level;
     unsigned stage,tx_bytes,rx_bytes,discarded_rx;
+    uint8_t first_discarded_rx; /* valid only when discarded_rx is nonzero */
     int error;
     bool clock_changed,rate_changed,pins_changed,engine_changed;
     bool acquired,quarantined,rfr_ready;

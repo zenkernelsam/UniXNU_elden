@@ -29,7 +29,7 @@ def entry(data):
     return p['entry'],target,word
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--profile',choices=('v99-bt-runtime','v100-hid-delivery','v101-bt-clock'),default='v99-bt-runtime')
+    p.add_argument('--profile',choices=('v99-bt-runtime','v100-hid-delivery','v101-bt-clock','v102-bt-wake'),default='v99-bt-runtime')
     for n in ('baseline','build','core','output'):p.add_argument('--'+n,type=Path,required=True)
     a=p.parse_args();contract=json.loads((ROOT/'profiles'/a.profile/'entry-assembly.json').read_text())
     plan=json.loads((ROOT/'profiles'/a.profile/'plan.json').read_text())

@@ -1,0 +1,90 @@
+{
+  "accepted_static": true,
+  "kernel_sha256": "5148c0a09c3eeb97366eb8795d3dfb8c0473f52bad311b643fcd1857d987b434",
+  "native_sha256": "614105497cf360bc31095c506fe474201638ee2ad2fad47c0c7235c1bad1338a",
+  "profile_sha256": "06bdc763087e780888c47018e6b2616108bf28641bdac947fcda55cf5bec96e4",
+  "callers": {
+    "ShengUfs": "_elden_wcn_request_stop",
+    "EldenDisplayGlue": "_elden_wcn_power_start",
+    "NativeHost": "_elden_wcn_stop_requested"
+  },
+  "linked_branches": {
+    "_elden_wcn_request_stop": [
+      "0xfffffff007a56390"
+    ],
+    "_elden_wcn_stop_requested": [
+      "0xfffffff007aaa454",
+      "0xfffffff007aaae84",
+      "0xfffffff007aaaf10",
+      "0xfffffff007aac838"
+    ],
+    "_elden_wcn_power_start": [
+      "0xfffffff007a6301c"
+    ],
+    "_elden_bt_bootstrap_publish": [
+      "0xfffffff007aa8238",
+      "0xfffffff007aa8270",
+      "0xfffffff007aa84f0",
+      "0xfffffff007aa8670",
+      "0xfffffff007aa88b8",
+      "0xfffffff007aa8a78",
+      "0xfffffff007aa8b1c"
+    ],
+    "_elden_bt_host_state": [
+      "0xfffffff007aac87c"
+    ],
+    "_elden_bt_runtime_ready": [
+      "0xfffffff007aa8360"
+    ]
+  },
+  "prelinked_call_bytes_equal": true,
+  "single_shared_owner_symbols": {
+    "_sm8750_aoss_qmp_owner": "0xfffffff007b98f24",
+    "_sm8750_gcc_vote_owner": "0xfffffff007b98f30"
+  },
+  "firmware": {
+    "qca/brhbtfw20.tlv": {
+      "sha256": "837aea39d33e95a4ba272ef2a2306e5ecf9848853332d2f7b8002901d6af771d",
+      "complete_copies": 1
+    },
+    "qca/lenovo/tb322fc/brhbtnv20.bin": {
+      "sha256": "f91354b0872f1f7680142df6852b2c8e67e3151ee2ad406b3d183a2fb539702e",
+      "complete_copies": 1
+    },
+    "qca/brhperifw20.tlv": {
+      "sha256": "9a8de09a127a5943f8c23d4ee6005531b900f085740a292c9ab5a20e76db6cb5",
+      "complete_copies": 1
+    },
+    "qca/brhperinv20.bin": {
+      "sha256": "3c73215352ba6422a9f2639124d27f64ec83a4d2aa91b388439ca88ea31098d0",
+      "complete_copies": 1
+    },
+    "qca/tmel_peach_20.elf": {
+      "sha256": "a175c8d9d0e6b38b5ae23ff0175da795b14b8268919463d2b6e1cb2bfeebc9f8",
+      "complete_copies": 1
+    }
+  },
+  "original_apple_executables_hashed": 30,
+  "generated_source_hashes": {
+    "BtBridge.c": "7fddbf007f66d1055dd463432358708c5db4c8f743bab5a4985e2b88d86dd571",
+    "BtBridge.h": "762c5dd0335f2c062ba1a191868ddce597280793da0eb1a148a5f76f73f91c24",
+    "Sm8750Rpmh.c": "8d4d7196b922512633ec37915fee24a96a735c5b9892de400055ab7c3c96f565",
+    "EldenWcnFirmware.c": "306965ec92b360aa86589d7bdfa633cf0ad0ea06ca7c963b8445f9f27d493e2d",
+    "EldenWcnFirmware.h": "7afc671b0ed6d3681c4a6c4d8493bd486d63974ed2061151f7abac87ae839522"
+  },
+  "boot_options_audited": false,
+  "hardware_tested": false,
+  "boot_packaged": false,
+  "device_operations": false,
+  "bootstrap_status": {
+    "oid": "kern.elden_bt_bootstrap",
+    "registration": "sysctl_register_oid_early",
+    "host_availability_gate_bound": true,
+    "abi_bytes": 32
+  },
+  "runtime_helper_complete_copies": 1,
+  "core_delta_objects": {
+    "kern_exec": "6c03941f4f6dc30bf1d30b5de3201f24fd1809632b559f882f9102ae7d43c952",
+    "ubc_subr": "10da425bba9c0abfefd05a7e728c9e97ddad06a58d8f31b42660b976d6abab97"
+  }
+}

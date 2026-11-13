@@ -235,7 +235,11 @@ int elden_wcn_uart_release(EldenWcnUart *u){
             return fail(u,EldenWcnUartBusy,true);
         uint32_t words=rd(u,EldenWcnUartSe,PB_SE_RX_FIFO_STATUS)&PB_RX_FIFO_WC;
         if(words>u->engine.rx_depth)return fail(u,EldenWcnUartProtocol,true);
-        for(unsigned i=0;i<words;i++){(void)rd(u,EldenWcnUartSe,PB_SE_RX_FIFO);u->discarded_rx++;}
+        for(unsigned i=0;i<words;i++){
+            uint32_t word=rd(u,EldenWcnUartSe,PB_SE_RX_FIFO);
+            if(!u->discarded_rx)u->first_discarded_rx=(uint8_t)word;
+            u->discarded_rx++;
+        }
         wr(u,EldenWcnUartSe,GLOBAL_IRQ,0);
         wr(u,EldenWcnUartSe,PB_SE_M_IRQ_CLEAR,0xffffffffu);wr(u,EldenWcnUartSe,PB_SE_S_IRQ_CLEAR,0xffffffffu);
         for(unsigned i=0;i<sizeof(config)/sizeof(config[0])-1;i++)wr(u,EldenWcnUartSe,config[i],u->configuration[i]);
