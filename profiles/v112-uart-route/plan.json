@@ -1,0 +1,16 @@
+{
+  "profile": "v112-uart-route",
+  "baseline": "v111-spmi-gate",
+  "baseline_kernel_sha256": "9c98f4faf8eb6b591d3fb49da2e43290ea11f4528ff35aff55a3ebd55bc61ef6",
+  "baseline_native_sha256": "80090346f13b05ecfeb2ea658bc2a1499781ae7a4abe36615dd6af4c0ba1c0f2",
+  "patcher_sha256": "b0208f29272ceb124614fc98ea64a917b8d2712c56e3f41a226d41298df5cdc3",
+  "runtime_helper_sha256": "464432d5308fa0998f9b25ed77ff0c2b9a7751377dc0cc992679a32dc7cc571e",
+  "runtime_header_sha256": "d0e110db4b2bc7cdc85f19acadb681d316b05c68e56bb4edcbb201e2d57a93e0",
+  "runtime_trust_sha256": "a6758681cd8ce0f364411bf65fc1207514b3470b0c16699e2c1a0d12f22a2c65",
+  "scope": "Enable same-board Linux GENI FIFO route0xf with SPI493 verified masked; read-only failure line snapshot; retain v111 gate.",
+  "sources": {
+    "UartPlatform.c": "795ef5ef67452c3fcbc6e65fd80f5682ca944e8e56f9e5874af76e013abf5767",
+    "UartPlatform.h": "aa99fe76c5a1056d910367d37e39dd00758a7ab7cb9cf68c97c6a9a0af6fdac4",
+    "UartBackend.cpp": "3debda548a41328a763f46d457d8034fefc1f53e140cdcf5efbdd5cce2968b57"
+  }
+}

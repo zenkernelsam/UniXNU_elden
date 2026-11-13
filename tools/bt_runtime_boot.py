@@ -11,9 +11,14 @@ def qualify(report_path,entry_path,runtime):
     if not report_path or not entry_path or not runtime:raise ValueError('Complete v99 build, entry and runtime inputs required')
     report=json.loads(Path(report_path).read_text());entry=json.loads(Path(entry_path).read_text());runtime=Path(runtime)
     name=report.get('profile')
-    if name not in ('v99-bt-runtime','v101-bt-clock','v102-bt-wake','v103-bt-version','v110-bt-fifo'):raise ValueError('Unsupported Bluetooth runtime profile')
+    if name=='v112-uart-route':raise ValueError('Withdrawn v112 has an incorrect GIC MMIO base; use v113 or later')
+    if name not in ('v99-bt-runtime','v101-bt-clock','v102-bt-wake','v103-bt-version','v110-bt-fifo','v111-spmi-gate','v112-uart-route','v113-uart-gic','v114-hci-length'):raise ValueError('Unsupported Bluetooth runtime profile')
     profile=ROOT/'profiles'/name/'plan.json';plan=json.loads(profile.read_text())
-    if report['profile_sha256']!=sha(profile) or report.get('recompiled_core_objects')!=2 or report['original_apple_executables_hashed']!=30:
+    if name in ('v111-spmi-gate','v112-uart-route','v113-uart-gic','v114-hci-length'):
+        audit=json.loads((Path(report_path).parent/'kernel-audit.json').read_text())
+        core_ok=audit['accepted_static'] and audit['one_gate_state'] and audit['core_filelist_equal'] and audit['kernel_sha256']==report['kernel_sha256'] and audit['profile_sha256']==sha(profile)
+    else:core_ok=report.get('recompiled_core_objects')==2
+    if report['profile_sha256']!=sha(profile) or not core_ok or report['original_apple_executables_hashed']!=30:
         raise ValueError('Unqualified v99 core build')
     if entry['source_sha256']!=report['kernel_sha256']:raise ValueError('Entry is not the v99 kernel')
     source=Path(report_path).parent/'kernel.macho';layout=json.loads((Path(report_path).parent/'entry-layout.json').read_text())

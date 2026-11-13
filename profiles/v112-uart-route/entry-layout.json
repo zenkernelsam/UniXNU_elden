@@ -1,0 +1,12 @@
+{
+  "source_kernel_sha256": "02568cd2a50ff4d536bf1a4e5a400db93fc175ed700ec894b1b8ace7acbadf04",
+  "baseline_kernel_sha256": "9c98f4faf8eb6b591d3fb49da2e43290ea11f4528ff35aff55a3ebd55bc61ef6",
+  "assembly_sha256": "818ed81e39f38ee6f13bdbf4f166e9e7a5d72f4b7a652d52872e2ba85ea53cc1",
+  "assembly_sections_equal": true,
+  "same_object_in_both_filelists": true,
+  "entry_word": 335546101,
+  "return_target": "0xfffffff0074ce05c",
+  "entry_address": "0xfffffff0074cc488",
+  "target_delta": 7124,
+  "hardware_tested": false
+}

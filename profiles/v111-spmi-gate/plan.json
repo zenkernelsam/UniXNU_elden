@@ -1,0 +1,11 @@
+{
+  "profile": "v111-spmi-gate",
+  "baseline": "v110-bt-fifo",
+  "baseline_kernel_sha256": "0db8f52b3d85026f1a85a000ab665c47cf084a340e87c09f556900b5355ee848",
+  "baseline_native_sha256": "3bc304b57e0ac6a5367834447dcf81c1ec960bdb758b4b4260ff3cc0be767493",
+  "patcher_sha256": "b0208f29272ceb124614fc98ea64a917b8d2712c56e3f41a226d41298df5cdc3",
+  "runtime_helper_sha256": "464432d5308fa0998f9b25ed77ff0c2b9a7751377dc0cc992679a32dc7cc571e",
+  "runtime_header_sha256": "d0e110db4b2bc7cdc85f19acadb681d316b05c68e56bb4edcbb201e2d57a93e0",
+  "runtime_trust_sha256": "a6758681cd8ce0f364411bf65fc1207514b3470b0c16699e2c1a0d12f22a2c65",
+  "scope": "One shared bus gate, actual ADC and WCN consumers; same v110 UART, recovery, firmware, runtime and6GiB menu."
+}

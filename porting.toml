@@ -218,3 +218,13 @@ findings = ["Both v110 runs stop before UART with completed SPMI status9 and ADC
 limits = ["No full gate kernel or hardware test. FIFO hardware not reached. Status9 causality is not proved. Charging/net-current/cycles and Bluetooth remain incomplete."]
 next_action = ["Integrate one gate provider plus actual ADC and BT consumers, audit and then test thermal/WCN together."]
 evidence = [{kind="host", reference="drivers/EldenSpmi/host-result.json", result="Injected concurrency/error model; not hardware proof."}]
+
+[[area]]
+id = "spmi-hci-v114"
+status = "implemented"
+components = ["EldenPmicGlink", "EldenBluetooth"]
+paths = ["profiles/v111-spmi-gate", "profiles/v113-uart-gic", "profiles/v114-hci-length"]
+findings = ["v111 shared-bus consumers verified,54 ADC readings/thermal/WCN pass. v113 peripheral complete and real EDL response captured. v114 length12 validation fixes proven old-source rejection."]
+limits = ["v112 withdrawn for GIC address typo. Initial IBS wake remains variable. v114 did not reach its new check on hardware. No native HCI-ready/pairing or charge-policy completion."]
+next_action = ["Inspect cold-start UART synchronization and same-board Linux port-reopen sequence before further device runs."]
+evidence = [{kind="device", reference="profiles/v114-hci-length/hardware-result.json", result="Typed sync/reset and stock restore; stage2 timeout retained."}]

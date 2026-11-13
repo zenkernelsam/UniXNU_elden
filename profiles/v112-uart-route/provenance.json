@@ -1,0 +1,8 @@
+{
+  "source_sha256": "249348128bcc6d6431bc4c7e37098c3c9b3f7035d6c608634200f87861c1699e",
+  "revision": "6f97250ead155fc3b980856323e99a4623dae73d",
+  "linux_fifo_route": 15,
+  "xnu_route_before": 0,
+  "gic_guard": "INTID493 must read disabled from GICD_ISENABLER; no GIC write or handler installed",
+  "scope": "Hypothesis test: route internal GENI IRQs as same-board Linux, retain polling/leases and restore original register on stop"
+}

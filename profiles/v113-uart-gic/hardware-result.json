@@ -1,0 +1,26 @@
+{
+  "image_sha256": "ada89829f552b76275d15afc342f122722cc59ea0e70df1a3b2c8542ae94f0c4",
+  "session": "25cc7af63a7ce36c",
+  "raw_sha256": "abf531aa800519a404301adf3c1211622e9ffc5005379bd3d3fa84b21f523232",
+  "bytes": 694578,
+  "drop_max": 2,
+  "peripheral_stages_completed": 13,
+  "failure_stage": 16,
+  "failure": -19,
+  "uart_tx": 79997,
+  "uart_rx": 228,
+  "version_raw": "040e120100fc00190c21000000586d000200022140",
+  "decoded": {
+    "status": 0,
+    "subopcode": 25,
+    "length": 12,
+    "product": 33,
+    "patch": 27992,
+    "rom": 512,
+    "soc": "0x40210200"
+  },
+  "thermal_failures": [],
+  "reset_after_sync": true,
+  "stock_restore_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "interpretation": "Internal route0xf plus correct GIC guard reaches peripheral completion; actual EDL response length byte12 wrongly rejected as nonzero. Identity fields otherwise match. One run, no pairing."
+}

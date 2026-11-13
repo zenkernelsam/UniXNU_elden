@@ -1,0 +1,29 @@
+{
+  "image_sha256": "98a860f735bb649f09bb1e9d8a97b26b1d810945b2420981d53a608dffcea9a2",
+  "session": "1b2fd09da953f03a",
+  "raw_sha256": "1015445eeac55333fbab3f1f7e8e2a2f00906796ec40e49c16bcf5786ef6b222",
+  "captured_bytes": 31743,
+  "drop_max_observed": 0,
+  "last_wcn_records": [
+    "ELDEN_WCN qmp=0 step=8 text={class: wlan_pdc, ss: rf, res: s5f.v, upval: 876}",
+    "ELDEN_WCN qmp=0 step=8 text={class: wlan_pdc, ss: rf, res: s5f.v, dwnval: 876}",
+    "ELDEN_WCN rail=0 mv=876 result=0 tcs=0 step=9",
+    "ELDEN_WCN rail=1 mv=1800 result=0 tcs=0 step=9",
+    "ELDEN_WCN rail=2 mv=1200 result=0 tcs=0 step=9",
+    "ELDEN_WCN rail=3 mv=876 result=0 tcs=0 step=9",
+    "ELDEN_WCN rail=4 mv=1312 result=0 tcs=0 step=9",
+    "ELDEN_WCN rail=5 mv=1860 result=0 tcs=0 step=9"
+  ],
+  "uart_acquire_report": false,
+  "route_write_observed": false,
+  "failure_line_snapshot_received": false,
+  "explicit_sync_return": false,
+  "smp_fallback_marker": false,
+  "fastboot_return_elapsed_seconds": 221.8,
+  "reset_trigger_proven": false,
+  "stock_restore_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "android_root_green_boot_completed": true,
+  "classification": "Incomplete run, logs stop before WCN prepare/acquire. Do not infer route0xf caused or fixed failure. Keep v111 as tested BT/SPMI baseline; v112 not promoted.",
+  "withdrawn": true,
+  "source_defect": "GIC MMIO address typo0x01600000 versus same-board0x16000000; corrected only in successor v113."
+}

@@ -52,6 +52,12 @@ CPU 同时记录实际上线、调度/IRQ 与负载，UFS 记录真实 I/O 延�
 
 ## 2. 完成基本外设
 
+最新v111已完成SPMI共用锁整核与真机：54次ADC读取、温控武装与WCN电源通过。
+v112的GIC地址笔误已撤回，v113按DTS修正并启用GENI FIFO路由，外围固件/激活完成一次。
+已捕获真正HCI版本包，v114修正长度字节12被误拒绝；host通过但本轮又停最初IBS唤醒。
+下一步查同板Linux qca_port_reopen/原厂冷启动同步和接收状态，不能把一次成功当稳定，
+不重复同像碰运气。蓝牙独立6GiB分支保持，v1098GiB可用GUI基线仍在。
+
 11月14日：先整合EldenSpmi共用bus0/EE0事务锁，替换PMIC Spmi.o、BT BtPmic.o/
 WcnPowerNative.o并只链接一份TransactionGate。真实函数并发/错误测试及ARM64组件
 完成，整核与实机未做。两轮v110都在SPMI0x9和ADC失败处停住，不能继续重复FIFO测试

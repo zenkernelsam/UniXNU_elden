@@ -40,8 +40,9 @@ or automatic initializers and preserve prior exports. The first two build
 attempts could not resolve the captured relative meta_features header; final
 build uses its verified compile-directory mapping. Attempts remain retained.
 
-**Not yet linked into a complete kernel or tested on hardware.** Next replace
-Spmi.o in the PMIC archive, BtPmic.o/WcnPowerNative.o in the BT archive, and add
-TransactionGate.o once; prove all three consumers bind that one provider and
-the source/entry/AVB/recovery contract before the next device run. Do not claim
-the FIFO candidate or the shared lock has fixed Bluetooth or charging yet.
+**v111 is now fully linked and hardware-tested.** The three consumers bind one
+provider;54 dual-port ADC readings pass, thermal arms and WCN survey/rails
+cross the previous0x9 failure. UART still fails initial wake. See
+profiles/v111-spmi-gate for full input/entry/AVB and recovery evidence. Later
+v113 reaches peripheral completion once but v114 again fails wake; neither
+charging completion nor reliable Bluetooth is claimed.

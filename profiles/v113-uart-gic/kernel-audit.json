@@ -1,0 +1,33 @@
+{
+  "accepted_static": true,
+  "profile_sha256": "c9dd71904f629df1f3ee5c390e1e68c28f14155fa53103f64d2947cc7386605d",
+  "kernel_sha256": "4faf72ab385b30851deea0932d02364d60c6525bf0900ba35a6f18cb45a2a5db",
+  "native_sha256": "1407357efead030789dfe7905521e79503a85d1ce8d8aef651ca101305bcd575",
+  "one_gate_state": true,
+  "gate_consumer_calls": {
+    "_elden_adc_spmi_read": [
+      "_elden_spmi_transaction_acquire",
+      "_elden_spmi_transaction_release",
+      "_elden_spmi_transaction_release"
+    ],
+    "_elden_adc_spmi_write": [
+      "_elden_spmi_transaction_acquire",
+      "_elden_spmi_transaction_release",
+      "_elden_spmi_transaction_release"
+    ],
+    "_pb_spmi_read8": [
+      "_elden_spmi_transaction_acquire",
+      "_elden_spmi_transaction_release",
+      "_elden_spmi_transaction_release"
+    ],
+    "__ZN12_GLOBAL__N_16bt_setEPvb": [
+      "_elden_spmi_transaction_acquire",
+      "_elden_spmi_transaction_release",
+      "_elden_spmi_transaction_release"
+    ]
+  },
+  "core_filelist_equal": true,
+  "original_apple_executables_hashed": 30,
+  "entry_return_target": "0xfffffff0074ce05c",
+  "hardware_tested": false
+}

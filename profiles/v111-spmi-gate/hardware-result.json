@@ -1,0 +1,20 @@
+{
+  "image_sha256": "e52e8005a8e6742ba8012ba0f1257e8c8202007dfa09bf5392b3886377c43541",
+  "session": "249704f6af024889",
+  "raw_sha256": "409e1e291a0bfd548e9cfce8878075bbdbc806d6ef77596f712afdd65f9863f9",
+  "bytes": 1156070,
+  "drop_max": 11,
+  "thermal_samples": 54,
+  "thermal_failures": [],
+  "thermal_armed": true,
+  "wcn_survey_ok": true,
+  "uart_4x8_acquired": true,
+  "startup_stage": 2,
+  "startup_error": -110,
+  "tx": 1,
+  "rx": 0,
+  "spmi_failures": [],
+  "reset_after_sync": true,
+  "stock_restored_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "scope": "One hardware run crossed prior SPMI failure with healthy dual ADC; initial UART wake still fails, not full Bluetooth or charge acceptance."
+}
