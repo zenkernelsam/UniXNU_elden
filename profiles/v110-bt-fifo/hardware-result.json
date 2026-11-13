@@ -1,0 +1,32 @@
+{
+  "runs": [
+    {
+      "run": "live-bt-fifo-v110-20261114",
+      "raw_sha256": "6cfb5843699095419dcc7b4436388a7b3093d225eb5dd5d1ead9a0e19f2cfe51",
+      "bytes": 681654,
+      "drop_max": 27,
+      "spmi_status": "0x9",
+      "bt_gpio_read_error": -5,
+      "uart_acquired": false,
+      "fifo_test_reached": false,
+      "concurrent_thermal_error": true,
+      "typed_reset": true,
+      "stock_restore_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890"
+    },
+    {
+      "run": "live-bt-fifo-v110-repeat-20261114",
+      "raw_sha256": "9c01d900e4e8de6077872e70f8b44576208b3cac8c2cd3556518aed79089d4e5",
+      "bytes": 1146464,
+      "drop_max": 13,
+      "spmi_status": "0x9",
+      "bt_gpio_read_error": -5,
+      "uart_acquired": false,
+      "fifo_test_reached": false,
+      "concurrent_thermal_error": true,
+      "typed_reset": true,
+      "stock_restore_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890"
+    }
+  ],
+  "fifo_hardware_result": "not reached; both stopped at SPMI preflight",
+  "next": "shared bus transaction serialization, no retry of failed transaction"
+}

@@ -1,0 +1,145 @@
+{
+  "passed": true,
+  "hardware_tested": false,
+  "results": {
+    "gate": {
+      "command": [
+        "wsl",
+        "-d",
+        "Ubuntu-22.04",
+        "-u",
+        "root",
+        "--",
+        "cc",
+        "-std=c11",
+        "-D_XOPEN_SOURCE=700",
+        "-O1",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-pthread",
+        "-ffunction-sections",
+        "-Wl,--gc-sections",
+        "-I",
+        "/mnt/d/Desktop/Git/UniXNU_elden/drivers/EldenSpmi",
+        "-I",
+        "/mnt/d/Desktop/Git/UniXNU_elden/drivers/EldenUsbThermal",
+        "-I",
+        "/mnt/d/Desktop/Git/UniXNU_elden/soc/sm8750/include",
+        "-I",
+        "/mnt/d/Desktop/Git/Patch/Y700-Elden/edl_work/spmi-gate-20261114/canonical-tests/reference",
+        "/mnt/d/Desktop/Git/UniXNU_elden/drivers/EldenSpmi/TransactionGate.c",
+        "/mnt/d/Desktop/Git/UniXNU_elden/drivers/EldenSpmi/TestTransactionGate.c",
+        "-o",
+        "/mnt/d/Desktop/Git/Patch/Y700-Elden/edl_work/spmi-gate-20261114/canonical-tests/gate"
+      ],
+      "sources": {
+        "D:\\Desktop\\Git\\UniXNU_elden\\drivers\\EldenSpmi\\TransactionGate.c": "2519cf38efa8b7bab99d482b35b6d06e6f484f6087514421dd0d9bba4efba2bd",
+        "D:\\Desktop\\Git\\UniXNU_elden\\drivers\\EldenSpmi\\TestTransactionGate.c": "6666ce55d607957ccf42773dc0f70e85c4b35a3cae691dc0f499de4e77adae28"
+      },
+      "runs": {
+        "None": "PASS 20000 serialized ADC/BT transactions, contention, wrong-owner and poison checks\n"
+      }
+    },
+    "old": {
+      "command": [
+        "wsl",
+        "-d",
+        "Ubuntu-22.04",
+        "-u",
+        "root",
+        "--",
+        "cc",
+        "-std=c11",
+        "-D_XOPEN_SOURCE=700",
+        "-O1",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-pthread",
+        "-ffunction-sections",
+        "-Wl,--gc-sections",
+        "-I",
+        "/mnt/d/Desktop/Git/UniXNU_elden/drivers/EldenSpmi",
+        "-I",
+        "/mnt/d/Desktop/Git/UniXNU_elden/drivers/EldenUsbThermal",
+        "-I",
+        "/mnt/d/Desktop/Git/UniXNU_elden/soc/sm8750/include",
+        "-I",
+        "/mnt/d/Desktop/Git/Patch/Y700-Elden/edl_work/spmi-gate-20261114/canonical-tests/reference",
+        "/mnt/d/Desktop/Git/UniXNU_elden/drivers/EldenSpmi/TransactionGate.c",
+        "/mnt/d/Desktop/Git/UniXNU_elden/drivers/EldenSpmi/TestSharedTransactions.c",
+        "/mnt/d/Desktop/Git/UniXNU_elden/profiles/v91/sources/power/Spmi.c",
+        "/mnt/d/Desktop/Git/Patch/Y700-Elden/edl_work/spmi-gate-20261114/canonical-tests/reference/BtPmic.c",
+        "-o",
+        "/mnt/d/Desktop/Git/Patch/Y700-Elden/edl_work/spmi-gate-20261114/canonical-tests/old"
+      ],
+      "sources": {
+        "D:\\Desktop\\Git\\UniXNU_elden\\drivers\\EldenSpmi\\TransactionGate.c": "2519cf38efa8b7bab99d482b35b6d06e6f484f6087514421dd0d9bba4efba2bd",
+        "D:\\Desktop\\Git\\UniXNU_elden\\drivers\\EldenSpmi\\TestSharedTransactions.c": "0202a334ef21cb8c42b9096977f76086dde9bf925a966b633636d5f2750f74c0",
+        "D:\\Desktop\\Git\\UniXNU_elden\\profiles\\v91\\sources\\power\\Spmi.c": "3b3ac07454eb5480119b2f00876cd230f1c3f803aba04dfab84250a44f007fd3",
+        "D:\\Desktop\\Git\\Patch\\Y700-Elden\\edl_work\\spmi-gate-20261114\\canonical-tests\\reference\\BtPmic.c": "42aa61b7b6243ee28bea5d7658614bff7b7b9552e07c9239d4405dc94060b4f3"
+      },
+      "runs": {
+        "old": "collisions=2000 completed=2000 refused-before-command=0\n"
+      }
+    },
+    "fixed": {
+      "command": [
+        "wsl",
+        "-d",
+        "Ubuntu-22.04",
+        "-u",
+        "root",
+        "--",
+        "cc",
+        "-std=c11",
+        "-D_XOPEN_SOURCE=700",
+        "-O1",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wno-misleading-indentation",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-pthread",
+        "-ffunction-sections",
+        "-Wl,--gc-sections",
+        "-I",
+        "/mnt/d/Desktop/Git/UniXNU_elden/drivers/EldenSpmi",
+        "-I",
+        "/mnt/d/Desktop/Git/UniXNU_elden/drivers/EldenUsbThermal",
+        "-I",
+        "/mnt/d/Desktop/Git/UniXNU_elden/soc/sm8750/include",
+        "-I",
+        "/mnt/d/Desktop/Git/Patch/Y700-Elden/edl_work/spmi-gate-20261114/canonical-tests/reference",
+        "/mnt/d/Desktop/Git/UniXNU_elden/drivers/EldenSpmi/TransactionGate.c",
+        "/mnt/d/Desktop/Git/UniXNU_elden/drivers/EldenSpmi/TestSharedTransactions.c",
+        "/mnt/d/Desktop/Git/Patch/Y700-Elden/edl_work/spmi-gate-20261114/canonical-tests/Spmi.c",
+        "/mnt/d/Desktop/Git/Patch/Y700-Elden/edl_work/spmi-gate-20261114/canonical-tests/BtPmic.c",
+        "-o",
+        "/mnt/d/Desktop/Git/Patch/Y700-Elden/edl_work/spmi-gate-20261114/canonical-tests/fixed"
+      ],
+      "sources": {
+        "D:\\Desktop\\Git\\UniXNU_elden\\drivers\\EldenSpmi\\TransactionGate.c": "2519cf38efa8b7bab99d482b35b6d06e6f484f6087514421dd0d9bba4efba2bd",
+        "D:\\Desktop\\Git\\UniXNU_elden\\drivers\\EldenSpmi\\TestSharedTransactions.c": "0202a334ef21cb8c42b9096977f76086dde9bf925a966b633636d5f2750f74c0",
+        "D:\\Desktop\\Git\\Patch\\Y700-Elden\\edl_work\\spmi-gate-20261114\\canonical-tests\\Spmi.c": "96e618c06f2be99ebb8935b395246345ab9c1253781e7c721cb616abdbaa75ff",
+        "D:\\Desktop\\Git\\Patch\\Y700-Elden\\edl_work\\spmi-gate-20261114\\canonical-tests\\BtPmic.c": "312f38fa5bf808d08abeec77591c1c4061e8c3acb38f5cb9609519e93a646b57"
+      },
+      "runs": {
+        "fixed": "collisions=0 completed=3965 refused-before-command=35\n",
+        "error": "PASS actual readers: completed error releases; timeout prevents subsequent command\n",
+        "timeout": "PASS actual readers: completed error releases; timeout prevents subsequent command\n"
+      }
+    }
+  }
+}

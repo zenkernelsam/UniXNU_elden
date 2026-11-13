@@ -208,3 +208,13 @@ findings = ["Real EFI allocation and XNU8GiB window; three coherent bootstrap ob
 limits = ["Not16GiB, full-page stress, About-latency or physical-finger acceptance. Home transition artifacts remain. Final capture drop10; damaged frame12 rejected."]
 next_action = ["Keep8GiB baseline and evaluate KVA/EFI reservations before larger windows or outside-page adoption."]
 evidence = [{kind="device", reference="profiles/v109-memory8/ui-hardware-result.json", result="Three trials completed sync return and full stock restoration; Android/root/green restored."}]
+
+[[area]]
+id = "spmi-adc-bt-serialization"
+status = "host-verified"
+components = ["EldenPmicGlink", "EldenBluetooth"]
+paths = ["drivers/EldenSpmi", "profiles/v110-bt-fifo"]
+findings = ["Both v110 runs stop before UART with completed SPMI status9 and ADC errors. Same-board Linux serializes entire bus transactions; Elden lacked a common gate. Actual-reader host collision/error tests and four ARM64 gate components pass."]
+limits = ["No full gate kernel or hardware test. FIFO hardware not reached. Status9 causality is not proved. Charging/net-current/cycles and Bluetooth remain incomplete."]
+next_action = ["Integrate one gate provider plus actual ADC and BT consumers, audit and then test thermal/WCN together."]
+evidence = [{kind="host", reference="drivers/EldenSpmi/host-result.json", result="Injected concurrency/error model; not hardware proof."}]

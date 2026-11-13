@@ -11,7 +11,7 @@ def qualify(report_path,entry_path,runtime):
     if not report_path or not entry_path or not runtime:raise ValueError('Complete v99 build, entry and runtime inputs required')
     report=json.loads(Path(report_path).read_text());entry=json.loads(Path(entry_path).read_text());runtime=Path(runtime)
     name=report.get('profile')
-    if name not in ('v99-bt-runtime','v101-bt-clock','v102-bt-wake','v103-bt-version'):raise ValueError('Unsupported Bluetooth runtime profile')
+    if name not in ('v99-bt-runtime','v101-bt-clock','v102-bt-wake','v103-bt-version','v110-bt-fifo'):raise ValueError('Unsupported Bluetooth runtime profile')
     profile=ROOT/'profiles'/name/'plan.json';plan=json.loads(profile.read_text())
     if report['profile_sha256']!=sha(profile) or report.get('recompiled_core_objects')!=2 or report['original_apple_executables_hashed']!=30:
         raise ValueError('Unqualified v99 core build')

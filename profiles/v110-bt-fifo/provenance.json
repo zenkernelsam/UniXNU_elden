@@ -1,0 +1,17 @@
+{
+  "primary_board_source": "ArmadaOS TB322FC README -> h0cheung fixed Gen4/SM8750",
+  "revision": "6f97250ead155fc3b980856323e99a4623dae73d",
+  "files": {
+    "drivers/soc/qcom/qcom-geni-se.c": "249348128bcc6d6431bc4c7e37098c3c9b3f7035d6c608634200f87861c1699e",
+    "drivers/tty/serial/qcom_geni_serial.c": "52cee502c9cded18ed058059fcc4dbce0a63b78fc52c20607dd826046bf611bf",
+    "drivers/bluetooth/hci_qca.c": "f6f0991b3f4c58b5f49e97c99e157d6bdbcaec11f8bf4ad34b4c2fd678d84060"
+  },
+  "changes": "Adopt actual Linux4x8 vectors; TX length controls padding; RX_LAST and software leftovers preserve all bytes",
+  "hardware_claim": false,
+  "host_scenarios": 621,
+  "host_assertions": 2988689,
+  "host_sanitizers": [
+    "ASan",
+    "UBSan"
+  ]
+}

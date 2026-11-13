@@ -52,6 +52,11 @@ CPU 同时记录实际上线、调度/IRQ 与负载，UFS 记录真实 I/O 延�
 
 ## 2. 完成基本外设
 
+11月14日：先整合EldenSpmi共用bus0/EE0事务锁，替换PMIC Spmi.o、BT BtPmic.o/
+WcnPowerNative.o并只链接一份TransactionGate。真实函数并发/错误测试及ARM64组件
+完成，整核与实机未做。两轮v110都在SPMI0x9和ADC失败处停住，不能继续重复FIFO测试
+或跳过温控。保留已验证的v1098GiB GUI候选；蓝牙分支稳定后再合并。
+
 充电继续保留已验电池、UCSI、温控和回程，剩余 500mA/双口问题使用有明确结论的功能对照，
 不再反复扫描已否定的 GLINK 写路径。旁路、80% 上限和保护窗不能因基本充电通过而省略。
 现行电源验收和v96电池界面候选见[CHARGING-STATUS.md](CHARGING-STATUS.md)。
