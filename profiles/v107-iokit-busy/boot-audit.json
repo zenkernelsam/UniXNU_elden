@@ -1,0 +1,35 @@
+{
+  "accepted_static": true,
+  "image_sha256": "c76f6483a12c056bcbd6b7f0351c481d696acb073e686bbaea4bdf43dacd62f2",
+  "kernel_sha256": "d8330ca82e8d24c1ad4109b11dfb21755fcdd7d2dde70278dcdf5fb7b9314aaa",
+  "rollback_index": 1738713600,
+  "footer_location": 0,
+  "parent_boot_chain_location": 3,
+  "fat_mirrors_equal": true,
+  "entry_body_100_bytes_equal_hardware_baseline": true,
+  "entry_branch_target_equal": true,
+  "entry_branch_target_qualified": true,
+  "entry_address": "0xfffffff0084c0000",
+  "entry_return_target": "0xfffffff00746a05c",
+  "session": "cdf915c6da8f84c3",
+  "memory_window_bytes": 6442450944,
+  "firmware_contract": {
+    "sha256": "aba76d8a8374e1356e41c0c97b9e4f83691108b8eb7767a5ead28b0d2b2a7b35",
+    "contract_sha256": "c3287ed4949e54529b6ad6cda482b28d1ee749439282ab1574f5ae9f643f84aa",
+    "all_executable_bytes_equal": true,
+    "hardware_tested": false
+  },
+  "hardware_tested": false,
+  "device_operation": false,
+  "full_asset_source_closure": true,
+  "touch_delivery": {
+    "profile": "v107-iokit-busy",
+    "profile_sha256": "d690320a3889adc47b8881a0f23593eba7e5fcc374646f19a973be66ab1332b8",
+    "pre_entry_kernel_sha256": "ef019cea15b0db52a8eb8b11d2868e17326d376fd4d27f0a7a2d3672bec33452",
+    "entry_return_target": "0xfffffff00746a05c",
+    "entry_assembly_sha256": "818ed81e39f38ee6f13bdbf4f166e9e7a5d72f4b7a652d52872e2ba85ea53cc1",
+    "menu_unchanged_from": null,
+    "menu_policy": "v106 unchanged",
+    "hardware_tested": false
+  }
+}

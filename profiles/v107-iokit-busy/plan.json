@@ -1,0 +1,11 @@
+{
+  "profile": "v107-iokit-busy",
+  "baseline": "v106-rt-memory",
+  "baseline_kernel_sha256": "0407fd055cfd8e114259c3698fae4d12135da3f98388af4eb74ebe496b92bba0",
+  "baseline_native_sha256": "52239f09eb83959874bc06b1f5c68ed5c3c067d6da6aa4bee244fb0ea98af298",
+  "glue_source_parent_sha256": "f2ed7c23fb692af1dc6a64a93827f2f37b648acbca49cbbd70277ad769bfce75",
+  "archive_member": "EldenDisplayGlue.o",
+  "scope": "Bounded IOKit busy-leaf and required service presence observations; no matching, busy-state or hardware mutation",
+  "menu_policy": "v106 unchanged",
+  "glue_source_sha256": "b8aefa3fb568bd23702f27efd800260d8e105e6ff653fb94cfa1e181bcd55d38"
+}

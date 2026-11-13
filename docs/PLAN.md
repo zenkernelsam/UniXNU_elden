@@ -15,6 +15,10 @@
 
 ## 1. 稳定无 GPU 的实际操作
 
+11月14日v107/v108已定位并补齐原IONetworkStack，完整注册树保持busy0。下一步
+保留该组件，择有判定价值的About耗时验证；当前继续内存窗口/页表/保留区审计。
+不重复刷写来重证六次已经确认的provider事实，Wi-Fi联网另行接入。
+
 11月13日晚：v106真实手指已打开Settings/General，About延迟后可见。v95 paired-store
 已测61.52ms，v104映射缓存/按需诊断与v100触控合成v105后，用户认为滑动明显改善，
 但backboardd出现DC ZVA异常；v106只改managed RT DRAM页表属性后重载未再观察到。

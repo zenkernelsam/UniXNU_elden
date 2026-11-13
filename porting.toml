@@ -5,7 +5,7 @@ schema_version = 1
 name = "elden"
 soc = "SM8750P"
 os_profile = "ipados-17.7.11-21H461"
-summary = "v91 reached populated Settings via software input. Physical input/performance/basic peripherals remain incomplete. Source migration and clean reproduction are in progress; device restored stock."
+summary = "v106 physical Settings/General works; v108 restores original IONetworkStack. About latency validation, memory expansion and basic peripherals remain incomplete. Device restored stock."
 
 [[area]]
 id = "configuration"
@@ -188,3 +188,13 @@ findings = ["USB kernel logs, frame readback, session-bound RPC and directed fas
 limits = ["v91 whole capture dropped 24 bytes; counted raster records and Settings frame CRC were retained."]
 next_action = ["Preserve the recovery path and measure rather than infer CPU/UFS stalls."]
 evidence = [{ kind = "device", reference = "docs/CURRENT-STATUS.md", command = "Read frozen source/hardware manifests; no new device operation during maintenance", revision = "c7fae2baaaad4be7406de3691a4e79cc5cc48664", result = "USB kernel logs, frame readback, session-bound RPC and directed fastboot recovery work. Imported source is a local snapshot based on this revision; see profiles/v91/manifest.json for exact hashes." }]
+
+[[area]]
+id = "network-initialization"
+status = "device-verified"
+components = ["XnuPrelink", "com.apple.iokit.IONetworkingFamily"]
+paths = ["profiles/v107-iokit-busy", "profiles/v108-network-family", "tools/build_network_family.py", "docs/NETWORK-INITIALIZATION.md"]
+findings = ["v107: six complete busy0/AES-only snapshots. v108: exact original21H461 family added; six snapshots show real IONetworkStack and AES, busy0."]
+limits = ["No WLAN/Ethernet interface; About latency not measured in v108. Capture dropped36 bytes."]
+next_action = ["Measure userland initialization when useful and continue qualified RAM expansion; no fake network readiness."]
+evidence = [{kind="device", reference="profiles/v108-network-family/hardware-result.json", result="Signed candidate, sync return and complete stock restoration verified."}]

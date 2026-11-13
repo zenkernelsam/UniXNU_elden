@@ -1,0 +1,17 @@
+{
+  "accepted_static": true,
+  "profile_sha256": "d690320a3889adc47b8881a0f23593eba7e5fcc374646f19a973be66ab1332b8",
+  "kernel_sha256": "ef019cea15b0db52a8eb8b11d2868e17326d376fd4d27f0a7a2d3672bec33452",
+  "native_sha256": "48da496358229b0404bbfab61a1f3f5cbd5c7987783300de94e7e1d3b908afa9",
+  "changed_archive_members": [
+    "EldenDisplayGlue.o"
+  ],
+  "core_filelist_equal": true,
+  "original_apple_executables_hashed": 30,
+  "worker_symbol": "__ZL15iokitBusyWorkerPvi",
+  "worker_address": "0xfffffff007a0036c",
+  "worker_bytes": 896,
+  "worker_prelink_equal": true,
+  "source_sha256": "b8aefa3fb568bd23702f27efd800260d8e105e6ff653fb94cfa1e181bcd55d38",
+  "hardware_tested": false
+}

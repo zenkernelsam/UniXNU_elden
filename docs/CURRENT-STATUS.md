@@ -1,4 +1,8 @@
-# 当前状态 · 2026-11-13
+# 当前状态 · 2026-11-14
+
+最新无人值守v108补齐同版原IONetworkingFamily，六次实机检查证实IONetworkStack存在、
+IOKit busy0。About实际耗时尚未复测，不把服务注册当联网成功；见[诊断](NETWORK-INITIALIZATION.md)。
+日志1475520B/drop36，同步RPC及完整stock恢复通过，设备已回Android并请求熄屏。
 
 最新实机为[v106](../profiles/v106-rt-memory/README.md)：真实手指能上滑、打开Settings和General，
 About在较长网络初始化等待后也能打开。v105引入映射缓存后滑动明显改善，但点击会使backboardd

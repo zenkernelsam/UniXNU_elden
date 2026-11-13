@@ -1,0 +1,14 @@
+{
+  "profile": "v108-network-family",
+  "profile_sha256": "7a482d1525f8b49e09d7776e84d51a2134ba7dd27ab853cd35e867b2fea6d3d2",
+  "baseline_kernel_sha256": "ef019cea15b0db52a8eb8b11d2868e17326d376fd4d27f0a7a2d3672bec33452",
+  "kernel_sha256": "4029cbc5f6bd4b50ec2237293e6e734c8543022ff6acbc20199e088dc829512b",
+  "native_sha256": "48da496358229b0404bbfab61a1f3f5cbd5c7987783300de94e7e1d3b908afa9",
+  "native_unchanged": true,
+  "core_filelist_equal": true,
+  "added_component": "com.apple.iokit.IONetworkingFamily",
+  "original_apple_executables_hashed": 31,
+  "original_existing30_preserved": true,
+  "network_personalities_preserved": true,
+  "hardware_tested": false
+}

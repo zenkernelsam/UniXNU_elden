@@ -1,0 +1,36 @@
+{
+  "profile": "v108-network-family",
+  "baseline": "v107-iokit-busy",
+  "baseline_kernel_sha256": "ef019cea15b0db52a8eb8b11d2868e17326d376fd4d27f0a7a2d3672bec33452",
+  "baseline_native_sha256": "48da496358229b0404bbfab61a1f3f5cbd5c7987783300de94e7e1d3b908afa9",
+  "added_component": "com.apple.iokit.IONetworkingFamily",
+  "original_kernel_sha256": "f18b4df865405f2a287b84977d7aca745e056d656d9fc9df1662970ce2969de7",
+  "native_recompiled": false,
+  "menu_policy": "v106 unchanged",
+  "scope": "Add original21H461 IONetworkingFamily to the prelink closure with its original IONetworkStack personality; no fabricated interfaces or MAC address",
+  "executable_sha256": "84482be879cb943c843b7525520a85ce9e58527033fb3b869cbe96a7186fa76d",
+  "executable_bytes": 91284,
+  "personalities": {
+    "Kernel Debugging Driver": {
+      "IOClass": "IOKDP",
+      "IOMatchCategory": "IOKDP",
+      "IOProviderClass": "IOKernelDebugger",
+      "CFBundleIdentifier": "com.apple.iokit.IONetworkingFamily"
+    },
+    "IONetworkStack": {
+      "IOClass": "IONetworkStack",
+      "IOMatchCategory": "IONetworkStack",
+      "IOProviderClass": "IOResources",
+      "IOResourceMatch": "IOBSD",
+      "CFBundleIdentifier": "com.apple.iokit.IONetworkingFamily"
+    }
+  },
+  "bundle_libraries": {
+    "com.apple.kpi.mach": "10.0.0d1",
+    "com.apple.kpi.private": "10.0.0d1",
+    "com.apple.kpi.unsupported": "10.0.0d1",
+    "com.apple.kpi.iokit": "10.0.0d1",
+    "com.apple.kpi.libkern": "10.0.0d1",
+    "com.apple.kpi.bsd": "10.0.0d1"
+  }
+}

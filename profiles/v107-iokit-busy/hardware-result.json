@@ -1,0 +1,21 @@
+{
+  "image_sha256": "c76f6483a12c056bcbd6b7f0351c481d696acb073e686bbaea4bdf43dacd62f2",
+  "session": "cdf915c6da8f84c3",
+  "boot_nonce": "4264f9453036ecd0",
+  "raw_sha256": "f871a77f475080fa1d8d410fc9c63f5c96aa10d39b5d0d5a77d8a227b506bf49",
+  "captured_bytes": 1513036,
+  "drop_max": 82,
+  "iokit": [
+    "ELDEN_IOKIT t=10 root-present=1 busy=0 visited=89 leaves=0 complete=1 providers=2",
+    "ELDEN_IOKIT t=30 root-present=1 busy=0 visited=141 leaves=0 complete=1 providers=2",
+    "ELDEN_IOKIT t=60 root-present=1 busy=0 visited=224 leaves=0 complete=1 providers=2",
+    "ELDEN_IOKIT t=120 root-present=1 busy=0 visited=260 leaves=0 complete=1 providers=2",
+    "ELDEN_IOKIT t=240 root-present=1 busy=0 visited=261 leaves=0 complete=1 providers=2",
+    "ELDEN_IOKIT t=300 root-present=1 busy=0 visited=261 leaves=0 complete=1 providers=2"
+  ],
+  "software_injection_seen": false,
+  "faults": [],
+  "reset_after_sync": true,
+  "stock_restored_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "interpretation": "Six complete snapshots show root busy0, AES provider present, and no IONetworkStack/wireless/Ethernet service. Combined with About stacks, investigate omitted original network-family registration. No timeout or fake readiness change made."
+}

@@ -13,7 +13,10 @@ def qualify(report_path,entry_path):
     if name=='v106-rt-memory':
         from rt_memory_boot import qualify as qualify_rt
         return qualify_rt(report_path,entry_path)
-    if name not in ('v100-hid-delivery','v105-hid-display'):raise ValueError('Unsupported HID profile')
+    if name=='v108-network-family':
+        from network_family_boot import qualify as qualify_network
+        return qualify_network(report_path,entry_path)
+    if name not in ('v100-hid-delivery','v105-hid-display','v107-iokit-busy'):raise ValueError('Unsupported HID profile')
     profile=ROOT/'profiles'/name/'plan.json';plan=json.loads(profile.read_text())
     if report['profile_sha256']!=sha(profile) or report['baseline_kernel_sha256']!=plan['baseline_kernel_sha256']:
         raise ValueError('Wrong HID build profile')
@@ -35,7 +38,7 @@ def qualify(report_path,entry_path):
 def menu(qualified):
     from fbwc_boot import template
     if qualified['profile']=='v100-hid-delivery':return template(True)
-    if qualified['profile'] not in ('v105-hid-display','v106-rt-memory'):raise ValueError('Unknown HID menu')
+    if qualified['profile'] not in ('v105-hid-display','v106-rt-memory','v107-iokit-busy','v108-network-family'):raise ValueError('Unknown HID menu')
     import tomllib
     from battery_boot import template as battery_template,arguments
     base=battery_template(template(True))

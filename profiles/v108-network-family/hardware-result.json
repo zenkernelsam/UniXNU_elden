@@ -1,0 +1,26 @@
+{
+  "image_sha256": "3713978c6843b228efbdd24b4c58f1921fbc87b23658bc99c3677b7efd59b615",
+  "session": "e6fd1d3826cfc960",
+  "raw_sha256": "c8277d9be548c4d55d5f8db3c2d324748b521f050ccb188bdaebd1ef809abe25",
+  "captured_bytes": 1475520,
+  "drop_max": 36,
+  "iokit": [
+    "ELDEN_IOKIT t=10 root-present=1 busy=0 visited=90 leaves=0 complete=1 providers=3",
+    "ELDEN_IOKIT t=30 root-present=1 busy=0 visited=149 leaves=0 complete=1 providers=3",
+    "ELDEN_IOKIT t=60 root-present=1 busy=0 visited=232 leaves=0 complete=1 providers=3",
+    "ELDEN_IOKIT t=120 root-present=1 busy=0 visited=261 leaves=0 complete=1 providers=3",
+    "ELDEN_IOKIT t=240 root-present=1 busy=0 visited=263 leaves=0 complete=1 providers=3",
+    "ELDEN_IOKIT t=300 root-present=1 busy=0 visited=263 leaves=0 complete=1 providers=3"
+  ],
+  "network_stack_present": true,
+  "aes_present": true,
+  "wireless_or_ethernet_interface_present": false,
+  "software_input": false,
+  "human_finger_trial": false,
+  "about_delay_measured": false,
+  "fault_markers": [],
+  "reset_after_sync": true,
+  "stock_restored_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "android_boot_root_green": true,
+  "sleep_requested": true
+}

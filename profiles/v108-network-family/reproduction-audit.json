@@ -1,0 +1,32 @@
+{
+  "accepted_static": true,
+  "kernel_sha256": "4029cbc5f6bd4b50ec2237293e6e734c8543022ff6acbc20199e088dc829512b",
+  "profile_sha256": "7a482d1525f8b49e09d7776e84d51a2134ba7dd27ab853cd35e867b2fea6d3d2",
+  "original_apple_executables_hashed": 31,
+  "native_unchanged": true,
+  "metadata_parser_sha256": "5bd80b8c63deec29b747c28253e02308a56d5f8cdb37c9d315e7c8af7012d017",
+  "network_personalities": {
+    "Kernel Debugging Driver": {
+      "IOClass": "IOKDP",
+      "IOMatchCategory": "IOKDP",
+      "IOProviderClass": "IOKernelDebugger",
+      "CFBundleIdentifier": "com.apple.iokit.IONetworkingFamily"
+    },
+    "IONetworkStack": {
+      "IOClass": "IONetworkStack",
+      "IOMatchCategory": "IONetworkStack",
+      "IOProviderClass": "IOResources",
+      "IOResourceMatch": "IOBSD",
+      "CFBundleIdentifier": "com.apple.iokit.IONetworkingFamily"
+    }
+  },
+  "bundle_libraries": {
+    "com.apple.kpi.mach": "10.0.0d1",
+    "com.apple.kpi.private": "10.0.0d1",
+    "com.apple.kpi.unsupported": "10.0.0d1",
+    "com.apple.kpi.iokit": "10.0.0d1",
+    "com.apple.kpi.libkern": "10.0.0d1",
+    "com.apple.kpi.bsd": "10.0.0d1"
+  },
+  "hardware_tested": false
+}
