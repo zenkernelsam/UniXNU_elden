@@ -11,7 +11,7 @@ from link_v91_kernel import native_identity,verify_original_executables
 ROOT=Path(__file__).resolve().parents[1]
 PROFILE=ROOT/'profiles/v93-fbwc'
 def source_file(name):
-    parents={'v95-fbwc-pairs':'v94-fbwc-observation','v94-fbwc-observation':'v93-fbwc'}
+    parents={'v104-display-cache':'v95-fbwc-pairs','v95-fbwc-pairs':'v94-fbwc-observation','v94-fbwc-observation':'v93-fbwc'}
     folder=PROFILE.name
     while True:
         local=ROOT/'profiles'/folder/'sources'/name
@@ -77,7 +77,7 @@ def external(cap,suffix):
 def main():
     global PROFILE
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--profile',choices=('v93-fbwc','v94-fbwc-observation','v95-fbwc-pairs'),default='v93-fbwc')
+    p.add_argument('--profile',choices=('v93-fbwc','v94-fbwc-observation','v95-fbwc-pairs','v104-display-cache'),default='v93-fbwc')
     for n in ('v91-core','v91-native','v91-image','xnu-repository','prelink-repository','original-kernelcache','llvm','output'):p.add_argument('--'+n,type=Path,required=True)
     p.add_argument('--resume',action='store_true',help='Resume only the same source profile before archive/link creation')
     a=p.parse_args();PROFILE=ROOT/'profiles'/a.profile;plan=read(PROFILE/'plan.json');out=a.output.resolve()
@@ -105,6 +105,12 @@ def main():
         result=subprocess.run([str(host/'test-policy')],capture_output=True,text=True,check=True)
         write(host/'result.json',{'passed':True,'stdout':result.stdout,'stderr':result.stderr})
     elif not read(host/'result.json')['passed']:raise ValueError('Host policy test failed')
+    if 'TestSourceCache.cpp' in plan['sources']:
+        subprocess.run(['xcrun','--sdk','macosx','clang++','-std=c++17','-O1','-Wall','-Wextra','-Werror',
+            '-fsanitize=address,undefined',str(source_file('TestSourceCache.cpp')),'-o',str(host/'test-source-cache')],check=True)
+        trial=subprocess.run([str(host/'test-source-cache')],capture_output=True,text=True,check=True)
+        write(host/'source-cache-result.json',{'passed':True,'stdout':trial.stdout,'stderr':trial.stderr,
+            'header_sha256':sha(source_file('NativeLegacySourceCache.h'))})
     if 'TestCopyPairs.c' in plan['sources'] and not (host/'copy-result.json').exists():
         virtual=nc['jobs'][587]['file'].rsplit('/',1)[0]+'/NativeLegacyRequest.h'
         item=nc['files'][virtual];original=Path(item['path'])
@@ -138,6 +144,8 @@ def main():
         replace_file(ncap,job['file'],name);replace_file(ncap,job['file'].rsplit('/',1)[0]+'/WcPolicy.h','WcPolicy.h')
     if 'CopyPairs.h' in plan['sources']:
         replace_file(ncap,ncap['jobs'][1]['file'].rsplit('/',1)[0]+'/CopyPairs.h','CopyPairs.h')
+    if 'NativeLegacySourceCache.h' in plan['sources']:
+        replace_file(ncap,ncap['jobs'][1]['file'].rsplit('/',1)[0]+'/NativeLegacySourceCache.h','NativeLegacySourceCache.h')
     compiled=[]
     for name,cap in [('core',ccap),('native',ncap)]:
         target=out/name;target.mkdir(exist_ok=True)
@@ -151,6 +159,8 @@ def main():
     exports=lambda file:{n for n,v in global_symbols(file).items() if v[0]&0x0e!=0}
     artifacts={'video':Path(cnew['0']['output']),'mapping':Path(cnew['1']['output']),'ufs':Path(nnew['0']['output']),'display':Path(nnew['1']['output']),'glue':Path(nnew['2']['output'])}
     declared={'video':(Path(cr['237']['output']),{'_elden_fb_console_state'}),'ufs':(Path(nr['582']['output']),{'_elden_smp_framebuffer_ready'}),'display':(Path(nr['587']['output']),set()),'glue':(Path(nr['589']['output']),{'_native_legacy_fb_cache_mode'})}
+    if 'NativeLegacySourceCache.h' in plan['sources']:
+        declared['glue'][1].add('_native_legacy_frame_diagnostics_wanted')
     for name,(prior,added) in declared.items():
         if exports(artifacts[name])!=exports(prior)|added:raise ValueError('Unexpected export change: '+name)
     if exports(artifacts['mapping'])!={'_elden_fb_check_mapping'}:raise ValueError('Unexpected mapping-check exports')

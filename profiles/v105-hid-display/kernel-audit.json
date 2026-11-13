@@ -1,0 +1,23 @@
+{
+  "accepted_static": true,
+  "profile_sha256": "b38949c8cf0b0b82be373dc1619fa66511e940bab3c25aacae19942f02973dcf",
+  "kernel_sha256": "1619780e854e7667de0c70248b80779532dc4f69665e95a86ce181ad0ee26c1b",
+  "native_sha256": "f26b8da59ade8e288f188434ea4b07bd1799baefecfa5c9869d2a68ac89d8514",
+  "changed_archive_members": [
+    "EldenHidGlue.o",
+    "NativeHidInput.late.o"
+  ],
+  "core_filelist_equal": true,
+  "original_apple_executables_hashed": 30,
+  "callback_address": "0xfffffff007a0476c",
+  "callback_branches": [
+    "0xfffffff007a03134",
+    "0xfffffff007a03208"
+  ],
+  "prelinked_call_bytes_equal": true,
+  "entry_address": "0xfffffff007468488",
+  "entry_return_target": "0xfffffff00746a05c",
+  "entry_word": 335546101,
+  "hardware_tested": false,
+  "device_operations": false
+}

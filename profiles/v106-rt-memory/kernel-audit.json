@@ -1,0 +1,16 @@
+{
+  "accepted_static": true,
+  "profile_sha256": "fb36d22638f2392f6c6e9e22ea3ae3409ebdecd317a9d0c6fbe2039ddd4c8a73",
+  "kernel_sha256": "0407fd055cfd8e114259c3698fae4d12135da3f98388af4eb74ebe496b92bba0",
+  "native_sha256": "52239f09eb83959874bc06b1f5c68ed5c3c067d6da6aa4bee244fb0ea98af298",
+  "changed_core_objects": 1,
+  "original_apple_executables_hashed": 30,
+  "managed_rt_helper_address": "0xfffffff007444170",
+  "helper_bytes": 304,
+  "helper_prelink_bytes_equal": true,
+  "managed_range_symbols_bound": true,
+  "existing_vector_instructions": 173,
+  "new_rt_helper_scalar": true,
+  "unchanged_archives": 13,
+  "hardware_tested": false
+}

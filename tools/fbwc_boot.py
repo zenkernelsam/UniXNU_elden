@@ -21,7 +21,7 @@ def template(enabled=False):
 def qualify(report_path,entry_path):
     report=json.loads(Path(report_path).read_text());entry=json.loads(Path(entry_path).read_text())
     name=report.get('profile','v93-fbwc')
-    if name not in ('v93-fbwc','v94-fbwc-observation','v95-fbwc-pairs'):raise ValueError('Unknown framebuffer profile')
+    if name not in ('v93-fbwc','v94-fbwc-observation','v95-fbwc-pairs','v104-display-cache'):raise ValueError('Unknown framebuffer profile')
     expected=hashlib.sha256((ROOT/'profiles'/name/'plan.json').read_bytes()).hexdigest()
     if report['profile_sha256']!=expected or report['recompiled_objects']!=5 or report['original_apple_executables_hashed']!=30:
         raise ValueError('Unqualified framebuffer build')

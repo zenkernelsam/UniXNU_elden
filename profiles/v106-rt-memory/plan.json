@@ -1,0 +1,11 @@
+{
+  "profile": "v106-rt-memory",
+  "baseline": "v105-hid-display",
+  "baseline_kernel_sha256": "1619780e854e7667de0c70248b80779532dc4f69665e95a86ce181ad0ee26c1b",
+  "baseline_native_sha256": "f26b8da59ade8e288f188434ea4b07bd1799baefecfa5c9869d2a68ac89d8514",
+  "core_job": 266,
+  "patcher_sha256": "e2407cd14ac33664464bfd2b7cb88ef2cf6e1cb25e230dcab9cd47d281421c13",
+  "menu_policy": "v105 unchanged",
+  "hypothesis": "Managed RT surface mapping uses Device attributes and faults on DC ZVA. Only managed RT PTE attributes change; all MMIO, cache synchronization and other modes preserved.",
+  "derived_source_sha256": "7893fca2a7365b78f161d0e564eb1e492df8d15c4de81c756b46a24a7621574b"
+}

@@ -1,0 +1,16 @@
+{
+  "source_kernel_sha256": "1619780e854e7667de0c70248b80779532dc4f69665e95a86ce181ad0ee26c1b",
+  "baseline_kernel_sha256": "e33bdc7870cd8056968b93f0b9c56378a13ac951329efa9e4970ffd115b8d800",
+  "assembly_sha256": "818ed81e39f38ee6f13bdbf4f166e9e7a5d72f4b7a652d52872e2ba85ea53cc1",
+  "assembly_sections_equal": true,
+  "same_object_in_both_filelists": true,
+  "entry_symbol": "__start",
+  "return_symbol": "_start_first_cpu",
+  "entry_word": 335546101,
+  "target_delta": 7124,
+  "entry_address": "0xfffffff007468488",
+  "return_target": "0xfffffff00746a05c",
+  "baseline_entry_address": "0xfffffff007468488",
+  "baseline_return_target": "0xfffffff00746a05c",
+  "hardware_tested": false
+}

@@ -1,5 +1,12 @@
 # 当前状态 · 2026-11-13
 
+最新实机为[v106](../profiles/v106-rt-memory/README.md)：真实手指能上滑、打开Settings和General，
+About在较长网络初始化等待后也能打开。v105引入映射缓存后滑动明显改善，但点击会使backboardd
+在DC ZVA处重载；v106按上游RT内存策略限定修正managed DRAM后，本轮未再记录该异常。
+两发分别drop24/28，均同步回fastboot并完整SHA恢复Android。整屏copy约60ms，仍非流畅度终验。
+CPU八核上线，内存仍6GiB；充电双口/净充电、无线、休眠和持久Data仍未完成。
+以下v100记录是历史基线，不能当作最新完整功能范围。
+
 最新软件交互已验为 **v100**（继承v94显示/v91功能）：iPadOS 17.7.11 (21H461) 在 Y700 Gen4 / TB322FC 上进入
 SpringBoard，通过一次软件上滑、一次短按 Settings，收到实际渲染的 Settings/General 页面。
 这证明该软件输入路径可用，尚不能宣布真实手指操作或日用性能验收。

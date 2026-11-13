@@ -1,0 +1,87 @@
+{
+  "profile": "v105-hid-display",
+  "baseline": "v104-display-cache",
+  "baseline_profile_sha256": "7e43b08e53b670a39d7b2bd7bdf1b8ec37b3eeadd53a0fa07853bca03105e059",
+  "baseline_native_sha256": "01a17bfc5a3cc165ab9b6d35caf1d4eef02cb93333410f27989bbd3d748aac0d",
+  "baseline_kernel_sha256": "e33bdc7870cd8056968b93f0b9c56378a13ac951329efa9e4970ffd115b8d800",
+  "owned": {
+    "drivers/EldenHidDelivery/SourcePatch.py": "1d2fac09fa70f5b1bf1e3c473f5474a42db24c95d9ac69fec7a84aa630b613dc"
+  },
+  "objects": {
+    "NativeHidInput.cpp": {
+      "parent_job_index": 593,
+      "source_sha256": "a09dd7056f4855b47bdb6fdeebdd95d995b8ca5e26617823b707a8b5f63d0e3c",
+      "sections": {
+        "__TEXT/__text": [
+          7668,
+          2147484672,
+          "9a062332e45a0aefd059e15d7d0276a87525c3949f41ec0f8cf09eda9a8fd473"
+        ],
+        "__DATA/__common": [
+          72,
+          1,
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ],
+        "__DATA/__const": [
+          1832,
+          0,
+          "97ae2e60f46fd4ea1f401c93a38e0323222d290665bfebbfc9a11dc05503e58f"
+        ],
+        "__TEXT/__cstring": [
+          394,
+          2,
+          "f953f4a2064451e6c21c82e68d8d5423174a9071139766a32d8ddc9d6576c15b"
+        ],
+        "__DATA_CONST/__kalloc_type": [
+          64,
+          134217728,
+          "cd96e73108ba635f79772933eb7ff96a7e1d804beeea977a2eee9a12b433f88f"
+        ],
+        "__DATA/__bss": [
+          272,
+          1,
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ],
+        "__DATA/__data": [
+          4,
+          0,
+          "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        ],
+        "__TEXT/__const": [
+          705,
+          0,
+          "3f7a7500cf52eff0c482e706773f3e70b9e5b67cb7801201363c241d97beaddc"
+        ]
+      },
+      "symbols_sha256": "30ea409aaa54c3856b5161243a06da85f87da3a814bcf7bb9303d5b3cbca8ae3"
+    },
+    "EldenHidGlue.cpp": {
+      "parent_job_index": 595,
+      "source_sha256": "86ad1a7e842308a7990b5228ae2f8760ec697c6dd5f5251edfdcd47d37c1784f",
+      "sections": {
+        "__TEXT/__text": [
+          8536,
+          2147484672,
+          "5c17478437c38f217ef37c8d5a7982d3a1f446324a7b92ccd4f28e44359f84a6"
+        ],
+        "__DATA/__common": [
+          156,
+          1,
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ],
+        "__DATA/__bss": [
+          172,
+          1,
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ],
+        "__TEXT/__cstring": [
+          1386,
+          2,
+          "3a28e6993377728b56476d1c0da9943393b51d75cc0bd91b53f4a56db2bd8fcc"
+        ]
+      },
+      "symbols_sha256": "aadad96264eae33859a36ae8969dc274971c69a785dfa6347acd244b8b10bae9"
+    }
+  },
+  "menu_policy": "v94 equivalents with v96 battery publication and smp-hold600"
+}

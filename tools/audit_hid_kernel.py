@@ -17,9 +17,11 @@ def at_va(data,va,size):
     raise ValueError('Address is not file backed')
 
 def audit(build):
-    result=json.loads((build/'result.json').read_text());plan=ROOT/'profiles/v100-hid-delivery/plan.json'
+    result=json.loads((build/'result.json').read_text());name=result.get('profile')
+    if name not in ('v100-hid-delivery','v105-hid-display'):raise ValueError('Unsupported HID profile')
+    plan=ROOT/'profiles'/name/'plan.json'
     kernel=build/'kernel.macho';native=build/'native.macho'
-    if result['profile']!='v100-hid-delivery' or result['profile_sha256']!=sha(plan) or sha(kernel)!=result['kernel_sha256'] or sha(native)!=result['native_sha256']:
+    if result['profile_sha256']!=sha(plan) or sha(kernel)!=result['kernel_sha256'] or sha(native)!=result['native_sha256']:
         raise ValueError('Unqualified HID build identity')
     expected={'NativeHidInput.late.o','EldenHidGlue.o'}
     changed={name for name,r in result['archive_members'].items() if r['before']!=r['archived_after']}

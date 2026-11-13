@@ -1,0 +1,35 @@
+{
+  "accepted_static": true,
+  "image_sha256": "b0fbb03b0105776075fc4023d73b2d2b1fa2fe2e969bd31d961b5344a99a52b6",
+  "kernel_sha256": "f0e65cac193eee31ef8eb104794e34bd11cb0be75daae4aede78bb75884be59c",
+  "rollback_index": 1738713600,
+  "footer_location": 0,
+  "parent_boot_chain_location": 3,
+  "fat_mirrors_equal": true,
+  "entry_body_100_bytes_equal_hardware_baseline": true,
+  "entry_branch_target_equal": true,
+  "entry_branch_target_qualified": true,
+  "entry_address": "0xfffffff0084c0000",
+  "entry_return_target": "0xfffffff00746a05c",
+  "session": "5c80cd07c33e65a6",
+  "memory_window_bytes": 6442450944,
+  "firmware_contract": {
+    "sha256": "aba76d8a8374e1356e41c0c97b9e4f83691108b8eb7767a5ead28b0d2b2a7b35",
+    "contract_sha256": "c3287ed4949e54529b6ad6cda482b28d1ee749439282ab1574f5ae9f643f84aa",
+    "all_executable_bytes_equal": true,
+    "hardware_tested": false
+  },
+  "hardware_tested": false,
+  "device_operation": false,
+  "full_asset_source_closure": true,
+  "touch_delivery": {
+    "profile": "v105-hid-display",
+    "profile_sha256": "b38949c8cf0b0b82be373dc1619fa66511e940bab3c25aacae19942f02973dcf",
+    "pre_entry_kernel_sha256": "1619780e854e7667de0c70248b80779532dc4f69665e95a86ce181ad0ee26c1b",
+    "entry_return_target": "0xfffffff00746a05c",
+    "entry_assembly_sha256": "818ed81e39f38ee6f13bdbf4f166e9e7a5d72f4b7a652d52872e2ba85ea53cc1",
+    "menu_unchanged_from": null,
+    "menu_policy": "v94 equivalents with v96 battery publication and smp-hold600",
+    "hardware_tested": false
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "image_sha256": "e25f1ed425308d48ac043d7488587ab9e7e60759eb14c7e06bc5b34b47dc4f79",
+  "session": "b7908e55c27262ee",
+  "boot_nonce": "a870fe09f577aa1b",
+  "log_sha256": "e6da7f03e51d749c1dcd8d2ff08d363a1617524eba4adfd7e15e12fcb8e33c57",
+  "captured_bytes": 3649183,
+  "drop_max": 24,
+  "paired_path_records": [
+    "1",
+    "1"
+  ],
+  "copy_samples": 32,
+  "copy_ms_median": 61.519557291666665,
+  "prior_v94_median_ms": 134.136875,
+  "copy_speedup_vs_v94": 2.1803940227341325,
+  "software_replay_records": [
+    "ELDEN_UI_REPLAY swipe-up sent=25 error=0 release=0 source=software"
+  ],
+  "software_settings_completed": false,
+  "user_qualitative_result": "No visual observation of performance/Settings reported; later requested manual play.",
+  "human_handoff": {
+    "utc": "2026-11-13T12:52:04.542553+00:00",
+    "user_requested_touch_play": true,
+    "watcher_pid": 62568,
+    "watcher_stop_result": "Owned watcher stopped",
+    "prior_control_events": [
+      {
+        "id": "icon-unlock-once",
+        "command": "swipe-up",
+        "utc": "2026-11-13T12:50:31.494547+00:00",
+        "state": "send-attempt"
+      },
+      {
+        "line": "ELDEN ACK SWIPE_UP session=b7908e55c27262ee source=software; queued",
+        "elapsed": 107.01599999994505,
+        "utc": "2026-11-13T12:50:33.299246+00:00"
+      },
+      {
+        "line": "ELDEN_UI_REPLAY swipe-up sent=25 error=0 release=0 source=software",
+        "elapsed": 107.68699999991804,
+        "utc": "2026-11-13T12:50:33.969772+00:00"
+      }
+    ],
+    "scope": "logger and supervised fastboot/stock recovery continue; any earlier software injection stays labelled software"
+  },
+  "full_ui_acceptance": false,
+  "smp_hold_end": [
+    "ELDEN_SMP HOLD_END reason=2 elapsed-ms=240986 online=ff; stop-pet"
+  ],
+  "explicit_sync_return": false,
+  "fastboot_observed": true,
+  "stock_restored_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "limits": [
+    "Copy timing does not measure FPS, gestures or end-to-end latency.",
+    "Automated watcher was intentionally stopped at the user request; software swipe had already been sent, so this is not a pure physical-input trial.",
+    "User did not confirm Settings or smoother interaction.",
+    "Fallback stop-pet was captured; no RESET_AFTER_SYNC was captured.",
+    "v95 does not include the later v100 HID delivery fix."
+  ]
+}

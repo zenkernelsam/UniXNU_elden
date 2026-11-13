@@ -1,0 +1,41 @@
+{
+  "accepted_static": true,
+  "image_sha256": "ea11a8700f71629d392a944654781a36b1b71e917b541fa14609095937fbab5d",
+  "kernel_sha256": "dcc500791afe6731b7ea20021e350b4ffe2a895da1834730328e54b4a5247c65",
+  "rollback_index": 1738713600,
+  "footer_location": 0,
+  "parent_boot_chain_location": 3,
+  "fat_mirrors_equal": true,
+  "entry_body_100_bytes_equal_hardware_baseline": true,
+  "entry_branch_target_equal": true,
+  "entry_branch_target_qualified": true,
+  "entry_address": "0xfffffff0084c0000",
+  "entry_return_target": "0xfffffff00746a05c",
+  "session": "c4efa0a7a7978cbd",
+  "memory_window_bytes": 6442450944,
+  "firmware_contract": {
+    "sha256": "aba76d8a8374e1356e41c0c97b9e4f83691108b8eb7767a5ead28b0d2b2a7b35",
+    "contract_sha256": "c3287ed4949e54529b6ad6cda482b28d1ee749439282ab1574f5ae9f643f84aa",
+    "all_executable_bytes_equal": true,
+    "hardware_tested": false
+  },
+  "hardware_tested": false,
+  "device_operation": false,
+  "full_asset_source_closure": true,
+  "touch_delivery": {
+    "profile": "v106-rt-memory",
+    "profile_sha256": "fb36d22638f2392f6c6e9e22ea3ae3409ebdecd317a9d0c6fbe2039ddd4c8a73",
+    "pre_entry_kernel_sha256": "0407fd055cfd8e114259c3698fae4d12135da3f98388af4eb74ebe496b92bba0",
+    "entry_return_target": "0xfffffff00746a05c",
+    "entry_assembly_sha256": "818ed81e39f38ee6f13bdbf4f166e9e7a5d72f4b7a652d52872e2ba85ea53cc1",
+    "menu_unchanged_from": "v105-hid-display",
+    "hardware_tested": false
+  },
+  "wait_sample": {
+    "boot_args_bytes": 1023,
+    "user_wait_enabled": true,
+    "ui_kdebug_observer_enabled": false,
+    "automatic_input": false,
+    "kernel_changed": false
+  }
+}

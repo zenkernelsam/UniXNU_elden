@@ -39,6 +39,7 @@ def main():
     p.add_argument('--wcn-report',type=Path)
     p.add_argument('--bt-runtime',type=Path)
     p.add_argument('--hid-report',type=Path,help='Explicit v100 result-bearing touch delivery build; retains the v94 menu')
+    p.add_argument('--wait-sample',action='store_true',help='v106 only: enable existing bounded process-wait sampler')
     a=p.parse_args();out=a.output.resolve()
     def path(v):
         s=str(Path(v).resolve())
@@ -83,7 +84,13 @@ def main():
     (payloads/'kernel.macho.trustcache').write_bytes(trust)
     for source,dest in [(a.kernel,payloads/'kernel.macho'),(a.data,payloads/'data.packed'),(a.loader,assets/'EldenPayloadLoader.efi')]:shutil.copyfile(source,dest)
     template=boot_template(bool(fbwc or hid))
+    if hid:template=hid_delivery_boot.menu(hid)
     if bt:template=bt_runtime_boot.menu()
+    wait_sample=None
+    if a.wait_sample:
+        if not hid or hid['profile']!='v106-rt-memory':raise ValueError('Wait capture requires v106')
+        from wait_sample_boot import template as wait_template,verify as wait_verify
+        before=template;template=wait_template(before);wait_sample=wait_verify(before,template)
     battery_ui=None
     if a.battery_ui:
         before=template;template=battery_template(before);battery_ui=verify_battery_menu(before,template)
@@ -123,5 +130,6 @@ def main():
     if battery_ui:result['battery_ui']=battery_ui
     if bt:result['bluetooth_runtime']=bt
     if hid:result['touch_delivery']=hid
+    if wait_sample:result['wait_sample']=wait_sample
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:result[k] for k in ('image_sha256','rollback_index','footer_location','session','full_asset_source_closure')},indent=2))
 if __name__=='__main__':main()

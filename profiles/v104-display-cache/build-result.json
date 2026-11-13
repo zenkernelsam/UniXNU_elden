@@ -1,0 +1,18 @@
+{
+  "profile": "v104-display-cache",
+  "kernel_sha256": "e33bdc7870cd8056968b93f0b9c56378a13ac951329efa9e4970ffd115b8d800",
+  "native_sha256": "01a17bfc5a3cc165ab9b6d35caf1d4eef02cb93333410f27989bbd3d748aac0d",
+  "profile_sha256": "7e43b08e53b670a39d7b2bd7bdf1b8ec37b3eeadd53a0fa07853bca03105e059",
+  "recompiled_objects": 5,
+  "core_objects_reused": 1009,
+  "original_apple_executables_hashed": 30,
+  "added_exports": [
+    "_elden_fb_check_mapping",
+    "_elden_fb_console_state",
+    "_elden_smp_framebuffer_ready",
+    "_native_legacy_fb_cache_mode",
+    "_native_legacy_frame_diagnostics_wanted"
+  ],
+  "hardware_tested": false,
+  "device_operation": false
+}

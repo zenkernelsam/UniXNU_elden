@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "stdout": "PASS 9216 actual PTE comparisons; managed RT only, MMIO and other modes unchanged\n",
+  "stderr": "",
+  "command": [
+    "cc",
+    "-std=c11",
+    "-O1",
+    "-g",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-fsanitize=address,undefined",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/rt-memory-v106-20261113/host3/test.c",
+    "-o",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/rt-memory-v106-20261113/host3/test"
+  ],
+  "scope": "Actual function bodies; constants/managed-range classification supplied by fixture; hardware mappings still require device evidence"
+}

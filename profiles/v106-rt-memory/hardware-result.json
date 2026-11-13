@@ -1,0 +1,31 @@
+{
+  "image_sha256": "0b34db586cd05e493df620d83d1f5244f2cd520646c20b930395b84a6bc53dae",
+  "session": "f41202ebebeb5e63",
+  "boot_nonce": "0e4f7ce5f033d6cf",
+  "captured_bytes": 1590822,
+  "raw_sha256": "f960de2c7d47cb077999b46a7670e160cb70400f8b3e52cc671c97b42ae275c4",
+  "drop_max": 24,
+  "faults": [],
+  "ram_data_enospc": [],
+  "copy_samples": 32,
+  "copy_median_ms": 60.20364583333333,
+  "user_result": {
+    "settings_opened": true,
+    "general_opened": true,
+    "about_freezes": true,
+    "springboard_reload_observed": false,
+    "user_text": "Seems much better. General -> About freezes Settings; no SpringBoard restart so far."
+  },
+  "touch_stop": [
+    "ELDEN_TOUCH stopping frames=20351 reports=960",
+    "ELDEN_TOUCH stop error=0 protocol-stage=8 platform-stage=5 released=0 quarantine=0 reports=960 invalid=0"
+  ],
+  "reset_after_sync": true,
+  "stock_restored": true,
+  "limits": [
+    "Settings and General opened by real finger, no observed SpringBoard reload in this window.",
+    "About freezes; cause not observable from ordinary console; next use existing bounded wait sampler.",
+    "Absence of recorded faults with dropped bytes is not a complete all-exception proof.",
+    "No memory-capacity expansion in this candidate; system window6GiB, RAM Data512MiB."
+  ]
+}

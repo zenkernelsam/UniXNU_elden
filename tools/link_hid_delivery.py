@@ -16,16 +16,19 @@ def exports(p):return {n for n,v in global_symbols(p).items() if v[0]&0x0e!=0}
 def symbols_sha(p):return hashlib.sha256(json.dumps(global_symbols(p),sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
 def main():
+    global PROFILE
     p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument("--profile",choices=("v100-hid-delivery","v105-hid-display"),default="v100-hid-delivery")
     for n in ('v94-build','delivery-build','prelink-repository','original-kernelcache','output'):p.add_argument('--'+n,type=Path,required=True)
-    a=p.parse_args();base=a.v94_build.resolve();delivery=a.delivery_build.resolve();out=a.output.resolve();plan=read(PROFILE)
+    a=p.parse_args();PROFILE=ROOT/'profiles'/a.profile/'plan.json';base=a.v94_build.resolve();delivery=a.delivery_build.resolve();out=a.output.resolve();plan=read(PROFILE)
     if out.exists():raise ValueError('Output must be new')
     if sha(base/'native.macho')!=plan['baseline_native_sha256'] or sha(base/'kernel.macho')!=plan['baseline_kernel_sha256']:
         raise ValueError('Wrong v94 baseline')
     for path,expected in plan['owned'].items():
         if sha(ROOT/path)!=expected:raise ValueError('Changed delivery source: '+path)
-    inputs=read(base/'inputs.json');bp=read(ROOT/'profiles/v94-fbwc-observation/plan.json')
-    if sha(ROOT/'profiles/v94-fbwc-observation/plan.json')!=plan['baseline_profile_sha256']:raise ValueError('Changed v94 profile')
+    baseline_profile=ROOT/'profiles'/plan['baseline']/'plan.json'
+    inputs=read(base/'inputs.json');bp=read(baseline_profile)
+    if sha(baseline_profile)!=plan['baseline_profile_sha256']:raise ValueError('Changed v94 profile')
     cc,cr=verified_objects(Path(inputs['core']),bp['parent_core_profile'])
     nc,nr=verified_objects(Path(inputs['native']),bp['parent_native_profile'])
     ip=read(ROOT/'profiles/v91/image-build/plan.json');image=Path(inputs['image'])
@@ -110,7 +113,7 @@ def main():
     for name in pre['early_security_initializers']:command+=['--early-security-init',name]
     with (out/'prelink.log').open('x') as log:subprocess.run(command,cwd=out,stdout=log,stderr=subprocess.STDOUT,check=True)
     verify_original_executables(kernel,read(kernel.with_suffix('.json')),pre['original_executable_sha256'])
-    result={'profile':'v100-hid-delivery','profile_sha256':sha(PROFILE),'kernel_sha256':sha(kernel),'native_sha256':sha(native),
+    result={'profile':a.profile,'profile_sha256':sha(PROFILE),'kernel_sha256':sha(kernel),'native_sha256':sha(native),
         'baseline_kernel_sha256':plan['baseline_kernel_sha256'],'delivery_build_sha256':sha(delivery/'result.json'),
         'changed_archive_members':sorted(changed_names),'archive_members':member_records,'core_filelist_equal':True,
         'original_apple_executables_hashed':30,'hardware_tested':False,'boot_packaged':False,'device_operations':False}

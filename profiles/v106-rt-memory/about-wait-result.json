@@ -1,0 +1,34 @@
+{
+  "image_sha256": "ea11a8700f71629d392a944654781a36b1b71e917b541fa14609095937fbab5d",
+  "session": "c4efa0a7a7978cbd",
+  "boot_nonce": "64a3f3732e3bfd42",
+  "raw_sha256": "f42f677a985484c7fc061101762858dab5dcb7ce1b7cc854523d146c5384501a",
+  "captured_bytes": 1579474,
+  "drop_max": 28,
+  "preferences_main_samples": [
+    "ELDEN_WAIT pass=1 name=Preferences pid=300 thread=1 slide=19b68000 state=1 wait=fffffff70d540da0 cont=fffffff0077a6680 trap=203 pc=1e52eebdc lr=1a90ef3ec frames=1a90ef334,1abfdb03c,231b06dbc,231b090ac,231b085f4,1c0e2d7d8,1c0e2cafc,231b0e690,1a3ba7a9c,1a3ba6764,1a3ba63c8,1a432f934,1a3c40eac,1a3ca0d48,1a3f3c3f8,1a3b5d604,1a300aa38,1a300a5c4,1a3060aec,1a2fdc288,1a3cfc9b0,1a19fb9e8,1a19fb790,1a1a29010 error=0",
+    "ELDEN_WAIT pass=2 name=Preferences pid=300 thread=1 slide=19b68000 state=1 wait=fffffff70d540da0 cont=fffffff0077a6680 trap=203 pc=1e52eebdc lr=1a90ef3ec frames=1a90ef334,1abfdb03c,231b06dbc,231b090ac,231b085f4,1c0e2d7d8,1c0e2cafc,231b0e690,1a3ba7a9c,1a3ba6764,1a3ba63c8,1a432f934,1a3c40eac,1a3ca0d48,1a3f3c3f8,1a3b5d604,1a300aa38,1a300a5c4,1a3060aec,1a2fdc288,1a3cfc9b0,1a19fb9e8,1a19fb790,1a1a29010 error=0",
+    "ELDEN_WAIT pass=3 name=Preferences pid=300 thread=1 slide=19b68000 state=1 wait=fffffff70cf60f62 cont=fffffff007348304 trap=ffffffffffffffd1 pc=1e52e8b58 lr=1e52ec224 frames=1e52ec1b0,1e52ebfb8,1a1a29a6c,1a1a290dc,1a1a287d0,1e142c814,1a3f21268,1a3fcb90c,10092a438,10092b2e8,1c2fc6228,0 error=0",
+    "ELDEN_WAIT pass=4 name=Preferences pid=300 thread=1 slide=19b68000 state=1 wait=0 cont=fffffff0072ce1f0 trap=ffffffffffffffd1 pc=1e52e8b58 lr=1e52ec224 frames=1e52ec1b0,1e52ebfb8,1a1a29a6c,1a1a290dc,1a1a287d0,1e142c814,1a3f21268,1a3fcb90c,10092a438,10092b2e8,1c2fc6228,0 error=0"
+  ],
+  "fault_records": [],
+  "enospc_records": [],
+  "software_input_seen": false,
+  "user_observation": "About appeared after an extended wait. Settings and General are usable; latency remains to fix.",
+  "about_displayed_user_confirmed": true,
+  "initial_wait_chain": [
+    "PSGAboutDataSource _macAddress",
+    "SystemConfiguration dispatch_once initialization",
+    "worker: _wait_for_IOKit_to_quiesce"
+  ],
+  "pass1_pass2_same_wait": true,
+  "pass3_pass4_left_initial_wait": true,
+  "reset_after_sync": true,
+  "stock_restored_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "android_root_green_boot_completed": true,
+  "limits": [
+    "Saved thread contexts/frame reads are not an atomic live stack snapshot; incomplete/dropped logs remain.",
+    "Specific IOKit busy service or missing network-stack interface still not identified; no fake quiet state applied.",
+    "No exact wall-time latency measurement from user actions."
+  ]
+}

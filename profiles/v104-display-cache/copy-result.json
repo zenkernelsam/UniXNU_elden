@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "stdout": "PASS 469 padded rectangles, tails, eligibility, overlap and bounds; hardware speed untested\n",
+  "stderr": "",
+  "bounds_header_sha256": "81e89e1f40f2f1d0919567f53bc0564c650488843082693d00b9ea256cafae21"
+}

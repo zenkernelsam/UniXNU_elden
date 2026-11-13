@@ -26,6 +26,7 @@ def main():
     p.add_argument('--wcn-report',type=Path)
     p.add_argument('--bt-runtime',type=Path)
     p.add_argument('--hid-report',type=Path)
+    p.add_argument('--wait-sample',action='store_true')
     a=p.parse_args();checked=check_image(a.image,'boot_a');stock=check_image(a.stock_boot,'boot_a');check_image(a.parent_vbmeta,'vbmeta')
     if bool(a.wcn_report)!=bool(a.bt_runtime) or (a.wcn_report and (a.fbwc_report or a.battery_ui or a.hid_report)) or (a.hid_report and (a.fbwc_report or a.battery_ui)):raise ValueError('Ambiguous runtime audit')
     bt=bt_runtime_boot.qualify(a.wcn_report,a.entry_report,a.bt_runtime) if a.wcn_report else None
@@ -87,10 +88,16 @@ def main():
     fbwc=qualify_fbwc(a.fbwc_report,a.entry_report) if a.fbwc_report else None
     if fbwc and json.loads(a.entry_report.read_text())['derivative_sha256']!=sha(kernel):raise RuntimeError('Framebuffer entry report mismatch')
     text=fat.read(prefix+'unixnu.toml').decode();cfg=tomllib.loads(text);template=boot_template(bool(fbwc or hid))
+    if hid:template=hid_delivery_boot.menu(hid)
     if hid and json.loads(a.entry_report.read_text())['derivative_sha256']!=sha(kernel):raise ValueError('HID entry report mismatch')
     if bt:
         if json.loads(a.entry_report.read_text())['derivative_sha256']!=sha(kernel):raise ValueError('v99 entry mismatch')
         template=bt_runtime_boot.menu()
+    wait_sample=None
+    if a.wait_sample:
+        if not hid or hid['profile']!='v106-rt-memory':raise ValueError('Wait capture requires v106')
+        from wait_sample_boot import template as wait_template,verify as wait_verify
+        before=template;template=wait_template(before);wait_sample=wait_verify(before,template)
     import re
     sessions=re.findall(r'elden-debug-session=([0-9a-f]{16})',text)
     battery_ui=None
@@ -108,6 +115,7 @@ def main():
     if battery_ui:report['battery_ui']=battery_ui
     if bt:report['bluetooth_runtime']=bt
     if hid:report['touch_delivery']=hid
+    if wait_sample:report['wait_sample']=wait_sample
     if a.output.exists():raise RuntimeError('Audit output must be new')
     a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
 if __name__=='__main__':main()
