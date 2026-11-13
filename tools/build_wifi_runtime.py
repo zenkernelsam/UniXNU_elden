@@ -58,6 +58,18 @@ def main():
     fetch.write_text('from wifi_snapshot_check import check\ncheck()\n')
     with (out/'prepare.log').open('x') as log:
         subprocess.run(['bash',str(module/'tools/prepare.sh')],env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
+    # Apply after the upstream pre-load hook, before compiling any MHI unit.
+    # Keep the exact prior source for differential tests and historical audit.
+    sys.path.insert(0,str(ROOT/'drivers/EldenWifi/peach'))
+    from MhiReadPatch import patch as patch_mhi_status
+    mhi=module/'out/mhi-src/boot.c';before=mhi.read_bytes();after=patch_mhi_status(before)
+    original_mhi=mhi.with_name('boot.before-status-read-fix')
+    if original_mhi.exists():raise ValueError('MHI original source already exists')
+    mhi.rename(original_mhi);mhi.write_bytes(after)
+    write(out/'mhi-status-read-fix.json',{'original_sha256':hashlib.sha256(before).hexdigest(),
+        'derived_sha256':hashlib.sha256(after).hexdigest(),
+        'patch_source_sha256':sha(ROOT/'drivers/EldenWifi/peach/MhiReadPatch.py'),
+        'hardware_operations':False})
     # The original prepare flow reads the already-qualified Linux+Peach layer;
     # its output may contain additional upstream OS/runtime transformations.
     subprocess.run([sys.executable,str(fetch),'--check'],env=env,check=True)
@@ -84,6 +96,7 @@ def main():
     with (out/'build.log').open('x') as log:subprocess.run([sys.executable,str(code/'build.py'),str(module),str(objects)],env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
     from audit_wifi_runtime import audit
     result=audit(out,a.llvm,a.kernel_reference)
+    if not result.get('mhi_status_read_fix'):raise ValueError('MHI error-propagation fix absent from complete runtime')
     result.update(component_revision=COMPONENT,board_builder_revision=BOARD,original_builder_sha256=original_builder,
                   derived_builder_sha256=sha(code/'build.py'),replaced_fetch_validator_sha256=original_fetch,
                   source_identity=identity,legacy_station_linked=False)

@@ -9,6 +9,10 @@ The final build ran from a new directory using `build_wifi_runtime.py`. The
 first attempt's missing generated pwrseq header was corrected in the maintained
 recipe; the later complete build requires no manual header injection.
 
+This initial report uses commit `eac20d1b76c9d809895910bfc702f218ac1e3a47`.
+Current builds also include the [MHI status-read repair](peach/MHI-STATUS-READ.md);
+its complete rebuild and comparison are separate records.
+
 ## Evidence and remaining integration
 
 - 125 ordinary ARM64/iOS17 objects, scalar instructions, no automatic initializers.
@@ -27,7 +31,7 @@ The native WLAN power provider must serialize the shared WCN resources and
 return real execution errors. The BT acquire flow is not a WLAN start function.
 No fake success implementation or fallback was inserted for the missing symbol.
 
-The compiler produced9,334 warnings, preserved in the object logs.33 distinct
+The initial compiler run produced9,334 warnings, preserved in the object logs.33 distinct
 source positions concern potentially uninitialized variables or incompatible
 pointers; the full warning review remains open. Those warnings are not waived by
 the successful build or host tests. See the categories and limits in

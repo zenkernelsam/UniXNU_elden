@@ -1,5 +1,5 @@
 """Audit the complete prepared Wi-Fi object set and its remaining kernel imports."""
-import argparse,hashlib,json,re,subprocess
+import argparse,hashlib,json,re,subprocess,sys
 from pathlib import Path
 from replay_xnu_objects import global_symbols,sections
 
@@ -7,6 +7,16 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def audit(build,llvm,kernel):
     build=build.resolve();module=build/'component';objects=build/'objects'
     report=json.loads((objects/'build-report.json').read_text())
+    mhi_fix=None
+    if (build/'mhi-status-read-fix.json').exists():
+        sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'drivers/EldenWifi/peach'))
+        from MhiReadPatch import patch
+        mhi_fix=json.loads((build/'mhi-status-read-fix.json').read_text())
+        original=(module/'out/mhi-src/boot.before-status-read-fix').read_bytes()
+        current=(module/'out/mhi-src/boot.c').read_bytes()
+        if (hashlib.sha256(original).hexdigest()!=mhi_fix['original_sha256'] or
+            hashlib.sha256(current).hexdigest()!=mhi_fix['derived_sha256'] or patch(original)!=current):
+            raise ValueError('MHI read fix differs from the exact reviewed source')
     if report['runtime']!='mainline' or report['legacy_station_linked']:raise ValueError('Wrong runtime')
     expected=[]
     for line in (module/'tools/sources.txt').read_text().splitlines():
@@ -66,7 +76,7 @@ def audit(build,llvm,kernel):
             'renaming_preserves_code_data_and_bindings':True,'duplicate_definitions':duplicate,'imports':pending,'imports_missing_from_reference_kernel':missing,
             'kernel_reference_sha256':sha(kernel),'power_provider_external_required':True,'warnings':warnings,'warning_free':warnings==0,
             'retired_generated_entries':len(moved),'trash_journal_sha256':sha(receipt),'trash_bucket':str(Path(moved[0]['destination']).parent) if moved else None,
-            'kernel_linked':False,'native_wlan_gateway_implemented':False,'hardware_operations':False}
+            'mhi_status_read_fix':mhi_fix,'kernel_linked':False,'native_wlan_gateway_implemented':False,'hardware_operations':False}
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)

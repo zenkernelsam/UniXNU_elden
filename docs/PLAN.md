@@ -42,6 +42,8 @@ Peach要求固件OL-CPR处理先于TME-Lite；已将新适配统一到已有WcnP
 见[回移说明](../drivers/EldenWifi/peach/README.md)。完整OS适配和125对象构建已通过，
 见[运行时说明](../drivers/EldenWifi/RUNTIME.md)；下一步审核保留警告并接入真实WLAN owner、
 PCIe/DMA/MHI与网络回调，再做整核集成。对象/host通过或0x53非致命例外均不能当作已联网。
+MHI错误读取误报下载成功已修复并完成125对象重建，见[MHI记录](../drivers/EldenWifi/peach/MHI-STATUS-READ.md)。
+其余类型/未初始化警告与板级回调仍待处理，避免为消除警告直接设置掩盖错误的默认值。
 蓝牙常驻模式已补离线停止接口与上行背压退出，见[WCN-SHUTDOWN.md](WCN-SHUTDOWN.md)；
 v97已完成整核/恢复钩子的静态资格，见[构建档](../profiles/v97-wcn/README.md)，尚未entry转换/签包。
 随后仍需真实WCN/HCI及daemon验证。现有候选不自动换料。

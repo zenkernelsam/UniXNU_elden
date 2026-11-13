@@ -1,0 +1,54 @@
+{
+  "parent_source_commit": "eac20d1b76c9d809895910bfc702f218ac1e3a47",
+  "native_result_sha256": "b5a7115dad78f9ed75485eb062bb979ef43ff1a0ffe585c928b4b8284d484adb",
+  "patch": {
+    "original_sha256": "2a7d8ec943d9a88d7474da5b8faa40cd520e22cb6757e24391be91006d0f9644",
+    "derived_sha256": "2871607be263b8ca06d5b7589e190f131689a0ecbc1d03dbd87e6928faedda65",
+    "patch_source_sha256": "cbede5a62c13c545fd301327d3933e5e0b3555c1d05272af73d44bcc1b685604",
+    "hardware_operations": false
+  },
+  "host": {
+    "results": {
+      "original": {
+        "passed": true,
+        "stdout": "Original reproduced: pending status followed by read error falsely returns BHI success\n",
+        "stderr": "",
+        "source_sha256": "2a7d8ec943d9a88d7474da5b8faa40cd520e22cb6757e24391be91006d0f9644",
+        "harness_sha256": "a1f103584933e3e96af7f143ca580e7233e3c0223930938f16549fd4446b30d1"
+      },
+      "repaired": {
+        "passed": true,
+        "stdout": "Repaired BHI/BHIe: read errors preserved; completion, timeout, transfer error, PM loss and doorbell failure checked\n",
+        "stderr": "",
+        "source_sha256": "2871607be263b8ca06d5b7589e190f131689a0ecbc1d03dbd87e6928faedda65",
+        "harness_sha256": "7d28aa07991bc47ce609c72371412ecc8a53bb274c7ce4846315e53871f451b0"
+      }
+    },
+    "integrated_source_verified": true,
+    "actual_wait_macro_sha256": "5244039fb9f4b447fc30c384e8debe5f950b9e3f539e40cc8927d4eef3aadb38",
+    "hardware_operations": false
+  },
+  "objects": 125,
+  "input_count": 456,
+  "warnings": 9332,
+  "remaining_native_symbols": [
+    "_pwrseq_qcom_wcn_set_ol_cpr"
+  ],
+  "functional_section_changes": [
+    {
+      "object": "mhi_boot.o",
+      "section": "__TEXT/__text"
+    }
+  ],
+  "build_path_only_cstring_objects": 68,
+  "other_compile_inputs_unchanged": 455,
+  "old_mhi_behaviors_retained": [
+    "successful transfers",
+    "original timeout codes",
+    "PM error handling",
+    "BHI error dump",
+    "BHIe doorbell error"
+  ],
+  "kernel_linked": false,
+  "hardware_operations": false
+}
