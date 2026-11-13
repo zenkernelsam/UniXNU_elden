@@ -1,0 +1,59 @@
+{
+  "image_sha256": "bd4fb2211b8f48fed74ce7623f8da6da3c40c9a8c9764180f7b8444b3553baf2",
+  "session": "9d007744db52fc06",
+  "boot_nonce": "3f13f18fc7de54a0",
+  "log": "edl_work\\live-bt-v101-20261113\\usb\\20261113-093423.bin",
+  "log_sha256": "533fd6e46bd54fcb59c0a70c2e1e27ccdd89dabace1cdca5cf982e1b7715bb08",
+  "captured_bytes": 1154692,
+  "drop_max": 13,
+  "capture_end": "ClearCommError failed (PermissionError(13, '\u8bbe\u5907\u4e0d\u8bc6\u522b\u6b64\u547d\u4ee4\u3002', None, 22))",
+  "runtime": [
+    "ELDEN_BT_RUNTIME prepared=1 error=0 mount-stage=5 original-job=1"
+  ],
+  "wcn": [
+    "ELDEN_WCN survey=0 parent=600000000/300000000 rf-clk1=off apid=629 mode=4",
+    "ELDEN_WCN pll mode=e0000005 op=00000000 l=0000001f alpha=00004000 user=02000403",
+    "ELDEN_WCN supply=0 rc=0 mv=852 enable=00 mode=07 status=03",
+    "ELDEN_WCN supply=1 rc=0 mv=1800 enable=80 mode=04 status=86",
+    "ELDEN_WCN supply=2 rc=0 mv=1200 enable=80 mode=04 status=86",
+    "ELDEN_WCN supply=3 rc=0 mv=852 enable=00 mode=07 status=03",
+    "ELDEN_WCN supply=4 rc=0 mv=1256 enable=80 mode=07 status=8f",
+    "ELDEN_WCN supply=5 rc=0 mv=1856 enable=80 mode=03 status=8f",
+    "ELDEN_WCN qmp=0 step=8 text={class: wlan_pdc, ss: rf, res: s5f.m, enable: 1}",
+    "ELDEN_WCN qmp=0 step=8 text={class: wlan_pdc, ss: rf, res: s5f.v, enable: 1}",
+    "ELDEN_WCN qmp=0 step=8 text={class: wlan_pdc, ss: rf, res: s5f.v, upval: 876}",
+    "ELDEN_WCN qmp=0 step=8 text={class: wlan_pdc, ss: rf, res: s5f.v, dwnval: 876}",
+    "ELDEN_WCN rail=0 mv=876 result=0 tcs=0 step=9",
+    "ELDEN_WCN rail=1 mv=1800 result=0 tcs=0 step=9",
+    "ELDEN_WCN rail=2 mv=1200 result=0 tcs=0 step=9",
+    "ELDEN_WCN rail=3 mv=876 result=0 tcs=0 step=9",
+    "ELDEN_WCN rail=4 mv=1312 result=0 tcs=0 step=9",
+    "ELDEN_WCN rail=5 mv=1860 result=0 tcs=0 step=9",
+    "ELDEN_WCN prepare=0 stage=6 epoch=1",
+    "ELDEN_WCN hci=-110 ready=0 patch=0000 segments=0",
+    "ELDEN_WCN stop=0 uart-close=0 state=4 boot-shared-votes-retained=1",
+    "ELDEN_WCN RPC stop=1; radio/UART stopped, boot-shared votes retained"
+  ],
+  "parent_survey_passed": true,
+  "power_acquire_passed": true,
+  "combined_startup_result": -110,
+  "combined_startup_precise_failure_stage_known": false,
+  "hci_ready": false,
+  "native_bluetooth_usable": false,
+  "stop_and_close_record": "ELDEN_WCN stop=0 uart-close=0 state=4 boot-shared-votes-retained=1",
+  "reset_after_sync": true,
+  "actual_fastboot_observed": true,
+  "stock_restored_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "android_root_green_boot_completed": true,
+  "power_admission": {
+    "battery_mv": 4434,
+    "battery_soc_ok": "yes"
+  },
+  "limits": [
+    "Combined hci log carries errors from UART open, peripheral preparation/run and ordinary HCI preparation/run. -110 alone does not identify which stage failed.",
+    "Native service, firmware download, HCI identity, pairing and sleep remain unverified.",
+    "No synthetic finger input in this run.",
+    "Rails were raised only through the original bounded board votes; boot-shared baseline votes remain until platform reset.",
+    "Charging dual-port and protection-cycle acceptance remains incomplete."
+  ]
+}

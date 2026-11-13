@@ -19,7 +19,7 @@ def exports(p):return {n for n,v in global_symbols(p).items() if v[0]&0x0e!=0}
 def main():
     global PROFILE
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--profile',choices=('v97-wcn','v98-bt-bootstrap','v99-bt-runtime'),default='v97-wcn')
+    p.add_argument('--profile',choices=('v97-wcn','v98-bt-bootstrap','v99-bt-runtime','v101-bt-clock'),default='v97-wcn')
     p.add_argument('--runtime',type=Path,help='Verified BlueTool-only runtime input for v99')
     for n in ('v94-build','dependency','firmware','xnu-source','prelink-repository','original-kernelcache','llvm','output'):
         p.add_argument('--'+n,type=Path,required=True)
@@ -39,7 +39,7 @@ def main():
         original=ROOT/item['path']
         if sha(original)!=item['sha256']:raise ValueError('Owned source changed: '+name)
         shutil.copyfile(original,source/name);records[name]=item['sha256']
-    if a.profile=='v99-bt-runtime':
+    if a.profile in ('v99-bt-runtime','v101-bt-clock'):
         if not a.runtime:raise ValueError('v99 requires its runtime input')
         runtime=read(a.runtime/'report.json')
         if runtime['helper_sha256']!=plan['runtime_helper_sha256'] or sha(a.runtime/'EldenBtRuntimePayload.h')!=plan['runtime_header_sha256'] or sha(a.runtime/'runtime.trustcache')!=plan['runtime_trust_sha256']:
@@ -151,10 +151,10 @@ def main():
     prior=next(v for v in nr.values() if v['source'].endswith('/CpuPerfSurvey.cpp'))
     for filename in plan['cpp_units']:
         name=Path(filename).stem
-        defines=('ELDEN_BT_NATIVE_BUILD','ELDEN_BLUETOOTH_HCI_BUILD')+(('ELDEN_BT_RUNTIME_BUILD',) if a.profile=='v99-bt-runtime' else ())
+        defines=('ELDEN_BT_NATIVE_BUILD','ELDEN_BLUETOOTH_HCI_BUILD')+(('ELDEN_BT_RUNTIME_BUILD',) if a.profile in ('v99-bt-runtime','v101-bt-clock') else ())
         audit[name]=compile_cpp(name,prior,nc,Path(inputs['native'])/'build',filename,defines=defines)
     core_replacements={}
-    if a.profile=='v99-bt-runtime':
+    if a.profile in ('v99-bt-runtime','v101-bt-clock'):
         from SourcePatch import patch
         for filename in ('kern_exec.c','ubc_subr.c'):
             selected=[(i,j) for i,j in enumerate(cc['jobs']) if j['file'].endswith('/'+filename)]
@@ -211,11 +211,11 @@ def main():
     with (logs/'link.log').open('x') as log:subprocess.run(command,cwd=out,env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
     expected=exports(base/'native.macho')
     for path in map(Path,btmembers):expected|=exports(path)
-    if a.profile in ('v98-bt-bootstrap','v99-bt-runtime'):
+    if a.profile in ('v98-bt-bootstrap','v99-bt-runtime','v101-bt-clock'):
         oid='_sysctl__kern_elden_bt_bootstrap'
         if not global_symbols(obj/'BootstrapStatus.o')[oid][0]&0x10:raise ValueError('Expected private sysctl OID')
         expected.remove(oid) # ld localizes this standard private-external OID.
-    if a.profile=='v99-bt-runtime':expected.add('_elden_bt_runtime_ready')
+    if a.profile in ('v99-bt-runtime','v101-bt-clock'):expected.add('_elden_bt_runtime_ready')
     if exports(target)!=expected:raise ValueError('Linked exports differ from exact WCN addition')
     pre=ip['prelink'];kit=out/'prelink-tool';kit.mkdir()
     raw=subprocess.check_output(['git','-C',str(a.prelink_repository),'archive',pre['commit']])

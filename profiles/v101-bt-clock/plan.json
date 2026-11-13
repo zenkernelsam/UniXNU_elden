@@ -1,0 +1,268 @@
+{
+  "version": 1,
+  "profile": "v101-bt-clock",
+  "baseline": "v94-fbwc-observation",
+  "runtime_enabled": false,
+  "baseline_profile_sha256": "75e5196322dced07f87156cc87cfcbc2ca4729353e935e09acbb8090de6dd150",
+  "baseline_kernel_sha256": "aae04d7d5ad6c4a014999152241e928eb9b08ab95d1880565a7e8c7f1f3fb6e7",
+  "baseline_native_sha256": "a213219113ac420db4a61998b3a52c9a834f70b2aeb30740453cf47ea9efec69",
+  "owned": {
+    "Wcn7861Peripheral.c": {
+      "path": "drivers/EldenBluetooth/Wcn7861Peripheral.c",
+      "sha256": "4e92e38ecc8d77e6ea8a4c14a1286e44138283fd9ed8cc9ec1cd81e611d635e2"
+    },
+    "Wcn7861Startup.c": {
+      "path": "drivers/EldenBluetooth/Wcn7861Startup.c",
+      "sha256": "74600a77da1032f365bc0b1fd151beaefdecbd14455f6dc1592abc2bdbfa1779"
+    },
+    "Wcn7861Hci.c": {
+      "path": "drivers/EldenBluetooth/Wcn7861Hci.c",
+      "sha256": "0ee48cf33e8725d6a4af9f99f07f30d0af12f4d7cd27a17cd0f7b25a17448d24"
+    },
+    "UartPlatform.c": {
+      "path": "drivers/EldenBluetooth/UartPlatform.c",
+      "sha256": "241c73fd668d55a743ea8cec966c4d98f155cb8ac16eb3981a9edcd518d3da75"
+    },
+    "WcnPower.c": {
+      "path": "drivers/EldenBluetooth/WcnPower.c",
+      "sha256": "feb9fefa74ee07e39b7f5694c5921329d0017163a6391bdd82bf64a2ae9208c0"
+    },
+    "WcnPowerNative.cpp": {
+      "path": "drivers/EldenBluetooth/WcnPowerNative.cpp",
+      "sha256": "7781e46551fef791555dc5af658ee90c43dc0ac59629fd76980410c140883f53"
+    },
+    "NativeHost.cpp": {
+      "path": "drivers/EldenBluetooth/NativeHost.cpp",
+      "sha256": "646849166bcd935a8c594cff2470a24ed56484f274c15bff1f8eeb9ca64496e3"
+    },
+    "UartBackend.cpp": {
+      "path": "drivers/EldenBluetooth/UartBackend.cpp",
+      "sha256": "8bc7e2f60d4efcd324e4a45aff794cdf2faaa8f666f3593f907474d9791b95e6"
+    },
+    "RunControl.h": {
+      "path": "drivers/EldenBluetooth/RunControl.h",
+      "sha256": "955a6caa262040f9cea4879e8c61199c941a8a7c629704d99cc6e49830e4efdb"
+    },
+    "WcnPower.h": {
+      "path": "drivers/EldenBluetooth/WcnPower.h",
+      "sha256": "2047193ec2337bf0ef83f4308c0a83d879fdd6738e80f422a6c1907111a6fff3"
+    },
+    "UartBackend.h": {
+      "path": "drivers/EldenBluetooth/UartBackend.h",
+      "sha256": "9d53914ca66ab3376f29a4a31dc01fe733d22ce1239b185c07cfe6982e5247c9"
+    },
+    "UartPlatform.h": {
+      "path": "drivers/EldenBluetooth/UartPlatform.h",
+      "sha256": "3d7cb5ae5db23c83ba756a272f2703028296c97a239faba4919e4996c0789f3a"
+    },
+    "Wcn7861Hci.h": {
+      "path": "drivers/EldenBluetooth/Wcn7861Hci.h",
+      "sha256": "0b953f526043b8e1c9d45dc82b6cde97dfc50a6b8d2a8ce958fc1c06fa4a4397"
+    },
+    "Wcn7861Startup.h": {
+      "path": "drivers/EldenBluetooth/Wcn7861Startup.h",
+      "sha256": "3400efc85b9aa5d3ed0007756b53f663bd6f2980bf3e53b9d5b4f22d7595d7fa"
+    },
+    "Wcn7861Peripheral.h": {
+      "path": "drivers/EldenBluetooth/Wcn7861Peripheral.h",
+      "sha256": "371cf25079ca2780d97ec9672db4fe97902a69abb16bacf57b92ec411a76ac12"
+    },
+    "Wcn7861Wire.h": {
+      "path": "drivers/EldenBluetooth/Wcn7861Wire.h",
+      "sha256": "7360ca1acae9ac1b3551f906cb121baaa60e631fea60345e481371c2b101ed15"
+    },
+    "NativeHost.h": {
+      "path": "drivers/EldenBluetooth/NativeHost.h",
+      "sha256": "22d075ffd1af65c30e9b028565e0fb9f8e864ecad1e540b63410d4aebeaac2e9"
+    },
+    "EldenBluetoothInspect.cpp": {
+      "path": "scripts/driver-patches/EldenBluetoothInspect.cpp",
+      "sha256": "f6c464fa6faa37ec44ac2b2f28b9d91bbbf0e2f2d765da2e252d9f8c5c3d044a"
+    },
+    "EldenBluetoothBoard.h": {
+      "path": "package/EldenBluetoothBoard.h",
+      "sha256": "b9bb749cb0e4a9092315c4c6ba1bb79251355e6f5d4df9de2223429df0055599"
+    },
+    "EldenRebootResources.h": {
+      "path": "soc/sm8750/include/EldenRebootResources.h",
+      "sha256": "04befe2caf6e8e857b01faf7e50b2f009f0697dcd66d2f49df617885a744fcac"
+    },
+    "EldenBluetoothResources.h": {
+      "path": "soc/sm8750/include/EldenBluetoothResources.h",
+      "sha256": "6022aebbe900c277f20ae932fabf45aa969f3e7fdf6a127f2d7a7082c3582e8e"
+    },
+    "BridgeSource.py": {
+      "path": "drivers/EldenBluetooth/BridgeSource.py",
+      "sha256": "599149974c40f9d38c1fc3f7af33b725ed7320c40632b1283211bb7d35f2a09e"
+    },
+    "BridgeCompletion.py": {
+      "path": "drivers/EldenBluetooth/BridgeCompletion.py",
+      "sha256": "6593d5ad5c891ce037e188ffec256ee83846d74f187b79ab6472da712c0b76f3"
+    },
+    "BootstrapStatus.h": {
+      "path": "drivers/EldenBluetooth/BootstrapStatus.h",
+      "sha256": "95695a6ac331b5f5aba0c7ae928146ab02cc8038d13c95e29780cb746d17eb24"
+    },
+    "BootstrapStatus.cpp": {
+      "path": "drivers/EldenBluetooth/BootstrapStatus.cpp",
+      "sha256": "d28f627fc522eace30b7bce8bc19caeee875a9dce35a1339aad73eb42f6bdeac"
+    },
+    "Runtime.inc": {
+      "path": "drivers/EldenBluetooth/runtime/Runtime.inc",
+      "sha256": "7c0c2186e5ef37be9e554eae60cb2b43b67b8ae4d857f5467fa7f8137e30b842"
+    },
+    "TextGuard.h": {
+      "path": "drivers/EldenBluetooth/runtime/TextGuard.h",
+      "sha256": "aa96bf101d34d0f481a88dd75007b50f61cdc953ed18b2a601cd1a8dd1154b5e"
+    },
+    "SourcePatch.py": {
+      "path": "drivers/EldenBluetooth/runtime/SourcePatch.py",
+      "sha256": "4988df77616206f70bdf49ceec1ee25fc7705b8c39661cd8aca0265c3fbb23fd"
+    }
+  },
+  "dependency": {
+    "revision": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+    "files": {
+      "BtH4.c": {
+        "path": "drivers/PaganiBt/BtH4.c",
+        "sha256": "473f45324782f2f74ec69b41fb444887e6af8cc6bf765cf937d1f45ce18d6ac2"
+      },
+      "BtH4.h": {
+        "path": "drivers/PaganiBt/BtH4.h",
+        "sha256": "8dd4df801f1bfc98ce7281d8057d888be2a35a625f1054eadfd466ec4c5cbf68"
+      },
+      "BtIbs.c": {
+        "path": "drivers/PaganiBt/BtIbs.c",
+        "sha256": "5b5f5ead223de947c0106f4c2384869c165c86f02c811c341383223ebd41cc53"
+      },
+      "BtIbs.h": {
+        "path": "drivers/PaganiBt/BtIbs.h",
+        "sha256": "d5c3ed51e7619bb3688c9e21bbe55c1561687fe6af1115dc3adce5f3aca26d9a"
+      },
+      "BtTlv.c": {
+        "path": "drivers/PaganiBt/BtTlv.c",
+        "sha256": "4c32329c9f7b2233030de8bcb48cd93a4c829b7de889d5eb6549d020f6d67bff"
+      },
+      "BtTlv.h": {
+        "path": "drivers/PaganiBt/BtTlv.h",
+        "sha256": "d3db2b4c15eb84b2990f95acb58a83908c6b04194182a8efa89644c792117496"
+      },
+      "BtGeni.c": {
+        "path": "drivers/PaganiBt/BtGeni.c",
+        "sha256": "7dba133f36c6ddc133dd0f6c0506a6089b5ab2463636d69eab98a5be2af22c0e"
+      },
+      "BtGeni.h": {
+        "path": "drivers/PaganiBt/BtGeni.h",
+        "sha256": "7f3616a1829335fe89d5c0ee4fba9d4d65afb7760aafd61dc0b30fdf49b66add"
+      },
+      "BtUtil.h": {
+        "path": "drivers/PaganiBt/BtUtil.h",
+        "sha256": "f09b46610d210b1fd9945d80c22785a1f81dc7e4b8e8c7a86ebec9f06810957a"
+      },
+      "BtBridge.c": {
+        "path": "drivers/PaganiBt/BtBridge.c",
+        "sha256": "36f976a64ad1b7b5cc6030b7582175afbebe2a38bc6c48e7e9e51eb47624b5eb"
+      },
+      "BtBridge.h": {
+        "path": "drivers/PaganiBt/BtBridge.h",
+        "sha256": "4a6543cc06257a32c8e9f0fbb863039cd82542aa26a6f59acc85d7e9c622c504"
+      },
+      "BtStandIn.c": {
+        "path": "drivers/PaganiBt/BtStandIn.c",
+        "sha256": "d1c560c618348cdc148b7a19075ee8cca9ef0aa31152fd5aff4656f79a9fb2d4"
+      },
+      "BtStandIn.h": {
+        "path": "drivers/PaganiBt/BtStandIn.h",
+        "sha256": "85f8f9410338ea88e463927a8ecf42b48756337523cc6783ee89c427c6b5df0a"
+      },
+      "BtPmic.c": {
+        "path": "drivers/PaganiBt/BtPmic.c",
+        "sha256": "42aa61b7b6243ee28bea5d7658614bff7b7b9552e07c9239d4405dc94060b4f3"
+      },
+      "BtPmic.h": {
+        "path": "drivers/PaganiBt/BtPmic.h",
+        "sha256": "b6f83f82e76660e1afa8d5dc9408853cee83a3dae060ba6dc410ec93309c2fef"
+      },
+      "PaganiBtBoard.h": {
+        "path": "drivers/PaganiBt/PaganiBtBoard.h",
+        "sha256": "027a8578a5b8d94eecdd7deb0519809c4c8e0c0c074ff1a47a0d4d38fddb8998"
+      },
+      "Sm8750Rpmh.c": {
+        "path": "drivers/Adreno830/platform/sm8750/Sm8750Rpmh.c",
+        "sha256": "5ef9d62301c3519eb447da85b475cf477367b9dc53b12ad1f1ef1ac82a1a7f1d"
+      },
+      "Sm8750Rpmh.h": {
+        "path": "drivers/Adreno830/platform/sm8750/Sm8750Rpmh.h",
+        "sha256": "a39f9324d152faf7b83063d71784555031d5c4e4f142b359478ccf656562843f"
+      },
+      "Sm8750AossQmp.c": {
+        "path": "drivers/Adreno830/platform/sm8750/Sm8750AossQmp.c",
+        "sha256": "2cc5031ae6dba645ebbda33ef1f49d419c610ffecd5b60290a2332b157f8f288"
+      },
+      "Sm8750AossQmp.h": {
+        "path": "drivers/Adreno830/platform/sm8750/Sm8750AossQmp.h",
+        "sha256": "dbfd1d619e97ced90d9266915f65c657692fa153741a888467d853a6ec976591"
+      }
+    }
+  },
+  "firmware": [
+    {
+      "file": "qca/brhbtfw20.tlv",
+      "bytes": 219296,
+      "sha256": "837aea39d33e95a4ba272ef2a2306e5ecf9848853332d2f7b8002901d6af771d"
+    },
+    {
+      "file": "qca/lenovo/tb322fc/brhbtnv20.bin",
+      "bytes": 13319,
+      "sha256": "f91354b0872f1f7680142df6852b2c8e67e3151ee2ad406b3d183a2fb539702e"
+    },
+    {
+      "file": "qca/brhperifw20.tlv",
+      "bytes": 19884,
+      "sha256": "9a8de09a127a5943f8c23d4ee6005531b900f085740a292c9ab5a20e76db6cb5"
+    },
+    {
+      "file": "qca/brhperinv20.bin",
+      "bytes": 741,
+      "sha256": "3c73215352ba6422a9f2639124d27f64ec83a4d2aa91b388439ca88ea31098d0"
+    },
+    {
+      "file": "qca/tmel_peach_20.elf",
+      "bytes": 56752,
+      "sha256": "a175c8d9d0e6b38b5ae23ff0175da795b14b8268919463d2b6e1cb2bfeebc9f8"
+    }
+  ],
+  "c_units": [
+    "Wcn7861Peripheral.c",
+    "Wcn7861Startup.c",
+    "Wcn7861Hci.c",
+    "UartPlatform.c",
+    "WcnPower.c",
+    "BtH4.c",
+    "BtGeni.c",
+    "BtTlv.c",
+    "BtIbs.c",
+    "BtPmic.c",
+    "Sm8750Rpmh.c",
+    "Sm8750AossQmp.c",
+    "BtBridge.c",
+    "BtStandIn.c",
+    "EldenWcnFirmware.c"
+  ],
+  "cpp_units": [
+    "WcnPowerNative.cpp",
+    "NativeHost.cpp",
+    "UartBackend.cpp",
+    "EldenBluetoothInspect.cpp",
+    "BootstrapStatus.cpp"
+  ],
+  "recovery_parent_sha256": "85928bf0212ed86b27edbfb49c01807d2ef710adf668f0be9f2fd80fac7f9aec",
+  "recovery_sha256": "ce63730b121d825dd9405cd9c537eaf7c0c73f78ed6dba0fe6c5021472a45781",
+  "display_glue_path": "profiles/v94-fbwc-observation/sources/EldenDisplayGlue.cpp",
+  "display_glue_sha256": "7414c13c1132c63ebdc0f5bb7fdcb90e23e19cadad5a2a70d283bd31dd0c2fba",
+  "runtime_helper_sha256": "464432d5308fa0998f9b25ed77ff0c2b9a7751377dc0cc992679a32dc7cc571e",
+  "runtime_header_sha256": "d0e110db4b2bc7cdc85f19acadb681d316b05c68e56bb4edcbb201e2d57a93e0",
+  "runtime_trust_sha256": "a6758681cd8ce0f364411bf65fc1207514b3470b0c16699e2c1a0d12f22a2c65",
+  "hardware_parent": "v99-bt-runtime",
+  "change": "Qualify Taycan vote-run parent clock using the ArmadaOS Gen4 fixed source; include previously qualified shared CPR helper consolidation."
+}

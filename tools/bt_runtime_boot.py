@@ -1,4 +1,4 @@
-"""The explicitly selected v99 runtime boot contract; no device operations."""
+"""Explicit v99/v101 runtime boot contracts; no device operations."""
 from pathlib import Path
 import copy,hashlib,json,tomllib
 from fbwc_boot import template as framebuffer_template
@@ -10,20 +10,22 @@ def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 def qualify(report_path,entry_path,runtime):
     if not report_path or not entry_path or not runtime:raise ValueError('Complete v99 build, entry and runtime inputs required')
     report=json.loads(Path(report_path).read_text());entry=json.loads(Path(entry_path).read_text());runtime=Path(runtime)
-    profile=ROOT/'profiles/v99-bt-runtime/plan.json';plan=json.loads(profile.read_text())
-    if report.get('profile')!='v99-bt-runtime' or report['profile_sha256']!=sha(profile) or report.get('recompiled_core_objects')!=2 or report['original_apple_executables_hashed']!=30:
+    name=report.get('profile')
+    if name not in ('v99-bt-runtime','v101-bt-clock'):raise ValueError('Unsupported Bluetooth runtime profile')
+    profile=ROOT/'profiles'/name/'plan.json';plan=json.loads(profile.read_text())
+    if report['profile_sha256']!=sha(profile) or report.get('recompiled_core_objects')!=2 or report['original_apple_executables_hashed']!=30:
         raise ValueError('Unqualified v99 core build')
     if entry['source_sha256']!=report['kernel_sha256']:raise ValueError('Entry is not the v99 kernel')
     source=Path(report_path).parent/'kernel.macho';layout=json.loads((Path(report_path).parent/'entry-layout.json').read_text())
     if sha(source)!=report['kernel_sha256'] or layout['source_kernel_sha256']!=sha(source) or not layout['assembly_sections_equal'] or not layout['same_object_in_both_filelists']:
         raise ValueError('Missing qualified entry-layout proof')
     start,target,word=inspect_entry(source.read_bytes())
-    contract=json.loads((ROOT/'profiles/v99-bt-runtime/entry-assembly.json').read_text())
+    contract=json.loads((profile.parent/'entry-assembly.json').read_text())
     if target-start!=contract['target_delta'] or layout['entry_word']!=word or layout['return_target']!=hex(target) or entry['entry']['entry_target']!=target:
         raise ValueError('Entry return does not match the unchanged startup assembly')
     if sha(runtime/'BlueTool')!=plan['runtime_helper_sha256'] or sha(runtime/'runtime.trustcache')!=plan['runtime_trust_sha256'] or sha(runtime/'EldenBtRuntimePayload.h')!=plan['runtime_header_sha256']:
         raise ValueError('Runtime inputs differ from compiled profile')
-    return {'profile':'v99-bt-runtime','profile_sha256':sha(profile),'trust_sha256':plan['runtime_trust_sha256'],
+    return {'profile':name,'profile_sha256':sha(profile),'trust_sha256':plan['runtime_trust_sha256'],
             'helper_sha256':plan['runtime_helper_sha256'],'entry_return_target':hex(target),'entry_assembly_sha256':layout['assembly_sha256'],'mode':4,'hardware_tested':False}
 def menu():
     before=battery_template(framebuffer_template(True));config=tomllib.loads(before)

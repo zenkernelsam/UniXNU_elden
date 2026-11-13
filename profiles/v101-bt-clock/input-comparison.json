@@ -1,0 +1,13 @@
+{
+  "changed_owned_inputs": [
+    "WcnPower.c",
+    "WcnPower.h"
+  ],
+  "other_owned_inputs_equal": 26,
+  "firmware_dependency_runtime_recovery_unchanged": true,
+  "v99_profile_sha256": "864c0f38b0ec7739a2a7cb534cf0b0e841c402089d323180b5f0da8c66169f63",
+  "v101_profile_sha256": "7872e22fabe895fe5c7501aa2be5f834fe086141b8e8a9c28165f2b9d3c433d3",
+  "includes_previously_qualified_shared_cpr_helpers": true,
+  "v99_contract_regression_passed": true,
+  "bt_menu_adt_host_tests_passed": 2
+}
