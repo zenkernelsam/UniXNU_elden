@@ -1,0 +1,39 @@
+{
+  "image_sha256": "4a95e834ac1d4a5134881ae6561f2e93b28555e5b76ce79d5bf33c229b8baaee",
+  "session": "06ee3e3f82c1cafa",
+  "boot_nonce": "0cc655a8764bdde3",
+  "raw_sha256": "32fa354f37f92cd6e3d358edb85d461528549648c685adeaf440e5396a927bb9",
+  "captured_bytes": 1254883,
+  "drop_max": 54,
+  "software_injection_seen": false,
+  "physical_report_count": 212,
+  "invalid_controller_reports": 0,
+  "successful_hid_report_count": 212,
+  "physical_stop": [
+    "ELDEN_TOUCH stopping frames=7599 reports=212",
+    "ELDEN_TOUCH stop error=0 protocol-stage=8 platform-stage=5 released=0 quarantine=0 reports=212 invalid=0"
+  ],
+  "user_observation": "Touch appears usable: physical swipe unlocked to the interface and multi-finger interaction responded; overall UI very laggy, without visible animation; testing incomplete when automatic return occurred.",
+  "swipe_unlock_user_verified": true,
+  "settings_tap_and_scroll_release_verified": false,
+  "full_physical_touch_acceptance": false,
+  "cpu_core_count": 8,
+  "online_work_timer_ipi_masks": "ff",
+  "continuous_online_observations": [
+    "ELDEN_SMP HOLD elapsed-ms=154051 online=ff",
+    "ELDEN_SMP HOLD elapsed-ms=165929 online=ff",
+    "ELDEN_SMP HOLD elapsed-ms=175935 online=ff"
+  ],
+  "memory_window_bytes": 6442450944,
+  "full_16gb_memory_enabled": false,
+  "copy_samples": 27,
+  "copy_ms_median": 133.85963541666666,
+  "reset_after_sync": true,
+  "stock_restored_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "limits": [
+    "Human unlocked the screen, but Settings/scroll/release and long-term touch stability were not completed.",
+    "Eight cores online does not establish max frequency or uniform CPU utilization.",
+    "Copies timed around the copy and final DSB, not end-to-end FPS.",
+    "User physical trial used confirmed long-PC/short-PD wiring; 500mA input selection remains unresolved."
+  ]
+}

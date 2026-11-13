@@ -64,7 +64,9 @@ v99已完成最小runtime签包：保留原561任务/缓存，只挂载BlueTool�
 该候选会尝试真实上电WCN。11月13日首测runtime准备成功，但在父时钟检查处停止，
 尚未进入UART/HCI；已正常同步回程和恢复Android。[父时钟修正](WCN-PARENT-CLOCK.md)
 按ArmadaOS固定的四代SM8750源通过host/native检查，v101完整候选实测已越过该门，
-六路rail和power stage6通过；下一处为合并启动流程−110，先区分UART-open/peripheral/HCI子阶段。
+六路rail和power stage6通过；v102还曾完成外围patch/NVM/TME-L/activation，
+在普通HCI版本检查stage16返回−19。v103按四代Linux修正SPMI的DONE判据并保留
+版本应答诊断，但该轮停在初次IBS唤醒stage2。启动重复性和真实版本仍待解决。
 同步回程和stock恢复通过，仍无HCI身份/配对验收；
 不将三代TB321FU/SM8650的寄存器或固件带入，不把静态通过当蓝牙可用。
 触控稳定后加入休眠/唤醒及双击亮屏，随后推进持久 Data、容量/内存、时间和日常应用稳定性。

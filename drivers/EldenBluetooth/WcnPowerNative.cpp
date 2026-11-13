@@ -73,6 +73,7 @@ struct Context{
     Sm8750AossQmpIo aoss_io={},ipcc_io={};Sm8750AossQmp qmp={};
     EldenWcnPower power={};EldenWcnStartup startup={};EldenWcnHci hci={};
     uint8_t address[6]={};int bt_apid=-1;
+    uint32_t last_obs_reg=0,last_obs_value=0;
     bool spmi_uncertain=false,aoss_uncertain=false,rsc_uncertain=false;
     bool map(){
         return gcc.map(ELDEN_BT_GCC_BASE,ELDEN_BT_GCC_BYTES)&&
@@ -91,7 +92,10 @@ static uint64_t now_us(void *){
 static void delay(void *,unsigned us){if(us>=1000)IOSleep((us+999)/1000);else IODelay(us);}
 static uint32_t core_read(void *p,uint32_t reg){return static_cast<Context *>(p)->core.read(reg);}
 static uint32_t owner_read(void *p,uint32_t reg){return static_cast<Context *>(p)->owner.read(reg);}
-static uint32_t obs_read(void *p,uint32_t reg){return static_cast<Context *>(p)->observer.read(reg);}
+static uint32_t obs_read(void *p,uint32_t reg){
+    Context *c=static_cast<Context *>(p);uint32_t value=c->observer.read(reg);
+    c->last_obs_reg=reg;c->last_obs_value=value;return value;
+}
 static void obs_write(void *p,uint32_t reg,uint32_t v){static_cast<Context *>(p)->observer.write(reg,v);}
 static uint32_t chan_read(void *p,unsigned apid,uint32_t reg){
     Context *c=static_cast<Context *>(p);return apid==(unsigned)c->bt_apid?c->writer.read(reg):0xffffffffu;
@@ -104,7 +108,11 @@ static int gpio_read(Context *c,uint8_t out[8]){
     if(c->spmi_uncertain||c->bt_apid<0)return -71;
     for(unsigned i=0;i<8;i++){
         int rc=pb_spmi_read8(&c->spmi,c->bt_apid,regs[i],&out[i]);
-        if(rc){c->spmi_uncertain=true;return rc;}
+        if(rc){
+            log("\nELDEN_WCN gpio-read error=%d apid=%d reg=%02x last-observer=%08x value=%08x\n",
+                rc,c->bt_apid,regs[i],c->last_obs_reg,c->last_obs_value);
+            c->spmi_uncertain=true;return rc;
+        }
     }
     return 0;
 }
@@ -287,6 +295,14 @@ static void worker(void *arg,wait_result_t){
                 elden_wcn_bt_nvm,sizeof(elden_wcn_bt_nvm),c->address);
             if(!rc)rc=elden_wcn_hci_run(&c->hci);
             log("\nELDEN_WCN hci=%d ready=%u patch=%04x segments=%u\n",rc,c->hci.ready,c->hci.reported_patch,c->hci.segments);
+            if(rc&&(c->hci.stage==EldenWcnHciVersion||c->hci.stage==EldenWcnHciPatchedVersion)){
+                char hex[65];unsigned n=c->startup.h4.have;if(n>32)n=32;
+                for(unsigned i=0;i<n;i++)snprintf(hex+2*i,3,"%02x",c->startup.h4.buf[i]);
+                hex[2*n]=0;
+                log("\nELDEN_WCN version stage=%u bytes=%u raw=%s peripheral=%08x/%04x/%08x expected-patch=%04x\n",
+                    c->hci.stage,(unsigned)c->startup.h4.have,hex,c->startup.identity.product,
+                    c->startup.identity.rom,c->startup.identity.soc,c->hci.firmware.patch_version);
+            }
 #if defined(ELDEN_BT_NATIVE_BUILD)
             if(!rc&&mode==4&&!elden_wcn_stop_requested()){
                 if(!c->hci.ready){rc=-71;}
