@@ -1,0 +1,31 @@
+{
+  "image_sha256": "9c6acae1f26642814a1c22156189bea1666614527030590829347e8d58306dd5",
+  "session": "8137d4147019711b",
+  "raw_sha256": "444a04f01af66b04d53dd3757fe903039a6dfef0f5fe36c3e00e8c98e091154a",
+  "captured_bytes": 1362428,
+  "drop_max": 17,
+  "actual_physbase": "0x8c007c000",
+  "actual_window_bytes": 8589934592,
+  "capacity_line_verified": true,
+  "iokit": [
+    "ELDEN_IOKIT t=10 root-present=1 busy=0 visited=90 leaves=0 complete=1 providers=3",
+    "ELDEN_IOKIT t=30 root-present=1 busy=0 visited=149 leaves=0 complete=1 providers=3",
+    "ELDEN_IOKIT t=60 root-present=1 busy=0 visited=230 leaves=0 complete=1 providers=3",
+    "ELDEN_IOKIT t=120 root-present=1 busy=0 visited=260 leaves=0 complete=1 providers=3",
+    "ELDEN_IOKIT t=240 root-present=1 busy=0 visited=262 leaves=0 complete=1 providers=3",
+    "ELDEN_IOKIT t=300 root-present=1 busy=0 visited=262 leaves=0 complete=1 providers=3"
+  ],
+  "all_recorded_smp_holds_online_ff": true,
+  "copy_samples": 13,
+  "copy_median_ms": 58.6090625,
+  "fault_markers": [],
+  "software_input_sent": false,
+  "manual_input": false,
+  "late_ui_request_rejected_before_send": true,
+  "all_memory_pages_stress_tested": false,
+  "settings_tested_this_window": false,
+  "reset_after_sync": true,
+  "stock_restored_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "android_boot_root_green": true,
+  "sleep_requested": true
+}

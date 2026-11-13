@@ -10,6 +10,9 @@ def qualify(report_path,entry_path):
     report_path=Path(report_path);root=report_path.parent
     report=json.loads(report_path.read_text());entry=json.loads(Path(entry_path).read_text())
     name=report.get('profile')
+    if name=='v109-memory8':
+        from memory_window_boot import qualify as qualify_memory
+        return qualify_memory(report_path,entry_path)
     if name=='v106-rt-memory':
         from rt_memory_boot import qualify as qualify_rt
         return qualify_rt(report_path,entry_path)
@@ -38,7 +41,7 @@ def qualify(report_path,entry_path):
 def menu(qualified):
     from fbwc_boot import template
     if qualified['profile']=='v100-hid-delivery':return template(True)
-    if qualified['profile'] not in ('v105-hid-display','v106-rt-memory','v107-iokit-busy','v108-network-family'):raise ValueError('Unknown HID menu')
+    if qualified['profile'] not in ('v105-hid-display','v106-rt-memory','v107-iokit-busy','v108-network-family','v109-memory8'):raise ValueError('Unknown HID menu')
     import tomllib
     from battery_boot import template as battery_template,arguments
     base=battery_template(template(True))

@@ -1,0 +1,11 @@
+{
+  "profile": "v109-memory8",
+  "baseline": "v108-network-family",
+  "baseline_kernel_sha256": "4029cbc5f6bd4b50ec2237293e6e734c8543022ff6acbc20199e088dc829512b",
+  "baseline_native_sha256": "48da496358229b0404bbfab61a1f3f5cbd5c7987783300de94e7e1d3b908afa9",
+  "intended_window_bytes": 8589934592,
+  "bootstrap_pages": 24,
+  "rt_kernel_sha256": "0407fd055cfd8e114259c3698fae4d12135da3f98388af4eb74ebe496b92bba0",
+  "start_source_sha256": "eab8c75e5065e852286346d372e7b93a78d8d1c446ec6bbfde5c370f9515654c",
+  "scope": "Offline bootstrap components; unchanged firmware must allocate real conventional memory. No 16GiB claim or release of reserved ranges."
+}

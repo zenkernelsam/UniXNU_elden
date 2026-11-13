@@ -1,0 +1,35 @@
+{
+  "accepted_static": true,
+  "image_sha256": "9c6acae1f26642814a1c22156189bea1666614527030590829347e8d58306dd5",
+  "kernel_sha256": "89b5d72be34f77f044b95d4f4ed7c8f2a2253922a9eb7842b1ec8dde6052fee6",
+  "rollback_index": 1738713600,
+  "footer_location": 0,
+  "parent_boot_chain_location": 3,
+  "fat_mirrors_equal": true,
+  "entry_body_100_bytes_equal_hardware_baseline": true,
+  "entry_branch_target_equal": false,
+  "entry_branch_target_qualified": true,
+  "entry_address": "0xfffffff0084cc000",
+  "entry_return_target": "0xfffffff00747205c",
+  "session": "8137d4147019711b",
+  "memory_window_bytes": 8589934592,
+  "firmware_contract": {
+    "sha256": "aba76d8a8374e1356e41c0c97b9e4f83691108b8eb7767a5ead28b0d2b2a7b35",
+    "contract_sha256": "c3287ed4949e54529b6ad6cda482b28d1ee749439282ab1574f5ae9f643f84aa",
+    "all_executable_bytes_equal": true,
+    "hardware_tested": false
+  },
+  "hardware_tested": false,
+  "device_operation": false,
+  "full_asset_source_closure": true,
+  "touch_delivery": {
+    "profile": "v109-memory8",
+    "profile_sha256": "5fc0d7e0068e281854d0026413f79892d2e96c3390828b24c3f050e8df7c4e71",
+    "pre_entry_kernel_sha256": "e4fe5e05154e6a74b559ef9ba2677586c33ab67a05a31387237e13440dd87a4c",
+    "entry_return_target": "0xfffffff00747205c",
+    "bootstrap_storage_bytes": 98304,
+    "memory_window_bytes": 8589934592,
+    "original_apple_executables_hashed": 31,
+    "hardware_tested": false
+  }
+}

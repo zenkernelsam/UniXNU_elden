@@ -1,5 +1,11 @@
 # 当前状态 · 2026-11-14
 
+最新[v109](../profiles/v109-memory8/README.md)已实际启动8GiB窗口，八核保持onlineff。
+软件上滑和点击得到有内容的Settings/General采样图（CRC b92cfd0a）。最后日志6089821B/
+drop10，Home过渡重复列和widget占位仍在，不宣称动画完善。三轮均同步回程、完整恢复
+stock Android并熄屏。16GB最大利用、About耗时、逐页压力/长时稳定性仍待继续。
+下方6GiB及v106表述为此前基线，最新容量以v109记录为准。
+
 最新无人值守v108补齐同版原IONetworkingFamily，六次实机检查证实IONetworkStack存在、
 IOKit busy0。About实际耗时尚未复测，不把服务注册当联网成功；见[诊断](NETWORK-INITIALIZATION.md)。
 日志1475520B/drop36，同步RPC及完整stock恢复通过，设备已回Android并请求熄屏。

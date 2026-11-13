@@ -1,0 +1,157 @@
+{
+  "profile": "v109-memory8",
+  "complete_kernel": false,
+  "boot_packaged": false,
+  "hardware_tested": false,
+  "objects": {
+    "pmap": {
+      "sha256": "2633f3be3ac9581f5b1edcaed0a0288813df1182f589908994ed647a9368d820",
+      "before_sha256": "cbd7cd7ce741998097749312e83340a7e027a3f9191c02d2f3140a8d132449f6",
+      "bindings_equal": true,
+      "existing_vectors_unchanged": true,
+      "sections": {
+        "__TEXT/__text": [
+          88140,
+          2147484672,
+          "940436301c3244ff9d1687af78644e4052903098ad01579db289bfeb2798247f"
+        ],
+        "__TEXT/__literal16": [
+          256,
+          14,
+          "8daf0949044a506fca6ab0e9d37a054da4baba43f8ef50a785845e143f90e643"
+        ],
+        "__TEXT/__cstring": [
+          13853,
+          2,
+          "ad475e56e50d747b37b2d25f4461ea6ab79952233bd53a31742b271aff8565a9"
+        ],
+        "__DATA/__const": [
+          480,
+          0,
+          "ca035284c9fe01ebe4434b98c84d89a225cfaeb579240a9ea8ca78c1dad9f36d"
+        ],
+        "__TEXT/__const": [
+          512,
+          0,
+          "c52de5cfc4970e0934de05108b92ef07520be8cb96825bd4aa30fe28f2f9a79e"
+        ],
+        "__DATA/__data": [
+          72,
+          0,
+          "0cdaec600a3faacf1fde1b66d736bf47b602082c5b38f7b1c3ff6ca75e2eb11b"
+        ],
+        "__DATA/__common": [
+          784,
+          1,
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ],
+        "__BOOTDATA/__init": [
+          64,
+          0,
+          "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        ],
+        "__BOOTDATA/__init_entry_set": [
+          144,
+          0,
+          "588054b0b532eaf52646d318ffed643366e52fb7f1633c749dd86a7caa82b8f7"
+        ],
+        "__DATA/__bss": [
+          96,
+          1,
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ]
+      }
+    },
+    "arm_vm_init": {
+      "sha256": "0b541897247e16c2d3a6937720173f3d75a8f2544c990a41bc42be505487a87a",
+      "before_sha256": "0359b90e827c7e3fa5857528782ba23a898d84894835e73c7dff10db7b1a0cab",
+      "bindings_equal": true,
+      "existing_vectors_unchanged": true,
+      "sections": {
+        "__TEXT/__text": [
+          13264,
+          2147484672,
+          "b0e2632599becb8ba6ca9a127b2a1875ce84bb6d2834cc666eb4f155b98a830c"
+        ],
+        "__DATA/__const": [
+          102760,
+          0,
+          "6ffe0b6f21e8f90aadcb2bdb22a9756db0cc9e113d25357554e9e07959f7d81e"
+        ],
+        "__DATA/__data": [
+          8,
+          0,
+          "058b6a284b1f86eb68172caaa8cb6bfb845b24052d1f8d7a85330b85752f44f6"
+        ],
+        "__TEXT/__cstring": [
+          2863,
+          2,
+          "16487d77fea24d359cece6f5fd3921f3b2ac915612f5e18211673b207f281c20"
+        ],
+        "__DATA/__common": [
+          40,
+          1,
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ]
+      }
+    },
+    "start": {
+      "sha256": "14f7f05a1113865a467ff1ee85bdf0e4fd8b3637d3e5bcd3b44c57c1ca41a4e3",
+      "before_sha256": "818ed81e39f38ee6f13bdbf4f166e9e7a5d72f4b7a652d52872e2ba85ea53cc1",
+      "bindings_equal": true,
+      "existing_vectors_unchanged": true,
+      "sections": {
+        "__TEXT/__text": [
+          9140,
+          2147484672,
+          "90c67d4dba1518fa70a13055fe22cdfb90a5092750d06a5478de9f4cb2f8f397"
+        ],
+        "__DATA_CONST/__const": [
+          16,
+          0,
+          "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+        ]
+      }
+    }
+  },
+  "sources": {
+    "assym.s": "37e0c1f9a604c6c82fb746c52009f96ce2ef4bf7cf22235e1dc2370a85027d3f",
+    "pmap.h": "880d912fd21e8314e368e35e0c4884f18e686566717dcdaf046d0b6fbabfe421",
+    "start.s": "eab8c75e5065e852286346d372e7b93a78d8d1c446ec6bbfde5c370f9515654c",
+    "arm_vm_init.c": "a99b6cea503d1bf8b9c24f0ffe12da0d4b4d5770c07d19fbca6a683ad553a383"
+  },
+  "bootstrap_pages": 24,
+  "intended_window_bytes": 8589934592,
+  "assembly_changes": [
+    {
+      "before": [
+        "d2800202",
+        "mov\tx2, #0x10               ; =16"
+      ],
+      "after": [
+        "d2800302",
+        "mov\tx2, #0x18               ; =24"
+      ]
+    },
+    {
+      "before": [
+        "9140432a",
+        "add\tx10, x25, #0x10, lsl #12 ; =0x10000"
+      ],
+      "after": [
+        "9140632a",
+        "add\tx10, x25, #0x18, lsl #12 ; =0x18000"
+      ]
+    },
+    {
+      "before": [
+        "9140432a",
+        "add\tx10, x25, #0x10, lsl #12 ; =0x10000"
+      ],
+      "after": [
+        "9140632a",
+        "add\tx10, x25, #0x18, lsl #12 ; =0x18000"
+      ]
+    }
+  ]
+}

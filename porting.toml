@@ -198,3 +198,13 @@ findings = ["v107: six complete busy0/AES-only snapshots. v108: exact original21
 limits = ["No WLAN/Ethernet interface; About latency not measured in v108. Capture dropped36 bytes."]
 next_action = ["Measure userland initialization when useful and continue qualified RAM expansion; no fake network readiness."]
 evidence = [{kind="device", reference="profiles/v108-network-family/hardware-result.json", result="Signed candidate, sync return and complete stock restoration verified."}]
+
+[[area]]
+id = "memory-window8"
+status = "device-verified"
+components = ["DarwinBoot", "ArmDTPlatform"]
+paths = ["profiles/v109-memory8", "tools/memory_window_patch.py", "docs/MEMORY-EXPANSION.md"]
+findings = ["Real EFI allocation and XNU8GiB window; three coherent bootstrap objects,24page pool and31 original Apple text extents audited. Software Settings/General frame CRCb92cfd0a validated."]
+limits = ["Not16GiB, full-page stress, About-latency or physical-finger acceptance. Home transition artifacts remain. Final capture drop10; damaged frame12 rejected."]
+next_action = ["Keep8GiB baseline and evaluate KVA/EFI reservations before larger windows or outside-page adoption."]
+evidence = [{kind="device", reference="profiles/v109-memory8/ui-hardware-result.json", result="Three trials completed sync return and full stock restoration; Android/root/green restored."}]

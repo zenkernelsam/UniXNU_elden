@@ -74,6 +74,12 @@ def main():
         if sha(encode_adt(baseline_adt['tree']))!=baseline_adt['sha256']:raise ValueError('Base ADT changed')
         expected['Payloads/kernel.macho.adt']=sha(encode_adt(bt_runtime_boot.adt(baseline_adt)['tree']))
         expected['Payloads/kernel.macho.trustcache']=bt['trust_sha256']
+    if hid and hid['profile']=='v109-memory8':
+        from build_v91_boot import encode_adt
+        from memory_window_boot import adt as memory_adt
+        config=json.loads((ROOT/'profiles/v91/boot-build/adt.json').read_text())
+        if sha(encode_adt(config['tree']))!=config['sha256']:raise ValueError('Base ADT changed')
+        expected['Payloads/kernel.macho.adt']=sha(encode_adt(memory_adt(config)['tree']))
     for name,h in expected.items():
         content=fat.read(prefix+name)
         if name=='EldenPayloadLoader.efi':verify_loader(content)
@@ -83,7 +89,8 @@ def main():
             rebuilt_seed=True
         elif sha(content)!=h:raise RuntimeError('Frozen payload changed: '+name)
     tree=adt_walk(fat.read(prefix+'Payloads/kernel.macho.adt'))
-    if tree['window']!=0x180000000 or tree['gpuaddon'] is not None:raise RuntimeError('Memory/GPU configuration changed')
+    expected_window=hid.get('memory_window_bytes',0x180000000) if hid else 0x180000000
+    if tree['window']!=expected_window or tree['gpuaddon'] is not None:raise RuntimeError('Memory/GPU configuration changed')
     if a.fbwc_report and not a.entry_report:raise RuntimeError('Framebuffer audit requires the entry transformation report')
     fbwc=qualify_fbwc(a.fbwc_report,a.entry_report) if a.fbwc_report else None
     if fbwc and json.loads(a.entry_report.read_text())['derivative_sha256']!=sha(kernel):raise RuntimeError('Framebuffer entry report mismatch')

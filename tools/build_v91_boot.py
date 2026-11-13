@@ -67,8 +67,12 @@ def main():
     adt_config=json.loads((PROFILE/'adt.json').read_text());adt=encode_adt(adt_config['tree'])
     if hashlib.sha256(adt).hexdigest()!=adt_config['sha256']:raise RuntimeError('ADT encoding differs from v91')
     if bt:adt=encode_adt(bt_runtime_boot.adt(adt_config)['tree'])
+    if hid and hid['profile']=='v109-memory8':
+        from memory_window_boot import adt as memory_adt
+        adt=encode_adt(memory_adt(adt_config)['tree'])
     tree=adt_walk(adt)
-    if tree['window']!=0x180000000 or tree['gpuaddon'] is not None:raise RuntimeError('Unexpected memory/GPU configuration')
+    expected_window=hid.get('memory_window_bytes',0x180000000) if hid else 0x180000000
+    if tree['window']!=expected_window or tree['gpuaddon'] is not None:raise RuntimeError('Unexpected memory/GPU configuration')
     (payloads/'kernel.macho.adt').write_bytes(adt)
     tc=json.loads((PROFILE/'trust-metadata.json').read_text());parts=[]
     for part in tc['parts']:parts.append(struct.pack('<I16sI',part['version'],bytes.fromhex(part['uuid_hex']),len(part['entries_hex']))+b''.join(bytes.fromhex(x) for x in part['entries_hex']))

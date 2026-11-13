@@ -1,0 +1,61 @@
+{
+  "pmap": {
+    "count": 32,
+    "warnings": [
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/kern/bits.h:274:21: warning: cast from 'void (*)(vm_allocation_site_t *)' (aka 'void (*)(struct vm_allocation_site *)') to 'typeof (__zone_site_register(&site)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/ipc/ipc_entry.h:131:1: warning: cast from 'void (*)(vm_allocation_site_t *)' (aka 'void (*)(struct vm_allocation_site *)') to 'typeof (__zone_site_register(&site)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/ipc/ipc_entry.h:131:1: warning: cast from 'void (*)(vm_allocation_site_t *)' (aka 'void (*)(struct vm_allocation_site *)') to 'typeof (__zone_site_register(&site)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/ipc/ipc_port.h:117:1: warning: cast from 'void (*)(vm_allocation_site_t *)' (aka 'void (*)(struct vm_allocation_site *)') to 'typeof (__zone_site_register(&site)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/ipc/ipc_port.h:117:1: warning: cast from 'void (*)(vm_allocation_site_t *)' (aka 'void (*)(struct vm_allocation_site *)') to 'typeof (__zone_site_register(&site)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/vm/vm_object.h:661:53: warning: format specifies type 'unsigned int' but the argument has type 'int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/vm/vm_object.h:661:60: warning: format specifies type 'unsigned int' but the argument has type 'int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/vm/vm_object.h:750:60: warning: format specifies type 'unsigned int' but the argument has type 'int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/vm/vm_object.h:750:67: warning: format specifies type 'unsigned int' but the argument has type 'int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/kern/zalloc_internal.h:990:55: warning: format specifies type 'int' but the argument has underlying type 'uint32_t' (aka 'unsigned int') [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:385:19: warning: cast from 'void (*)(struct usimple_lock_startup_spec *)' to 'typeof (usimple_lock_startup_init(&__startup_usimple_lock_spec_pmaps_lock)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:386:19: warning: cast from 'void (*)(struct usimple_lock_startup_spec *)' to 'typeof (usimple_lock_startup_init(&__startup_usimple_lock_spec_tt1_lock)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:464:1: warning: cast from 'void (*)(struct usimple_lock_startup_spec *)' to 'typeof (usimple_lock_startup_init(&__startup_usimple_lock_spec_phys_backup_lock)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:502:19: warning: cast from 'void (*)(struct usimple_lock_startup_spec *)' to 'typeof (usimple_lock_startup_init(&__startup_usimple_lock_spec_asid_lock)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:1841:53: warning: format specifies type 'unsigned int' but the argument has type 'vm_prot_t' (aka 'int') [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:2011:36: warning: format specifies type 'unsigned int' but the argument has type 'vm_prot_t' (aka 'int') [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:2026:36: warning: format specifies type 'unsigned int' but the argument has type 'vm_prot_t' (aka 'int') [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:2885:22: warning: format specifies type 'int' but the argument has type 'unsigned int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:2896:22: warning: format specifies type 'int' but the argument has type 'unsigned int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:3801:45: warning: format specifies type 'int' but the argument has type 'unsigned int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:3955:8: warning: format specifies type 'int' but the argument has type 'unsigned int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:3955:51: warning: format specifies type 'int' but the argument has type 'unsigned int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:5370:41: warning: format specifies type 'unsigned int' but the argument has type 'vm_prot_t' (aka 'int') [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:5701:38: warning: format specifies type 'unsigned int' but the argument has type 'vm_prot_t' (aka 'int') [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:6079:41: warning: format specifies type 'unsigned int' but the argument has type 'vm_prot_t' (aka 'int') [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:6337:20: warning: format specifies type 'int' but the argument has underlying type 'unsigned int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:7165:17: warning: format specifies type 'unsigned int' but the argument has type 'int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:7172:17: warning: format specifies type 'unsigned int' but the argument has type 'int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:8137:75: warning: format specifies type 'unsigned int' but the argument has type 'vm_prot_t' (aka 'int') [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:8137:87: warning: format specifies type 'unsigned int' but the argument has type 'int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:9616:41: warning: cast from 'void (*)(vm_allocation_site_t *)' (aka 'void (*)(struct vm_allocation_site *)') to 'typeof (__zone_site_register(&site)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm/pmap/pmap.c:9694:45: warning: cast from 'void (*)(vm_allocation_site_t *)' (aka 'void (*)(struct vm_allocation_site *)') to 'typeof (__zone_site_register(&site)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]"
+    ],
+    "errors": []
+  },
+  "arm_vm_init": {
+    "count": 10,
+    "warnings": [
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/kern/bits.h:274:21: warning: cast from 'void (*)(vm_allocation_site_t *)' (aka 'void (*)(struct vm_allocation_site *)') to 'typeof (__zone_site_register(&site)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/ipc/ipc_entry.h:131:1: warning: cast from 'void (*)(vm_allocation_site_t *)' (aka 'void (*)(struct vm_allocation_site *)') to 'typeof (__zone_site_register(&site)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/ipc/ipc_entry.h:131:1: warning: cast from 'void (*)(vm_allocation_site_t *)' (aka 'void (*)(struct vm_allocation_site *)') to 'typeof (__zone_site_register(&site)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/ipc/ipc_port.h:117:1: warning: cast from 'void (*)(vm_allocation_site_t *)' (aka 'void (*)(struct vm_allocation_site *)') to 'typeof (__zone_site_register(&site)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/ipc/ipc_port.h:117:1: warning: cast from 'void (*)(vm_allocation_site_t *)' (aka 'void (*)(struct vm_allocation_site *)') to 'typeof (__zone_site_register(&site)) (*)(const void *)' (aka 'void (*)(const void *)') converts to incompatible function type [-Wcast-function-type-strict]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/vm/vm_object.h:661:53: warning: format specifies type 'unsigned int' but the argument has type 'int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/vm/vm_object.h:661:60: warning: format specifies type 'unsigned int' but the argument has type 'int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/vm/vm_object.h:750:60: warning: format specifies type 'unsigned int' but the argument has type 'int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/vm/vm_object.h:750:67: warning: format specifies type 'unsigned int' but the argument has type 'int' [-Wformat]",
+      "/Users/ciscohe/Desktop/UniXNU_elden/research/cpu-guard-20261111/tree/.cache/xnu-work/osfmk/arm64/arm_vm_init.c:1827:19: warning: variable 'boot_ttep' set but not used [-Wunused-but-set-variable]"
+    ],
+    "errors": []
+  },
+  "start": {
+    "count": 0,
+    "warnings": [],
+    "errors": []
+  }
+}

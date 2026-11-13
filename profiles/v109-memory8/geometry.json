@@ -1,0 +1,9 @@
+{
+  "analytical_cases": 10240,
+  "largest_initial_pool_pages": 20,
+  "reserved_pages": 24,
+  "conservative_arm_vm_init_pages": 24,
+  "assumes_image_plus_seed_below_bytes": 805306368,
+  "window_bytes": 8589934592,
+  "not_hardware_memory_test": true
+}

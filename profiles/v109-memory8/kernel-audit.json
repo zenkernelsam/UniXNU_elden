@@ -1,0 +1,70 @@
+{
+  "accepted_static": true,
+  "profile_sha256": "5fc0d7e0068e281854d0026413f79892d2e96c3390828b24c3f050e8df7c4e71",
+  "kernel_sha256": "e4fe5e05154e6a74b559ef9ba2677586c33ab67a05a31387237e13440dd87a4c",
+  "native_sha256": "474bcd6885f28181b86900844415f47babc540f77a06836a7e445e63e5e60627",
+  "bootstrap_storage_bytes": 98304,
+  "start_bytes": 9140,
+  "start_exact_changes": [
+    {
+      "offset": 8412,
+      "before": "0xd2800202",
+      "after": "0xd2800302"
+    },
+    {
+      "offset": 8552,
+      "before": "0x9140432a",
+      "after": "0x9140632a"
+    },
+    {
+      "offset": 8704,
+      "before": "0x9140432a",
+      "after": "0x9140632a"
+    }
+  ],
+  "start_relocations": [
+    {
+      "offset": 1104,
+      "before": "0xf0ffebb4",
+      "after": "0xf0ffeb74",
+      "symbol": "_const_boot_args"
+    },
+    {
+      "offset": 8228,
+      "before": "0x90ffebd9",
+      "after": "0x90ffeb99",
+      "symbol": "_bootstrap_pagetables"
+    },
+    {
+      "offset": 8324,
+      "before": "0x90ffebd9",
+      "after": "0x90ffeb99",
+      "symbol": "_bootstrap_pagetables"
+    },
+    {
+      "offset": 8432,
+      "before": "0xd0ffdcc0",
+      "after": "0xd0ffdc80",
+      "symbol": "__mh_execute_header"
+    },
+    {
+      "offset": 8848,
+      "before": "0xb0ffeba0",
+      "after": "0xb0ffeb60",
+      "symbol": "_sysreg_restore"
+    },
+    {
+      "offset": 8988,
+      "before": "0xb0ffeba0",
+      "after": "0xb0ffeb60",
+      "symbol": "_cpu_ttep"
+    }
+  ],
+  "entry_address": "0xfffffff007470488",
+  "entry_return_target": "0xfffffff00747205c",
+  "entry_word": 335546101,
+  "target_delta": 7124,
+  "original_apple_executables_hashed": 31,
+  "all_inherited_inputs_verified": true,
+  "hardware_tested": false
+}
