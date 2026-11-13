@@ -3,6 +3,10 @@ import argparse,hashlib,json,re,struct,zlib
 from pathlib import Path
 from PIL import Image
 
+# v94 and later retain up to twelve previews, including five after input.
+# This bounds IDs only; session, complete rows and CRC still qualify each image.
+MAX_PREVIEW_ID=12
+
 def _decode_segment(data,session):
     frames={}
     # Status responses use a separate USB reply path and may land between two
@@ -23,7 +27,7 @@ def _decode_segment(data,session):
         if m:
             token,ident,source=m.groups();ident=int(ident)
             if token!=session:raise ValueError('Preview session mismatch')
-            if not 1<=ident<=10 or ident in frames:raise ValueError('Duplicate or unexpected frame')
+            if not 1<=ident<=MAX_PREVIEW_ID or ident in frames:raise ValueError('Duplicate or unexpected frame')
             frames[ident]=dict(session=token,source_frame=int(source),rows={},end=None)
             continue
         m=re.fullmatch(r'ELDEN_FRAME_ROW id=(\d+) y=(\d+) hex=([0-9a-f]+)',line)

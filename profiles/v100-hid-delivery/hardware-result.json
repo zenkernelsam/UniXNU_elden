@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "image_sha256": "4a95e834ac1d4a5134881ae6561f2e93b28555e5b76ce79d5bf33c229b8baaee",
+  "session": "06ee3e3f82c1cafa",
+  "boot_nonce": "e080acf5979a7031",
+  "log": "edl_work\\live-hid-v100-rpc-20261113\\usb\\20261113-071852.bin",
+  "raw_sha256": "f5ea0d97c37706b3760d044e476ec6fc7b7c16d039d699ab316e3a2774dfab3d",
+  "captured_bytes": 5419173,
+  "drop_max": 50,
+  "capture_end": "ClearCommError failed (PermissionError(13, '设备不识别此命令。', None, 22))",
+  "transport_gaps": [],
+  "software_input_records": [
+    "ELDEN_UI_REPLAY swipe-up sent=25 error=0 release=0 source=software",
+    "ELDEN_UI_REPLAY settings down=0 up=0 normalized=27285,12934 source=software"
+  ],
+  "touch_stop_records": [
+    "ELDEN_TOUCH stopping frames=7383 reports=0",
+    "ELDEN_TOUCH stop error=0 protocol-stage=8 platform-stage=5 released=0 quarantine=0 reports=0 invalid=0"
+  ],
+  "settings_frame_id": 11,
+  "settings_crc32": "3bd2f297",
+  "settings_raw_sha256": "2dc86d0d2164e2cd21c3f4d5afa08cd87620d26c092361e9678e1d5b7e5b0422",
+  "settings_png_sha256": "d0e28f117d989dba33e8eaa090540bde9fce18adb40f0aa0de5ff3d5b4c077c3",
+  "settings_pixels_equal_v94": true,
+  "software_settings_passed": true,
+  "physical_touch_verified": false,
+  "reset_after_sync": true,
+  "actual_fastboot_observed": true,
+  "smp_fallback_observed": false,
+  "stock_restored_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "android_root_green_boot_completed": true,
+  "power_admission": {
+    "battery_mv": 4382,
+    "battery_soc_ok": "yes"
+  },
+  "stock_restore_power_admission": {
+    "battery_mv": 4367,
+    "battery_soc_ok": "yes"
+  },
+  "source_tool_fix": "decode_frame_preview accepts target IDs1..12; all session/row/CRC/gap guards retained",
+  "host_tests": {
+    "command": "py -3.12 -B -m unittest discover -s tools/device -p 'test_frame*.py'",
+    "tests_passed": 9
+  },
+  "limits": [
+    "Software gestures only, no human finger motion in this run.",
+    "Dropped bytes remain; complete-log/long-term reliability not claimed.",
+    "Sampled238x380 readback is not full-frame pixel validation or FPS.",
+    "No charging/radio/GPU/audio changes in this image."
+  ],
+  "preceding_attempts": [
+    {
+      "run": "edl_work/live-hid-v100-20261113",
+      "result": "write verified; listener wait expired without usable capture"
+    },
+    {
+      "run": "edl_work\\live-hid-v100-rerun-20261113",
+      "log_sha256": "a87615a6536b9b7ade21443c4c17e89804fbf368ab96815d83b5206dd3d60622",
+      "captured_bytes": 5503874,
+      "drop_max": 65,
+      "settings_crc32": "3bd2f297",
+      "software_settings_passed": true,
+      "watcher_error": "Duplicate or unexpected frame (old decoder max10, target sent11)",
+      "reset_after_sync": false,
+      "smp_hold_end": [
+        "ELDEN_SMP HOLD_END reason=2 elapsed-ms=240785 online=ff; stop-pet"
+      ],
+      "actual_fastboot_observed": true,
+      "stock_restored": true
+    }
+  ]
+}

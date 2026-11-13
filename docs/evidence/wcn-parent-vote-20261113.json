@@ -1,0 +1,137 @@
+{
+  "primary_chain": "ArmadaOS-Freedom TB322FC -> fixed h0cheung 6f97250e -> sm8750-lenovo-elden / GCC Taycan PLL",
+  "armada_revision": "885fd1fdaa373f266b9a3207997b91c67aa22e6d",
+  "armada_readme_sha256": "534d1b4e079ba0eeaaf63b14f4e9c1ff2c8b8a4dce107bb3e24dfce368d9e899",
+  "board_revision": "6f97250ead155fc3b980856323e99a4623dae73d",
+  "model": "Lenovo Legion Y700 Gen4",
+  "product": "TB322FC",
+  "soc": "SM8750",
+  "compatible": [
+    "lenovo,elden",
+    "qcom,sm8750"
+  ],
+  "source_sha256": {
+    "arch/arm64/boot/dts/qcom/sm8750-lenovo-elden.dts": "0a4361f3f2225befd954dd5420216f357bfa8a68294c28c895ec2478ebea3ba3",
+    "drivers/clk/qcom/gcc-sm8750.c": "31f7644672976b9b39a850e3143750ebfc01000730ccafbf9ca71e7fcd5a495e",
+    "drivers/clk/qcom/clk-alpha-pll.c": "d81f628af746854dbdd6ef8b0f2e36f85ba38858404690759199a026cac77109",
+    "drivers/clk/qcom/clk-alpha-pll.h": "6eb0ff4de568da94e486fc1c5e2b9ddf3db51383ce35ab45908832e780d26697"
+  },
+  "primary_alpha_pll_c_equals_linux7014_blob": true,
+  "mainline_header_not_substituted": true,
+  "excluded_board_reference": "enij90/armada-tb321fu = Gen3 TB321FU SM8650; no board registers/firmware imported",
+  "captured_words": {
+    "mode": "0xe0000005",
+    "opmode": 0,
+    "l": 31,
+    "alpha": "0x4000",
+    "user_ctl": "0x02000403"
+  },
+  "scope": "Correct existing stable read decoding; no PLL write, enable or retune",
+  "host_result": "Old actual function rejects captured words; fixed actual code passes344 assertions including12 power lifecycle scenarios",
+  "native_result": {
+    "objects": {
+      "WcnPower": {
+        "source_sha256": "feb9fefa74ee07e39b7f5694c5921329d0017163a6391bdd82bf64a2ae9208c0",
+        "object_sha256": "f5a48dcd547407c2a485d4234449001b40734cfb259b157cffb9cf2827ff0ac5",
+        "exports": [
+          "_elden_wcn_cpr_adjust",
+          "_elden_wcn_cpr_pdc_name",
+          "_elden_wcn_cpr_plan",
+          "_elden_wcn_cpr_plan_details",
+          "_elden_wcn_cpr_rail_name",
+          "_elden_wcn_parent_decode",
+          "_elden_wcn_power_acquire",
+          "_elden_wcn_power_check",
+          "_elden_wcn_power_cpr",
+          "_elden_wcn_power_finish",
+          "_elden_wcn_power_stop",
+          "_elden_wcn_rail_specs"
+        ],
+        "imports": [
+          "_strcmp"
+        ],
+        "scalar": true,
+        "command": [
+          "xcrun",
+          "--sdk",
+          "iphoneos",
+          "clang",
+          "-target",
+          "arm64-apple-ios17.0",
+          "-O2",
+          "-Wall",
+          "-Wextra",
+          "-Werror",
+          "-ffreestanding",
+          "-fno-builtin",
+          "-fno-stack-protector",
+          "-mgeneral-regs-only",
+          "-I/Users/ciscohe/Desktop/UniXNU_elden/lab/wcn-parent-vote-20261113/source/drivers/EldenBluetooth",
+          "-I/Users/ciscohe/Desktop/UniXNU_elden/lab/wcn-parent-vote-20261113/source/drivers/EldenWifi",
+          "-c",
+          "/Users/ciscohe/Desktop/UniXNU_elden/lab/wcn-parent-vote-20261113/source/drivers/EldenBluetooth/WcnPower.c",
+          "-o",
+          "/Users/ciscohe/Desktop/UniXNU_elden/lab/wcn-parent-vote-20261113/native/WcnPower.o"
+        ]
+      },
+      "OlCprPlan": {
+        "source_sha256": "08d7dd9ee21228a194582fd1bea5a0b319007e8be58fb1f1a1a1282e9c449896",
+        "object_sha256": "f1841e648495c24a61e593f4b044cfc3d654623a95b486e402fbd88acc9a3845",
+        "exports": [
+          "_elden_olcpr_adjust",
+          "_elden_olcpr_pdc_name",
+          "_elden_olcpr_prepare",
+          "_elden_olcpr_rail_name"
+        ],
+        "imports": [
+          "_bzero",
+          "_elden_wcn_cpr_adjust",
+          "_elden_wcn_cpr_pdc_name",
+          "_elden_wcn_cpr_plan_details",
+          "_elden_wcn_cpr_rail_name"
+        ],
+        "scalar": true,
+        "command": [
+          "xcrun",
+          "--sdk",
+          "iphoneos",
+          "clang",
+          "-target",
+          "arm64-apple-ios17.0",
+          "-O2",
+          "-Wall",
+          "-Wextra",
+          "-Werror",
+          "-ffreestanding",
+          "-fno-builtin",
+          "-fno-stack-protector",
+          "-mgeneral-regs-only",
+          "-I/Users/ciscohe/Desktop/UniXNU_elden/lab/wcn-parent-vote-20261113/source/drivers/EldenBluetooth",
+          "-I/Users/ciscohe/Desktop/UniXNU_elden/lab/wcn-parent-vote-20261113/source/drivers/EldenWifi",
+          "-c",
+          "/Users/ciscohe/Desktop/UniXNU_elden/lab/wcn-parent-vote-20261113/source/drivers/EldenWifi/OlCprPlan.c",
+          "-o",
+          "/Users/ciscohe/Desktop/UniXNU_elden/lab/wcn-parent-vote-20261113/native/OlCprPlan.o"
+        ]
+      }
+    },
+    "headers_sha256": {
+      "WcnPower.h": "2047193ec2337bf0ef83f4308c0a83d879fdd6738e80f422a6c1907111a6fff3",
+      "OlCprPlan.h": "613fb15e96cbf51c43fe0dcafc652c23059a5eed943020fa22578268552e4911"
+    },
+    "provider_archive_sha256": "445dd7cb9fb6bbc839f229e22919ab939c3518944b09c2cbab504fb1c3a8dd9f",
+    "shared_provider_bound": true,
+    "remaining_imports": [
+      "_bzero",
+      "_strcmp"
+    ],
+    "legacy_exports_preserved": true,
+    "integration_rule": "Link libEldenWcnPower.a once and OlCprPlan.o; omit any duplicate WcnPower.o from Bluetooth/Wi-Fi archives.",
+    "native_runtime_gateway_added": false,
+    "kernel_linked": false,
+    "hardware_operations": false
+  },
+  "kernel_linked_with_fix": false,
+  "boot_candidate_with_fix": false,
+  "hardware_retested_with_fix": false
+}

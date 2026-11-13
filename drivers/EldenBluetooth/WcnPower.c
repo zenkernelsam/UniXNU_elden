@@ -111,7 +111,13 @@ int elden_wcn_power_check(const EldenWcnPower *p,uint64_t epoch,unsigned op){
 int elden_wcn_parent_decode(uint32_t mode,uint32_t opmode,uint32_t l,uint32_t alpha,
     uint32_t user,uint32_t *main,uint32_t *even){
     if(!main||!even)return EldenWcnPowerArgument;
-    if((mode&0x80000001u)!=0x80000001u||opmode!=1||(user&7u)!=7u||
+    /* Taycan uses lucid-evo vote-run (USER_CTL bit25). In that mode the
+     * firmware vote can keep the PLL locked while OPMODE remains STANDBY.
+     * Only main/even outputs are needed; the third output is not a parent.
+     * Observe only: never retune the shared PLL or create a clock vote here. */
+    bool vote_run=(user&(1u<<25))!=0;
+    if((mode&0x80000001u)!=0x80000001u||opmode>1||(!vote_run&&opmode!=1)||
+       (user&3u)!=3u||
        ((user>>10)&15u)!=1u)return EldenWcnPowerIdentity;
     uint64_t hz=19200000ULL*(l&65535u)+(19200000ULL*(alpha&65535u)>>16);
     if(hz!=600000000ULL)return EldenWcnPowerIdentity;

@@ -1,4 +1,14 @@
-# v99 Bluetooth runtime candidate — signed, untested
+# v99 Bluetooth runtime — first hardware attempt stopped at parent clock admission
+
+2026-11-13: the owner resumed unattended testing. This exact image prepared
+its runtime files/mount successfully, then refused WCN survey with−19 before
+power acquisition or UART/HCI. The capture's Taycan PLL uses hardware vote-run;
+the old decoder incorrectly requires manual RUN and an unused third output.
+See [hardware-result.json](hardware-result.json) and
+[the fixed-board analysis](../../docs/WCN-PARENT-CLOCK.md). Explicit sync/reset
+and full-SHA stock Android recovery passed. Bluetooth is not yet usable.
+The read-only decoder repair passes host/native component checks but has not
+been integrated into this frozen candidate. The earlier build record follows.
 
 Reproduce this exact source profile at commit `7f0704c657ca3e671007cc00034e096b54892042`.
 Later shared-planner changes deliberately fail its old owned-source hashes;
@@ -7,7 +17,7 @@ do not update those hashes or silently replace this unflashed candidate.
 The runtime, entry transformation and96MiB signed boot candidate now build
 offline. This profile selects `elden-wcn-power=4`: it attempts real WCN power,
 UART and HCI initialization after its gates. It is **not read-only** and has
-not been flashed. The owner's current offline-only instruction still applies.
+had not been flashed when the following offline record was written.
 
 Candidate in the paired workbench:
 `edl_work/bt-runtime-v99-20261112/candidate/boot-signed.img`

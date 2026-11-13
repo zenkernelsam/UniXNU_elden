@@ -45,6 +45,8 @@ int elden_wcn_power_stop(EldenWcnPower *,uint64_t epoch);
 int elden_wcn_power_finish(EldenWcnPower *,uint64_t epoch);
 int elden_wcn_power_check(const EldenWcnPower *,uint64_t epoch,unsigned operation);
 /* Taycan GPLL0 fixed rate: L low16, alpha16, USER_CTL postdiv10:13.
+ * Vote-run bit25 permits standby OPMODE with locked/enabled main+even outputs;
+ * manual mode still requires RUN. This decoder never enables/retunes a PLL.
  * Inputs are a stable live read; false/zero when not running or unsupported. */
 int elden_wcn_parent_decode(uint32_t mode,uint32_t opmode,uint32_t l,uint32_t alpha,
     uint32_t user,uint32_t *main_hz,uint32_t *even_hz);

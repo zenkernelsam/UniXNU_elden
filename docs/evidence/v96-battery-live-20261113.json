@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "image_sha256": "1a9e76212c77fe2d6eb4f8e402804f313048774c3998631267612db2563372da",
+  "session": "30a09b6552dc35e4",
+  "boot_nonce": "06e6e32b761a8a3e",
+  "log": "edl_work\\live-battery-v96-20261113\\usb\\20261113-072953.bin",
+  "raw_sha256": "50f306c1fc0149291071e487bf838014def87aab89174952a968f9635e05216d",
+  "captured_bytes": 5431844,
+  "drop_max": 28,
+  "capture_end": "ClearCommError failed (PermissionError(13, '设备不识别此命令。', None, 22))",
+  "gaps": [],
+  "power_admission": {
+    "battery_mv": 4377,
+    "battery_soc_ok": "yes"
+  },
+  "initial_gate_records": [
+    "ELDEN_BATTERY held epoch=1 cycle=1 reason=-6 confirmations=0",
+    "ELDEN_BATTERY held epoch=1 cycle=2 reason=-6 confirmations=0",
+    "ELDEN_BATTERY held epoch=1 cycle=3 reason=-6 confirmations=0",
+    "ELDEN_BATTERY held epoch=1 cycle=4 reason=-6 confirmations=1"
+  ],
+  "published_samples": 62,
+  "first_published": {
+    "cycle": 5,
+    "percent": 96,
+    "mv": 4379,
+    "ma": -848,
+    "temp_centi_c": 2970,
+    "external": 1,
+    "net_charging": 0
+  },
+  "last_published": {
+    "cycle": 66,
+    "percent": 96,
+    "mv": 4380,
+    "ma": -412,
+    "temp_centi_c": 3070,
+    "external": 1,
+    "net_charging": 0
+  },
+  "last_ten_median_ma": -413.5,
+  "status_bar": {
+    "session": "30a09b6552dc35e4",
+    "log_sha256": "50f306c1fc0149291071e487bf838014def87aab89174952a968f9635e05216d",
+    "settings_id": 11,
+    "settings_crc32": "5ef86781",
+    "settings_raw_sha256": "c896c88af0160a8d21378990bf09bda32a89257ec40cee98ad28790144c0389c",
+    "battery_bar_begin": "ELDEN_BAR_BEGIN session=30a09b6552dc35e4 id=11 source=18 x=1666 y=0 width=238 height=96 format=rgb565le",
+    "battery_bar_end": "ELDEN_BAR_END id=11 crc32=b8f23165 bytes=45696",
+    "battery_bar_raw_sha256": "9c92bd63bd8cab8ab487e197061e74e582a0c18d4271c39bfd30a7ea121d3942",
+    "all_rows_and_crc_verified": true,
+    "gaps": [],
+    "png_sha256": "6c7f2f4ce3bf6c82de40e926deae7b649630cbc703b080cf747464964bbed1e1",
+    "visual_observation": "96% and battery icon, no charging lightning; actual full-resolution top-right238x96 tile"
+  },
+  "software_settings_passed": true,
+  "battery_units_and_publication_passed_this_run": true,
+  "last_contract_records": [
+    "ELDEN_PD_CONTRACT port=1 result=-11 position=0 type=0 range-mv=0/0 exact-v=0 requested-mv=0 requested-ma=0 requested-mw=0; contract-only, not metering",
+    "ELDEN_PD_CONTRACT port=2 result=0 position=1 type=0 range-mv=5000/5000 exact-v=1 requested-mv=5000 requested-ma=3000 requested-mw=15000; contract-only, not metering"
+  ],
+  "last_input_records": [
+    "ELDEN_POWER_INPUTS USB-v=5609000 i=506000 limit=500000 temp=3000 real-type=1 WLS-online=0 v=5011000 i=497000 limit=500000 temp=310 Lenovo55=0; raw-units, mapping-pending",
+    "ELDEN_POWER_INPUTS USB-v=5401000 i=497000 limit=500000 temp=3000 real-type=1 WLS-online=0 v=5003000 i=497000 limit=500000 temp=310 Lenovo55=0; raw-units, mapping-pending"
+  ],
+  "reset_after_sync": true,
+  "actual_fastboot_observed": true,
+  "stock_restored_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "android_root_green_boot_completed": true,
+  "physical_touch_verified": false,
+  "full_charging_goal_complete": false,
+  "limits": [
+    "High96%SOC; no fast-charge performance claim.",
+    "Current cable wiring not independently confirmed by user this run; UCSI port2 reports a5V/3A contract, not measured input power.",
+    "Last10 signed aggregate samples show net discharge, despite external power.",
+    "Dual-port arbitration, unplug/reconnect, full protection cycles and persistence remain incomplete.",
+    "v96 is v94 plus battery menu parameters; it does not contain v100 HID fixes.",
+    "Log drops28 remain; no all-bytes capture claim."
+  ]
+}

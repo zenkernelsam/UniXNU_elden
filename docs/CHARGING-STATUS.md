@@ -1,8 +1,16 @@
-# 充电状态与电池界面候选 · 2026-11-12
+# 充电状态与电池界面 · 2026-11-13
 
 充电驱动尚未完整验收。原厂固件、UCSI事件/合同、保护模式和回程已有实证；
 双口取电、净充电能力及完整保护周期仍有缺口。GPU最后，扬声器启用前先讨论保护。
-当前用户要求离线；本轮无设备访问。
+用户11月13日已恢复无人值守真机授权。v96电池发布功能已验证并恢复Android，
+原11月12日离线证据及冻结镜像保留。
+
+本轮62次发布从cycle5开始：初始化默认值先被拒绝，两次合格采样后才注册。
+状态栏原尺寸238×96回读全部行与CRC通过，明确显示96%，与驱动一致；
+末次4.380V、30.70°C，末10轮有符号电流中位−413.5mA，显示未充电是正确的。
+日志5431844B、drop28；同步RPC、fastboot实枚举及stock完整SHA恢复均通过。
+这完成当前接线下的单位/发布/UI验证；高96%SOC和端口2的5V/3A合同不能证明快充功率。
+见[本轮证据](evidence/v96-battery-live-20261113.json)。
 
 ## 实证与缺口
 
@@ -12,7 +20,7 @@
 | 短边单口PD | 11月11日iPadOS内用户两轮读表约14.87/15.65W | 电池稳态净充电、峰值功率与兼容性 |
 | 原生双口 | 长边PC接回后短边读表约0W；原厂报告优先级/撤票条件已追到精确固件 | 保持长边数据且由短边PD供电的安全实现 |
 | 旁路/80%/40–60% | 原厂28/29属性、五阶段读回及stock恢复通过 | 正常UI负载旁路、完整阈值循环、设置持久化 |
-| 电池显示 | 真实双FG交叉校验及IOPMPowerSource发布器已有实现 | 当前GUI诊断菜单未启用；下面的恢复候选未上机 |
+| 电池显示 | v96双FG准入、62次真实发布、状态栏96%通过 | 链路失败/重连、插拔及完整保护周期下的UI仍需验收；尚未与v100合并 |
 
 不得把9V合同、online或输入功率当成电池净充电。两口的隔离/反灌保护仍由原厂控制，
 不能因为长边优先就强写GPIO/FET或提高SDP预算。原GLINK WRITE status1与AP写FIFO外部异常
@@ -48,9 +56,15 @@ python tools/analysis/audit_oem_power_reports.py --firmware STOCK_ADSP_MBN --ass
 
 工具绑定原件与完整反汇编SHA，输出所用字段映射和每段原机器码SHA；没有执行固件。
 下一项充电硬件证据仍是准确捕获切换后的逻辑online、合同/投票、实际功率和恢复，
-当前离线约束下不重复刷写。v94/v95/v96均未因此换料或产生新版本。
+不重复已否定的写接口。v94/v95/v96均未因参考更新换料。
 
-## 当前GUI菜单缺少电池发布
+11月13日上游b952733的电池改动保持已知online/status、处理合并的掉线/上线事件，
+并为小米键盘属性0xe4排队；其新增部分只有host证据，作者明确未量出充电改善。
+Elden已采用完整新鲜快照、epoch、双FG准入和unavailable路径，不重复移植未知值保护。
+小米键盘属性与其默认SDP电流不能用于本机双口仲裁。最新官方power指南同样要求
+保留固件充电所有权，并分别证明协议、测量和OS服务。
+
+## 候选来源：v94 GUI菜单缺少电池发布
 
 v94日志明确显示 `ELDEN_BATTERY qualified data-only; UI disabled`，启动菜单确实没有
 elden-battery/profile/current三项。初始50%/4V/4A默认值被双FG校验拒绝，cycle5才进入合格状态；
@@ -78,7 +92,7 @@ v96只恢复既有发布器：`elden-battery=1 elden-battery-profile=1 elden-bat
 - SHA256：`1a9e76212c77fe2d6eb4f8e402804f313048774c3998631267612db2563372da`
 - session：`30a09b6552dc35e4`
 - 内核：`3fe39a54f2ff31683511dce6871a05853b6e6ad8aa487c290be497501bf8be60`，与v94相同
-- floor：1738713600@footer0，父链3；独立FAT/资产/entry/AVB核验通过；**未刷、未实测**。
+- floor：1738713600@footer0，父链3；独立FAT/资产/entry/AVB核验通过；11月13日已完成上述实机发布验证。
 
 按[源码复现](REPRODUCIBILITY.md)使用已核v94 entry/kernel与build-result，
 `build_v91_boot.py`及`audit_v91_boot.py`均在原参数上增加 `--battery-ui`。
@@ -87,6 +101,6 @@ v96只恢复既有发布器：`elden-battery=1 elden-battery-profile=1 elden-bat
 `python3 tools/test_battery_boot.py --parser-source PATH/pexpert/gen/bootargs.c --work NEW_SCRATCH_DIRECTORY`。
 输出保留，不自动删除；脚本需要Python3.11+的tomllib。
 
-此候选用于下一次明确的电池界面功能验证：两个合格采样前不发布虚假电量，之后显示真实SOC/温度/电流；
+本轮验证了两个合格采样前不发布虚假电量，之后显示真实SOC/温度/电流；
 拔线或供电协议验证另按已记录的接线判据，不把状态栏图标当电气验收。
 真实手指仍优先用原已验v94，避免将两个未验证因素混为一次触控结果。

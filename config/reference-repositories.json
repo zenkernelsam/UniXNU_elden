@@ -182,6 +182,11 @@
       "observed_head": "6d58c09d1529fb22dba8e3d6f74d8d4c7f9f8306"
     },
     {
+      "name": "UniXNU-official",
+      "url": "https://github.com/UniXNU/UniXNU.git",
+      "observed_head": "7d85ede80092050f4d87f72ac7229bb605ce07fb"
+    },
+    {
       "name": "UniXNU-Pagani-Drivers",
       "url": "https://github.com/IssacL04/UniXNU-Pagani-Drivers.git",
       "observed_head": "c888efd3ce1b817d13f28783a77cf689cb2255c9"

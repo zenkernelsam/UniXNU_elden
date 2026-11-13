@@ -99,6 +99,30 @@ int main(void){
     CHECK(elden_wcn_parent_decode(1,1,31,0x4000,7|(1u<<10),&main,&even)<0);
     CHECK(elden_wcn_parent_decode(0x80000001,1,32,0x4000,7|(1u<<10),&main,&even)<0);
     CHECK(elden_wcn_parent_decode(0x80000001,1,31,0x4000,7,&main,&even)<0);
+    /* Exact first v99 hardware observation: a running vote-mode GPLL0 was
+     * incorrectly rejected because its manual OPMODE and unused output differ. */
+    CHECK(!elden_wcn_parent_decode(0xe0000005,0,31,0x4000,0x02000403,&main,&even)&&
+        main==600000000&&even==300000000);
+    CHECK(!elden_wcn_parent_decode(0xe0000005,1,31,0x4000,0x02000403,&main,&even));
+    CHECK(!elden_wcn_parent_decode(0x80000001,1,31,0x4000,0x403,&main,&even));
+    const uint32_t invalid[][5]={
+        {0xe0000005,0,31,0x4000,0x403}, /* manual standby */
+        {0x60000005,0,31,0x4000,0x02000403}, /* unlocked */
+        {0xe0000004,0,31,0x4000,0x02000403}, /* output disabled */
+        {0xe0000005,0,31,0x4000,0x02000402}, /* main disabled */
+        {0xe0000005,0,31,0x4000,0x02000401}, /* even disabled */
+        {0xe0000005,2,31,0x4000,0x02000403}, /* unsupported OPMODE */
+        {0xe0000005,0,32,0x4000,0x02000403}, /* wrong main rate */
+        {0xe0000005,0,31,0x4001,0x02000403}, /* wrong fractional rate */
+        {0xe0000005,0,31,0x4000,0x02000803}, /* unsupported divider */
+        {0xffffffff,0xffffffff,0xffffffff,0xffffffff,0xffffffff}
+    };
+    for(unsigned i=0;i<sizeof(invalid)/sizeof(invalid[0]);i++){
+        main=123;even=456;
+        CHECK(elden_wcn_parent_decode(invalid[i][0],invalid[i][1],invalid[i][2],
+            invalid[i][3],invalid[i][4],&main,&even)==EldenWcnPowerIdentity);
+        CHECK(main==123&&even==456);
+    }
     cpr();
     printf("PASS %u power scenarios, %u sequence/lease/rail/PLL/OL-CPR assertions\n",scenarios,checks);
     return 0;

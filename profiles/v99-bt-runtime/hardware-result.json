@@ -1,0 +1,36 @@
+{
+  "image_sha256": "d385e428b0753c13a09c2befd479a98a8d5ead287545604139164aec214f8215",
+  "session": "3d74d3ccaed21f53",
+  "boot_nonce": "bc84e24aa6952e52",
+  "log": "edl_work\\live-bt-v99-retry-20261113\\usb\\20261113-075708.bin",
+  "log_sha256": "cac9dce46714a113623dce11f81aef99b291944649e957a59ffedcbad07467a2",
+  "captured_bytes": 1155217,
+  "drop_max": 3,
+  "capture_end": "ClearCommError failed (PermissionError(13, '\u8bbe\u5907\u4e0d\u8bc6\u522b\u6b64\u547d\u4ee4\u3002', None, 22))",
+  "runtime": [
+    "ELDEN_BT_RUNTIME prepared=1 error=0 mount-stage=5 original-job=1"
+  ],
+  "wcn": [
+    "ELDEN_WCN survey=-19 parent=0/0 rf-clk1=off apid=629 mode=4",
+    "ELDEN_WCN pll mode=e0000005 op=00000000 l=0000001f alpha=00004000 user=02000403",
+    "ELDEN_WCN RPC stop=1; radio/UART stopped, boot-shared votes retained"
+  ],
+  "power_acquire_reached": false,
+  "uart_hci_reached": false,
+  "native_bluetooth_usable": false,
+  "reset_after_sync": true,
+  "actual_fastboot_observed": true,
+  "stock_restored_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "android_root_green_boot_completed": true,
+  "power_admission": {
+    "battery_mv": 4373,
+    "battery_soc_ok": "yes"
+  },
+  "fix_status": "host/native component checks passed; new full boot image not yet built",
+  "limits": [
+    "Original BlueTool file/mount preparation passed; actual daemon/XPC/HCI success remains unverified.",
+    "PLL survey refusal precedes WCN power acquisition; live-radio stop path has not been tested.",
+    "One attempted initialization, no synthetic touch replay.",
+    "An initial launcher variable error occurred before writer invocation; no candidate was written then, stock was rebooted and the corrected launcher used a new run directory."
+  ]
+}

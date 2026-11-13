@@ -1,9 +1,20 @@
-# v100 touch delivery — signed, untested
+# v100 touch delivery — software interaction verified, physical touch pending
 
 The complete v94-based image now includes the two
 [HID delivery repairs](../../drivers/EldenHidDelivery/README.md). Linking,
 prelink, entry transformation, signing and independent inspection passed offline.
-The owner's offline-only restriction remains; this image has not been flashed.
+The owner resumed unattended hardware testing on 2026-11-13. The unchanged
+signed image has now completed software swipe/Settings, session-bound sync/reset
+to fastboot and full-SHA stock Android recovery; see [hardware-result.json](hardware-result.json).
+Its final sampled Settings frame matches v94 exactly. No physical finger test
+occurred; the capture still reports50 dropped bytes.
+
+The preceding run also reached Settings but its PC watcher stopped at frame11:
+the decoder still limited IDs to10 although v94/v100 can send12. The host tool
+now accepts1..12 with the existing session/row/CRC/gap checks; nine regression
+tests and both real captures pass. That preceding run returned after the SMP
+watchdog stop-pet marker, without a captured reset-after-sync. The final run
+explicitly captured `ELDEN_RPC RESET_AFTER_SYNC route=sdam-v7` before fastboot.
 
 - Image SHA256: `4a95e834ac1d4a5134881ae6561f2e93b28555e5b76ce79d5bf33c229b8baaee`
 - Session: `06ee3e3f82c1cafa`
