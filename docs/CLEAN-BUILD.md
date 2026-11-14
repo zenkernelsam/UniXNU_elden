@@ -97,3 +97,6 @@ VFS键，用于保持 `__FILE__` 和字符串合并顺序。实际内容只来�
 [EldenKeyStore](../drivers/EldenKeyStore/README.md)。这两个阶段只消费本次源码
 构建的输出，不恢复历史v99依赖；software-keystore目前要求exit-stack同时启用。
 当前已分别执行完整基础构建和两个后续阶段，尚未重新执行含这两个选项的全量空目录命令。
+
+v124另加 `--bluetool-launch`，只处理准确自有助手的已观察启动限制失败。
+它的源码增量阶段已执行，实机后续USB中断，故仅作为诊断候选；不是新稳定基线。

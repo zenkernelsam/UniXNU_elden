@@ -1,5 +1,12 @@
 # 当前状态 · 2026-11-14
 
+v124进一步核出v123的BlueTool103次启动限制拒绝。按现有IconServices方式，只为
+准确CDHash/路径/只读RAM union/已就绪runtime和观察到的e6错误加限定处理；全局
+限制保持。实机一次限定放行，但108145B后USB写超时，未证实BlueTool处理XPC或
+H4已连接，不能据此断言内核死锁。设备自动回fastboot，复位原因未捕获；完整stock
+恢复和Android/root/green通过，已熄屏。候选保留诊断，不提升为默认。下步bootstrap
+sysctl与native connect/send的有限阶段记录。详profiles/bluetool-owner-launch。
+
 v123已越过蓝牙首退：软件AppleKeyStore实机wrap/unwrap返回0，原bluetoothd
 PID79打印“Server attached, going into msg loop”。本轮1186758B日志/drop0，
 未记录原exit或launch-constraint重试；H4端仍client0/ready0，扫描配对未通。

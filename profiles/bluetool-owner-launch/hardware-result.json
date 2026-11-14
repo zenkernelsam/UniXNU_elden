@@ -1,0 +1,34 @@
+{
+  "candidate": "v124",
+  "image_sha256": "a79c1c7ae678565fe7cecad27cc1b30ab9604ac4760bb47ffc586f5ba9609e68",
+  "session": "b1a78d04dec91467",
+  "bytes": 108145,
+  "raw_sha256": "45a374897574c10a947fd655bafdf9fe152b020e0b2b611bd8811e4f448cb4a9",
+  "max_reported_drop": 0,
+  "discontinuities": [
+    {
+      "offset": 108145,
+      "utc": "2026-11-14T10:06:47.030331+00:00",
+      "error": "Write timeout",
+      "partial_line_chars": 0
+    }
+  ],
+  "ended_by": "Bounded USB reconnect expired; no controls repeated",
+  "transport_observation_incomplete": true,
+  "lines": [
+    "ELDEN_WCN hci=0 ready=1 patch=80ab segments=958",
+    "ELDEN_BT_HOST published actual H4 transport; no fabricated capabilities",
+    "ELDEN_BT_OWNER_LAUNCH accepted pid=126 exact-cdhash=1 RAM-overlay=1 category6-volume-only",
+    "ELDEN_BT_STDERR pid=79 line=7 iov=0 bytes=66 copied=66 error=0 text=com.apple.server.bluetooth: Server attached, going into msg loop."
+  ],
+  "owner_exception_matches": 1,
+  "h4_connection_observed": false,
+  "BlueTool_XPC_handling_proven": false,
+  "explicit_sync_return": false,
+  "reset_cause_unproven": true,
+  "physical_fastboot_observed": true,
+  "recovery_complete": true,
+  "stock_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "not_new_default_baseline": true,
+  "next": "Bounded phase trace in BootstrapStatus and native connect/send, after the approved helper launch; do not infer kernel deadlock from USB timeout alone."
+}

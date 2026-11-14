@@ -1,5 +1,9 @@
 # 下一阶段顺序
 
+v124更新：已捕获准确BlueTool的e6例外接受，随后USB写超时，自动恢复Android完成。
+下一发只定位bootstrap sysctl与native connect/send的进入/返回，不更改固件、电源
+或时钟。H4连接仍未观察到；v123与v124均不是无线完成结论，不把日志中断当内核死锁。
+
 当前下一步（v123）：已用官方软件AppleKeyStore越过原21H461 readRootKeys首退，
 daemon进入消息循环，但真实UART.SK H4仍client0。先核对准确17版的服务发现、
 BlueTool后续状态及control socket打开条件；不重测密钥包装已成功的事实，不跳过

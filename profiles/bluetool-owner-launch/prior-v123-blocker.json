@@ -1,0 +1,11 @@
+{
+  "source_raw_sha256": "5f82ac6c97caa88a9e44062e14cf2efa9a4410a0916e5cf9bb20ad672ab8c39b",
+  "BlueTool_launch_constraint_count": 103,
+  "first": "AMFI: Launch Constraint Violation (enforcing), error info: c[8]p[1]m[1]e[6], (Constraint not matched) launching proc[vc: 1 pid: 138]: /usr/sbin/BlueTool, launch type 1, failure proc [vc: 1 pid: 138]: /usr/sbin/BlueTool",
+  "last": "AMFI: Launch Constraint Violation (enforcing), error info: c[8]p[1]m[1]e[6], (Constraint not matched) launching proc[vc: 1 pid: 394]: /usr/sbin/BlueTool, launch type 1, failure proc [vc: 1 pid: 394]: /usr/sbin/BlueTool",
+  "all_observed_error6": true,
+  "bluetoothd_first_exit_fixed": true,
+  "next_action": "Qualify only exact owner-signed BlueTool on verified read-only RAM union; preserve MAC and code-page checks",
+  "sheng_no_lc_in_board": true,
+  "original_launchd_job_preserved_this_trial": true
+}
