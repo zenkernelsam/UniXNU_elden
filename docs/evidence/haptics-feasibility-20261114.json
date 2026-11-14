@@ -1,0 +1,526 @@
+{
+  "system_version": {
+    "BuildID": "52CE5CD4-44C1-11F1-A8F4-8E9E0A9331EA",
+    "ProductBuildVersion": "21H461",
+    "ProductCopyright": "1983-2026 Apple Inc.",
+    "ProductName": "iPhone OS",
+    "ProductVersion": "17.7.11",
+    "SystemImageID": "3F09D9D7-3C07-450B-8CD7-FC056221FC8E"
+  },
+  "raw_OS_sha256": "d8808bea18b949142b3e47bbcb780c3f22faaacd9b40a88f77c23557181edc9c",
+  "readonly": true,
+  "frameworks_present": [
+    "System/Library/Frameworks/AudioToolbox.framework",
+    "System/Library/Frameworks/CoreAudioKit.framework",
+    "System/Library/Frameworks/CoreHaptics.framework",
+    "System/Library/Frameworks/CoreAudioTypes.framework",
+    "System/Library/Frameworks/CoreAudio.framework",
+    "System/Library/Frameworks/AVFAudio.framework",
+    "System/Library/Frameworks/AudioUnit.framework",
+    "System/Library/PrivateFrameworks/AudioSession.framework",
+    "System/Library/PrivateFrameworks/AudioToolboxCore.framework",
+    "System/Library/PrivateFrameworks/Feedback.framework",
+    "System/Library/PrivateFrameworks/SiriAudioIntentUtils.framework",
+    "System/Library/PrivateFrameworks/AudioAnalyticsBase.framework",
+    "System/Library/PrivateFrameworks/SiriCrossDeviceArbitrationFeedback.framework",
+    "System/Library/PrivateFrameworks/AudioAnalytics.framework",
+    "System/Library/PrivateFrameworks/FeedbackService.framework",
+    "System/Library/PrivateFrameworks/BluetoothAudio.framework",
+    "System/Library/PrivateFrameworks/SiriAudioInternal.framework",
+    "System/Library/PrivateFrameworks/AudioAnalyticsExternal.framework",
+    "System/Library/PrivateFrameworks/AudioPasscode.framework",
+    "System/Library/PrivateFrameworks/AppleHIDFeedback.framework",
+    "System/Library/PrivateFrameworks/AudioServerDriverTransports_Base.framework",
+    "System/Library/PrivateFrameworks/FeedbackLogger.framework",
+    "System/Library/PrivateFrameworks/AccessoryAudio.framework",
+    "System/Library/PrivateFrameworks/AudioAccessoryServices.framework",
+    "System/Library/PrivateFrameworks/AudioDSPManager.framework",
+    "System/Library/PrivateFrameworks/Haptics.framework",
+    "System/Library/PrivateFrameworks/FeedbackCore.framework",
+    "System/Library/PrivateFrameworks/ContactsDonationFeedback.framework",
+    "System/Library/PrivateFrameworks/ExclavesAudioDrivers.framework",
+    "System/Library/PrivateFrameworks/SiriAudioSnippetKit.framework",
+    "System/Library/PrivateFrameworks/SiriAudioSnippetUI.framework",
+    "System/Library/PrivateFrameworks/AudioServerApplication.framework",
+    "System/Library/PrivateFrameworks/AudioServerDriverTransports_IOA2.framework",
+    "System/Library/PrivateFrameworks/AudiogramIngestion.framework",
+    "System/Library/PrivateFrameworks/KeyboardSettingsFeedback.framework",
+    "System/Library/PrivateFrameworks/MediaExperience.framework",
+    "System/Library/PrivateFrameworks/AudioDataAnalysis.framework",
+    "System/Library/PrivateFrameworks/AOPHaptics.framework",
+    "System/Library/PrivateFrameworks/AudioServerDriverTransports_IOP.framework",
+    "System/Library/PrivateFrameworks/AudioSessionServer.framework",
+    "System/Library/PrivateFrameworks/SiriAudioSupport.framework",
+    "System/Library/PrivateFrameworks/AudioTransportCommon.framework",
+    "System/Library/PrivateFrameworks/IsolatedCoreAudioClient.framework",
+    "System/Library/PrivateFrameworks/AudioServerDriver.framework",
+    "System/Library/PrivateFrameworks/PersonalAudio.framework"
+  ],
+  "tuning_product_directories": [
+    "DialogueAnchorAnalyzer",
+    "Generic",
+    "J120",
+    "J121",
+    "J207",
+    "J208"
+  ],
+  "hapticengineconfigs": {
+    "Library/Audio/Tunings/Generic/Haptics/Config/hapticengineconfig.plist": {
+      "sha256": "72c96828df9b41ac91fed9f799af68bfa8229a3e4b7f658aadbf7ccbdf689bec",
+      "bytes": 1694,
+      "layer_types": [
+        "Audio"
+      ]
+    }
+  },
+  "vibration_tables": {
+    "System/Library/PrivateFrameworks/MediaExperience.framework/J120/SystemSoundVibrationPatterns.plist": {
+      "sha256": "8157908ed176fa0075fcce644a116b741b05e0415ff6b8ddde71bab36a691210",
+      "bytes": 55,
+      "top_level_keys": 1,
+      "default_empty": true
+    },
+    "System/Library/PrivateFrameworks/MediaExperience.framework/D83/SystemSoundVibrationPatterns.plist": {
+      "sha256": "f50d5002f808bc85cb5bb284b6ef9d5928703a21738122b23686e1ab5c05910c",
+      "bytes": 20577,
+      "top_level_keys": 142,
+      "default_empty": false
+    },
+    "System/Library/PrivateFrameworks/MediaExperience.framework/J317/SystemSoundVibrationPatterns.plist": {
+      "sha256": "8157908ed176fa0075fcce644a116b741b05e0415ff6b8ddde71bab36a691210",
+      "bytes": 55,
+      "top_level_keys": 1,
+      "default_empty": true
+    }
+  },
+  "launch_services": {
+    "System/Library/LaunchDaemons/com.apple.audiomxd.plist": {
+      "sha256": "188e1c9839c9a9475307faf5bf631063e0fa6cdb86d53360097326610dd361cd",
+      "program": [
+        "/usr/libexec/audiomxd"
+      ],
+      "haptics_services": [
+        {
+          "key": "com.apple.audio.SystemSoundServer-iOS",
+          "conditional_path": "/MachServices/#Then",
+          "value": true
+        },
+        {
+          "key": "com.apple.audio.hapticd",
+          "conditional_path": "/MachServices/#Then",
+          "value": true
+        }
+      ]
+    },
+    "System/Library/LaunchDaemons/com.apple.mediaserverd.plist": {
+      "sha256": "acc4457c2b34010ce6044d0e5df64b6d6cf311abcc149ea359ad54424671c349",
+      "program": [
+        "/usr/sbin/mediaserverd"
+      ],
+      "haptics_services": [
+        {
+          "key": "com.apple.audio.SystemSoundServer-iOS",
+          "conditional_path": "/MachServices/#Then",
+          "value": {
+            "#IfFeatureFlagDisabled": "CoreAudioServices/audiomxd",
+            "#Then": true
+          }
+        },
+        {
+          "key": "com.apple.audio.hapticd",
+          "conditional_path": "/MachServices/#Then",
+          "value": {
+            "#IfFeatureFlagDisabled": "CoreAudioServices/audiomxd",
+            "#Then": true
+          }
+        }
+      ]
+    }
+  },
+  "cache": {
+    "symbols_uuid_matched": true,
+    "readonly": true,
+    "images": [
+      {
+        "path": "/System/Library/PrivateFrameworks/AudioToolboxCore.framework/AudioToolboxCore",
+        "base": 6772666368,
+        "bytes": 3473408,
+        "uuid": "a0ff745717513af897c10597e001e079",
+        "sha256": "75ec1b59290c72350fa8b7c9349eaf35b89a0f57eb3bf808fa67feb6099beda6",
+        "symbols": 13487
+      },
+      {
+        "path": "/usr/lib/libMobileGestalt.dylib",
+        "base": 6981443584,
+        "bytes": 520160,
+        "uuid": "ffb2683b781d3d73bc3f1d4797c00f0d",
+        "sha256": "4867d9f021e520546f7fcbf84b3465cff78976f6774e6fc5c15392bfb9a08af5",
+        "symbols": 0
+      },
+      {
+        "path": "/System/Library/Frameworks/CoreHaptics.framework/CoreHaptics",
+        "base": 7354839040,
+        "bytes": 483328,
+        "uuid": "3b965b745da13a79b9cd1b96730ddee7",
+        "sha256": "4ed1cccf086dc1e6a3d12ab2fbbe618355fe17d52930a4f2f2cc91fa7b4d944c",
+        "symbols": 1986
+      },
+      {
+        "path": "/System/Library/PrivateFrameworks/Haptics.framework/Haptics",
+        "base": 8606674944,
+        "bytes": 24576,
+        "uuid": "0697536e50063aa2a8fc8ddb38ab07f1",
+        "sha256": "9044504481220294ac48df034ba04e15e2e3673eb77688985ee6259b49d32102",
+        "symbols": 108
+      }
+    ]
+  },
+  "sources": {
+    "tb322fc-linux-kernel:arch/arm64/boot/dts/qcom/sm8750-lenovo-elden.dts": {
+      "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+      "sha256": "0a4361f3f2225befd954dd5420216f357bfa8a68294c28c895ec2478ebea3ba3",
+      "bytes": 54331
+    },
+    "tb322fc-linux-kernel:arch/arm64/boot/dts/qcom/sm8750.dtsi": {
+      "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+      "sha256": "cbf8bad5006ec6d2c3d654aeec94bb0f08be235e03804164a2252e5b65a4e175",
+      "bytes": 191275
+    },
+    "tb322fc-linux-kernel:drivers/input/misc/aw86927.c": {
+      "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+      "sha256": "a7ffb037b494f043ab0b7d9334861467eeb3f479d0ba19d371c784bc9f8c8388",
+      "bytes": 32249
+    },
+    "armadaos-freedom:devices/lenovo-tb322fc/README.md": {
+      "commit": "885fd1fdaa373f266b9a3207997b91c67aa22e6d",
+      "sha256": "534d1b4e079ba0eeaaf63b14f4e9c1ff2c8b8a4dce107bb3e24dfce368d9e899",
+      "bytes": 6422
+    },
+    "armadaos-freedom:system_files/usr/lib/firmware/awinic/y700-gen4-haptic.bin": {
+      "commit": "885fd1fdaa373f266b9a3207997b91c67aa22e6d",
+      "sha256": "84598d2a5130f7fe6bccba5cfbcafa1341d2d5bfe2f7d1361142cb78783ce79d",
+      "bytes": 1436,
+      "waveforms": {
+        "checksum_ok": true,
+        "base": "0x800",
+        "count": 5,
+        "entries": [
+          {
+            "index": 1,
+            "start": "0x815",
+            "end": "0x993"
+          },
+          {
+            "index": 2,
+            "start": "0x994",
+            "end": "0xaa4"
+          },
+          {
+            "index": 3,
+            "start": "0xaa5",
+            "end": "0xb9b"
+          },
+          {
+            "index": 4,
+            "start": "0xb9c",
+            "end": "0xc28"
+          },
+          {
+            "index": 5,
+            "start": "0xc29",
+            "end": "0xd97"
+          }
+        ]
+      }
+    },
+    "armadaos-freedom:packages/kernel/patches/0208-input-aw86927-accept-aw86937.patch": {
+      "commit": "885fd1fdaa373f266b9a3207997b91c67aa22e6d",
+      "sha256": "ca89bf55efa3b73af081f4f988733c5cba28094d7e3890d19ee7ed2c0997f8ee",
+      "bytes": 1297
+    },
+    "twrp-device:recovery/root/vendor/firmware/haptic_ram.bin": {
+      "commit": "c9c6a9f1287e5b416c3480c5fe06b23dc54c9ab8",
+      "sha256": "84598d2a5130f7fe6bccba5cfbcafa1341d2d5bfe2f7d1361142cb78783ce79d",
+      "bytes": 1436,
+      "waveforms": {
+        "checksum_ok": true,
+        "base": "0x800",
+        "count": 5,
+        "entries": [
+          {
+            "index": 1,
+            "start": "0x815",
+            "end": "0x993"
+          },
+          {
+            "index": 2,
+            "start": "0x994",
+            "end": "0xaa4"
+          },
+          {
+            "index": 3,
+            "start": "0xaa5",
+            "end": "0xb9b"
+          },
+          {
+            "index": 4,
+            "start": "0xb9c",
+            "end": "0xc28"
+          },
+          {
+            "index": 5,
+            "start": "0xc29",
+            "end": "0xd97"
+          }
+        ]
+      }
+    },
+    "UniXNU-Pagani-Drivers:drivers/PaganiHaptics/README.md": {
+      "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+      "sha256": "af116eb3b340c026d6d9af0089d0ae6a7b897d072aab09ba1765db112d386275",
+      "bytes": 12326
+    },
+    "UniXNU-Pagani-Drivers:drivers/PaganiHaptics/HapticsIos.h": {
+      "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+      "sha256": "762400cb99bba97d1bd94167e751e14a28de79b105861ec7c5624661c20538ec",
+      "bytes": 5215
+    },
+    "UniXNU-Pagani-Drivers:drivers/PaganiHaptics/HapticsIos.c": {
+      "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+      "sha256": "0fbea7e0df1473e709062eae4a73830c809df4846c5b3447de9b12a42f44adf2",
+      "bytes": 1881
+    },
+    "UniXNU-Pagani-Drivers:drivers/PaganiHaptics/PaganiHapticsIos.cpp": {
+      "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+      "sha256": "a78797224414e90826c32a58c539c52c83949d1048355129264011e0332de11e",
+      "bytes": 4939
+    },
+    "UniXNU-Pagani-Drivers:drivers/PaganiAudio/PaganiAudioHaptics.h": {
+      "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+      "sha256": "59af47ea2993fc393a5cea3eda67f7d31448a3e3bf3850f6e9d7bdefe3e6b9df",
+      "bytes": 9612
+    },
+    "UniXNU-Pagani-Drivers:drivers/PaganiAudio/PaganiAudioHaptics.c": {
+      "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+      "sha256": "53c4d95ae5e8ba8baee6c20a04b4c6ad350c58c5d9377f520a351d5bc072b8a9",
+      "bytes": 10615
+    },
+    "UniXNU-Pagani-Drivers:drivers/PaganiAudio/hal/PaganiAudioPlugIn.c": {
+      "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+      "sha256": "2b67019bcd39d7a9ed7bd90420ebe2b978f46ca319b4543a29fad2947eab8891",
+      "bytes": 97040
+    },
+    "UniXNU-Pagani-Drivers:drivers/PaganiAudio/README.md": {
+      "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+      "sha256": "7043d63f5236bd75db3e17b74e40718044f6b8a910b5359b10a86160401ac2ed",
+      "bytes": 17073
+    },
+    "UniXNU-Pagani_SM8750:patches/xnu/phone-haptics-overlays.patch": {
+      "commit": "a84204eccb9b183945072e1b9b63de36c8495097",
+      "sha256": "0b9a6a4de695ce8d38d8293f49c3d27826b7f253031757214fb8c391348689a8",
+      "bytes": 6701
+    }
+  },
+  "hardware_test_this_research": false,
+  "current_adt": {
+    "compatible": "lenovo,elden\u0000qcom,sm8750",
+    "model": "iPad8,1",
+    "target-type": "J317"
+  },
+  "user_confirmed": "Both motors and alternating LRLRLR felt; subsequent stock CLICK option reported successful. Android tests only, not XNU haptics.",
+  "motor_logs": {
+    "20261114-122813-883672.jsonl": {
+      "sha256": "853ce3d391b959203d4daf99e408c52f22e37150045ba19b30a72a22b8f00179",
+      "crisp_pulses": 27,
+      "successful_restores": 45
+    }
+  },
+  "constants": {
+    "CoreHaptics_keys": [
+      {
+        "address": "0x1e914ffd0",
+        "pointer": "0x1b667b363",
+        "flags": "0x7c8",
+        "value": "gqDnklGQnpv5ilgh5uHckw"
+      },
+      {
+        "address": "0x1e914ff90",
+        "pointer": "0x1b667b332",
+        "flags": "0x7c8",
+        "value": "cBy4BcYs5YWtFHbBpt4C6A"
+      }
+    ],
+    "MG_obfuscated_properties": [
+      {
+        "address": "0x1e7ca1f10",
+        "pointer": "0x1a02709a7",
+        "flags": "0x7c8",
+        "value": "6S9CvPHPtzHQqKudHSfsag"
+      },
+      {
+        "address": "0x1e7c9ddb0",
+        "pointer": "0x1a0275966",
+        "flags": "0x7c8",
+        "value": "OtnrTIhWBtyPo45BcApMTw"
+      },
+      {
+        "address": "0x1e7c9cf70",
+        "pointer": "0x1a0274f6c",
+        "flags": "0x7c8",
+        "value": "XKpK5v7PGzbe7igjloNBpQ"
+      }
+    ],
+    "MG_paths": [
+      {
+        "address": "0x1a026dd19",
+        "value": "IODeviceTree:/product"
+      },
+      {
+        "address": "0x1a0274f4e",
+        "value": "IODeviceTree:/product/haptics"
+      }
+    ],
+    "expected_hashes": {
+      "haptics": "6S9CvPHPtzHQqKudHSfsag",
+      "supports-3rd-party-haptics": "OtnrTIhWBtyPo45BcApMTw",
+      "closed-loop": "XKpK5v7PGzbe7igjloNBpQ"
+    },
+    "expected_questions": {
+      "DeviceSupportsHaptics": "cBy4BcYs5YWtFHbBpt4C6A",
+      "DeviceSupportsClosedLoopHaptics": "gqDnklGQnpv5ilgh5uHckw",
+      "deviceSupports3RdPartyHaptics": "Kpa3EHCfsHtN+MWkhelnbw",
+      "VibratorCapability": "/9luHerXthRoPoNt/PVkTg"
+    }
+  },
+  "motor_external_inputs": {
+    "haptic.ko": {
+      "bytes": 491944,
+      "sha256": "f688fcaec0d33a7c70c83af8e6fcb1aca015097282da30dfcf1e7314ad5935b9"
+    },
+    "vendor.qti.hardware.vibratorOL.impl.so": {
+      "bytes": 85288,
+      "sha256": "df6e56075412951ec775ecb3d5bb97d57b355b055bfc3d549f2f6cfc8dbaed2c"
+    },
+    "vibrator-dual-service": {
+      "bytes": 52336,
+      "sha256": "cd46033c67190402bfaab7885a5a954096ec1966e911f528e8907339e95a25bf"
+    },
+    "vibrator-impl.so": {
+      "bytes": 51872,
+      "sha256": "dab46087fe701d6c414a07f3b74c406dec6bd15b99274ca49fed4be655d3baa4"
+    }
+  },
+  "os_inventory_full_local_only": {
+    "path": "lab/records/haptics-feasibility-20261114/os-inventory.json",
+    "sha256": "a5e7ee1c9d2a024767726277c7af5bd8f1dcd21ba77ed2c91fc2830f46eab6e2",
+    "reason": "Contains original Apple plist payloads; publish reduced identity/key summary only."
+  },
+  "raw_SystemOS_sha256": "b4908cde41d23e6bc05e6af51a2c9eeb00cf0f863a6a18b1600c96a3fd70414f",
+  "recorded_date": "2026-11-14 Asia/Shanghai",
+  "public_api_sources": [
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/corehaptics.json",
+      "title": "Core Haptics",
+      "platforms": [
+        {
+          "introducedAt": "13.0",
+          "name": "iOS"
+        },
+        {
+          "introducedAt": "13.0",
+          "name": "iPadOS"
+        },
+        {
+          "introducedAt": "13.0",
+          "name": "Mac Catalyst"
+        },
+        {
+          "introducedAt": "14.0",
+          "name": "tvOS"
+        },
+        {
+          "introducedAt": "1.0",
+          "name": "visionOS"
+        }
+      ]
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/corehaptics/chhapticengine/capabilitiesforhardware().json",
+      "title": "capabilitiesForHardware()",
+      "platforms": [
+        {
+          "introducedAt": "13.0",
+          "name": "iOS"
+        },
+        {
+          "introducedAt": "13.0",
+          "name": "iPadOS"
+        },
+        {
+          "introducedAt": "13.0",
+          "name": "Mac Catalyst"
+        },
+        {
+          "introducedAt": "10.15",
+          "name": "macOS"
+        },
+        {
+          "introducedAt": "14.0",
+          "name": "tvOS"
+        },
+        {
+          "introducedAt": "1.0",
+          "name": "visionOS"
+        }
+      ]
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/corehaptics/chhapticdevicecapability/supportshaptics.json",
+      "title": "supportsHaptics",
+      "platforms": [
+        {
+          "introducedAt": "13.0",
+          "name": "iOS"
+        },
+        {
+          "introducedAt": "13.0",
+          "name": "iPadOS"
+        },
+        {
+          "introducedAt": "13.0",
+          "name": "Mac Catalyst"
+        },
+        {
+          "introducedAt": "10.15",
+          "name": "macOS"
+        },
+        {
+          "introducedAt": "14.0",
+          "name": "tvOS"
+        },
+        {
+          "introducedAt": "1.0",
+          "name": "visionOS"
+        }
+      ]
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/uikit/uifeedbackgenerator.json",
+      "title": "UIFeedbackGenerator",
+      "platforms": [
+        {
+          "introducedAt": "10.0",
+          "name": "iOS"
+        },
+        {
+          "introducedAt": "10.0",
+          "name": "iPadOS"
+        },
+        {
+          "introducedAt": "13.1",
+          "name": "Mac Catalyst"
+        }
+      ]
+    }
+  ]
+}
