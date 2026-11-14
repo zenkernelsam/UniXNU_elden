@@ -11,7 +11,7 @@ def exports(p):return {n for n,v in global_symbols(p).items() if v[0]&0x0e}
 def main():
     if sys.flags.optimize:raise ValueError('Assertions required')
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--profile',choices=('v118-native17','v119-bt-exit'),default='v118-native17')
+    p.add_argument('--profile',choices=('v118-native17','v119-bt-exit','v120-bt-xpc'),default='v118-native17')
     for n in ('baseline','core-build','compile-cwd','runtime','prelink-repository','original-kernelcache','llvm','output'):p.add_argument('--'+n,type=Path,required=True)
     a=p.parse_args();base=a.baseline.resolve();core=a.core_build.resolve();runtime=a.runtime.resolve();out=a.output.resolve()
     profile=ROOT/'profiles'/a.profile;plan=read(profile/'plan.json');rr=read(runtime/'report.json')
@@ -21,17 +21,21 @@ def main():
     assert sha(runtime/'EldenBtRuntimePayload.h')==plan['runtime_header_sha256']
     assert sha(runtime/'EldenBtTextGuard.h')==plan['guard_sha256']
     assert sha(runtime/'BlueTool')==plan['runtime_helper_sha256'] and sha(runtime/'runtime.trustcache')==plan['runtime_trust_sha256']
-    assert rr['table_count']==22 and rr['original_bluetoothd_cdhash']=='fe7bc182386a2766c7574f8b48412ff9df113564'
+    assert rr['table_count']==(31 if a.profile=='v120-bt-xpc' else 22) and rr['original_bluetoothd_cdhash']=='fe7bc182386a2766c7574f8b48412ff9df113564'
     out.mkdir(parents=True);src=out/'source';src.mkdir();objects=out/'objects';objects.mkdir();records={};input_hashes={}
     prior=read(core/'object-audit.json')
     for name in ('EldenBtRuntimePayload.h','EldenBtTextGuard.h'):shutil.copyfile(runtime/name,src/name)
-    if a.profile=='v119-bt-exit':
+    if a.profile in ('v119-bt-exit','v120-bt-xpc'):
         observer=ROOT/'profiles/v91/sources/xnu/EldenIconCpuCommon.inc'
         assert sha(observer)==plan['observer_parent_sha256']
         body=observer.read_bytes();marker=b'    if (!elden_icon_cpu_process_selected(p)) return 0;'
         assert body.count(marker)==1
         addition=(profile/'observer.inc').read_bytes();assert sha(profile/'observer.inc')==plan['observer_addition_sha256']
         body=body.replace(marker,addition+b'\n'+marker)
+        if a.profile=='v120-bt-xpc':
+            marker=b'    if(code==ELDEN_ICON_GLYPH_TRACE_CODE){'
+            addition=(profile/'marker.inc').read_bytes();assert sha(profile/'marker.inc')==plan['marker_sha256'] and body.count(marker)==1
+            body=body.replace(marker,addition+b'\n'+marker)
         (src/'EldenIconCpuCommon.inc').write_bytes(body)
     for name in ('kern_exec','ubc_subr'):
         old=prior[name];assert sha(Path(old['file']))==old['sha256']
@@ -52,7 +56,7 @@ def main():
             if Path(oldpath).is_file():input_hashes[oldpath]=sha(Path(oldpath))
             if oldpath in replacements:
                 row['external-contents']=str(replacements[oldpath]);replaced.add(oldpath)
-            if a.profile=='v119-bt-exit' and name=='kern_exec' and oldpath.endswith('/EldenIconCpuCommon.inc'):
+            if a.profile in ('v119-bt-exit','v120-bt-xpc') and name=='kern_exec' and oldpath.endswith('/EldenIconCpuCommon.inc'):
                 assert sha(Path(oldpath))==plan['observer_parent_sha256']
                 row['external-contents']=str(src/'EldenIconCpuCommon.inc')
         assert str(original) in replaced and len(replaced)==3
@@ -68,7 +72,7 @@ def main():
         (out/(name+'.asm')).write_text(asm)
         assert not re.search(r'^\s*[0-9a-f]+:\s+[0-9a-f]{8}\s+.*\b[qvdshb]\d+(?:\b|\.)',asm,re.M)
         assert not any(n.endswith('/__mod_init_func') for n in sections(obj))
-        baseline_object=Path(read(base/'result.json')['core_replacements'][name]['after']) if a.profile=='v119-bt-exit' else Path(old['file'])
+        baseline_object=Path(read(base/'result.json')['core_replacements'][name]['after']) if a.profile in ('v119-bt-exit','v120-bt-xpc') else Path(old['file'])
         records[name]={'before':str(baseline_object),'before_sha256':sha(baseline_object),'after':str(obj),'sha256':sha(obj),
                        'source_sha256':sha(src/(name+'.c')),'command':command,'exports':sorted(exports(obj))}
     filelist=(base/'link.filelist').read_text().splitlines();newlist=list(filelist)

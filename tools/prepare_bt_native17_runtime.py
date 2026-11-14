@@ -12,17 +12,29 @@ def array(data): return ','.join(str(b) for b in data)
 def main():
     if sys.flags.optimize: raise ValueError('Assertions required')
     p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--trace-xpc',action='store_true',help='v120 only: preserve calls and record XPC results/errx')
     for n in ('original','runtime','output'): p.add_argument('--' + n, type=Path, required=True)
     a = p.parse_args()
     if a.output.exists(): raise ValueError('Fresh output required')
-    image = Image(a.original).routing(); report = image.report()
+    image = Image(a.original).routing()
+    if a.trace_xpc:
+        from Native17Trace import apply
+        apply(image)
+    report = image.report()
     previous = json.loads((a.runtime / 'report.json').read_text())
     helper = (a.runtime / 'BlueTool').read_bytes(); trust = (a.runtime / 'runtime.trustcache').read_bytes()
     assert sha(helper) == previous['helper_sha256'] == '464432d5308fa0998f9b25ed77ff0c2b9a7751377dc0cc992679a32dc7cc571e'
     assert sha(trust) == previous['trust_sha256'] == 'a6758681cd8ce0f364411bf65fc1207514b3470b0c16699e2c1a0d12f22a2c65'
     baseline = bytes.fromhex(previous['text_fixups_before_hex'])
     rules = [{'offset': 0xddd20, 'before': 'a0050034', 'after': '1f2003d5'}]
-    for edit in report['edits']:
+    edits=report['edits']
+    if a.trace_xpc:
+        edits=[]
+        for edit in sorted(report['edits'],key=lambda e:e['offset']):
+            if edits and edits[-1]['offset']+len(bytes.fromhex(edits[-1]['before']))==edit['offset']:
+                edits[-1]['before']+=edit['before'];edits[-1]['after']+=edit['after']
+            else:edits.append(dict(edit))
+    for edit in edits:
         before = bytes.fromhex(edit['before']); after = bytes.fromhex(edit['after'])
         for at in range(0, len(before), 16):
             offset = edit['offset'] + at; old = before[at:at+16]; new = after[at:at+16]
@@ -56,7 +68,7 @@ static inline bool elden_bt_stream_rule(uint64_t offset,uint32_t bytes,const uin
     (a.output/'BlueTool').write_bytes(helper); (a.output/'runtime.trustcache').write_bytes(trust)
     (a.output/'EldenBtRuntimePayload.h').write_text(header, newline='\n')
     (a.output/'EldenBtTextGuard.h').write_text(guard, newline='\n')
-    result = {'profile':'v118-native17','helper_sha256':sha(helper),'trust_sha256':sha(trust),
+    result = {'profile':'v120-bt-xpc' if a.trace_xpc else 'v118-native17','helper_sha256':sha(helper),'trust_sha256':sha(trust),
               'payload_header_sha256':sha(header.encode()),'text_guard_sha256':sha(guard.encode()),
               'text_fixups_before_hex':baseline.hex(),'text_fixups_after_hex':table.hex(),
               'rules':rules,'native_patch':report,'table_count':len([r for r in table.split(b'\0') if r]),

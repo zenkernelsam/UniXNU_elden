@@ -1,0 +1,274 @@
+{
+  "cases": [
+    {
+      "slide": "0x0",
+      "kind": "xpc_result_trace",
+      "native_result": 0,
+      "syscall": [
+        4268752920,
+        1,
+        0,
+        18765284782899,
+        16980
+      ]
+    },
+    {
+      "slide": "0x0",
+      "kind": "xpc_result_trace",
+      "native_result": 1,
+      "syscall": [
+        4268752920,
+        1,
+        1,
+        18765284782899,
+        16980
+      ]
+    },
+    {
+      "slide": "0x0",
+      "kind": "xpc_result_trace",
+      "native_result": 81985529216486895,
+      "syscall": [
+        4268752920,
+        1,
+        81985529216486895,
+        18765284782899,
+        16980
+      ]
+    },
+    {
+      "slide": "0x0",
+      "kind": "errx_trace",
+      "native_result": 0,
+      "syscall": [
+        4268752920,
+        2,
+        0,
+        187650270809292,
+        16980
+      ]
+    },
+    {
+      "slide": "0x0",
+      "kind": "errx_trace",
+      "native_result": 1,
+      "syscall": [
+        4268752920,
+        2,
+        1,
+        187650270809292,
+        16980
+      ]
+    },
+    {
+      "slide": "0x0",
+      "kind": "errx_trace",
+      "native_result": 81985529216486895,
+      "syscall": [
+        4268752920,
+        2,
+        81985529216486895,
+        187650270809292,
+        16980
+      ]
+    },
+    {
+      "slide": "0x28000000",
+      "kind": "xpc_result_trace",
+      "native_result": 0,
+      "syscall": [
+        4268752920,
+        1,
+        0,
+        18765284782899,
+        16980
+      ]
+    },
+    {
+      "slide": "0x28000000",
+      "kind": "xpc_result_trace",
+      "native_result": 1,
+      "syscall": [
+        4268752920,
+        1,
+        1,
+        18765284782899,
+        16980
+      ]
+    },
+    {
+      "slide": "0x28000000",
+      "kind": "xpc_result_trace",
+      "native_result": 81985529216486895,
+      "syscall": [
+        4268752920,
+        1,
+        81985529216486895,
+        18765284782899,
+        16980
+      ]
+    },
+    {
+      "slide": "0x28000000",
+      "kind": "errx_trace",
+      "native_result": 0,
+      "syscall": [
+        4268752920,
+        2,
+        0,
+        187650270809292,
+        16980
+      ]
+    },
+    {
+      "slide": "0x28000000",
+      "kind": "errx_trace",
+      "native_result": 1,
+      "syscall": [
+        4268752920,
+        2,
+        1,
+        187650270809292,
+        16980
+      ]
+    },
+    {
+      "slide": "0x28000000",
+      "kind": "errx_trace",
+      "native_result": 81985529216486895,
+      "syscall": [
+        4268752920,
+        2,
+        81985529216486895,
+        187650270809292,
+        16980
+      ]
+    }
+  ],
+  "hardware": false,
+  "libc_errno_untouched": true,
+  "patch": {
+    "original_sha256": "3f1e4493ea6a76976625f7af58a8f330c0c90d82d9020b11110b4f3f5b758df4",
+    "uuid": "0f836381-d07b-36e4-9dbb-8a44782b9c14",
+    "output_sha256": "2b0cd322148dc9a1ee377ec6d8fde5c504b9ff20f474d99c0fb1ae0d61289eba",
+    "edits": [
+      {
+        "address": "0x100002c00",
+        "offset": 11264,
+        "before": "0000000000000000",
+        "after": "010080529f460b14"
+      },
+      {
+        "address": "0x1002d50e4",
+        "offset": 2969828,
+        "before": "67fdff17",
+        "after": "c7b6f417"
+      },
+      {
+        "address": "0x10031cc90",
+        "offset": 3263632,
+        "before": "00040034",
+        "after": "1f2003d5"
+      },
+      {
+        "address": "0x10037792c",
+        "offset": 3635500,
+        "before": "fd7bbfa9fd030091",
+        "after": "00008052c0035fd6"
+      },
+      {
+        "address": "0x100002c08",
+        "offset": 11272,
+        "before": "00000000000000000000000000000000",
+        "after": "40000035727c0714090400516e7c0714"
+      },
+      {
+        "address": "0x1001e1dc8",
+        "offset": 1973704,
+        "before": "09040051",
+        "after": "9083f817"
+      },
+      {
+        "address": "0x100002c18",
+        "offset": 11288,
+        "before": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "after": "a0020035604900f000002591010f8152e9171c94684900f0082106911f0100f9684900f0080106911f0100f9684900f008a106911f0100f98849009008e106911f0100f9684900f008e124911f0100b94e7c071408040051237c0714"
+      },
+      {
+        "address": "0x1001e1cf8",
+        "offset": 1973496,
+        "before": "08040051",
+        "after": "c883f817"
+      },
+      {
+        "address": "0x100002c74",
+        "offset": 11380,
+        "before": "00000000000000000000000000000000",
+        "after": "48000035f27c071409050051d07c0714"
+      },
+      {
+        "address": "0x1001e1fbc",
+        "offset": 1974204,
+        "before": "09050051",
+        "after": "2e83f817"
+      },
+      {
+        "address": "0x100002c84",
+        "offset": 11396,
+        "before": "00000000000000000000000000000000",
+        "after": "48000035157d071408050051fc7c0714"
+      },
+      {
+        "address": "0x1001e207c",
+        "offset": 1974396,
+        "before": "08050051",
+        "after": "0283f817"
+      },
+      {
+        "address": "0x100002c94",
+        "offset": 11412,
+        "before": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "after": "fd7bbfa9f30300aae20300aae30314aa0003805200cebf7221008052844a8852701680d2011000d4e00313aafd7bc1a8c0035fd6"
+      },
+      {
+        "address": "0x100568c5c",
+        "offset": 5672028,
+        "before": "f30300aa",
+        "after": "0e68ea97"
+      },
+      {
+        "address": "0x100002cc8",
+        "offset": 11464,
+        "before": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "after": "e007bea9fe0b00f9e20300aae30301aa0003805200cebf7241008052844a8852701680d2011000d4fe0b40f9e007c2a8b1181c14"
+      },
+      {
+        "address": "0x1004bc45c",
+        "offset": 4965468,
+        "before": "d8320994",
+        "after": "1b1aed97"
+      },
+      {
+        "address": "0x100669c08",
+        "offset": 6724616,
+        "before": "ed7c0294",
+        "after": "3064e697"
+      }
+    ],
+    "entries": {
+      "constructor": "0x100002c00",
+      "registration": "0x100002c08",
+      "vendor_init": "0x100002c18",
+      "callbacks_0": "0x100002c74",
+      "callbacks_1": "0x100002c84",
+      "xpc_result_trace": "0x100002c94",
+      "errx_trace": "0x100002cc8"
+    },
+    "stage": "offline-model-type0-routing",
+    "original_BlueTool_call_unchanged": true,
+    "signed": false,
+    "installed": false,
+    "hardware_verified": false,
+    "capability_adapter": false
+  }
+}

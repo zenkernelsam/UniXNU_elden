@@ -1,0 +1,20 @@
+{
+  "profile": "v120-bt-xpc",
+  "image_sha256": "ab506bb8a4d985d23b2342caeeece7a91b6fb5a733484528b8c649fc8382f56b",
+  "session": "d96f5f5df114f7dd",
+  "raw_sha256": "7f77f7ee81ee9529f8fbc32e30ef741b1e5f75ccbe6f78a2083d3c65ea88fe9b",
+  "bytes": 1161177,
+  "drop_max": 0,
+  "hci_ready": true,
+  "native_connected": false,
+  "marker_lines": [],
+  "stderr_lines": [],
+  "exit_lines": [
+    "ELDEN_ICON_EXIT pid=79 rv=100 ns=0 code=0 text=none",
+    "ELDEN_ICON_EXIT pid=120 rv=0 ns=0 code=0 text=none"
+  ],
+  "reset_after_sync": true,
+  "stock_restore_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "final_android_root_green": true,
+  "limits": "XPC markers absent; cannot infer their calls were never reached. Stderr captures address discovery then exit1; underlying startup condition not yet identified. No pairing. User requested source reproducibility priority before more trials."
+}

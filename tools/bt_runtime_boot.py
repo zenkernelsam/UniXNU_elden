@@ -12,11 +12,12 @@ def qualify(report_path,entry_path,runtime):
     report=json.loads(Path(report_path).read_text());entry=json.loads(Path(entry_path).read_text());runtime=Path(runtime)
     name=report.get('profile')
     if name=='v112-uart-route':raise ValueError('Withdrawn v112 has an incorrect GIC MMIO base; use v113 or later')
-    if name not in ('v99-bt-runtime','v101-bt-clock','v102-bt-wake','v103-bt-version','v110-bt-fifo','v111-spmi-gate','v112-uart-route','v113-uart-gic','v114-hci-length','v115-ibs-wake','v116-hci-reset','v117-hci-debug','v118-native17','v119-bt-exit'):raise ValueError('Unsupported Bluetooth runtime profile')
+    if name not in ('v99-bt-runtime','v101-bt-clock','v102-bt-wake','v103-bt-version','v110-bt-fifo','v111-spmi-gate','v112-uart-route','v113-uart-gic','v114-hci-length','v115-ibs-wake','v116-hci-reset','v117-hci-debug','v118-native17','v119-bt-exit','v120-bt-xpc','v121-bt-stderr'):raise ValueError('Unsupported Bluetooth runtime profile')
     profile=ROOT/'profiles'/name/'plan.json';plan=json.loads(profile.read_text())
-    if name in ('v111-spmi-gate','v112-uart-route','v113-uart-gic','v114-hci-length','v115-ibs-wake','v116-hci-reset','v117-hci-debug','v118-native17','v119-bt-exit'):
+    if name in ('v111-spmi-gate','v112-uart-route','v113-uart-gic','v114-hci-length','v115-ibs-wake','v116-hci-reset','v117-hci-debug','v118-native17','v119-bt-exit','v120-bt-xpc','v121-bt-stderr'):
         audit=json.loads((Path(report_path).parent/'kernel-audit.json').read_text())
-        filelist_ok=audit.get('only_two_declared_core_replacements') is True and audit['core_filelist_equal'] is False if name in ('v118-native17','v119-bt-exit') else audit['core_filelist_equal']
+        filelist_ok=audit.get('only_two_declared_core_replacements') is True and audit['core_filelist_equal'] is False if name in ('v118-native17','v119-bt-exit','v120-bt-xpc','v121-bt-stderr') else audit['core_filelist_equal']
+        if name=='v121-bt-stderr':filelist_ok=audit.get('only_declared_stderr_replacement') is True and audit['core_filelist_equal'] is False
         core_ok=audit['accepted_static'] and audit['one_gate_state'] and filelist_ok and audit['kernel_sha256']==report['kernel_sha256'] and audit['profile_sha256']==sha(profile)
     else:core_ok=report.get('recompiled_core_objects')==2
     if report['profile_sha256']!=sha(profile) or not core_ok or report['original_apple_executables_hashed']!=30:
@@ -33,7 +34,7 @@ def qualify(report_path,entry_path,runtime):
         raise ValueError('Runtime inputs differ from compiled profile')
     result={'profile':name,'profile_sha256':sha(profile),'trust_sha256':plan['runtime_trust_sha256'],
             'helper_sha256':plan['runtime_helper_sha256'],'entry_return_target':hex(target),'entry_assembly_sha256':layout['assembly_sha256'],'mode':4,'hardware_tested':False}
-    if name in ('v118-native17','v119-bt-exit'):
+    if name in ('v118-native17','v119-bt-exit','v120-bt-xpc','v121-bt-stderr'):
         rr=json.loads((runtime/'report.json').read_text());table=bytes.fromhex(rr['text_fixups_after_hex'])
         header='#include <stdint.h>\nstatic const uint8_t elden_bt_runtime_payload[]={\n'+','.join(str(v) for v in (runtime/'BlueTool').read_bytes())+'\n};\n'
         header+='static const uint8_t elden_bt_runtime_fixups[]={'+','.join(str(v) for v in table)+'};\n'
@@ -69,8 +70,8 @@ def adt(base,qualification=None):
     old=bytes.fromhex(found[0]['hex'])
     if not old.endswith(b'\0') or b'bluetoothd,' in old:raise ValueError('Prior Bluetooth fixup is not allowed')
     updated=old+FIXUP
-    if qualification and qualification['profile'] in ('v118-native17','v119-bt-exit'):
+    if qualification and qualification['profile'] in ('v118-native17','v119-bt-exit','v120-bt-xpc','v121-bt-stderr'):
         updated=bytes.fromhex(qualification['text_fixups_hex'])
-        if not updated.startswith(old+FIXUP) or len([x for x in updated.split(b'\0') if x])!=22:raise ValueError('Native17 table contract differs')
+        if not updated.startswith(old+FIXUP) or len([x for x in updated.split(b'\0') if x])!=(31 if qualification['profile']=='v120-bt-xpc' else 22):raise ValueError('Native17 table contract differs')
     found[0]['hex']=updated.hex();result.pop('sha256',None)
     return result

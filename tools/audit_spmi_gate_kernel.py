@@ -10,14 +10,14 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
     if sys.flags.optimize:raise SystemExit('Assertions required')
     ap=argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('--profile',choices=('v111-spmi-gate','v112-uart-route','v113-uart-gic','v114-hci-length','v115-ibs-wake','v116-hci-reset','v117-hci-debug','v118-native17','v119-bt-exit'),default='v111-spmi-gate')
+    ap.add_argument('--profile',choices=('v111-spmi-gate','v112-uart-route','v113-uart-gic','v114-hci-length','v115-ibs-wake','v116-hci-reset','v117-hci-debug','v118-native17','v119-bt-exit','v120-bt-xpc','v121-bt-stderr'),default='v111-spmi-gate')
     for n in ('build','baseline','components','core','llvm','output'):ap.add_argument('--'+n,type=Path,required=True)
     a=ap.parse_args();b=a.build;c=a.components;r=json.loads((b/'result.json').read_text());pp=ROOT/'profiles'/a.profile/'plan.json';p=json.loads(pp.read_text())
     assert r['profile_sha256']==sha(pp)
     if a.profile=='v111-spmi-gate':assert r['components_sha256']==sha(c/'result.json')
     for n in ('native','kernel'):assert sha(b/(n+'.macho'))==r[n+'_sha256'] and sha(a.baseline/(n+'.macho'))==p['baseline_'+n+'_sha256']
     core_equal=(b/'link.filelist').read_bytes()==(a.baseline/'link.filelist').read_bytes()
-    if a.profile in ('v118-native17','v119-bt-exit'):
+    if a.profile in ('v118-native17','v119-bt-exit','v120-bt-xpc'):
         assert set(r['core_replacements'])=={'kern_exec','ubc_subr'}
         before=(a.baseline/'link.filelist').read_text().splitlines();after=list(before)
         for name,row in r['core_replacements'].items():
@@ -30,14 +30,29 @@ def main():
         assert sha(b/'source/EldenBtTextGuard.h')==p['guard_sha256']
         assert sha(b/'source/EldenBtRuntimePayload.h')==p['runtime_header_sha256']
         assert b'blob->csb_end_offset - relative < f->length' in (b/'source/ubc_subr.c').read_bytes()
-        if a.profile=='v119-bt-exit':
+        if a.profile in ('v119-bt-exit','v120-bt-xpc'):
             parent=(ROOT/'profiles/v91/sources/xnu/EldenIconCpuCommon.inc').read_bytes()
             addition=(pp.parent/'observer.inc').read_bytes()
             assert hashlib.sha256(parent).hexdigest()==p['observer_parent_sha256']
             assert hashlib.sha256(addition).hexdigest()==p['observer_addition_sha256']
             marker=b'    if (!elden_icon_cpu_process_selected(p)) return 0;'
             assert parent.count(marker)==1
-            assert (b/'source/EldenIconCpuCommon.inc').read_bytes()==parent.replace(marker,addition+b'\n'+marker)
+            derived=parent.replace(marker,addition+b'\n'+marker)
+            if a.profile=='v120-bt-xpc':
+                addition=(pp.parent/'marker.inc').read_bytes();assert hashlib.sha256(addition).hexdigest()==p['marker_sha256']
+                marker=b'    if(code==ELDEN_ICON_GLYPH_TRACE_CODE){';assert derived.count(marker)==1
+                derived=derived.replace(marker,addition+b'\n'+marker)
+            assert (b/'source/EldenIconCpuCommon.inc').read_bytes()==derived
+    elif a.profile=='v121-bt-stderr':
+        row=r['replacement'];assert sha(Path(row['before']))==row['before_sha256'] and sha(Path(row['after']))==row['sha256']
+        before=(a.baseline/'link.filelist').read_text().splitlines();assert before.count(row['before'])==1
+        before[before.index(row['before'])]=row['after'];assert before==(b/'link.filelist').read_text().splitlines() and not core_equal
+        assert sha(b/'sys_generic.c')==row['source_sha256']
+        fragment=(ROOT/'drivers/EldenBluetooth/userland/StderrObserve.inc').read_bytes();assert hashlib.sha256(fragment).hexdigest()==p['observer_sha256']
+        derived=(b/'sys_generic.c').read_bytes();assert derived.count(fragment)==1 and derived.count(b'\telden_bt_stderr_observe(p,fd,uio);\n\n')==1
+        restored=derived.replace(fragment+b'\n',b'').replace(b'\telden_bt_stderr_observe(p,fd,uio);\n\n',b'')
+        assert hashlib.sha256(restored).hexdigest()==p['source_parent_sha256']
+        for path,h in r['compiler_inputs'].items():assert sha(Path(path))==h
     else:assert core_equal
     for path,h in r['inherited_inputs'].items():assert sha(Path(path))==h
     for name,ar in r.get('archives',{}).items():
@@ -84,7 +99,8 @@ def main():
     layout={'source_kernel_sha256':r['kernel_sha256'],'baseline_kernel_sha256':p['baseline_kernel_sha256'],'assembly_sha256':sha(obj),'assembly_sections_equal':True,'same_object_in_both_filelists':True,'entry_word':now[2],'return_target':hex(now[1]),'entry_address':hex(now[0]),'target_delta':7124,'hardware_tested':False}
     with (b/'entry-layout.json').open('x') as f:json.dump(layout,f,indent=2);f.write('\n')
     result={'accepted_static':True,'profile_sha256':sha(pp),'kernel_sha256':r['kernel_sha256'],'native_sha256':r['native_sha256'],'one_gate_state':True,'gate_consumer_calls':calls,'core_filelist_equal':core_equal,'original_apple_executables_hashed':30,'entry_return_target':hex(now[1]),'hardware_tested':False}
-    if a.profile in ('v118-native17','v119-bt-exit'):result['only_two_declared_core_replacements']=True
+    if a.profile in ('v118-native17','v119-bt-exit','v120-bt-xpc'):result['only_two_declared_core_replacements']=True
+    if a.profile=='v121-bt-stderr':result['only_declared_stderr_replacement']=True
     with a.output.open('x') as f:json.dump(result,f,indent=2);f.write('\n')
     print(json.dumps(result,indent=2))
 if __name__=='__main__':main()

@@ -1,0 +1,21 @@
+{
+  "profile": "v121-bt-stderr",
+  "baseline": "v119-bt-exit",
+  "baseline_kernel_sha256": "2266ad45e2fba0bc5051961be6d44b8f7903ddfdd4d5dc37e6e872b3c06a4339",
+  "baseline_native_sha256": "645393272bb04db3a73f9821b0ab4432262e8a26b5db08058b315503f1de6328",
+  "core_build_kernel_sha256": "0db8f52b3d85026f1a85a000ab665c47cf084a340e87c09f556900b5355ee848",
+  "runtime_helper_sha256": "464432d5308fa0998f9b25ed77ff0c2b9a7751377dc0cc992679a32dc7cc571e",
+  "runtime_header_sha256": "3032579d4d29194f526a11b4683a32a36643277bb1348570bb5119ff49cbe2f2",
+  "runtime_trust_sha256": "a6758681cd8ce0f364411bf65fc1207514b3470b0c16699e2c1a0d12f22a2c65",
+  "guard_sha256": "00b61380b46a485d09c1011a11ae0971ff810e204ba4b4baa26a2e4009fd1012",
+  "core_source_sha256": {
+    "kern_exec": "728eff50b3e0455bb749dfed3843bbb9e148c4141deaf91012cc94ff5a6f2543",
+    "ubc_subr": "6112d05629afee630b92e2d8e4350184e480cc327f5db3ac125fe0a2a6829828"
+  },
+  "scope": "Observe exact original daemon fd2 uio without mutation,16 calls/512B/8iovs; no userspace marker or policy change.",
+  "observer_parent_sha256": "2017f3f70d240bbd983011447dbd87e89d7e33e75300c8e988b36fc1aa5c5618",
+  "observer_addition_sha256": "490a809abe16dcd03debd2f3233b2081484fde5d4fcebdd08fea2aed1a044352",
+  "source_parent_sha256": "1bde5dc7b452cc1d1008bc49e7f71541f03fafa851c94c903cea33d2b11bca72",
+  "object_parent_sha256": "33d956e862d8f9bbc53c841bc710aab5d4441e0edd76f360ebcf9e4078cd05a9",
+  "observer_sha256": "f7f685d510d290b08a85c5aba57e4df254897482d91d813f5cce51c6a902004f"
+}

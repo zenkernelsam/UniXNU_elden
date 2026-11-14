@@ -1,0 +1,19 @@
+{
+  "profile": "v120-bt-xpc",
+  "baseline": "v119-bt-exit",
+  "baseline_kernel_sha256": "2266ad45e2fba0bc5051961be6d44b8f7903ddfdd4d5dc37e6e872b3c06a4339",
+  "baseline_native_sha256": "645393272bb04db3a73f9821b0ab4432262e8a26b5db08058b315503f1de6328",
+  "core_build_kernel_sha256": "0db8f52b3d85026f1a85a000ab665c47cf084a340e87c09f556900b5355ee848",
+  "runtime_helper_sha256": "464432d5308fa0998f9b25ed77ff0c2b9a7751377dc0cc992679a32dc7cc571e",
+  "runtime_header_sha256": "99abe39dba56021c572216a5afccdea968d67a241bce7d4bf221a8bb307886e0",
+  "runtime_trust_sha256": "a6758681cd8ce0f364411bf65fc1207514b3470b0c16699e2c1a0d12f22a2c65",
+  "guard_sha256": "85622e0dd4635548c96e7ace5a19795281767ee15ac2dbfe0a10f13dad82ea58",
+  "core_source_sha256": {
+    "kern_exec": "728eff50b3e0455bb749dfed3843bbb9e148c4141deaf91012cc94ff5a6f2543",
+    "ubc_subr": "6112d05629afee630b92e2d8e4350184e480cc327f5db3ac125fe0a2a6829828"
+  },
+  "scope": "Diagnostic only: preserve real XPC result and errx arguments, report via bounded original-name/CDHash marker; no launch policy change.",
+  "observer_parent_sha256": "2017f3f70d240bbd983011447dbd87e89d7e33e75300c8e988b36fc1aa5c5618",
+  "observer_addition_sha256": "490a809abe16dcd03debd2f3233b2081484fde5d4fcebdd08fea2aed1a044352",
+  "marker_sha256": "25df13bbbf2b813f44dddf1fbbca612d895ce20d3bec5a73e3a76c118f9a6796"
+}

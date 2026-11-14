@@ -1,0 +1,27 @@
+{
+  "profile": "v121-bt-stderr",
+  "image_sha256": "accd59ecd2bd440462f8161936df0a650a6464f2893a7fb5d1e487f07520ade9",
+  "session": "7e1ef9f849d64a54",
+  "raw_sha256": "aadb9ea9bca2439c809f732293033d196a38fbbb0dd431891c3216bc48deae6c",
+  "bytes": 1163309,
+  "drop_max": 4,
+  "hci_ready": true,
+  "native_connected": false,
+  "marker_lines": [],
+  "stderr_lines": [
+    "ELDEN_BT_STDERR pid=79 line=1 iov=0 bytes=67 copied=67 error=0 text=com.apple.server.bluetooth: Bluetooth Super Server Robot Destroyer",
+    "ELDEN_BT_STDERR pid=79 line=2 iov=0 bytes=46 copied=46 error=0 text=could not find BT_DEVICE_ADDRESS env variable",
+    "ELDEN_BT_STDERR pid=79 line=3 iov=0 bytes=62 copied=62 error=0 text=marconi-bt: Unable to match bluetooth service in device tree.",
+    "ELDEN_BT_STDERR pid=79 line=4 iov=0 bytes=47 copied=47 error=0 text=marconi-bt: Not a valid MAC address (all 00s).",
+    "ELDEN_BT_STDERR pid=79 line=5 iov=0 bytes=52 copied=52 error=0 text=bluetooth: Got local-mac-address: 81:7d:ee:dc:0c:26",
+    "ELDEN_BT_STDERR pid=79 line=6 iov=0 bytes=54 copied=54 error=0 text=FindLocalMacAddress Deleting local address from plist"
+  ],
+  "exit_lines": [
+    "ELDEN_ICON_EXIT pid=104 rv=0 ns=0 code=0 text=none",
+    "ELDEN_ICON_EXIT pid=79 rv=100 ns=0 code=0 text=none"
+  ],
+  "reset_after_sync": true,
+  "stock_restore_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "final_android_root_green": true,
+  "limits": "XPC markers absent; cannot infer their calls were never reached. Stderr captures address discovery then exit1; underlying startup condition not yet identified. No pairing. User requested source reproducibility priority before more trials."
+}
