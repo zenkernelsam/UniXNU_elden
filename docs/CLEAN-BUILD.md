@@ -16,6 +16,7 @@ UEFI、加载器、Data种子和两个签名boot，完成静态核验。两个�
 - macOS、完整 Xcode 和 iPhoneOS SDK。验证工具链：Apple clang17、SDK26.2、LLVM20。
 - Python3.12，`python3.12 -m venv .venv`，然后 `.venv/bin/pip install -r requirements-build.txt`。
 - Git、make、macOS codesign/hdiutil/diskutil/fsck_apfs。firmware构建需要其固定Mu源与子模块。
+- 完整boot的固定Data种子要求UID501或root；内核目标不受此限制，入口会提前检查。
 - 当前原生编译/签名使用 macOS 工具；**不宣称 WSL 原生构建已实现**。生成的boot可交给
   Windows设备工具刷写，但这条构建命令不调用WSL或任何平板。
 

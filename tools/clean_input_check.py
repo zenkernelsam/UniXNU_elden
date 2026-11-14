@@ -1,6 +1,6 @@
 """Check explicit original inputs before an expensive source build starts."""
 from pathlib import Path
-import hashlib,json,subprocess,sys
+import hashlib,json,os,subprocess,sys
 ROOT=Path(__file__).resolve().parents[1]
 def sha(path):
     with Path(path).open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
@@ -19,6 +19,7 @@ def check(inputs,variant,target):
             f=inputs['wcn_firmware']/row['file']
             if not f.is_file() or f.stat().st_size!=row['bytes'] or sha(f)!=row['sha256']:raise ValueError('Original WCN firmware differs: '+row['file'])
     if target=='boot':
+        if os.geteuid() not in (0,501):raise ValueError('The frozen Data fixture requires macOS UID501 or root; kernel-only builds have no such requirement')
         expect('os_image','d8808bea18b949142b3e47bbcb780c3f22faaacd9b40a88f77c23557181edc9c')
         fp=json.loads((ROOT/'profiles/v91/firmware-build/plan.json').read_text())
         for rel,digest in fp['crypto_files'].items():
