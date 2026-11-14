@@ -14,6 +14,9 @@ py -3.12 -B D:/Desktop/Git/UniXNU_elden/tools/device/y700_motor_panel.py
   停止并恢复该路后再换另一颗，不同时振动。单测L/R仍各三下。
 - **轻柔**：增益32、每次250ms；**中等**：增益64、每次350ms。
   初始原厂增益128。增益数字不等于机械振幅百分比。
+- **清脆点击**：增益64，使用原厂CLICK的第1号RAM波形，自然结束并有软件停止兜底。
+  这不是把长振动时间缩短，也不合成新波形。选择它后，单测或LRLRLR均保持原来的次数。
+  原厂HAL对CLICK按强度/当前设置调整增益，所以手感未必与所有Android操作完全相同。
 - **立即停止**：只向经可执行文件路径核验的测试进程发SIGTERM，随后由它停止并恢复。
 - 测试时轻握平板，尽量不用手指操作屏幕，避免系统触感与测试重叠。
 - 两组都可感觉到，只能说明两颗都会响应；强弱还受握法、机壳传导、摆放影响，
@@ -47,9 +50,27 @@ activate_mode_store只存模式；不触碰电压、频率、校准、固件或�
 
 产物在工作台`edl_work/motor-test-20261114`；运行记录在
 `lab/records/motor-test-20261114/manual-sessions`。部署文件：
-`/data/local/tmp/y700_motor_test_manual_v3`，SHA256
-`df74a6550e30aaa98cd8a894fb81fe4e7da517497039a3c06aa3d6bb8797ee70`。
+`/data/local/tmp/y700_motor_test_manual_v4`，SHA256
+`02a6bd46c265ae7b7280ebbdc96e698c9f3a9c0d4e40254e2dca9617979fcc58`。
 
 复现ARM64静态工具：WSL Ubuntu-22.04的aarch64-linux-gnu-gcc，
 `-static -O2 -Wall -Wextra -Werror -Wno-misleading-indentation`编译y700_motor_test.c。
 源码有固定时长与强度上限；GUI核验部署的全SHA后才运行。
+
+## 清脆点击的原厂依据
+
+本机`vendor.qti.hardware.vibratorOL.impl.so` SHA256
+`df6e56075412951ec775ecb3d5bb97d57b355b055bfc3d549f2f6cfc8dbaed2c`：
+`VibratorOL::perform`@0xb048传入原Effect枚举，`InputFFDevice::play`@0x94c8的
+0x96bc..0x9700将CLICK(0)映射为1，生成FF_PERIODIC(0x51)/FF_CUSTOM(0x5d)，
+custom_len=6、指向三个s16的私有参数块。play_bak随后处理另一路；本工具只打开
+被选中的一路，不调用两路HAL包装器。
+
+同版haptic.ko `input_upload_effect`@0x1853c读取这六字节；ID1进入RAM单次模式1，
+`input_vib_work_routine`的0x18c98..0x18d34选择RAM波形1、清下一段并设置零循环，
+调用ram_play。ID3/5另外有增益/时长逻辑，本工具不使用。不是通用Linux FF_CUSTOM
+波形数组格式，不能将这里的custom_len语义搬到其他驱动。
+
+RAM单次播放完成后duration计时器可以为0，所以清脆档记录模式/index/gain，
+不把timer=0误当作未播放。两路机械强度及清脆手感由用户手动确认；编译、UI命令
+路由检查与只读survey不算清脆效果实机验收。打开新版窗口不触发振动。

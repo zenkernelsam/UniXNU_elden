@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MIT
- * Stock Android only. Send bounded FF_CONSTANT through one verified evdev.
+ * Stock Android only. Send bounded constant or stock CLICK through one evdev.
  * No direct registers, calibration, firmware, boost or resonance writes.
  */
 #define _GNU_SOURCE
@@ -52,8 +52,8 @@ static int event_write(int fd,unsigned short code,int value){struct input_event 
 int main(int argc,char **argv){
  setvbuf(stdout,NULL,_IOLBF,0);
  if(argc<2||argc>4||(strcmp(argv[1],"survey")&&strcmp(argv[1],"stop")&&strcmp(argv[1],"l")&&strcmp(argv[1],"r"))||
-    (argc>=3&&strcmp(argv[2],"gentle")&&strcmp(argv[2],"medium"))||
-    (argc==4&&strcmp(argv[3],"1")&&strcmp(argv[3],"3"))){fprintf(stderr,"usage: y700_motor_test survey|stop|l|r [gentle|medium] [1|3]\n");return 2;}
+    (argc>=3&&strcmp(argv[2],"gentle")&&strcmp(argv[2],"medium")&&strcmp(argv[2],"crisp"))||
+    (argc==4&&strcmp(argv[3],"1")&&strcmp(argv[3],"3"))){fprintf(stderr,"usage: y700_motor_test survey|stop|l|r [gentle|medium|crisp] [1|3]\n");return 2;}
  if(!strcmp(argv[1],"stop")){
   int f=open("/data/local/tmp/y700-motor-test.lock",O_RDONLY|O_CLOEXEC|O_NOFOLLOW);char text[32]={0},path[64],actual[PATH_MAX],self[PATH_MAX];
   if(f<0)return 0;ssize_t n=read(f,text,sizeof(text)-1);close(f);if(n<=0)return 0;
@@ -64,8 +64,9 @@ int main(int argc,char **argv){
   if(kill((pid_t)pid,SIGTERM)<0&&errno!=ESRCH)return 1;
   puts("STOP requested for verified motor-test process");return 0;
  }
- unsigned test_gain=argc>=3&&!strcmp(argv[2],"medium")?64:32;
- unsigned duration=argc>=3&&!strcmp(argv[2],"medium")?350:250;
+ int crisp=argc>=3&&!strcmp(argv[2],"crisp");
+ unsigned test_gain=crisp||(argc>=3&&!strcmp(argv[2],"medium"))?64:32;
+ unsigned duration=crisp?100:argc>=3&&!strcmp(argv[2],"medium")?350:250;
  unsigned pulse_count=argc==4&&!strcmp(argv[3],"1")?1:3;
  char paths[2][128];int fd[2]={-1,-1},effect=-1,ret=1,lock=-1;int gain[2],index[2],mode[2],vmax[2];int selected=argv[1][0]=='r';
  lock=open("/data/local/tmp/y700-motor-test.lock",O_CREAT|O_RDWR|O_CLOEXEC|O_NOFOLLOW,0600);
@@ -83,17 +84,37 @@ int main(int argc,char **argv){
  if(number('l',"duration")!=0||number('r',"duration")!=0){fprintf(stderr,"Motor busy; wait without system haptics\n");goto done;}
  signal(SIGINT,interrupt);signal(SIGTERM,interrupt);signal(SIGHUP,interrupt);signal(SIGALRM,interrupt);alarm(8);
  char side=selected?'r':'l',other=selected?'l':'r';
+ if(crisp){
+  unsigned long bits[(FF_MAX+sizeof(long)*8)/(sizeof(long)*8)]={0};
+  if(ioctl(fd[selected],EVIOCGBIT(EV_FF,sizeof(bits)),bits)<0||
+     !(bits[FF_PERIODIC/(sizeof(long)*8)]&(1UL<<(FF_PERIODIC%(sizeof(long)*8))))||
+     !(bits[FF_CUSTOM/(sizeof(long)*8)]&(1UL<<(FF_CUSTOM%(sizeof(long)*8))))||number(side,"ram_num")!=5){
+   fprintf(stderr,"Stock click waveform interface unavailable\n");goto done;
+  }
+ }
  if(test_gain>(unsigned)gain[selected]){fprintf(stderr,"Test gain would exceed current factory gain\n");goto done;}
  if(set_field(side,"gain",(int)test_gain)){perror("set bounded gain");goto restore;}
  struct ff_effect ff={0};ff.type=FF_CONSTANT;ff.id=-1;ff.replay.length=duration;ff.u.constant.level=8192;
+ /* Exact stock VibratorOL InputFFDevice::play: Effect::CLICK(0) maps to
+  * waveform1, FF_PERIODIC/FF_CUSTOM, three s16 values and custom_len6.
+  * This vendor interface selects built-in RAM data; no waveform is uploaded.
+  * Driver id1 selects RAM one-shot; magnitude metadata does not raise gain. */
+ __s16 click_data[3]={1,16383,0};
+ if(crisp){
+  memset(&ff,0,sizeof(ff));ff.type=FF_PERIODIC;ff.id=-1;ff.replay.length=duration;
+  ff.u.periodic.waveform=FF_CUSTOM;ff.u.periodic.magnitude=16383;
+  ff.u.periodic.custom_len=6;ff.u.periodic.custom_data=click_data;
+ }
  if(ioctl(fd[selected],EVIOCSFF,&ff)<0){perror("upload effect");goto restore;}
  effect=ff.id;
  for(unsigned pulse=1;pulse<=pulse_count&&!cancelled;pulse++){
   if(number(other,"duration")!=0){fprintf(stderr,"Other motor active; cancelling test\n");goto restore;}
-  printf("PULSE %c %u/%u %ums gain%u\n",side,pulse,pulse_count,duration,test_gain);
+  if(crisp)printf("PULSE %c %u/%u stock-CLICK RAM1 gain%u guard=%ums\n",side,pulse,pulse_count,test_gain,duration);
+  else printf("PULSE %c %u/%u %ums gain%u\n",side,pulse,pulse_count,duration,test_gain);
   if(event_write(fd[selected],effect,1)){perror("play");goto restore;}
   nap(75);
-  printf("TIMER selected=%dms other=%dms\n",number(side,"duration"),number(other,"duration"));
+  if(crisp)printf("CLICK selected-mode=%d index=%d gain=%d; RAM one-shot uses waveform end, not duration timer; other-timer=%dms\n",number(side,"activate_mode"),number(side,"index"),number(side,"gain"),number(other,"duration"));
+  else printf("TIMER selected=%dms other=%dms\n",number(side,"duration"),number(other,"duration"));
   for(unsigned elapsed=75;elapsed<duration+40&&!cancelled;elapsed+=20)nap(20);
   if(event_write(fd[selected],effect,0)){perror("stop");goto restore;}
   for(unsigned elapsed=0;elapsed<700&&!cancelled;elapsed+=20)nap(20);

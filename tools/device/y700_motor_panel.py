@@ -12,8 +12,8 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 
 SERIAL = 'HA2A1PT2'
-REMOTE = '/data/local/tmp/y700_motor_test_manual_v3'
-EXPECTED_BINARY = 'df74a6550e30aaa98cd8a894fb81fe4e7da517497039a3c06aa3d6bb8797ee70'
+REMOTE = '/data/local/tmp/y700_motor_test_manual_v4'
+EXPECTED_BINARY = '02a6bd46c265ae7b7280ebbdc96e698c9f3a9c0d4e40254e2dca9617979fcc58'
 ADB = Path('D:/Desktop/Git/SchoolBox/Tools/platform-tools_ADB/adb.exe')
 ROOT = Path(__file__).resolve().parents[2]
 WORKBENCH = Path('D:/Desktop/Git/Patch/Y700-Elden')
@@ -34,7 +34,7 @@ class Panel:
         log_dir.mkdir(parents=True, exist_ok=True)
         self.log = log_dir / (datetime.datetime.now().strftime('%Y%m%d-%H%M%S-%f') + '.jsonl')
         root.title('Y700 双马达独立测试 · Android')
-        root.geometry('760x660'); root.minsize(680, 600)
+        root.geometry('800x730'); root.minsize(740, 700)
         root.configure(bg='#f4f6fa')
         style = ttk.Style(); style.theme_use('clam')
         style.configure('TButton', font=('Microsoft YaHei UI', 14), padding=12)
@@ -48,6 +48,7 @@ class Panel:
         row = ttk.Frame(main); row.pack(fill='x')
         ttk.Radiobutton(row, text='轻柔：250 ms × 3，增益 32', variable=self.level, value='gentle').pack(side='left')
         ttk.Radiobutton(row, text='中等：350 ms × 3，增益 64', variable=self.level, value='medium').pack(side='left', padx=14)
+        ttk.Radiobutton(main, text='清脆点击：原厂 CLICK 波形 · 增益 64', variable=self.level, value='crisp').pack(anchor='w', pady=(10, 0))
         ttk.Label(main, text='原厂当前增益为 128；本工具只用 32 / 64，不改电压、频率或校准。', wraplength=700).pack(anchor='w', pady=(8, 16))
         row = ttk.Frame(main); row.pack(fill='x')
         self.buttons = []
@@ -97,7 +98,7 @@ class Panel:
             survey = adb('shell', f"su -c '{REMOTE} survey'")
             self.emit('log', survey)
             if action == 'survey': self.emit('status', '两路接口已识别 · 没有触发振动'); return
-            if level not in ('gentle', 'medium'): raise RuntimeError('未知强度')
+            if level not in ('gentle', 'medium', 'crisp'): raise RuntimeError('未知振动类型')
             sides = ('l', 'r') * 3 if action == 'both' else (action,)
             count = 1 if action == 'both' else 3
             label = 'L → R → L → R → L → R' if action == 'both' else action.upper()
@@ -110,7 +111,8 @@ class Panel:
                 if 'currentState = IDLE' not in state or 'currentState = VIBRATING' in state:
                     raise RuntimeError('Android 正在使用马达，请停下屏幕操作后重试。')
                 if self.cancel.is_set(): break
-                self.emit('status', f'交替 {step}/6 · {side.upper()} 振一下' if action == 'both' else f'正在测试 {side.upper()} · 三次短振动')
+                effect_name = '清脆点击' if level == 'crisp' else '短振动'
+                self.emit('status', f'交替 {step}/6 · {side.upper()} {effect_name}' if action == 'both' else f'正在测试 {side.upper()} · 三次{effect_name}')
                 process = subprocess.Popen([str(ADB), '-s', SERIAL, 'shell', f"su -c '{REMOTE} {side} {level} {count}'"],
                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding='utf-8', errors='replace',
                     creationflags=subprocess.CREATE_NO_WINDOW)
