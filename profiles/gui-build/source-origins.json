@@ -1,0 +1,8 @@
+{
+  "/Users/ciscohe/Desktop/UniXNU_elden/lab/memory-v109-20261114/components2/source/pmap.h": "sources/880d912fd21e8314/pmap.h",
+  "/Users/ciscohe/Desktop/UniXNU_elden/lab/rt-memory-v106-20261113/build4/source/pmap.c": "sources/7893fca2a7365b78/pmap.c",
+  "/Users/ciscohe/Desktop/UniXNU_elden/lab/memory-v109-20261114/components2/source/assym.s": "sources/37e0c1f9a604c6c8/assym.s",
+  "/Users/ciscohe/Desktop/UniXNU_elden/lab/memory-v109-20261114/components2/source/arm_vm_init.c": "sources/a99b6cea503d1bf8/arm_vm_init.c",
+  "/Users/ciscohe/Desktop/UniXNU_elden/lab/hid-delivery-20261112/native3/source/NativeHidInput.cpp": "sources/a09dd7056f4855b4/NativeHidInput.cpp",
+  "/Users/ciscohe/Desktop/UniXNU_elden/lab/hid-delivery-20261112/native3/source/EldenHidGlue.cpp": "sources/86ad1a7e842308a7/EldenHidGlue.cpp"
+}

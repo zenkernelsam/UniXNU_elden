@@ -1,5 +1,10 @@
 # 下一阶段顺序
 
+11月14日Jerry反馈的从零构建缺口已处理并实际验证：新入口tools/build_clean.py，
+GUI/蓝牙两分支均从空输出通过完整签名boot审核，旧目录读取限制抓到的汇编漏点也已修。
+文档docs/CLEAN-BUILD.md和profiles/current-build/validation为现行入口/证据；
+新像尚未实机回归。下一轮回到蓝牙首次exit1的实际条件诊断，保持现有充电保护与GUI基线。
+
 ## 0. 整理和复现归仓已完成
 
 源码到 v91 签名候选已完成独立重建和静态核验；完整外围 Goal 仍未完成。

@@ -1,5 +1,10 @@
 # 当前状态 · 2026-11-14
 
+源码复现修复：`build_clean.py --variant gui|bluetooth` 已分别从新克隆/空输出生成
+完整签名boot并通过审核，不再要求旧v99/旧对象或工作台路径；原始系统、固件、
+Crypto与签名材料仍需按清单提供，原生构建宿主为macOS。GUI新像df0480ac…、
+蓝牙新像96b0fd19…均未刷，不能用静态重建扩大实机结论。详见CLEAN-BUILD.md。
+
 最新v118/v119已实机：真实HCI初始化保持成功，原机型空对象fault未再记录。
 但bluetoothd首进程主动exit1，后续11次启动约束拒绝，H4 client仍0；扫描配对未通。
 v119仅增加原身份限定退出日志，未改安全策略；下一步定位首退的listeners/startup真实错误。

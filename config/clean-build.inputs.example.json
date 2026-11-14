@@ -1,0 +1,15 @@
+{
+  "llvm": "/path/to/llvm-20/bin",
+  "original_agent": "../inputs/21H461/iconservicesagent.original",
+  "original_kernelcache": "../inputs/21H461/kernelcache.decompressed",
+  "os_image": "../inputs/21H461/OS.raw",
+  "nvt_firmware": "../inputs/stock/novatek_ts_csot_3k_fw.bin",
+  "wcn_firmware": "../inputs/stock/bluetooth",
+  "mu_repository": "../research/mu_wide_platforms",
+  "unixnu_repository": "../research/UniXNU",
+  "crypto": "../inputs/basecrypto",
+  "stock_boot": "../inputs/signing/boot_signed.img",
+  "parent_vbmeta": "../inputs/signing/vbmeta_signed.img",
+  "avbtool": "../inputs/signing/avbtool.py",
+  "signing_key": "../inputs/signing/testkey_rsa4096.pem"
+}

@@ -33,6 +33,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('kernel','entry-report','fd','loader','data','library','agent','stock-boot','avbtool','key','output'):p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--clang',default='clang');p.add_argument('--wsl-distro',help='Use Linux filesystem/signing tools in this Windows WSL distribution')
+    p.add_argument('--portable-fat',action='store_true',help='Use the repository FAT16 writer; no mtools, dosfstools or WSL')
     p.add_argument('--data-report',type=Path,help='Source-built Data seed filesystem/manifest verification')
     p.add_argument('--fbwc-report',type=Path,help='Explicit qualified v93 framebuffer build; adds only the bare fbwc option')
     p.add_argument('--battery-ui',action='store_true',help='Restore qualified battery UI; compact existing numeric-one flags without dropping options')
@@ -110,13 +111,18 @@ def main():
     if len(shim)!=128 or hashlib.sha256(shim).hexdigest()!='ac27ecc2bcec5440606d77e69b7726921b0bf3803dd2234f23b10d1619149e1d':raise RuntimeError('BootShim differs from qualified v91')
     (out/'BootShim.bin').write_bytes(shim)
     image=out/'payload.img'
-    with image.open('xb') as f:f.truncate(58720256)
-    run(['mkfs.fat','--invariant','-F','16','-S','512','-s','4','-n','ELDENRAM',path(image)])
-    for directory in ('EFI','EFI/UniXNU','EFI/UniXNU/Payloads'):run(['mmd','-i',path(image),'::/'+directory])
     expected={}
-    for file in sorted((out/'files').rglob('*')):
-        if not file.is_file():continue
-        os.utime(file,(1738713600,1738713600));relative=file.relative_to(out/'files').as_posix();run(['mcopy','-m','-i',path(image),path(file),'::/'+relative]);expected[relative]=sha(file)
+    if a.portable_fat:
+        from fat16_payload import build
+        files={f.relative_to(out/'files').as_posix():f.read_bytes() for f in (out/'files').rglob('*') if f.is_file()}
+        image.write_bytes(build(files));expected={n:hashlib.sha256(v).hexdigest() for n,v in files.items()}
+    else:
+        with image.open('xb') as f:f.truncate(58720256)
+        run(['mkfs.fat','--invariant','-F','16','-S','512','-s','4','-n','ELDENRAM',path(image)])
+        for directory in ('EFI','EFI/UniXNU','EFI/UniXNU/Payloads'):run(['mmd','-i',path(image),'::/'+directory])
+        for file in sorted((out/'files').rglob('*')):
+            if not file.is_file():continue
+            os.utime(file,(1738713600,1738713600));relative=file.relative_to(out/'files').as_posix();run(['mcopy','-m','-i',path(image),path(file),'::/'+relative]);expected[relative]=sha(file)
     fat=Fat(image.read_bytes())
     for name,h in expected.items():
         if hashlib.sha256(fat.read(name)).hexdigest()!=h:raise RuntimeError('FAT content differs: '+name)

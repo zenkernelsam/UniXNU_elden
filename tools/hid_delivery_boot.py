@@ -10,6 +10,9 @@ def qualify(report_path,entry_path):
     report_path=Path(report_path);root=report_path.parent
     report=json.loads(report_path.read_text());entry=json.loads(Path(entry_path).read_text())
     name=report.get('profile')
+    if report.get('native_contract_matches') and report.get('variant')=='gui':
+        from current_boot import qualify_gui
+        return qualify_gui(report_path,entry_path)
     if name=='v109-memory8':
         from memory_window_boot import qualify as qualify_memory
         return qualify_memory(report_path,entry_path)

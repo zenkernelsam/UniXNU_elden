@@ -1,0 +1,2 @@
+# Offline AVB signature verification during boot packaging.
+pycryptodome==3.23.0

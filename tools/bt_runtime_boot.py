@@ -11,6 +11,9 @@ def qualify(report_path,entry_path,runtime):
     if not report_path or not entry_path or not runtime:raise ValueError('Complete v99 build, entry and runtime inputs required')
     report=json.loads(Path(report_path).read_text());entry=json.loads(Path(entry_path).read_text());runtime=Path(runtime)
     name=report.get('profile')
+    if report.get('native_contract_matches') is True:
+        from current_boot import qualify as qualify_current
+        return qualify_current(report_path,entry_path,runtime)
     if name=='v112-uart-route':raise ValueError('Withdrawn v112 has an incorrect GIC MMIO base; use v113 or later')
     if name not in ('v99-bt-runtime','v101-bt-clock','v102-bt-wake','v103-bt-version','v110-bt-fifo','v111-spmi-gate','v112-uart-route','v113-uart-gic','v114-hci-length','v115-ibs-wake','v116-hci-reset','v117-hci-debug','v118-native17','v119-bt-exit','v120-bt-xpc','v121-bt-stderr'):raise ValueError('Unsupported Bluetooth runtime profile')
     profile=ROOT/'profiles'/name/'plan.json';plan=json.loads(profile.read_text())
@@ -70,7 +73,7 @@ def adt(base,qualification=None):
     old=bytes.fromhex(found[0]['hex'])
     if not old.endswith(b'\0') or b'bluetoothd,' in old:raise ValueError('Prior Bluetooth fixup is not allowed')
     updated=old+FIXUP
-    if qualification and qualification['profile'] in ('v118-native17','v119-bt-exit','v120-bt-xpc','v121-bt-stderr'):
+    if qualification and qualification['profile'] in ('v118-native17','v119-bt-exit','v120-bt-xpc','v121-bt-stderr','current-source'):
         updated=bytes.fromhex(qualification['text_fixups_hex'])
         if not updated.startswith(old+FIXUP) or len([x for x in updated.split(b'\0') if x])!=(31 if qualification['profile']=='v120-bt-xpc' else 22):raise ValueError('Native17 table contract differs')
     found[0]['hex']=updated.hex();result.pop('sha256',None)

@@ -1,0 +1,73 @@
+{
+  "source_base_commit": "cc7714d",
+  "source_manifest_bluetooth_sha256": "e15b65da67efed878e187e934000539dc00ff2fab3b0e5a7c2ff18bf180070c3",
+  "source_manifest_gui_sha256": "64a6e33f3b955a34885005bcca884cf2a12698448fa9a4dc87b701af6099a173",
+  "source_inputs": "Fresh cloned repository plus new source-build manifest/tools; dependencies fetched at fixed public commits; original firmware/OS/signing inputs supplied separately.",
+  "baseline_xnu_objects": 1010,
+  "baseline_native_objects": 608,
+  "bluetooth_units": 30,
+  "gui_units": 10,
+  "bluetooth_native": {
+    "kernel_sha256": "d25c68c5e0ec730ef3f13955d765c7a8b47efb80fbd31bf283b21bd937e2bc71",
+    "native_sha256": "ba7a8140838b21800bc0a09beef439ac5eff75697e06a8423558f7a4de8a00f5",
+    "native_contract_matches": true,
+    "apple_execution_ranges": 30,
+    "core_objects": 1010,
+    "current_units": 30,
+    "copied_historical_objects": 0,
+    "boot_packaged": false,
+    "device_operation": false
+  },
+  "gui_native": {
+    "variant": "gui",
+    "profile_sha256": "64a6e33f3b955a34885005bcca884cf2a12698448fa9a4dc87b701af6099a173",
+    "kernel_sha256": "831d32da5c1ddb03272f01577d58f073767b3f3342e4dccf9c044e524575e2b5",
+    "native_sha256": "09ea9fb8f7b02f1fadafced5cc3ffd5451914ea9f23f12ed0bbe1940c151b221",
+    "native_contract_matches": true,
+    "apple_execution_ranges": 31,
+    "core_objects": 1010,
+    "current_units": 10,
+    "copied_historical_objects": 0,
+    "boot_packaged": false,
+    "device_operation": false
+  },
+  "bluetooth_boot": {
+    "sha256": "96b0fd19c4028d68d83b9662efa1032c23afa4b9bf2bead5493daef64b39f036",
+    "session": "854ca6f5ab2caad7",
+    "bytes": 100663296,
+    "memory": 6442450944
+  },
+  "gui_boot": {
+    "sha256": "01fae7ac87570ef6162f8f394d617134f8b1b6a0094112fe9cdc6dd5aac78cfc",
+    "session": "bb600e8d81b84a2f",
+    "bytes": 100663296,
+    "memory": 8589934592
+  },
+  "single_command_bluetooth_boot_complete": true,
+  "gui_validation": "Both full CLI and isolated component/link/boot runs completed. Sandbox rejected original driver access to old start.s; corrected builder stages assembly in this run. Nine other units passed under denial, and corrected start passed its full expected section/symbol comparison under denial.",
+  "sandbox_old_build_read_denial_passed": true,
+  "sandbox_units": 30,
+  "firmware": {
+    "sha256": "e4df9e676394504f7d8914e5e6c05654d42fed6b2f93c700c2671ba230b66273",
+    "contract_sha256": "c3287ed4949e54529b6ad6cda482b28d1ee749439282ab1574f5ae9f643f84aa",
+    "all_executable_bytes_equal": true,
+    "hardware_tested": false
+  },
+  "loader": {
+    "returncode": 0,
+    "fresh_workspace": true,
+    "sha256": "569bef30ab43035d6114b2eb09b80b20f65fd74286d63ffe70126d781872f602",
+    "bytes": 31744
+  },
+  "fat_validation": "Sample passed Linux fsck.fat4.2 -n; both full payloads passed macOS fsck_msdos -n with no proposed repair.",
+  "new_images_hardware_tested": false,
+  "full_peripheral_goal_complete": false,
+  "single_command_gui_boot_complete": true,
+  "gui_unified_boot": {
+    "sha256": "df0480accb9ffc6aef7fe52f4c531b8c3c8d1b4a403ecd356e2af6b19f1e54d1",
+    "session": "537a6666441ee5a6",
+    "memory": 8589934592
+  },
+  "old_path_failure_fixed": "Clang driver assembly input existence check precedes VFS frontend; staged real source now receives original-name prefix mapping.",
+  "preflight_original_inputs_verified": true
+}

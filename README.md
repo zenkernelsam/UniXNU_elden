@@ -2,6 +2,11 @@
 
 Lenovo Legion Y700 Gen4 / TB322FC / SM8750 的 UniXNU 适配源码。
 
+**新克隆构建入口：[CLEAN-BUILD.md](docs/CLEAN-BUILD.md)**。`tools/build_clean.py` 从源码
+生成8GiB GUI或v121蓝牙分支，独立再生载荷和boot，不要求旧v99/旧对象/工作台路径。
+需自备原始21H461系统、TB322FC固件及声明的工具链/签名输入。当前原生构建宿主为macOS；
+两个分支独立选择；下方v91为历史复现基础。
+
 **最近已验：v91 运行 iPadOS 17.7.11 (21H461)，通过软件上滑和短按打开有内容的 Settings。**
 真实手指交互、显示流畅度、持久 Data、完整充电、无线等仍在推进，尚非完整可用的 iPad。
 

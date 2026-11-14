@@ -1,0 +1,41 @@
+{
+  "command": [
+    "sandbox-exec",
+    "-f",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/clean-build-20261114/isolated/deny-old.sb",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/clean-build-20261114/isolated/venv/bin/python",
+    "-B",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/clean-build-20261114/isolated/UniXNU_elden/tools/build_current_units.py",
+    "--xnu-source",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/clean-build-20261114/isolated/source/xnu",
+    "--dependencies",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/clean-build-20261114/isolated/dependencies",
+    "--icon-header",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/clean-build-20261114/isolated/agent/EldenIconCpuPayload.h",
+    "--nvt-header",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/clean-build-20261114/isolated/nvt/EldenNvtFirmware.h",
+    "--generated",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/clean-build-20261114/isolated/generated-runtime",
+    "--llvm",
+    "/Users/ciscohe/toolchains/llvm-20/bin",
+    "--output",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/clean-build-20261114/isolated/sandbox-units",
+    "--jobs",
+    "4"
+  ],
+  "denied": [
+    "/Users/ciscohe/Desktop/UniXNU_elden/research",
+    "/Users/ciscohe/Desktop/UniXNU_elden/third_party",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/reproduction-20261111",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/reproduction-20261112",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/fbwc-v94-20261112",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/bt-fifo-v110-20261114",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/native17-v118-20261114",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/spmi-gate-20261114",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/uart-v113-20261114",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/ibs-v115-20261114",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/reset-v116-20261114",
+    "/Users/ciscohe/Desktop/UniXNU_elden/lab/debug-v117-20261114"
+  ],
+  "returncode": 0
+}
