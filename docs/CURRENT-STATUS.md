@@ -1,5 +1,11 @@
 # 当前状态 · 2026-11-14
 
+v125阶段日志确认bootstrap两次均返回Ready/result0。之后USB再次写超时，未捕获
+H4 connect/send入口；日志109806B/drop7且有断点，不能将缺失记录当回调绝未执行。
+自动回实fastboot、完整stock恢复及Android/root/green通过，复位原因无同步证据。
+下步原21H461 socket/CTLIOCGINFO/connect入口与返回；不回头改已验固件上电。
+新增只读观察构建仍从build_clean来源产生，详profiles/bt-transport-trace。
+
 v124进一步核出v123的BlueTool103次启动限制拒绝。按现有IconServices方式，只为
 准确CDHash/路径/只读RAM union/已就绪runtime和观察到的e6错误加限定处理；全局
 限制保持。实机一次限定放行，但108145B后USB写超时，未证实BlueTool处理XPC或

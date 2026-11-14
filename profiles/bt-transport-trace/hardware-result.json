@@ -1,0 +1,39 @@
+{
+  "candidate": "v125",
+  "image_sha256": "d58f5133a3933480a8815ff5122a69e2b2e90b6c7081c1583b1d9b29ce813880",
+  "session": "fbaa89b75e0ff451",
+  "bytes": 109806,
+  "raw_sha256": "27153991e8f53629b1890aa8800d6dc5d1dac17702805894364824374b6c1d58",
+  "max_reported_drop": 7,
+  "discontinuities": [
+    {
+      "offset": 109806,
+      "utc": "2026-11-14T10:31:13.995078+00:00",
+      "error": "Write timeout",
+      "partial_line_chars": 0
+    }
+  ],
+  "ended_by": "Bounded USB reconnect expired; no controls repeated",
+  "transport_observation_incomplete": true,
+  "phases": [
+    "ELDEN_BT_PHASE bootstrap-enter call=1 write=0",
+    "ELDEN_BT_PHASE bootstrap-snapshot call=1 state=2",
+    "ELDEN_BT_PHASE bootstrap-return call=1 result=0",
+    "ELDEN_BT_PHASE bootstrap-enter call=2 write=0",
+    "ELDEN_BT_PHASE bootstrap-snapshot call=2 state=2",
+    "ELDEN_BT_PHASE bootstrap-return call=2 result=0"
+  ],
+  "owner_launches": [
+    "ELDEN_BT_OWNER_LAUNCH accepted pid=134 exact-cdhash=1 RAM-overlay=1 category6-volume-only"
+  ],
+  "bootstrap_ready_successes": 2,
+  "h4_callback_enter_observed": false,
+  "h4_connection_observed": false,
+  "explicit_sync_return": false,
+  "reset_cause_unproven": true,
+  "physical_fastboot_observed": true,
+  "recovery_complete": true,
+  "stock_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "stable_baseline": false,
+  "next": "Observe exact-original bluetoothd socket/CTLIOCGINFO/connect syscall entry and return; bootstrap calls1/2 both completed Ready/result0. Do not change firmware or infer USB timeout proves a kernel hang."
+}

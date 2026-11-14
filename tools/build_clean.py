@@ -20,12 +20,14 @@ def main():
     p.add_argument('--bt-exit-stack',action='store_true',help='Bluetooth only: bounded native first-exit call-stack diagnostic')
     p.add_argument('--software-keystore',action='store_true',help='Bluetooth exit-stack candidate: software key operations on volatile Data')
     p.add_argument('--bluetool-launch',action='store_true',help='Qualify the exact owned BlueTool on its RAM overlay')
+    p.add_argument('--bt-transport-trace',action='store_true',help='Bounded bootstrap sysctl and H4 callback phase logs')
     p.add_argument('--jobs',type=int,choices=range(1,9),default=4)
     p.add_argument('--resume',action='store_true',help='Resume completed stages of this exact source/input run')
     a=p.parse_args()
     if a.bt_exit_stack and a.variant!='bluetooth':raise ValueError('--bt-exit-stack requires the Bluetooth variant')
     if a.software_keystore and not a.bt_exit_stack:raise ValueError('--software-keystore requires --bt-exit-stack')
     if a.bluetool_launch and not a.software_keystore:raise ValueError('--bluetool-launch requires --software-keystore')
+    if a.bt_transport_trace and not a.bluetool_launch:raise ValueError('--bt-transport-trace requires --bluetool-launch')
     if sys.platform!='darwin':raise SystemExit('Native build requires macOS with Xcode/iPhoneOS SDK. Windows/WSL can inspect sources and flash separately.')
     config=a.inputs.resolve();data=read(config);out=a.output.resolve()
     def input_path(name):
@@ -47,6 +49,7 @@ def main():
     identity={'sources':sources,'inputs':{n:str(v) for n,v in inputs.items()},'config_sha256':sha(config),'target':a.target,'variant':a.variant,'bt_exit_stack':a.bt_exit_stack}
     identity['software_keystore']=a.software_keystore
     identity['bluetool_launch']=a.bluetool_launch
+    identity['bt_transport_trace']=a.bt_transport_trace
     stamp=hashlib.sha256(json.dumps(identity,sort_keys=True).encode()).hexdigest();journal=out/'build-state.json'
     if out.exists():
         if not a.resume or not journal.exists():raise ValueError('Use a new output, or explicitly resume this run')
@@ -98,6 +101,9 @@ def main():
     if a.bluetool_launch:
         stage('bluetool-launch',script('build_bluetool_launch.py','--clean-build',out,'--keystore-build',out/'keystore','--original-kernelcache',inputs['original_kernelcache'],'--llvm',inputs['llvm'],'--output',out/'bluetool-launch'),'bluetool-launch/result.json')
         kernel_folder=out/'bluetool-launch'
+    if a.bt_transport_trace:
+        stage('bt-transport-trace',script('build_bt_transport_trace.py','--clean-build',out,'--bluetool-build',out/'bluetool-launch','--original-kernelcache',inputs['original_kernelcache'],'--llvm',inputs['llvm'],'--output',out/'bt-transport-trace'),'bt-transport-trace/result.json')
+        kernel_folder=out/'bt-transport-trace'
     if a.target=='boot':
         stage('firmware',script('build_v91_firmware.py','--mu-root',inputs['mu_repository'],'--unixnu-root',inputs['unixnu_repository'],'--crypto-path',inputs['crypto'],'--llvm',inputs['llvm'],'--output',out/'firmware','--jobs',a.jobs),'firmware/result.json')
         stage('loader',script('build_v91_payload_loader.py','--mu-root',out/'firmware/project/third_party/mu_wide_platforms','--unixnu-root',out/'firmware/project/third_party/UniXNU','--llvm',inputs['llvm'],'--output',out/'loader'),'loader/result.json')

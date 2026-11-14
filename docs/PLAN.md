@@ -1,5 +1,9 @@
 # 下一阶段顺序
 
+v125已完成bootstrap两次Ready/result0证据；下步沿原21H461的socket→CTLIOCGINFO→
+connect检查进入/返回，H4回调在USB断点前未观察到。保留自动复位和完整stock恢复；
+不将v124/v125诊断件升级为可用无线基线。
+
 v124更新：已捕获准确BlueTool的e6例外接受，随后USB写超时，自动恢复Android完成。
 下一发只定位bootstrap sysctl与native connect/send的进入/返回，不更改固件、电源
 或时钟。H4连接仍未观察到；v123与v124均不是无线完成结论，不把日志中断当内核死锁。
