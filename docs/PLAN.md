@@ -52,6 +52,12 @@ CPU 同时记录实际上线、调度/IRQ 与负载，UFS 记录真实 I/O 延�
 
 ## 2. 完成基本外设
 
+最新17用户态工作已到[离线路由组件](../drivers/EldenBluetooth/userland/NATIVE17.md)：
+124指令场景/两ASLR和保留127entitlement的签名过，但尚未集成运行。
+已按用户线索补全sheng历史：17旧版可供对应外设参考，公开蓝牙适配首次即27。
+下一步将精确17改动接入原身份页面保护/运行时包，保留真实HCI和现有回程，
+验证daemon连接与标准命令；能力、可选命令、key与扫描配对分阶段实证。
+
 v117已实机跨过完整HCI初始化并发布H4 host，下一项是准确21H461 bluetoothd用户态。
 目前12次fault均为file offset0x2f2fc0、FAR0x2a8：单例机型对象未构造，尚无client连接。
 先核原厂二进制的factory/constructor与标准HCI注册，再依sheng的已成功type0方法适配，
