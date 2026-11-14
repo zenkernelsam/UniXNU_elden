@@ -1,5 +1,12 @@
 # 当前状态 · 2026-11-14
 
+v126仍只捕获bootstrap两次Ready/0，socket/ioctl/connect记录未到USB断点前出现。
+110923B/drop0后Write timeout，自动fastboot/完整stock恢复成功，非同步RPC证明。
+已转向补齐实际运行配置：原BlueTool仍为mobile/pressed-exit，缺少sheng的四项
+lifecycle覆盖。新925323B缓存已签名、宿主XPC解析和560其他任务/原信任模块核验
+通过，尚未挂载、未装入boot。下一步先整合此缓存，避免继续更细的无结果探针。
+详docs/BLUETOOL-LIFECYCLE.md；设备当前Android/root/green，已熄屏，全部任务结束。
+
 v125阶段日志确认bootstrap两次均返回Ready/result0。之后USB再次写超时，未捕获
 H4 connect/send入口；日志109806B/drop7且有断点，不能将缺失记录当回调绝未执行。
 自动回实fastboot、完整stock恢复及Android/root/green通过，复位原因无同步证据。

@@ -1,5 +1,9 @@
 # 下一阶段顺序
 
+当前转向BlueTool完整运行配置：v126未在USB中断前得到socket记录；原job确认仍缺
+sheng四项lifecycle覆盖。先将已签缓存/签名/新信任项整合进合格RAM只读union和
+从零构建链，参见BLUETOOL-LIFECYCLE.md。之后再判断是否需要更细syscall探针。
+
 v125已完成bootstrap两次Ready/result0证据；下步沿原21H461的socket→CTLIOCGINFO→
 connect检查进入/返回，H4回调在USB断点前未观察到。保留自动复位和完整stock恢复；
 不将v124/v125诊断件升级为可用无线基线。

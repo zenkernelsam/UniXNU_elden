@@ -11,6 +11,9 @@ def qualify(report_path,entry_path,runtime):
     if not report_path or not entry_path or not runtime:raise ValueError('Complete v99 build, entry and runtime inputs required')
     report=json.loads(Path(report_path).read_text());entry=json.loads(Path(entry_path).read_text());runtime=Path(runtime)
     name=report.get('profile')
+    if name=='bt-syscall-trace':
+        from bt_syscall_trace_boot import qualify as qualify_syscalls
+        return qualify_syscalls(report_path,entry_path,runtime)
     if name=='bt-transport-trace':
         from bt_transport_trace_boot import qualify as qualify_trace
         return qualify_trace(report_path,entry_path,runtime)
@@ -67,7 +70,7 @@ def menu(qualification=None):
     expected=arguments(original)
     for key in removed:expected.pop(key)
     expected['elden-wcn-power']='4'
-    if qualification and qualification.get('profile') in ('elden-software-keystore','bluetool-owner-launch','bt-transport-trace'):
+    if qualification and qualification.get('profile') in ('elden-software-keystore','bluetool-owner-launch','bt-transport-trace','bt-syscall-trace'):
         slots=[i for i,t in enumerate(result) if t.partition('=')[0]=='elden-key-state']
         if len(slots)!=1 or expected.get('elden-key-state')!='1':raise ValueError('Expected old state mode1')
         result[slots[0]]='elden-key-state=2'
@@ -90,7 +93,7 @@ def adt(base,qualification=None):
     old=bytes.fromhex(found[0]['hex'])
     if not old.endswith(b'\0') or b'bluetoothd,' in old:raise ValueError('Prior Bluetooth fixup is not allowed')
     updated=old+FIXUP
-    if qualification and qualification['profile'] in ('v118-native17','v119-bt-exit','v120-bt-xpc','v121-bt-stderr','current-source','bt-exit-stack','elden-software-keystore','bluetool-owner-launch','bt-transport-trace'):
+    if qualification and qualification['profile'] in ('v118-native17','v119-bt-exit','v120-bt-xpc','v121-bt-stderr','current-source','bt-exit-stack','elden-software-keystore','bluetool-owner-launch','bt-transport-trace','bt-syscall-trace'):
         updated=bytes.fromhex(qualification['text_fixups_hex'])
         if not updated.startswith(old+FIXUP) or len([x for x in updated.split(b'\0') if x])!=(31 if qualification['profile']=='v120-bt-xpc' else 22):raise ValueError('Native17 table contract differs')
     found[0]['hex']=updated.hex();result.pop('sha256',None)

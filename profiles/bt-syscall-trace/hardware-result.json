@@ -1,0 +1,35 @@
+{
+  "candidate": "v126",
+  "image_sha256": "9eb4a7ac781f1053529170a69c38f1640317d2a94f64240a0903bddb5c8943d0",
+  "session": "f562b9d228676196",
+  "bytes": 110923,
+  "raw_sha256": "9a2dcc8ec6a2d2b63a8e63d7e8a034f751c6f6bb2279e812f9ec1b3cc2845377",
+  "max_reported_drop": 0,
+  "discontinuities": [
+    {
+      "offset": 110923,
+      "utc": "2026-11-14T11:22:20.131598+00:00",
+      "error": "Write timeout",
+      "partial_line_chars": 0
+    }
+  ],
+  "ended_by": "Bounded USB reconnect expired; no controls repeated",
+  "transport_observation_incomplete": true,
+  "phases": [
+    "ELDEN_BT_PHASE bootstrap-enter call=1 write=0",
+    "ELDEN_BT_PHASE bootstrap-snapshot call=1 state=2",
+    "ELDEN_BT_PHASE bootstrap-return call=1 result=0",
+    "ELDEN_BT_PHASE bootstrap-enter call=2 write=0",
+    "ELDEN_BT_PHASE bootstrap-snapshot call=2 state=2",
+    "ELDEN_BT_PHASE bootstrap-return call=2 result=0"
+  ],
+  "syscall_markers": 0,
+  "bootstrap_returns": 2,
+  "explicit_sync_return": false,
+  "physical_fastboot_observed": true,
+  "reset_cause_unproven": true,
+  "recovery_complete": true,
+  "stock_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "stable_baseline": false,
+  "next": "Use the confirmed original BlueTool job difference to complete upstream lifecycle integration before adding finer syscall probes. Signed cache prepared separately, not installed."
+}

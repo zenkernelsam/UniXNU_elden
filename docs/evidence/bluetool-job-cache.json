@@ -1,0 +1,56 @@
+{
+  "original_cache_sha256": "f1b99c4e3e738cb1c2622ad82f5e78cd2fbd1f88c8ced13c423aabf91b2b22eb",
+  "original_job_sha256": "e6a3c88d3458b7d6adc5da3b11099769648068baf81beae63283300c80c6606a",
+  "original_job": {
+    "ThrottleInterval": 0,
+    "POSIXSpawnType": "Adaptive",
+    "MachServices": {
+      "com.apple.BlueTool": true
+    },
+    "ProgramArguments": [
+      "/usr/sbin/BlueTool",
+      "-R"
+    ],
+    "UserName": "mobile",
+    "EnablePressuredExit": true,
+    "Label": "com.apple.BlueTool"
+  },
+  "overrides": {
+    "UserName": "root",
+    "EnableTransactions": true,
+    "EnablePressuredExit": false,
+    "ThrottleInterval": 3
+  },
+  "jobs": 561,
+  "other_jobs_unchanged": 560,
+  "other_top_level_entries_unchanged": true,
+  "new_job": {
+    "ThrottleInterval": 3,
+    "POSIXSpawnType": "Adaptive",
+    "MachServices": {
+      "com.apple.BlueTool": true
+    },
+    "ProgramArguments": [
+      "/usr/sbin/BlueTool",
+      "-R"
+    ],
+    "UserName": "root",
+    "EnablePressuredExit": false,
+    "Label": "com.apple.BlueTool",
+    "EnableTransactions": true
+  },
+  "cache_sha256": "d258da13c01861a229fe64153e239750d5e9253ff53b692c2db76e782bbfc98d",
+  "cache_bytes": 925323,
+  "signature_sha256": "fe964676f841c791afcf62864e854f785543cddd619314976c83803150d58727",
+  "cdhash": "3dd1063e4d38d18da8f4c753b5ca25a6efe1e92a",
+  "input_trust_sha256": "a6758681cd8ce0f364411bf65fc1207514b3470b0c16699e2c1a0d12f22a2c65",
+  "trust_sha256": "daf63a9153addabce3c9f8b3ee532af6ecb062ceca469271bb634b9ad52f105c",
+  "old_trust_modules_unchanged": true,
+  "host_xpc_parser_passed": true,
+  "target17_parser_not_yet_tested": true,
+  "detached_signature_verified": true,
+  "header_sha256": "5a1e7b118150736f053b64d9e157f1d41ce961249a3e65201febfbcbbba51986",
+  "installed": false,
+  "device_operation": false,
+  "source_sha256": "f1394ba9f56931d6a48a0facae84ef9523fd6c7f5a74fc3b8bcb09e44712fc49"
+}

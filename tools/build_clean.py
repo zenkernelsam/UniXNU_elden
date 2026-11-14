@@ -21,6 +21,7 @@ def main():
     p.add_argument('--software-keystore',action='store_true',help='Bluetooth exit-stack candidate: software key operations on volatile Data')
     p.add_argument('--bluetool-launch',action='store_true',help='Qualify the exact owned BlueTool on its RAM overlay')
     p.add_argument('--bt-transport-trace',action='store_true',help='Bounded bootstrap sysctl and H4 callback phase logs')
+    p.add_argument('--bt-syscall-trace',action='store_true',help='Bounded original-bluetoothd socket and controller-query phases')
     p.add_argument('--jobs',type=int,choices=range(1,9),default=4)
     p.add_argument('--resume',action='store_true',help='Resume completed stages of this exact source/input run')
     a=p.parse_args()
@@ -28,6 +29,7 @@ def main():
     if a.software_keystore and not a.bt_exit_stack:raise ValueError('--software-keystore requires --bt-exit-stack')
     if a.bluetool_launch and not a.software_keystore:raise ValueError('--bluetool-launch requires --software-keystore')
     if a.bt_transport_trace and not a.bluetool_launch:raise ValueError('--bt-transport-trace requires --bluetool-launch')
+    if a.bt_syscall_trace and not a.bt_transport_trace:raise ValueError('--bt-syscall-trace requires --bt-transport-trace')
     if sys.platform!='darwin':raise SystemExit('Native build requires macOS with Xcode/iPhoneOS SDK. Windows/WSL can inspect sources and flash separately.')
     config=a.inputs.resolve();data=read(config);out=a.output.resolve()
     def input_path(name):
@@ -50,6 +52,7 @@ def main():
     identity['software_keystore']=a.software_keystore
     identity['bluetool_launch']=a.bluetool_launch
     identity['bt_transport_trace']=a.bt_transport_trace
+    identity['bt_syscall_trace']=a.bt_syscall_trace
     stamp=hashlib.sha256(json.dumps(identity,sort_keys=True).encode()).hexdigest();journal=out/'build-state.json'
     if out.exists():
         if not a.resume or not journal.exists():raise ValueError('Use a new output, or explicitly resume this run')
@@ -104,6 +107,9 @@ def main():
     if a.bt_transport_trace:
         stage('bt-transport-trace',script('build_bt_transport_trace.py','--clean-build',out,'--bluetool-build',out/'bluetool-launch','--original-kernelcache',inputs['original_kernelcache'],'--llvm',inputs['llvm'],'--output',out/'bt-transport-trace'),'bt-transport-trace/result.json')
         kernel_folder=out/'bt-transport-trace'
+    if a.bt_syscall_trace:
+        stage('bt-syscall-trace',script('build_bt_syscall_trace.py','--clean-build',out,'--transport-build',out/'bt-transport-trace','--original-kernelcache',inputs['original_kernelcache'],'--llvm',inputs['llvm'],'--output',out/'bt-syscall-trace'),'bt-syscall-trace/result.json')
+        kernel_folder=out/'bt-syscall-trace'
     if a.target=='boot':
         stage('firmware',script('build_v91_firmware.py','--mu-root',inputs['mu_repository'],'--unixnu-root',inputs['unixnu_repository'],'--crypto-path',inputs['crypto'],'--llvm',inputs['llvm'],'--output',out/'firmware','--jobs',a.jobs),'firmware/result.json')
         stage('loader',script('build_v91_payload_loader.py','--mu-root',out/'firmware/project/third_party/mu_wide_platforms','--unixnu-root',out/'firmware/project/third_party/UniXNU','--llvm',inputs['llvm'],'--output',out/'loader'),'loader/result.json')
