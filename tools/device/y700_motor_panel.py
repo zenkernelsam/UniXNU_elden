@@ -12,8 +12,8 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 
 SERIAL = 'HA2A1PT2'
-REMOTE = '/data/local/tmp/y700_motor_test_manual_v2'
-EXPECTED_BINARY = '56969bdd5fc37127bab5bc838c8a30813e57641b462412c436bc9fc916dec3ee'
+REMOTE = '/data/local/tmp/y700_motor_test_manual_v3'
+EXPECTED_BINARY = 'df74a6550e30aaa98cd8a894fb81fe4e7da517497039a3c06aa3d6bb8797ee70'
 ADB = Path('D:/Desktop/Git/SchoolBox/Tools/platform-tools_ADB/adb.exe')
 ROOT = Path(__file__).resolve().parents[2]
 WORKBENCH = Path('D:/Desktop/Git/Patch/Y700-Elden')
@@ -42,7 +42,7 @@ class Panel:
         style.configure('TRadiobutton', font=('Microsoft YaHei UI', 11), background='#f4f6fa')
         main = ttk.Frame(root, padding=22); main.pack(fill='both', expand=True)
         ttk.Label(main, text='Y700 · 两颗马达分开感受', font=('Microsoft YaHei UI', 21, 'bold')).pack(anchor='w')
-        ttk.Label(main, text='打开窗口不会振动。点击后倒数 3 秒，每组只有一颗马达振动三次。', wraplength=700).pack(anchor='w', pady=(10, 6))
+        ttk.Label(main, text='点击后倒数 3 秒。单测各三下；交替为 L → R → L → R → L → R。', wraplength=700).pack(anchor='w', pady=(10, 6))
         ttk.Label(main, text='L / R 是原厂驱动标签；请按手感确认机身位置。轻握平板，测试时先不要操作屏幕。', wraplength=700).pack(anchor='w', pady=(0, 14))
         self.level = tk.StringVar(value='medium')
         row = ttk.Frame(main); row.pack(fill='x')
@@ -51,7 +51,7 @@ class Panel:
         ttk.Label(main, text='原厂当前增益为 128；本工具只用 32 / 64，不改电压、频率或校准。', wraplength=700).pack(anchor='w', pady=(8, 16))
         row = ttk.Frame(main); row.pack(fill='x')
         self.buttons = []
-        for label, action in [('只测 L 马达', 'l'), ('只测 R 马达', 'r'), ('L → R 交替', 'both')]:
+        for label, action in [('只测 L 马达', 'l'), ('只测 R 马达', 'r'), ('L ↔ R 逐次交替', 'both')]:
             button = ttk.Button(row, text=label, command=lambda value=action: self.start(value))
             button.pack(side='left', expand=True, fill='x', padx=3); self.buttons.append(button)
         row = ttk.Frame(main); row.pack(fill='x', pady=12)
@@ -98,15 +98,20 @@ class Panel:
             self.emit('log', survey)
             if action == 'survey': self.emit('status', '两路接口已识别 · 没有触发振动'); return
             if level not in ('gentle', 'medium'): raise RuntimeError('未知强度')
-            sides = ('l', 'r') if action == 'both' else (action,)
-            for side in sides:
+            sides = ('l', 'r') * 3 if action == 'both' else (action,)
+            count = 1 if action == 'both' else 3
+            label = 'L → R → L → R → L → R' if action == 'both' else action.upper()
+            if not self.delay(3, '拿好平板：即将测试 ' + label):
+                self.emit('status', '已取消 · 没有触发振动'); return
+            for step, side in enumerate(sides, 1):
                 if side not in ('l','r'): raise RuntimeError('未知马达')
-                if not self.delay(3, '拿好平板：即将测试 ' + side.upper()): break
+                if self.cancel.is_set(): break
                 state = adb('shell', 'dumpsys', 'vibrator_manager')
                 if 'currentState = IDLE' not in state or 'currentState = VIBRATING' in state:
                     raise RuntimeError('Android 正在使用马达，请停下屏幕操作后重试。')
-                self.emit('status', f'正在测试 {side.upper()} · 三次短振动')
-                process = subprocess.Popen([str(ADB), '-s', SERIAL, 'shell', f"su -c '{REMOTE} {side} {level}'"],
+                if self.cancel.is_set(): break
+                self.emit('status', f'交替 {step}/6 · {side.upper()} 振一下' if action == 'both' else f'正在测试 {side.upper()} · 三次短振动')
+                process = subprocess.Popen([str(ADB), '-s', SERIAL, 'shell', f"su -c '{REMOTE} {side} {level} {count}'"],
                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding='utf-8', errors='replace',
                     creationflags=subprocess.CREATE_NO_WINDOW)
                 # The target has its own eight-second limit plus hrtimer stop.

@@ -10,7 +10,8 @@ py -3.12 -B D:/Desktop/Git/UniXNU_elden/tools/device/y700_motor_panel.py
 ```
 
 - **只测 L / 只测 R**：对应原厂驱动标签，不预设横竖屏下物理左右。
-- **L → R**：两颗依次各三次；两组之间再倒数3秒。
+- **L ↔ R 逐次交替**：只在开始倒数3秒，随后 **L R L R L R**，每路每次只振一下，
+  停止并恢复该路后再换另一颗，不同时振动。单测L/R仍各三下。
 - **轻柔**：增益32、每次250ms；**中等**：增益64、每次350ms。
   初始原厂增益128。增益数字不等于机械振幅百分比。
 - **立即停止**：只向经可执行文件路径核验的测试进程发SIGTERM，随后由它停止并恢复。
@@ -41,12 +42,13 @@ activate_mode_store只存模式；不触碰电压、频率、校准、固件或�
 初轮低增益32/180ms验证：L的三个计时器103/111/111ms，R均0；R的三个
 计时器108/108/107ms，L均0，恢复gain128/index1/mode5/vmax8500/timer0。
 用户没赶上且反馈不明显，**不算机械振动确认**。手动版已部署并完成只读survey，
-中等档尚待用户手动感受；打开窗口与UI smoke不触发振动。
+用户随后手动测试反馈两路均可明显感知，认为马达工作；未据此证明机械强度完全一致。
+应用户要求，交替模式改为逐次LRLRLR。打开窗口与UI smoke不触发振动。
 
 产物在工作台`edl_work/motor-test-20261114`；运行记录在
 `lab/records/motor-test-20261114/manual-sessions`。部署文件：
-`/data/local/tmp/y700_motor_test_manual_v2`，SHA256
-`56969bdd5fc37127bab5bc838c8a30813e57641b462412c436bc9fc916dec3ee`。
+`/data/local/tmp/y700_motor_test_manual_v3`，SHA256
+`df74a6550e30aaa98cd8a894fb81fe4e7da517497039a3c06aa3d6bb8797ee70`。
 
 复现ARM64静态工具：WSL Ubuntu-22.04的aarch64-linux-gnu-gcc，
 `-static -O2 -Wall -Wextra -Werror -Wno-misleading-indentation`编译y700_motor_test.c。
