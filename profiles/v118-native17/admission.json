@@ -1,0 +1,11 @@
+{
+  "static_pass": true,
+  "image_sha256": "3ae13d96344097aa1cbfa2ba3031e124db58de0ae2c6aa7a83ca2680006c6d83",
+  "session": "da34670a4d478362",
+  "complete_rule_table_unique_in_kernel": true,
+  "loader_data_trust_menu_unchanged_except_session": true,
+  "floor": 1738713600,
+  "footer": 0,
+  "parent": 3,
+  "device_touched": false
+}

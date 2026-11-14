@@ -1,0 +1,16 @@
+{
+  "profile": "v118-native17",
+  "baseline": "v117-hci-debug",
+  "baseline_kernel_sha256": "d8bfbc11486b37023254ae4c6825bd499591fa938a65c6c1089581f26676b79d",
+  "baseline_native_sha256": "f29b1bdf5178c730c118fbfb4cc2d321f1ae8d0f908a529c960357c261d93f2f",
+  "core_build_kernel_sha256": "0db8f52b3d85026f1a85a000ab665c47cf084a340e87c09f556900b5355ee848",
+  "runtime_helper_sha256": "464432d5308fa0998f9b25ed77ff0c2b9a7751377dc0cc992679a32dc7cc571e",
+  "runtime_header_sha256": "3032579d4d29194f526a11b4683a32a36643277bb1348570bb5119ff49cbe2f2",
+  "runtime_trust_sha256": "a6758681cd8ce0f364411bf65fc1207514b3470b0c16699e2c1a0d12f22a2c65",
+  "guard_sha256": "00b61380b46a485d09c1011a11ae0971ff810e204ba4b4baa26a2e4009fd1012",
+  "core_source_sha256": {
+    "kern_exec": "728eff50b3e0455bb749dfed3843bbb9e148c4141deaf91012cc94ff5a6f2543",
+    "ubc_subr": "6112d05629afee630b92e2d8e4350184e480cc327f5db3ac125fe0a2a6829828"
+  },
+  "scope": "Original21H461 identity-only model/type0 page rules; same BlueTool/trust/561 jobs; original HCI and hardware objects unchanged."
+}

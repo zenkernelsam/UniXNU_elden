@@ -1,0 +1,18 @@
+{
+  "profile": "v119-bt-exit",
+  "baseline": "v118-native17",
+  "baseline_kernel_sha256": "d58c92071f987b150469b6625e7c448a803d9a4b1a823a15296fd708d8e2b774",
+  "baseline_native_sha256": "1ef2dc0e6f19af5945eaccf662f0920a1ec526f441f6d0a6321a8c321a414dd8",
+  "core_build_kernel_sha256": "0db8f52b3d85026f1a85a000ab665c47cf084a340e87c09f556900b5355ee848",
+  "runtime_helper_sha256": "464432d5308fa0998f9b25ed77ff0c2b9a7751377dc0cc992679a32dc7cc571e",
+  "runtime_header_sha256": "3032579d4d29194f526a11b4683a32a36643277bb1348570bb5119ff49cbe2f2",
+  "runtime_trust_sha256": "a6758681cd8ce0f364411bf65fc1207514b3470b0c16699e2c1a0d12f22a2c65",
+  "guard_sha256": "00b61380b46a485d09c1011a11ae0971ff810e204ba4b4baa26a2e4009fd1012",
+  "core_source_sha256": {
+    "kern_exec": "728eff50b3e0455bb749dfed3843bbb9e148c4141deaf91012cc94ff5a6f2543",
+    "ubc_subr": "6112d05629afee630b92e2d8e4350184e480cc327f5db3ac125fe0a2a6829828"
+  },
+  "scope": "Diagnostic only: exact original bluetoothd gets bounded native exit-reason logging; no policy changes.",
+  "observer_parent_sha256": "2017f3f70d240bbd983011447dbd87e89d7e33e75300c8e988b36fc1aa5c5618",
+  "observer_addition_sha256": "490a809abe16dcd03debd2f3233b2081484fde5d4fcebdd08fea2aed1a044352"
+}

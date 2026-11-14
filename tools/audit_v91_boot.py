@@ -72,7 +72,7 @@ def main():
         from build_v91_boot import encode_adt
         baseline_adt=json.loads((ROOT/'profiles/v91/boot-build/adt.json').read_text())
         if sha(encode_adt(baseline_adt['tree']))!=baseline_adt['sha256']:raise ValueError('Base ADT changed')
-        expected['Payloads/kernel.macho.adt']=sha(encode_adt(bt_runtime_boot.adt(baseline_adt)['tree']))
+        expected['Payloads/kernel.macho.adt']=sha(encode_adt(bt_runtime_boot.adt(baseline_adt,bt)['tree']))
         expected['Payloads/kernel.macho.trustcache']=bt['trust_sha256']
     if hid and hid['profile']=='v109-memory8':
         from build_v91_boot import encode_adt

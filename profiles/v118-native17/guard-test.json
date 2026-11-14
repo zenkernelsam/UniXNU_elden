@@ -1,0 +1,34 @@
+{
+  "command": [
+    "wsl",
+    "-d",
+    "Ubuntu-22.04",
+    "-u",
+    "root",
+    "--",
+    "cc",
+    "-O1",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-fsanitize=address,undefined",
+    "-I",
+    "/mnt/d/Desktop/Git/Patch/Y700-Elden/edl_work/bt-native-v118-20261114/input",
+    "/mnt/d/Desktop/Git/Patch/Y700-Elden/edl_work/bt-native-v118-20261114/guard-test/test.c",
+    "-o",
+    "/mnt/d/Desktop/Git/Patch/Y700-Elden/edl_work/bt-native-v118-20261114/guard-test/test"
+  ],
+  "run": [
+    "wsl",
+    "-d",
+    "Ubuntu-22.04",
+    "-u",
+    "root",
+    "--",
+    "env",
+    "UBSAN_OPTIONS=halt_on_error=1",
+    "/mnt/d/Desktop/Git/Patch/Y700-Elden/edl_work/bt-native-v118-20261114/guard-test/test"
+  ],
+  "result": "PASS 3077 exact rule/identity checks\n",
+  "hardware": false
+}

@@ -1,5 +1,10 @@
 # 输入与阻塞审计 · 2026-11-13
 
+11月14日对照用户提供的myron HID说明，当前独立Digitizer/原EventDriver/edge-tip/
+投递与抬指链路已具备，未发现值得本轮修改的新缺口。v106后来已实指打开Settings/
+General，About等待后也出现；下文较早的“实指未验”只适用原v94离线审计。
+本轮不重写触控或改变时间戳接口，细项见[参考对照](TOUCH-REFERENCE-CHECK.md)。
+
 11月13日首个v100纯实指窗口已收到212次控制器变化和212次成功HID报告，invalid0，
 没有软件手势注入。用户确认能上滑解锁并有多指反应，但画面很卡；Settings与滚动抬指
 未完成时测试自动回程。八核online/work/timers/ipis均ff，运行中online持续ff；内存仍6GiB。

@@ -1,5 +1,12 @@
 # 当前状态 · 2026-11-14
 
+最新v118/v119已实机：真实HCI初始化保持成功，原机型空对象fault未再记录。
+但bluetoothd首进程主动exit1，后续11次启动约束拒绝，H4 client仍0；扫描配对未通。
+v119仅增加原身份限定退出日志，未改安全策略；下一步定位首退的listeners/startup真实错误。
+日志分别1168878B/drop4、1159506B/drop108，均typed sync/fastboot/全SHA恢复Android。
+所有本轮任务终止；细节在profiles/v118-native17与v119-bt-exit。
+用户分享触控HID清单已与现有独立Digitizer/edge-tip/抬指链路对照，本轮不改触控。
+
 最新[v117](../profiles/v117-hci-debug/README.md)已实机完成外围固件、普通蓝牙958段、
 HCI Reset及身份/版本/地址检查，`hci=0 ready=1 patch=80ab`，真实H4 host已发布。
 原21H461 bluetoothd尚未连入，12次在file offset0x2f2fc0/FAR0x2a8崩溃；扫描配对未通。

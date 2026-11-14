@@ -1,7 +1,9 @@
 # Reliable Elden touch delivery — offline component preparation
 
-This component work is now included in the separately audited, signed
-[v100 candidate](../../profiles/v100-hid-delivery/README.md). It remains unflashed.
+This component work is included in the separately audited, signed
+[v100 candidate](../../profiles/v100-hid-delivery/README.md), subsequently tested
+with real fingers. v106 inherited it and opened Settings/General after the
+display memory fix. See docs/INPUT-STATUS.md; the original offline record follows.
 
 Two failures are reproduced from the exact v94 input source, without a tablet:
 

@@ -52,6 +52,11 @@ CPU 同时记录实际上线、调度/IRQ 与负载，UFS 记录真实 I/O 延�
 
 ## 2. 完成基本外设
 
+v118/v119已经完成原身份页面规则整合和自动真机回程：HCI保持ready，旧空对象fault
+未再记录。首个bluetoothd主动exit1，后续LC拒绝，尚无client。下一步准确诊断其
+listeners/daemon startup失败的实际状态/文本，再选最小修复；不要先全局跳过LC。
+用户分享触控清单已对照，无新修改依据，保持v106/v109已验交互链路。
+
 最新17用户态工作已到[离线路由组件](../drivers/EldenBluetooth/userland/NATIVE17.md)：
 124指令场景/两ASLR和保留127entitlement的签名过，但尚未集成运行。
 已按用户线索补全sheng历史：17旧版可供对应外设参考，公开蓝牙适配首次即27。

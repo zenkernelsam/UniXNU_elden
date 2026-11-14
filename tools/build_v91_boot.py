@@ -66,7 +66,7 @@ def main():
     parse_kernel(a.kernel.read_bytes());out.mkdir(parents=True);assets=out/'files/EFI/UniXNU';payloads=assets/'Payloads';payloads.mkdir(parents=True)
     adt_config=json.loads((PROFILE/'adt.json').read_text());adt=encode_adt(adt_config['tree'])
     if hashlib.sha256(adt).hexdigest()!=adt_config['sha256']:raise RuntimeError('ADT encoding differs from v91')
-    if bt:adt=encode_adt(bt_runtime_boot.adt(adt_config)['tree'])
+    if bt:adt=encode_adt(bt_runtime_boot.adt(adt_config,bt)['tree'])
     if hid and hid['profile']=='v109-memory8':
         from memory_window_boot import adt as memory_adt
         adt=encode_adt(memory_adt(adt_config)['tree'])

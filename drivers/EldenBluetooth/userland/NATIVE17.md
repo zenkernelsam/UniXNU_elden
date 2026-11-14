@@ -1,5 +1,12 @@
 # Native 21H461 Bluetooth routing component
 
+Later integration: profiles/v118-native17 applies these exact rules to original
+signature-verified pages, including the separately retained F3 rule, rather than
+installing the signed component below. v118/v119 real HCI stays ready and model-null
+fault is no longer recorded, but native client remains absent. v119 captures initial
+exit1 with no os_reason, followed by launch-constraint failures. Native daemon
+initialization, supported capabilities and scanning/pairing remain incomplete.
+
 The user correctly recalled that sheng ran iPadOS17 before27. The complete
 published sheng history confirms21H461 at `1cab151` (2026-10-25); `e9865b0`
 (2026-10-28) selects27/24A446, following a26 profile. Bluetooth's first recorded

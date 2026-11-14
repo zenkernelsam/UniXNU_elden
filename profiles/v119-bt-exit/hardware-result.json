@@ -1,0 +1,28 @@
+{
+  "image_sha256": "4787fd0469ee6f88633278035c6dfb1f4d8cee428a6444d647853c35ba73cc3e",
+  "session": "2b25f60198edba1c",
+  "raw_sha256": "6d0c642f31afa4e692dfb6c1eab5aafba996ab25c4ad70ba1fc1b7f59c30ec13",
+  "bytes": 1159506,
+  "drop_max": 108,
+  "exit_records": [
+    "ELDEN_ICON_EXIT pid=106 rv=0 ns=0 code=0 text=none",
+    "ELDEN_ICON_EXIT pid=79 rv=100 ns=0 code=0 text=none"
+  ],
+  "bluetooth_first_exit": {
+    "pid": 79,
+    "raw_wait_status": "0x100",
+    "exit_status": 1,
+    "reason_namespace": 0,
+    "reason_code": 0,
+    "reason_text": "none",
+    "identity": "Exact name+originalCDHash observer; marker retains legacy ELDEN_ICON_EXIT label"
+  },
+  "hci_ready": true,
+  "native_client_connected": false,
+  "launch_constraint_count": 11,
+  "faults": [],
+  "reset_after_sync": true,
+  "stock_restore_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "final_android_root_green": true,
+  "limits": "First exit1 without os_reason is not a data abort and does not prove which startup condition failed. Subsequent LC category errors are separate. No scan/pairing. No policy changed."
+}
