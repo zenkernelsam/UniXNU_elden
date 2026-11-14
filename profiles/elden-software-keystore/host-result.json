@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "actual_service": true,
+  "sanitizers": [
+    "ASan",
+    "UBSan"
+  ],
+  "upstream_oracle_preserved": true,
+  "additional_cases": [
+    "mode1 refusal",
+    "null scalar",
+    "oversized identity",
+    "identity mismatch",
+    "short descriptor write",
+    "disabled state"
+  ],
+  "service_sha256": "a10c68538c35967432a39f23c87ae663d4b93c58603c7e22b1c770f499e7938f",
+  "glue_sha256": "9a41506686dd0666c08827954525b4c2dbecfd5aa91cbeef8fc036e1f311d4b9",
+  "scope": "host service lifecycle and selectors; not IOKit/kernel registration or persistent keychain"
+}

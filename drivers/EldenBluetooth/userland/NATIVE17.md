@@ -1,5 +1,12 @@
 # Native 21H461 Bluetooth routing component
 
+Latest v123: real software AppleKeyStore operations remove the observed
+readRootKeys first-exit. PID79 now reports "Server attached, going into msg loop";
+no exit/fault/launch-constraint repeat was recorded in the150-second capture.
+The kernel UART.SK endpoint still reports client0/ready0/out0/up0. Next trace the
+actual17 transport discovery/open conditions. This is not scan/pair acceptance.
+See profiles/elden-software-keystore; the earlier first-exit status below is history.
+
 Later integration: profiles/v118-native17 applies these exact rules to original
 signature-verified pages, including the separately retained F3 rule, rather than
 installing the signed component below. v118/v119 real HCI stays ready and model-null

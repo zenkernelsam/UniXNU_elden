@@ -92,3 +92,8 @@ VFS键，用于保持 `__FILE__` 和字符串合并顺序。实际内容只来�
 
 不同主机/工具链版本的实测覆盖，以及这两份新生成boot的硬件回归仍未完成。
 不要把源码重建通过扩大为新像已上机或全部外围已修复。
+
+蓝牙后续候选可显式添加 `--bt-exit-stack --software-keystore`，参见
+[EldenKeyStore](../drivers/EldenKeyStore/README.md)。这两个阶段只消费本次源码
+构建的输出，不恢复历史v99依赖；software-keystore目前要求exit-stack同时启用。
+当前已分别执行完整基础构建和两个后续阶段，尚未重新执行含这两个选项的全量空目录命令。

@@ -22,6 +22,11 @@
       "observed_head": "282606b528b2595bc4274ea7490b62b323f35a5f"
     },
     {
+      "name": "AppleKeyStoreState",
+      "url": "https://github.com/UniXNU/AppleKeyStoreState.git",
+      "observed_head": "6ff4f11d8fdf853351f8d98e1bbe1373fb8da2e6"
+    },
+    {
       "name": "armada-tb321fu",
       "url": "https://github.com/enij90/armada-tb321fu.git",
       "observed_head": "07421c6f143925e5856d5d56ff4bb230ecbfef8f"

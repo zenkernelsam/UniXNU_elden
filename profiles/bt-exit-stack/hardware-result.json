@@ -1,0 +1,33 @@
+{
+  "candidate": "v122",
+  "image_sha256": "2ab9380b188e7a2de47aa4c7e027a174c7506fa639ef753d177581d9e415e067",
+  "session": "c899b71a9de66a99",
+  "raw_sha256": "e2d5615a433a3276457156112fb438034ed927bae411ac34026e213f4b5ab7a3",
+  "bytes": 1180739,
+  "max_drop": 0,
+  "lines": [
+    "ELDEN_KEY_EVENTS metaclass status=0",
+    "ELDEN_KEY_EVENTS registered AppleKeyStore notification service; state-client=1 key-operations=off",
+    "ELDEN_WCN hci=0 ready=1 patch=80ab segments=958",
+    "ELDEN_BT_EXIT_STACK pid=79 pc=1dcf825f0 lr=1011e1bd4 fp=16ed24de0 syscall=1",
+    "ELDEN_BT_EXIT_FRAME pid=79 index=0 return=1015fa250",
+    "ELDEN_BT_EXIT_FRAME pid=79 index=1 return=10170c614",
+    "ELDEN_BT_EXIT_FRAME pid=79 index=2 return=101595d9c",
+    "ELDEN_BT_EXIT_FRAME pid=79 index=3 return=1010e5f28",
+    "ELDEN_BT_EXIT_FRAME pid=79 index=4 return=10114e840",
+    "ELDEN_BT_EXIT_FRAME pid=79 index=5 return=101173f00",
+    "ELDEN_BT_EXIT_FRAME pid=79 index=6 return=1bac4e228",
+    "ELDEN_BT_EXIT_FRAME pid=79 index=7 return=0",
+    "ELDEN_RPC RESET_AFTER_SYNC route=sdam-v7"
+  ],
+  "inferred_daemon_base": "0x1010da000",
+  "base_is_inferred": true,
+  "read_root_keys": "0x10062dfd4",
+  "failure_path": "0x1006325e0",
+  "exact_keychain_error_unknown": true,
+  "user_observation": "Wi-Fi Off cannot enable; Bluetooth No Available. Neither wireless function accepted.",
+  "restored_android": true,
+  "explicit_sync_return": true,
+  "stock_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "discontinuities": []
+}

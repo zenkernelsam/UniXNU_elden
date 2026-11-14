@@ -1,5 +1,15 @@
 # 当前状态 · 2026-11-14
 
+v123已越过蓝牙首退：软件AppleKeyStore实机wrap/unwrap返回0，原bluetoothd
+PID79打印“Server attached, going into msg loop”。本轮1186758B日志/drop0，
+未记录原exit或launch-constraint重试；H4端仍client0/ready0，扫描配对未通。
+上游密钥算法保留，只在显式mode2的512MiB临时Data启用；当前ADT身份1是fixture，
+不代表硬件安全存储或持久密钥。全像28f234da…，typed sync回fastboot和全SHA
+恢复stock8b8e72da…通过，最终Android/root/green并请求熄屏，全部设备任务结束。
+下一步检查准确21H461发现/打开com.apple.uart.sk.bluetooth的路径。Wi-Fi仍缺
+真实WLAN/PCIe/DMA/MSI/网络接入，用户确认Off无法开启。完整Goal保持active。
+详profiles/elden-software-keystore与drivers/EldenKeyStore/README.md。
+
 源码复现修复：`build_clean.py --variant gui|bluetooth` 已分别从新克隆/空输出生成
 完整签名boot并通过审核，不再要求旧v99/旧对象或工作台路径；原始系统、固件、
 Crypto与签名材料仍需按清单提供，原生构建宿主为macOS。GUI新像df0480ac…、

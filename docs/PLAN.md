@@ -1,5 +1,11 @@
 # 下一阶段顺序
 
+当前下一步（v123）：已用官方软件AppleKeyStore越过原21H461 readRootKeys首退，
+daemon进入消息循环，但真实UART.SK H4仍client0。先核对准确17版的服务发现、
+BlueTool后续状态及control socket打开条件；不重测密钥包装已成功的事实，不跳过
+传输错误。Wi-Fi开关仍不可用，随后接实际WLAN电源/PCIe/DMA/MSI/网络回调。
+本轮已恢复Android，下一轮重新fresh准入。新功能仍接入build_clean的从零源码链。
+
 11月14日Jerry反馈的从零构建缺口已处理并实际验证：新入口tools/build_clean.py，
 GUI/蓝牙两分支均从空输出通过完整签名boot审核，旧目录读取限制抓到的汇编漏点也已修。
 文档docs/CLEAN-BUILD.md和profiles/current-build/validation为现行入口/证据；

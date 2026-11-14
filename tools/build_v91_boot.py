@@ -90,7 +90,7 @@ def main():
     for source,dest in [(a.kernel,payloads/'kernel.macho'),(a.data,payloads/'data.packed'),(a.loader,assets/'EldenPayloadLoader.efi')]:shutil.copyfile(source,dest)
     template=boot_template(bool(fbwc or hid))
     if hid:template=hid_delivery_boot.menu(hid)
-    if bt:template=bt_runtime_boot.menu()
+    if bt:template=bt_runtime_boot.menu(bt)
     wait_sample=None
     if a.wait_sample:
         if not hid or hid['profile']!='v106-rt-memory':raise ValueError('Wait capture requires v106')

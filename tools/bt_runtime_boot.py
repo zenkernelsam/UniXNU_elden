@@ -11,6 +11,12 @@ def qualify(report_path,entry_path,runtime):
     if not report_path or not entry_path or not runtime:raise ValueError('Complete v99 build, entry and runtime inputs required')
     report=json.loads(Path(report_path).read_text());entry=json.loads(Path(entry_path).read_text());runtime=Path(runtime)
     name=report.get('profile')
+    if name=='elden-software-keystore':
+        from elden_keystore_boot import qualify as qualify_keystore
+        return qualify_keystore(report_path,entry_path,runtime)
+    if name=='bt-exit-stack':
+        from bt_exit_stack_boot import qualify as qualify_exit_stack
+        return qualify_exit_stack(report_path,entry_path,runtime)
     if report.get('native_contract_matches') is True:
         from current_boot import qualify as qualify_current
         return qualify_current(report_path,entry_path,runtime)
@@ -45,7 +51,7 @@ def qualify(report_path,entry_path,runtime):
             raise ValueError('Native17 table/guard differs from compiled identity')
         result['text_fixups_hex']=table.hex()
     return result
-def menu():
+def menu(qualification=None):
     before=battery_template(framebuffer_template(True));config=tomllib.loads(before)
     first=config['entry'][0];original=first['args'];tokens=original.split()
     # This trial uses real input and Bluetooth logs, not the one-shot software
@@ -55,6 +61,11 @@ def menu():
     expected=arguments(original)
     for key in removed:expected.pop(key)
     expected['elden-wcn-power']='4'
+    if qualification and qualification.get('profile')=='elden-software-keystore':
+        slots=[i for i,t in enumerate(result) if t.partition('=')[0]=='elden-key-state']
+        if len(slots)!=1 or expected.get('elden-key-state')!='1':raise ValueError('Expected old state mode1')
+        result[slots[0]]='elden-key-state=2'
+        expected['elden-key-state']='2'
     text=before.replace('args = "'+original+'"','args = "'+' '.join(result)+'"',1)
     text=text.replace('title = "'+first['title']+'"','title = "Bluetooth runtime + battery - TEST"',1)
     new=tomllib.loads(text)
@@ -73,7 +84,7 @@ def adt(base,qualification=None):
     old=bytes.fromhex(found[0]['hex'])
     if not old.endswith(b'\0') or b'bluetoothd,' in old:raise ValueError('Prior Bluetooth fixup is not allowed')
     updated=old+FIXUP
-    if qualification and qualification['profile'] in ('v118-native17','v119-bt-exit','v120-bt-xpc','v121-bt-stderr','current-source'):
+    if qualification and qualification['profile'] in ('v118-native17','v119-bt-exit','v120-bt-xpc','v121-bt-stderr','current-source','bt-exit-stack','elden-software-keystore'):
         updated=bytes.fromhex(qualification['text_fixups_hex'])
         if not updated.startswith(old+FIXUP) or len([x for x in updated.split(b'\0') if x])!=(31 if qualification['profile']=='v120-bt-xpc' else 22):raise ValueError('Native17 table contract differs')
     found[0]['hex']=updated.hex();result.pop('sha256',None)

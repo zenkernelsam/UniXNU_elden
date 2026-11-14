@@ -17,9 +17,13 @@ def main():
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--target',choices=('kernel','boot'),default='boot')
     p.add_argument('--variant',choices=('bluetooth','gui'),default='bluetooth',help='Frozen v121 Bluetooth diagnostics or v109 8GiB GUI')
+    p.add_argument('--bt-exit-stack',action='store_true',help='Bluetooth only: bounded native first-exit call-stack diagnostic')
+    p.add_argument('--software-keystore',action='store_true',help='Bluetooth exit-stack candidate: software key operations on volatile Data')
     p.add_argument('--jobs',type=int,choices=range(1,9),default=4)
     p.add_argument('--resume',action='store_true',help='Resume completed stages of this exact source/input run')
     a=p.parse_args()
+    if a.bt_exit_stack and a.variant!='bluetooth':raise ValueError('--bt-exit-stack requires the Bluetooth variant')
+    if a.software_keystore and not a.bt_exit_stack:raise ValueError('--software-keystore requires --bt-exit-stack')
     if sys.platform!='darwin':raise SystemExit('Native build requires macOS with Xcode/iPhoneOS SDK. Windows/WSL can inspect sources and flash separately.')
     config=a.inputs.resolve();data=read(config);out=a.output.resolve()
     def input_path(name):
@@ -38,7 +42,8 @@ def main():
         for f in (ROOT/folder).rglob('*'):
             if f.is_file() and f.suffix in ('.py','.json','.c','.cpp','.h','.inc','.s','.S','.patch','.inf','.dsc','.fdf','.toml') and '__pycache__' not in f.parts:
                 sources[f.relative_to(ROOT).as_posix()]=sha(f)
-    identity={'sources':sources,'inputs':{n:str(v) for n,v in inputs.items()},'config_sha256':sha(config),'target':a.target,'variant':a.variant}
+    identity={'sources':sources,'inputs':{n:str(v) for n,v in inputs.items()},'config_sha256':sha(config),'target':a.target,'variant':a.variant,'bt_exit_stack':a.bt_exit_stack}
+    identity['software_keystore']=a.software_keystore
     stamp=hashlib.sha256(json.dumps(identity,sort_keys=True).encode()).hexdigest();journal=out/'build-state.json'
     if out.exists():
         if not a.resume or not journal.exists():raise ValueError('Use a new output, or explicitly resume this run')
@@ -80,13 +85,20 @@ def main():
     generated_args=['--generated',out/'generated'] if a.variant=='bluetooth' else []
     stage('current-units',script('build_current_units.py','--variant',a.variant,'--xnu-source',out/'source/xnu','--dependencies',deps,'--icon-header',out/'agent/EldenIconCpuPayload.h','--nvt-header',out/'nvt/EldenNvtFirmware.h',*generated_args,'--llvm',inputs['llvm'],'--output',out/'units','--jobs',a.jobs),'units/result.json')
     stage('link',script('link_current_kernel.py','--variant',a.variant,'--xnu-objects',out/'xnu/build','--native-archives',out/'native/archives','--units',out/'units','--prelink-repository',deps/'XnuPrelink','--original-kernelcache',inputs['original_kernelcache'],'--output',out/'linked'),'linked/result.json')
+    kernel_folder=out/'linked'
+    if a.bt_exit_stack:
+        stage('bt-exit-stack',script('build_bt_exit_stack.py','--clean-build',out,'--original-kernelcache',inputs['original_kernelcache'],'--llvm',inputs['llvm'],'--output',out/'exit-stack'),'exit-stack/result.json')
+        kernel_folder=out/'exit-stack'
+    if a.software_keystore:
+        stage('software-keystore',script('build_elden_keystore.py','--clean-build',out,'--exit-stack',out/'exit-stack','--original-kernelcache',inputs['original_kernelcache'],'--llvm',inputs['llvm'],'--output',out/'keystore'),'keystore/result.json')
+        kernel_folder=out/'keystore'
     if a.target=='boot':
         stage('firmware',script('build_v91_firmware.py','--mu-root',inputs['mu_repository'],'--unixnu-root',inputs['unixnu_repository'],'--crypto-path',inputs['crypto'],'--llvm',inputs['llvm'],'--output',out/'firmware','--jobs',a.jobs),'firmware/result.json')
         stage('loader',script('build_v91_payload_loader.py','--mu-root',out/'firmware/project/third_party/mu_wide_platforms','--unixnu-root',out/'firmware/project/third_party/UniXNU','--llvm',inputs['llvm'],'--output',out/'loader'),'loader/result.json')
         stage('data',script('build_v91_data_seed.py','--os-image',inputs['os_image'],'--output',out/'data'),'data/result.json')
-        ep={'candidate_sha256':read(out/'linked/result.json')['kernel_sha256'],'original_executable_sha256':read(ROOT/'profiles/v91/image-build/plan.json')['prelink']['original_executable_sha256']};(out/'entry-plan.json').write_text(json.dumps(ep,indent=2)+'\n')
-        stage('entry',script('prepare_v91_entry.py','--kernel',out/'linked/kernel.macho','--plan',out/'entry-plan.json','--clang',inputs['llvm']/'clang','--output',out/'entry'),'entry/result.json')
-        variant_args=['--wcn-report',out/'linked/result.json','--bt-runtime',out/'generated/runtime'] if a.variant=='bluetooth' else ['--hid-report',out/'linked/result.json']
+        ep={'candidate_sha256':read(kernel_folder/'result.json')['kernel_sha256'],'original_executable_sha256':read(ROOT/'profiles/v91/image-build/plan.json')['prelink']['original_executable_sha256']};(out/'entry-plan.json').write_text(json.dumps(ep,indent=2)+'\n')
+        stage('entry',script('prepare_v91_entry.py','--kernel',kernel_folder/'kernel.macho','--plan',out/'entry-plan.json','--clang',inputs['llvm']/'clang','--output',out/'entry'),'entry/result.json')
+        variant_args=['--wcn-report',kernel_folder/'result.json','--bt-runtime',out/'generated/runtime'] if a.variant=='bluetooth' else ['--hid-report',kernel_folder/'result.json']
         stage('boot',script('build_v91_boot.py','--portable-fat','--kernel',out/'entry/kernel.macho','--entry-report',out/'entry/result.json','--fd',out/'firmware/UEFI.fd','--loader',out/'loader/EldenPayloadLoader.efi','--data',out/'data/data.packed','--data-report',out/'data/result.json','--library',out/'icon/EldenIconCpuMode.dylib','--agent',out/'agent/iconservicesagent','--stock-boot',inputs['stock_boot'],'--avbtool',inputs['avbtool'],'--key',inputs['signing_key'],'--clang',inputs['llvm']/'clang',*variant_args,'--output',out/'boot'),'boot/result.json')
         stage('boot-audit',script('audit_v91_boot.py','--image',out/'boot/boot-signed.img','--entry-kernel',out/'entry/kernel.macho','--entry-report',out/'entry/result.json','--stock-boot',inputs['stock_boot'],'--parent-vbmeta',inputs['parent_vbmeta'],'--data-report',out/'data/result.json',*variant_args,'--output',out/'boot/audit.json'),'boot/audit.json')
     state['complete']=True;save();print('Completed '+a.target+'; no device operation performed',flush=True)

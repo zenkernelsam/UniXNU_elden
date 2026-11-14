@@ -1,0 +1,189 @@
+{
+  "candidate": "v123",
+  "image_sha256": "28f234dac478f28f7edf126d6cc17f11ed20229e07efd34750b9e01977712d09",
+  "session": "c6e4592eac0c38f6",
+  "bytes": 1186758,
+  "raw_sha256": "5f82ac6c97caa88a9e44062e14cf2efa9a4410a0916e5cf9bb20ad672ab8c39b",
+  "max_drop": 0,
+  "discontinuities": [],
+  "key_operations": [
+    {
+      "call": 1,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 2,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 3,
+      "selector": 11,
+      "result": "0"
+    },
+    {
+      "call": 4,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 5,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 6,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 7,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 8,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 9,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 10,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 11,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 12,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 13,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 14,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 15,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 16,
+      "selector": 11,
+      "result": "0"
+    },
+    {
+      "call": 17,
+      "selector": 11,
+      "result": "0"
+    },
+    {
+      "call": 18,
+      "selector": 11,
+      "result": "0"
+    },
+    {
+      "call": 19,
+      "selector": 11,
+      "result": "0"
+    },
+    {
+      "call": 20,
+      "selector": 11,
+      "result": "0"
+    },
+    {
+      "call": 21,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 22,
+      "selector": 11,
+      "result": "0"
+    },
+    {
+      "call": 23,
+      "selector": 11,
+      "result": "0"
+    },
+    {
+      "call": 24,
+      "selector": 11,
+      "result": "0"
+    },
+    {
+      "call": 25,
+      "selector": 11,
+      "result": "0"
+    },
+    {
+      "call": 26,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 27,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 28,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 29,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 30,
+      "selector": 10,
+      "result": "0"
+    },
+    {
+      "call": 31,
+      "selector": 11,
+      "result": "0"
+    },
+    {
+      "call": 32,
+      "selector": 10,
+      "result": "0"
+    }
+  ],
+  "key_log_cap": 32,
+  "lines": [
+    "ELDEN_KEY_EVENTS registered AppleKeyStore notification service; state-client=2 key-operations=software",
+    "ELDEN_WCN hci=0 ready=1 patch=80ab segments=958",
+    "ELDEN_BT_STDERR pid=79 line=7 iov=0 bytes=66 copied=66 error=0 text=com.apple.server.bluetooth: Server attached, going into msg loop.",
+    "ELDEN_BT_HOST live client=0 ready=0 out=0 up=0 bad=0 pending=0",
+    "ELDEN_BT_HOST live client=0 ready=0 out=0 up=0 bad=0 pending=0",
+    "ELDEN_WCN stop=0 uart-close=0 state=4 boot-shared-votes-retained=1",
+    "ELDEN_RPC RESET_AFTER_SYNC route=sdam-v7"
+  ],
+  "bt_exit_observer_count": 0,
+  "bluetoothd_fault_lines": [],
+  "h4_client_still_zero": true,
+  "wireless_accepted": false,
+  "recovery_complete": true,
+  "explicit_sync_return": true,
+  "stock_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "next": "Match actual iOS17 userland transport discovery/open to native H4 service; no scan or pairing yet."
+}

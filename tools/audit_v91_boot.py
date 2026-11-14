@@ -99,7 +99,7 @@ def main():
     if hid and json.loads(a.entry_report.read_text())['derivative_sha256']!=sha(kernel):raise ValueError('HID entry report mismatch')
     if bt:
         if json.loads(a.entry_report.read_text())['derivative_sha256']!=sha(kernel):raise ValueError('v99 entry mismatch')
-        template=bt_runtime_boot.menu()
+        template=bt_runtime_boot.menu(bt)
     wait_sample=None
     if a.wait_sample:
         if not hid or hid['profile']!='v106-rt-memory':raise ValueError('Wait capture requires v106')
