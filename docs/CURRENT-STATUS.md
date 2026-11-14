@@ -1,5 +1,15 @@
 # 当前状态 · 2026-11-14
 
+最新[v117](../profiles/v117-hci-debug/README.md)已实机完成外围固件、普通蓝牙958段、
+HCI Reset及身份/版本/地址检查，`hci=0 ready=1 patch=80ab`，真实H4 host已发布。
+原21H461 bluetoothd尚未连入，12次在file offset0x2f2fc0/FAR0x2a8崩溃；扫描配对未通。
+v115按本机stock HAL实现最多10次/10ms的FD唤醒，v116定位Reset前的保留调试ACL，
+v117只过滤完整且长度一致的0x2edc调试帧。所有状态/身份/超时检查保留。
+最后日志1164295B/drop25，typed sync、实际fastboot、全SHA恢复stock通过。
+当前Android/root/green/boot_completed，已请求熄屏；所有本轮任务终止。
+下一步沿sheng成功路线适配准确iOS17机型对象/标准HCI分支，不搬iOS27偏移。
+下方v114是此前失败窗口，8GiB GUI v109继续独立冻结，不混写蓝牙分支的6GiB。
+
 蓝牙独立分支最新v114：SPMI总线串行化已实机跨过ADC/WCN同时失败，v113曾完成外围
 固件/激活并收到真实HCI版本包；v114已修长度字段检查，但初次唤醒仍不稳定，尚未联网/配对。
 v112有GIC地址笔误已撤回；各像均已恢复stock Android，当前未运行设备任务。

@@ -12,9 +12,9 @@ def qualify(report_path,entry_path,runtime):
     report=json.loads(Path(report_path).read_text());entry=json.loads(Path(entry_path).read_text());runtime=Path(runtime)
     name=report.get('profile')
     if name=='v112-uart-route':raise ValueError('Withdrawn v112 has an incorrect GIC MMIO base; use v113 or later')
-    if name not in ('v99-bt-runtime','v101-bt-clock','v102-bt-wake','v103-bt-version','v110-bt-fifo','v111-spmi-gate','v112-uart-route','v113-uart-gic','v114-hci-length'):raise ValueError('Unsupported Bluetooth runtime profile')
+    if name not in ('v99-bt-runtime','v101-bt-clock','v102-bt-wake','v103-bt-version','v110-bt-fifo','v111-spmi-gate','v112-uart-route','v113-uart-gic','v114-hci-length','v115-ibs-wake','v116-hci-reset','v117-hci-debug'):raise ValueError('Unsupported Bluetooth runtime profile')
     profile=ROOT/'profiles'/name/'plan.json';plan=json.loads(profile.read_text())
-    if name in ('v111-spmi-gate','v112-uart-route','v113-uart-gic','v114-hci-length'):
+    if name in ('v111-spmi-gate','v112-uart-route','v113-uart-gic','v114-hci-length','v115-ibs-wake','v116-hci-reset','v117-hci-debug'):
         audit=json.loads((Path(report_path).parent/'kernel-audit.json').read_text())
         core_ok=audit['accepted_static'] and audit['one_gate_state'] and audit['core_filelist_equal'] and audit['kernel_sha256']==report['kernel_sha256'] and audit['profile_sha256']==sha(profile)
     else:core_ok=report.get('recompiled_core_objects')==2

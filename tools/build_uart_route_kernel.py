@@ -10,7 +10,7 @@ def write(p,v):p.write_text(json.dumps(v,indent=2)+'\n')
 def main():
     if sys.flags.optimize:raise SystemExit('Assertions required')
     ap=argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('--profile',choices=('v112-uart-route','v113-uart-gic','v114-hci-length'),default='v112-uart-route')
+    ap.add_argument('--profile',choices=('v112-uart-route','v113-uart-gic','v114-hci-length','v115-ibs-wake','v116-hci-reset','v117-hci-debug'),default='v112-uart-route')
     for n in ('baseline','uart-build','prelink-repository','original-kernelcache','llvm','output'):ap.add_argument('--'+n,type=Path,required=True)
     a=ap.parse_args();base=a.baseline.resolve();old=a.uart_build.resolve();out=a.output.resolve();pp=ROOT/'profiles'/a.profile/'plan.json';plan=read(pp)
     if a.profile=='v113-uart-gic':
@@ -25,7 +25,7 @@ def main():
     for n,h in plan['sources'].items():
         p=pp.parent/'sources'/n;assert sha(p)==h;shutil.copyfile(p,src/n)
     units=plan.get('replacement_units',['UartPlatform','UartBackend'])
-    assert units in (['UartPlatform','UartBackend'],['Wcn7861Hci'])
+    assert units in (['UartPlatform','UartBackend'],['Wcn7861Hci'],['Wcn7861Startup'],['WcnPowerNative'])
     for n in units:
         command=list(prior[n]['command']);oldroot=str(old/'source');newroot=str(src);command=[x.replace(oldroot,newroot) for x in command];obj=out/(n+'.o');command[command.index('-o')+1]=str(obj);cwd=out
         if '-ivfsoverlay' in command:
@@ -44,7 +44,7 @@ def main():
         assert not re.search(r'^\s*[0-9a-f]+:\s+[0-9a-f]{8}\s+.*\b[qvdshb]\d+(?:\b|\.)',asm,re.M)
         assert not any(n.endswith('/__mod_init_func') for n in sections(obj))
         exports={n for n,v in global_symbols(obj).items() if v[0]&0x0e};assert exports==set(prior[n]['exports'])
-        records[n]={'sha256':sha(obj),'source_sha256':sha(src/(n+('.cpp' if n=='UartBackend' else '.c'))),'command':command}
+        records[n]={'sha256':sha(obj),'source_sha256':sha(src/(n+('.cpp' if n in ('UartBackend','WcnPowerNative') else '.c'))),'command':command}
     link=read(base/'link-command.json');paths=[v.split(',',2)[2] for v in link if v.startswith('-Wl,-force_load,') and v.endswith('/libEldenBluetooth.a')];assert len(paths)==1;ar=Path(paths[0]);folder=out/'bluetooth';folder.mkdir();members={};names=[n for n in subprocess.check_output(['/usr/bin/ar','t',str(ar)],text=True).splitlines() if not n.startswith('__.SYMDEF')]
     assert len(set(names))==len(names)
     for n in names:

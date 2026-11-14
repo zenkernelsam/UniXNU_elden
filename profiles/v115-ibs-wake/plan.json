@@ -1,0 +1,17 @@
+{
+  "profile": "v115-ibs-wake",
+  "baseline": "v114-hci-length",
+  "baseline_kernel_sha256": "0871edd06c9e560ed20f21b5419778b2bd5a06cf023eb98e3c4f0732b0099ced",
+  "baseline_native_sha256": "ce9d76aca631be6ceb9aaba8bef29c2ae75acb14f7fa51022f22a95577716eff",
+  "patcher_sha256": "b0208f29272ceb124614fc98ea64a917b8d2712c56e3f41a226d41298df5cdc3",
+  "runtime_helper_sha256": "464432d5308fa0998f9b25ed77ff0c2b9a7751377dc0cc992679a32dc7cc571e",
+  "runtime_header_sha256": "d0e110db4b2bc7cdc85f19acadb681d316b05c68e56bb4edcbb201e2d57a93e0",
+  "runtime_trust_sha256": "a6758681cd8ce0f364411bf65fc1207514b3470b0c16699e2c1a0d12f22a2c65",
+  "scope": "Stock bounded ten FD at10ms within100ms; real FC required, no command retry.",
+  "sources": {
+    "Wcn7861Startup.c": "ac5164ba89255fef16f4661b1a35bf14c4ba47cc58c13ec56b9eb29f6ccdeee3"
+  },
+  "replacement_units": [
+    "Wcn7861Startup"
+  ]
+}

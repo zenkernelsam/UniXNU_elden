@@ -1,0 +1,19 @@
+{
+  "source": {
+    "path": "/vendor/lib64/hw/android.hardware.bluetooth@1.0-impl-qti.so",
+    "bytes": 1514472,
+    "sha256": "5139a008d134a52851b00abf3f3793234694ad4c9cc93ab1c13b9b6e4a334ef3"
+  },
+  "symbol": "PeriPatchDLManager::WakeUpSoC",
+  "start": "0xee978",
+  "end": "0xeec58",
+  "function_sha256": "4b17226c80aa9e2cf41e999dd55342c81a92f55387846e3c58cdebfd8d17cb80",
+  "anchors": {
+    "0xeea50": "cmp w20,#10; bounded ten attempts",
+    "0xeea9c": "WriteSafely one FD byte",
+    "0xeeac4": "10000us select timeout",
+    "0xeebec": "stock exhausts to return0, deliberately NOT copied"
+  },
+  "port_policy": "Repeat only FD up to10 within100ms; real FC required; failed write/unexpected frame or timeout poison session. No firmware command retry.",
+  "hardware_proof": "Original HAL code only; no claim that repeated FD was observed in this boot log."
+}

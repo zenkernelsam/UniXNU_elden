@@ -1,0 +1,18 @@
+{
+  "profile": "v116-hci-reset",
+  "baseline": "v115-ibs-wake",
+  "baseline_kernel_sha256": "bfc310226e28874969a1ace23e3f71bc6ff4ff391bef1d62f38a148228e8c6fa",
+  "baseline_native_sha256": "fbe3da429b5803e373ef56318d76ea4b8b4422ea50839cefbf5ebad1e1d61db1",
+  "patcher_sha256": "b0208f29272ceb124614fc98ea64a917b8d2712c56e3f41a226d41298df5cdc3",
+  "runtime_helper_sha256": "464432d5308fa0998f9b25ed77ff0c2b9a7751377dc0cc992679a32dc7cc571e",
+  "runtime_header_sha256": "d0e110db4b2bc7cdc85f19acadb681d316b05c68e56bb4edcbb201e2d57a93e0",
+  "runtime_trust_sha256": "a6758681cd8ce0f364411bf65fc1207514b3470b0c16699e2c1a0d12f22a2c65",
+  "scope": "Record existing failed HCI frame and cursor at reset, no protocol/power change.",
+  "sources": {
+    "WcnPowerNative.cpp": "5c16106e90622150686b90706fcfc8c674cf3c4d563ed782fd7d57fc864e2c72",
+    "TransactionGate.h": "0edeb1a1db096e3cff96a2b68275964c1d4035a969bab06365bdbc46804247d2"
+  },
+  "replacement_units": [
+    "WcnPowerNative"
+  ]
+}

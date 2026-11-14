@@ -1,0 +1,17 @@
+{
+  "image_sha256": "29b9c68e891f533597daab0dd6d9f51459c4fd91149a0065a26918e12069d05e",
+  "session": "962862262d5814b5",
+  "raw_sha256": "bd5f206e8cf5ea4853156ff78043935c4a225f0d40ee6676ccc37ba6c96b18ef",
+  "bytes": 1156422,
+  "drop_max": 3,
+  "peripheral_complete": true,
+  "hci_version_passed": true,
+  "segments": 958,
+  "failure_stage": 19,
+  "failure": -71,
+  "uart_tx": 318363,
+  "uart_rx": 722,
+  "reset_after_sync": true,
+  "stock_restore_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "limits": "Full patch/NVM segment loop completed, reset-stage protocol failed. No post-reset version, HCI-ready or pairing."
+}

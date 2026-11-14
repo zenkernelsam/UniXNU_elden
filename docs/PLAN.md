@@ -52,6 +52,13 @@ CPU 同时记录实际上线、调度/IRQ 与负载，UFS 记录真实 I/O 延�
 
 ## 2. 完成基本外设
 
+v117已实机跨过完整HCI初始化并发布H4 host，下一项是准确21H461 bluetoothd用户态。
+目前12次fault均为file offset0x2f2fc0、FAR0x2a8：单例机型对象未构造，尚无client连接。
+先核原厂二进制的factory/constructor与标准HCI注册，再依sheng的已成功type0方法适配，
+保持真实BlueTool、原状态/能力报告；不能用空返回或假能力跳过初始化。
+本阶段无需再做相同固件下载冒烟。见profiles/v115-ibs-wake至v117-hci-debug。
+8GiB GUI分支独立保留；触控已实指打开设置，不因蓝牙推进而重置已有验收。
+
 最新v111已完成SPMI共用锁整核与真机：54次ADC读取、温控武装与WCN电源通过。
 v112的GIC地址笔误已撤回，v113按DTS修正并启用GENI FIFO路由，外围固件/激活完成一次。
 已捕获真正HCI版本包，v114修正长度字节12被误拒绝；host通过但本轮又停最初IBS唤醒。

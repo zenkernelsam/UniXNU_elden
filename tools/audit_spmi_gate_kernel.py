@@ -10,7 +10,7 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
     if sys.flags.optimize:raise SystemExit('Assertions required')
     ap=argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('--profile',choices=('v111-spmi-gate','v112-uart-route','v113-uart-gic','v114-hci-length'),default='v111-spmi-gate')
+    ap.add_argument('--profile',choices=('v111-spmi-gate','v112-uart-route','v113-uart-gic','v114-hci-length','v115-ibs-wake','v116-hci-reset','v117-hci-debug'),default='v111-spmi-gate')
     for n in ('build','baseline','components','core','llvm','output'):ap.add_argument('--'+n,type=Path,required=True)
     a=ap.parse_args();b=a.build;c=a.components;r=json.loads((b/'result.json').read_text());pp=ROOT/'profiles'/a.profile/'plan.json';p=json.loads(pp.read_text())
     assert r['profile_sha256']==sha(pp)
@@ -24,7 +24,7 @@ def main():
         for n,v in ar['members'].items():
             data=subprocess.check_output(['/usr/bin/ar','p',ar['after'],n]);assert hashlib.sha256(data).hexdigest()==v['after']
             if n not in expected:assert v['before']==v['after']
-    if a.profile in ('v112-uart-route','v113-uart-gic','v114-hci-length'):
+    if a.profile in ('v112-uart-route','v113-uart-gic','v114-hci-length','v115-ibs-wake','v116-hci-reset','v117-hci-debug'):
         assert {n for n,v in r['members'].items() if v['before']!=v['after']}==set(n+'.o' for n in p.get('replacement_units',['UartPlatform','UartBackend']))
         for n,v in r['members'].items():
             data=subprocess.check_output(['/usr/bin/ar','p',str(b/'bluetooth/libEldenBluetooth.a'),n]);assert hashlib.sha256(data).hexdigest()==v['after']

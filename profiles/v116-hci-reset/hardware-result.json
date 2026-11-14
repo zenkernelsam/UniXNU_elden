@@ -1,0 +1,13 @@
+{
+  "image_sha256": "cfa09f77eb31756497b60c46ca0a1d89d3eded28e2913becc043f612653dc53f",
+  "session": "33eda9b1df4f092f",
+  "raw_sha256": "c734937c1aea320ef11984c92866663cb6b28bf9c694fc2c3824629525893f60",
+  "bytes": 1154517,
+  "drop_max": 30,
+  "failure_record": [
+    "ELDEN_WCN hci-failure stage=19 have=41 need=41 skip=0 queued=0 sleeping=0 acks=57 raw=02dc2e24002000ff0000215906010009000000140000000a7fddce0000000041"
+  ],
+  "reset_after_sync": true,
+  "stock_restore_sha256": "8b8e72dad85a65d3bf6fc2c6b2a88064d0487e4696ae578e9fd4c46a33565890",
+  "finding": "Complete41-byte reserved debug ACL handle0x2edc is mistaken for HCI Reset completion. Logged prefix only32B; not claiming full payload captured."
+}
