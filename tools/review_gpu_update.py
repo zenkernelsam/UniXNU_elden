@@ -21,8 +21,14 @@ def main():
     p.add_argument('--fetch-selected',action='store_true')
     a=p.parse_args();original=a.lock.read_bytes();lock=json.loads(original)
     out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);rows=[]
-    for name,spec in lock['repositories'].items():
-        repo=a.references/spec['directory'];ref=spec['ref']
+    entries=lock.get('repositories',lock.get('sources',{}))
+    if not entries:raise ValueError('No GPU source entries')
+    if 'runtime' in lock:
+        # Observe the requested development branch, but leave its compiled pin
+        # paired with the exact official builder/patch metadata in the proposal.
+        entries=dict(entries,runtime=dict(lock['runtime'],directory=lock['runtime'].get('directory','metal2vulkan-development')))
+    for name,spec in entries.items():
+        repo=a.references/spec['directory'];ref=spec.get('ref','refs/heads/main')
         if not ref.startswith('refs/heads/'):raise ValueError('Named branch required')
         remote='refs/remotes/origin/'+ref[len('refs/heads/'):]
         row={'component':name,'branch':ref,'before':spec['commit']}
@@ -43,7 +49,10 @@ def main():
                 header=git(repo,'show',new+':AdrenoHfiStartup.h')
                 row['has_a8xx_fields']=all(x in header for x in (b'AdrenoHfiPerfA8xx',b'performance_table',b'gpu_dependency_votes'))
                 if not row['has_a8xx_fields']:raise ValueError('A8xx HFI interface missing; cannot substitute generic main')
-            spec['commit']=new
+            if name=='runtime':
+                row['pin_retained_for_paired_upgrade']=True
+                row['patch_and_builder_review_required']=True
+            else:spec['commit']=new
         except Exception as e:row.update(success=False,error=str(e))
         if head!=git(repo,'rev-parse','HEAD') or status!=git(repo,'status','--porcelain=v1','--untracked-files=all'):
             raise RuntimeError('Reference changed during review: '+name)
@@ -51,6 +60,10 @@ def main():
     if original!=a.lock.read_bytes():raise RuntimeError('Active lock changed during review')
     report={'components':rows,'active_lock_changed':False,'candidate_built':False,'device_access':False,
             'review_required':True,'passed':all(x['success'] for x in rows)}
+    if 'runtime' in lock:
+        report['full_chain_review']=['official compatibility_inputs and runtime patch series must advance together',
+            'RuntimeSource/FrameSource exact-source anchors require review for new providers',
+            'full native/Metal/Rust/Turnip build and ABI checks required before accepting proposal']
     (out/'review.json').write_text(json.dumps(report,indent=2)+'\n')
     if report['passed']:(out/'proposal.json').write_text(json.dumps(lock,indent=2)+'\n')
     print(json.dumps({'passed':report['passed'],'changed':sum(x.get('changed',False) for x in rows),'active_lock_changed':False}))

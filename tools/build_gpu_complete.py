@@ -1,6 +1,6 @@
 """Build the entire Elden A830 offline chain with a source-built fixed baseline.
 
-Requires macOS/Xcode, the explicit clean-build inputs, LLVM20 plus llvm-as>=21,
+Requires macOS/Xcode, the explicit clean-build inputs and LLVM tool directory,
 Rust1.98 and a private setup_gpu_host.py prefix. Outputs must be new. The base
 build may resume only through build_clean's identity/proof checks. No device IO.
 """
@@ -49,8 +49,10 @@ def main():
             raise ValueError('Prepared lock differs: ' + name)
     calls = []
     env = dict(os.environ)
+    inputs = read(args.inputs)
+    llvm = Path(inputs['llvm'])
     env['PATH'] = ':'.join(map(str, [args.shader_prefix/'venv/bin', args.shader_prefix/'install/bin',
-                                     Path.home()/'.cargo/bin', Path('/usr/local/opt/llvm/bin')])) + ':' + env['PATH']
+                                     Path.home()/'.cargo/bin', llvm])) + ':' + env['PATH']
     env['CARGO_BUILD_JOBS'] = '4'
     env['PYTHONPYCACHEPREFIX'] = str(out/'pycache')
     def run(name, command, cwd=None):
@@ -67,7 +69,8 @@ def main():
     def tool(name, *arguments):
         return [sys.executable, ROOT/'tools'/name, *arguments]
     run('baseline', [sys.executable, source/'tools/build_clean.py', *BASE_FLAGS,
-                     '--inputs', args.inputs.resolve(), '--output', base, '--target', 'kernel', '--jobs', '4'], source)
+                     '--inputs', args.inputs.resolve(), '--output', base, '--target', 'kernel', '--jobs', '4',
+                     *(['--resume'] if base.exists() else [])], source)
     if not read(base/'build-state.json')['complete']:
         raise ValueError('Baseline incomplete')
     tree = out/'tree'
@@ -84,8 +87,6 @@ def main():
     run('derive', tool('prepare_gpu_runtime.py', '--tree', tree, '--output', out/'derived'))
     run('native-core', tool('build_gpu_native.py', '--tree', tree, '--base-native', base/'native',
                            '--xnu-source', base/'source/xnu', '--output', out/'core', '--jobs', '4'))
-    inputs = read(args.inputs)
-    llvm = Path(inputs['llvm'])
     run('native-runtime', tool('build_gpu_runtime.py', '--tree', tree, '--derived', out/'derived',
         '--core-build', out/'core', '--base-native', base/'native', '--opps', out/'opps',
         '--firmware', out/'firmware', '--llvm', llvm, '--output', out/'runtime'))
@@ -101,7 +102,12 @@ def main():
         '--core', out/'core', '--runtime', out/'runtime', '--recovery', out/'recovery', '--llvm', llvm,
         '--original-kernelcache', inputs['original_kernelcache'], '--output', out/'linked'))
     run('abi', tool('audit_gpu_link.py', '--linked', out/'linked', '--prelink-tool', base/'ufs-wait-trial/prelink-tool', '--output', out/'gpu-abi.json'))
+    run('rust-manifest', [sys.executable, tree/'scripts/build-adreno-metal-bridge.py', '--target', 'ios', '--manifest-only'])
+    cargo_lock = tree/'build/adreno-metal-bridge/Cargo.lock'
+    shutil.copyfile(ROOT/'config/gpu-cargo.lock', cargo_lock)
     run('rust', [sys.executable, tree/'scripts/build-adreno-metal-bridge.py', '--target', 'ios'])
+    if sha(cargo_lock) != sha(ROOT/'config/gpu-cargo.lock'):
+        raise ValueError('Cargo dependency lock changed during build')
     run('turnip', [sys.executable, tree/'scripts/build-turnip-darwin.py', '--target', 'ios'])
     run('metal', tool('build_gpu_metal.py', '--tree', tree, '--turnip-tree', tree, '--output', out/'metal'))
     plan = {'candidate_sha256': sha(out/'linked/kernel.macho'),
