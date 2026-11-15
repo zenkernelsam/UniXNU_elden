@@ -5,7 +5,7 @@ Rust1.98 and a private setup_gpu_host.py prefix. Outputs must be new. The base
 build may resume only through build_clean's identity/proof checks. No device IO.
 """
 from pathlib import Path
-import argparse, hashlib, json, os, shutil, subprocess, sys, time
+import argparse, hashlib, json, os, re, shlex, shutil, subprocess, sys, time
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE_REV = 'a13e5087a8651b3185a0855eacf94923a21e97eb'
@@ -27,13 +27,17 @@ def main():
         parser.add_argument('--' + key, type=Path, required=True)
     parser.add_argument('--mesa-cache', type=Path)
     parser.add_argument('--runtime-cache', type=Path)
+    parser.add_argument('--bison', type=Path, help='Bison3.8+; Apple system Bison is too old')
+    parser.add_argument('--resume-userspace', action='store_true', help='Resume this same run after native/ABI/Rust succeeded; verify retained inputs and objects')
     args = parser.parse_args()
     if sys.platform != 'darwin':
         raise ValueError('Full native build requires macOS/Xcode')
     out = args.output.resolve()
-    out.mkdir(parents=True, exist_ok=False)
+    if args.resume_userspace and not out.is_dir():
+        raise ValueError('Resume requires the existing complete-build directory')
+    out.mkdir(parents=True, exist_ok=args.resume_userspace)
     logs = out/'logs'
-    logs.mkdir()
+    logs.mkdir(exist_ok=args.resume_userspace)
     base = args.base_build.resolve()
     source = args.baseline_source.resolve()
     revision = subprocess.check_output(['git', '-C', source, 'rev-parse', 'HEAD'], text=True).strip()
@@ -47,20 +51,73 @@ def main():
     for key, name in [('source_lock_sha256', 'gpu-build.lock.json'), ('firmware_lock_sha256', 'gpu-firmware.lock.json')]:
         if prepared[key] != hashlib.sha256((ROOT/'config'/name).read_bytes().replace(b'\r\n', b'\n')).hexdigest():
             raise ValueError('Prepared lock differs: ' + name)
-    calls = []
+    calls = read(out/'stages.json') if args.resume_userspace else []
+    completed = {row['stage']: row for row in calls if row['returncode'] == 0}
+    if args.resume_userspace:
+        for name in ('baseline', 'dependencies', 'derive', 'native-core', 'native-runtime', 'recovery',
+                     'frame-test', 'runtime-test', 'CallGate-test', 'Quiesce-test', 'link', 'abi', 'rust'):
+            if name not in completed:
+                raise ValueError('Required completed stage missing: '+name)
+        for rel, row in read(out/'tree/elden-source-manifest.json')['files'].items():
+            if sha(out/'tree'/rel) != row['sha256']:
+                raise ValueError('Retained source changed: '+rel)
+        for name, row in read(out/'core/result.json')['sources'].items():
+            if sha(out/'core'/(Path(name).stem+'.o')) != row['object_sha256']:
+                raise ValueError('Retained core object changed: '+name)
+        for name, row in read(out/'runtime/result.json')['units'].items():
+            obj = out/'runtime'/('EldenGpuFirmware.o' if name == 'firmware' else Path(name).stem+'.o')
+            if sha(obj) != row['sha256' if name == 'firmware' else 'object_sha256']:
+                raise ValueError('Retained runtime object changed: '+name)
+        for folder, field, filename in [('recovery','object_sha256','ShengUfs.o'), ('linked','native_sha256','native.macho'), ('linked','kernel_sha256','kernel.macho')]:
+            if sha(out/folder/filename) != read(out/folder/'result.json')[field]:
+                raise ValueError('Retained linked/recovery artifact changed')
+        if read(out/'gpu-abi.json')['kernel_sha256'] != sha(out/'linked/kernel.macho'):
+            raise ValueError('Retained ABI audit differs')
+        if sha(out/'tree/build/adreno-metal-bridge/Cargo.lock') != sha(ROOT/'config/gpu-cargo.lock'):
+            raise ValueError('Retained Cargo lock differs')
+        # The failed Meson configuration cached Apple's old Bison path. Preserve
+        # that attempt and start only Turnip's build directory afresh.
+        if 'turnip' not in completed:
+            failed = out/'attempts'/('turnip-'+str(len(list((out/'attempts').glob('*'))) if (out/'attempts').exists() else 0))
+            failed.mkdir(parents=True)
+            old = out/'tree/build/mesa-tu-ios'
+            if old.exists():
+                if not old.resolve().is_relative_to(out) or not failed.resolve().is_relative_to(out):
+                    raise ValueError('Build archive escaped output')
+                shutil.move(str(old), str(failed/'mesa-tu-ios'))
+            for p in (out/'tree/.cache').glob('mesa-tu-ios-*.log'):
+                shutil.copyfile(p, failed/p.name)
     env = dict(os.environ)
     inputs = read(args.inputs)
     llvm = Path(inputs['llvm'])
+    bison = args.bison or next((p for p in [Path('/usr/local/opt/bison/bin/bison'), Path('/opt/homebrew/opt/bison/bin/bison')] if p.is_file()), None)
+    if not bison:
+        raise ValueError('Supply --bison with Bison3.8+; no system tool is modified')
+    version = subprocess.check_output([str(bison), '--version'], text=True).splitlines()[0]
+    number = re.search(r'\b(\d+)\.(\d+)(?:\.\d+)?\b', version)
+    if not number or tuple(map(int, number.groups())) < (3, 8):
+        raise ValueError('Bison3.8+ required: '+version)
+    # Only the legacy grammar deprecation is suppressed, as in the qualified
+    # prior Turnip build. All parser error/counterexample diagnostics remain.
+    env['BISON'] = shlex.join([str(bison.resolve()), '-Wno-deprecated'])
     env['PATH'] = ':'.join(map(str, [args.shader_prefix/'venv/bin', args.shader_prefix/'install/bin',
                                      Path.home()/'.cargo/bin', llvm])) + ':' + env['PATH']
     env['CARGO_BUILD_JOBS'] = '4'
     env['PYTHONPYCACHEPREFIX'] = str(out/'pycache')
     def run(name, command, cwd=None):
         command = list(map(str, command))
+        if args.resume_userspace and name in completed:
+            if completed[name]['command'] != command:
+                raise ValueError('Completed command changed: '+name)
+            print('Verified retained stage ' + name, flush=True)
+            return
         row = {'stage': name, 'command': command, 'started': time.time()}
         calls.append(row)
         print('Building ' + name, flush=True)
-        with (logs/(name+'.log')).open('xb') as stream:
+        log = logs/(name+'.log')
+        if log.exists():
+            log = logs/(name+'-retry-'+str(len(calls))+'.log')
+        with log.open('xb') as stream:
             result = subprocess.run(command, cwd=cwd, env=env, stdout=stream, stderr=subprocess.STDOUT)
         row.update(returncode=result.returncode, seconds=time.time()-row['started'])
         (out/'stages.json').write_text(json.dumps(calls, indent=2)+'\n')
@@ -74,16 +131,18 @@ def main():
     if not read(base/'build-state.json')['complete']:
         raise ValueError('Baseline incomplete')
     tree = out/'tree'
-    shutil.copytree(args.prepared/'tree', tree)
-    shutil.copytree(args.prepared/'opps', out/'opps')
-    shutil.copytree(args.prepared/'firmware', out/'firmware')
+    if not args.resume_userspace:
+        shutil.copytree(args.prepared/'tree', tree)
+        shutil.copytree(args.prepared/'opps', out/'opps')
+        shutil.copytree(args.prepared/'firmware', out/'firmware')
     extras = []
     for key in ('mesa_cache', 'runtime_cache'):
         if getattr(args, key):
             extras += ['--'+key.replace('_', '-'), getattr(args, key).resolve()]
     run('dependencies', tool('prepare_gpu_dependencies.py', '--tree', tree, *extras))
     # Upstream expects this private venv path; it contains tools, never GPU objects.
-    (tree/'.cache/mesa-venv').symlink_to(args.shader_prefix.resolve()/'venv', target_is_directory=True)
+    if not args.resume_userspace:
+        (tree/'.cache/mesa-venv').symlink_to(args.shader_prefix.resolve()/'venv', target_is_directory=True)
     run('derive', tool('prepare_gpu_runtime.py', '--tree', tree, '--output', out/'derived'))
     run('native-core', tool('build_gpu_native.py', '--tree', tree, '--base-native', base/'native',
                            '--xnu-source', base/'source/xnu', '--output', out/'core', '--jobs', '4'))
@@ -104,7 +163,8 @@ def main():
     run('abi', tool('audit_gpu_link.py', '--linked', out/'linked', '--prelink-tool', base/'ufs-wait-trial/prelink-tool', '--output', out/'gpu-abi.json'))
     run('rust-manifest', [sys.executable, tree/'scripts/build-adreno-metal-bridge.py', '--target', 'ios', '--manifest-only'])
     cargo_lock = tree/'build/adreno-metal-bridge/Cargo.lock'
-    shutil.copyfile(ROOT/'config/gpu-cargo.lock', cargo_lock)
+    if not args.resume_userspace:
+        shutil.copyfile(ROOT/'config/gpu-cargo.lock', cargo_lock)
     run('rust', [sys.executable, tree/'scripts/build-adreno-metal-bridge.py', '--target', 'ios'])
     if sha(cargo_lock) != sha(ROOT/'config/gpu-cargo.lock'):
         raise ValueError('Cargo dependency lock changed during build')
@@ -121,6 +181,8 @@ def main():
     result = {'complete_offline_build': True, 'baseline_revision': revision,
               'baseline_state_sha256': sha(base/'build-state.json'), 'prepared_sha256': sha(args.prepared/'prepared.json'),
               'source_revision': subprocess.check_output(['git', '-C', ROOT, 'rev-parse', 'HEAD'], text=True).strip(),
+              'driver_script_sha256': sha(Path(__file__)), 'resumed_userspace': args.resume_userspace,
+              'bison': {'path': str(bison), 'version': version},
               'gpu_specific_abi': read(out/'gpu-abi.json'), 'device_access': False,
               'hardware_qualified': False, 'boot_image_packaged': False,
               'artifacts': {p.relative_to(out).as_posix(): {'bytes': p.stat().st_size, 'sha256': sha(p)} for p in files}}

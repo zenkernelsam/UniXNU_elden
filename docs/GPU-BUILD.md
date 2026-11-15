@@ -21,6 +21,9 @@ items; the supplementary GPU ABI audit does not change those flags.
 - Rust1.98 with `aarch64-apple-ios`, LLVM tool directory from the input JSON,
   and the private prefix produced by `tools/setup_gpu_host.py` (CMake3.31.10,
   Meson1.9.1, shaderc/glslang/SPIR-V tools). No system CMake replacement.
+- Bison3.8+ (`--bison /path/to/bison`, or detected Homebrew installation).
+  Apple's bundled Bison does not support Mesa's warning flags. The one legacy
+  grammar deprecation is disabled; parser error/counterexample checks remain.
 
 ## Preparation on Windows
 
@@ -63,6 +66,13 @@ Metal/signatures and entry validation all finish successfully. A failed stage
 retains its logs and does not emit final success. A component report alone does
 not satisfy the full build. The `linked` stage's standalone report remains scoped
 to that link; the top-level report is the full-chain evidence.
+
+If a host-tool failure occurs after Rust succeeds, repeat the same command with
+`--resume-userspace`. It requires every native/test/ABI/Rust stage to have exited
+successfully, rechecks retained source/object/link/lock hashes and exact commands,
+and retains failed Turnip output/logs before rebuilding that stage. It does not
+reuse GPU objects from another run. This is the path exercised by the consolidated
+2026-11-16 build after discovering Apple's old Bison during the initial attempt.
 
 ```sh
 python3 tools/package_gpu_complete.py \

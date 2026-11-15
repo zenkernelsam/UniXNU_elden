@@ -53,6 +53,22 @@ def main():
         copy(src, 'reports/'+src.parent.name+'-'+src.name)
     for name in ('GPU-MERGE.md', 'GPU-BUILD.md'):
         copy(ROOT/'docs'/name, 'docs/'+name)
+    for p in (build/'firmware').iterdir():
+        if p.is_file() and (p.name.startswith(('LICENSE', 'LICENCE', 'COPYING', 'NOTICE')) or p.name == 'WHENCE'):
+            copy(p, 'licenses/firmware/'+p.name)
+    copy(ROOT/'drivers/EldenGpu/upstream/LICENSE', 'licenses/EldenGpu-upstream.txt')
+    for component in ('Adreno740', 'AdrenoMetal', 'GopFramebuffer'):
+        for p in (build/'tree/drivers'/component).glob('*LICENSE*'):
+            if p.is_file():
+                copy(p, 'licenses/'+component+'/'+p.name)
+    for p in (build/'tree/.cache/gpu-reference/metal2vulkan').glob('*LICENSE*'):
+        if p.is_file():
+            copy(p, 'licenses/metal2vulkan/'+p.name)
+    for folder in (build/'tree/kits').iterdir():
+        if folder.is_dir():
+            for p in folder.glob('*LICENSE*'):
+                if p.is_file():
+                    copy(p, 'licenses/'+folder.name+'/'+p.name)
     # Modes survive packaging; Windows extraction is not installation.
     for p in payload.rglob('*'):
         if p.is_file():
