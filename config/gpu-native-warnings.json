@@ -1,0 +1,134 @@
+{
+  "NativeAdrenoCpu.cpp": {
+    "source_sha256": "295ccb7b43f474b0cf699c0b0b2fe680558c752897baf6f1b73df6e7756eeda8",
+    "sites": [
+      {
+        "file": "NativeAdrenoCpu.cpp",
+        "line": 56,
+        "group": "-Wsign-conversion",
+        "file_sha256": "295ccb7b43f474b0cf699c0b0b2fe680558c752897baf6f1b73df6e7756eeda8"
+      }
+    ],
+    "review": "PAGE_SIZE_FIXED on this XNU context makes vm_map_page_size(kernel_map) a positive page size; recorded in a diagnostic uint64 field."
+  },
+  "NativeAdrenoGmuContext.cpp": {
+    "source_sha256": "575f0720e67ae90ff361f6f4cd9e061d1b9be6044c6f4538afd16680ec158d34",
+    "sites": [
+      {
+        "file": "NativeAdrenoGmuContext.cpp",
+        "line": 62,
+        "group": "-Wsign-conversion",
+        "file_sha256": "575f0720e67ae90ff361f6f4cd9e061d1b9be6044c6f4538afd16680ec158d34"
+      }
+    ],
+    "review": "Boolean equality flags shifted through bit8 form a nonnegative <=511 mismatch bitmask."
+  },
+  "NativeAdrenoGpuContext.cpp": {
+    "source_sha256": "b82cd3f7a8f599b2eb791f09100beae8f04715813db764798d9498d12936929e",
+    "sites": [
+      {
+        "file": "NativeAdrenoGpuContext.cpp",
+        "line": 63,
+        "group": "-Wsign-conversion",
+        "file_sha256": "b82cd3f7a8f599b2eb791f09100beae8f04715813db764798d9498d12936929e"
+      }
+    ],
+    "review": "Boolean equality flags shifted through bit8 form a nonnegative <=511 mismatch bitmask."
+  },
+  "NativeAdrenoMemory.cpp": {
+    "source_sha256": "aa06e12d603fe6be001808bd579e01f7caa427fa517953dc24efe92784abbcf6",
+    "sites": [
+      {
+        "file": "NativeAdrenoMemory.cpp",
+        "line": 25,
+        "group": "-Wsign-conversion",
+        "file_sha256": "aa06e12d603fe6be001808bd579e01f7caa427fa517953dc24efe92784abbcf6"
+      }
+    ],
+    "review": "Signed allocation/free delta intentionally updates unsigned system-memory accounting modulo 2^64 under its statistics lock; no DMA address is derived from this diagnostic counter."
+  },
+  "NativeAdrenoPublish.cpp": {
+    "source_sha256": "425c9c84c0e8cebe17296c04412a46045620ef68e0e0aa12f35970c15d963d02",
+    "sites": [
+      {
+        "file": "NativeGpuTrace.inc",
+        "line": 26,
+        "group": "-Wsign-conversion",
+        "file_sha256": "3756f2e9c0bc6d9741ba0fdd870f92ea5cf7475875e534d10f34652abbc87d74"
+      },
+      {
+        "file": "NativeAdrenoPublish.cpp",
+        "line": 750,
+        "group": "-Wsign-conversion",
+        "file_sha256": "425c9c84c0e8cebe17296c04412a46045620ef68e0e0aa12f35970c15d963d02"
+      },
+      {
+        "file": "NativeAdrenoPublish.cpp",
+        "line": 755,
+        "group": "-Wsign-conversion",
+        "file_sha256": "425c9c84c0e8cebe17296c04412a46045620ef68e0e0aa12f35970c15d963d02"
+      }
+    ],
+    "review": "Trace-enabled is written as0/1; process identifiers are copied to uint32 diagnostic protocol fields, with no hardware address or control decision."
+  },
+  "NativeAdrenoSmmuContext.cpp": {
+    "source_sha256": "2bbecf7add14ab02220f80bfeb4c17ca9e185830bc6a96549ab34df2ae8548b7",
+    "sites": [
+      {
+        "file": "NativeAdrenoSmmuContext.cpp",
+        "line": 35,
+        "group": "-Wshorten-64-to-32",
+        "file_sha256": "2bbecf7add14ab02220f80bfeb4c17ca9e185830bc6a96549ab34df2ae8548b7"
+      }
+    ],
+    "review": "attach rejects count0 and count>8 before conversion from size_t to unsigned; narrowing cannot lose any accepted value."
+  },
+  "NativeAdrenoSubmit.cpp": {
+    "source_sha256": "9c77ab3c7fc770a9e97081e3beb6c96bc0f4ba54ea0aa72feccb67bf612fdb92",
+    "sites": [
+      {
+        "file": "NativeAdrenoSubmit.cpp",
+        "line": 340,
+        "group": "-Wsign-conversion",
+        "file_sha256": "9c77ab3c7fc770a9e97081e3beb6c96bc0f4ba54ea0aa72feccb67bf612fdb92"
+      },
+      {
+        "file": "NativeAdrenoSubmit.cpp",
+        "line": 383,
+        "group": "-Wshadow",
+        "file_sha256": "9c77ab3c7fc770a9e97081e3beb6c96bc0f4ba54ea0aa72feccb67bf612fdb92"
+      },
+      {
+        "file": "NativeAdrenoSubmit.cpp",
+        "line": 463,
+        "group": "-Wsign-conversion",
+        "file_sha256": "9c77ab3c7fc770a9e97081e3beb6c96bc0f4ba54ea0aa72feccb67bf612fdb92"
+      },
+      {
+        "file": "NativeAdrenoSubmit.cpp",
+        "line": 541,
+        "group": "-Wsign-conversion",
+        "file_sha256": "9c77ab3c7fc770a9e97081e3beb6c96bc0f4ba54ea0aa72feccb67bf612fdb92"
+      }
+    ],
+    "review": "The documented local vm_ deliberately selects the request VM; PID/owner and IOReturn conversions preserve32-bit diagnostic representation and do not change submission addresses."
+  },
+  "NativeAdrenoUserClient.cpp": {
+    "source_sha256": "2015adcb0f52a3691a2341cd839a26ec1536477481ab5ca10a1fe31dd6de3538",
+    "sites": [
+      {
+        "file": "NativeAdrenoUserClient.cpp",
+        "line": 304,
+        "group": "-Wsign-conversion",
+        "file_sha256": "2015adcb0f52a3691a2341cd839a26ec1536477481ab5ca10a1fe31dd6de3538"
+      },
+      {
+        "file": "NativeAdrenoUserClient.cpp",
+        "line": 306,
+        "group": "-Wsign-conversion",
+        "file_sha256": "2015adcb0f52a3691a2341cd839a26ec1536477481ab5ca10a1fe31dd6de3538"
+      }
+    ],
+    "review": "proc_selfpid() is stored in the32-bit import identity/trace fields after successful task import; width is unchanged."
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "status": "complete-chain work in progress; not qualified",
+  "sources": {
+    "tooling": {
+      "url": "https://github.com/UniXNU/UniXNU.git",
+      "directory": "UniXNU-official",
+      "commit": "fd7280a44e60f33191e7714051366734326fecbc",
+      "destination": "."
+    },
+    "gpu": {
+      "url": "https://github.com/IssacL04/Adreno740.git",
+      "directory": "Adreno740-a830",
+      "commit": "9c34ea46aa991c4fed6f0347a814473ad626de77",
+      "ref": "refs/heads/a830-sm8750",
+      "destination": "drivers/Adreno740"
+    },
+    "metal": {
+      "url": "https://github.com/UniXNU/AdrenoMetal.git",
+      "directory": "AdrenoMetal-official",
+      "commit": "19bb66cb25f9a25b983bd7be15ea697ac7ed5203",
+      "ref": "refs/heads/main",
+      "destination": "drivers/AdrenoMetal"
+    },
+    "soc": {
+      "url": "https://github.com/IssacL04/UniXNU-sm8750-common.git",
+      "directory": "UniXNU-sm8750-common-pagani",
+      "commit": "feaa135df4763e3c19a155402e6b17b124a12e13",
+      "ref": "refs/heads/main",
+      "destination": "kits/Sm8750Platform",
+      "prefix": "kits/Sm8750Platform"
+    },
+    "firmware": {
+      "url": "https://github.com/IssacL04/AdrenoFirmware.git",
+      "directory": "AdrenoFirmware-a830",
+      "commit": "505d0a1ac079339ee1486f0e19cfd8bd36a282a2",
+      "ref": "refs/heads/a830-sm8750",
+      "destination": "kits/AdrenoFirmware"
+    },
+    "pm4": {
+      "url": "https://github.com/UniXNU/AdrenoPM4.git",
+      "directory": "AdrenoPM4-night",
+      "commit": "282606b528b2595bc4274ea7490b62b323f35a5f",
+      "ref": "refs/heads/main",
+      "destination": "kits/AdrenoPM4"
+    },
+    "smmu": {
+      "url": "https://github.com/UniXNU/ArmSmmu4K.git",
+      "directory": "ArmSmmu4K-night",
+      "commit": "83969cd874503e65997ff7639f7dcf3d0a92cd17",
+      "ref": "refs/heads/main",
+      "destination": "kits/ArmSmmu4K"
+    }
+  },
+  "integration_note": "Current official Metal/runtime pairing selected after the fork26/624bab first patch failed unchanged and reverse checks. A830 topology/replay adaptation and full build qualification remain required; core GPU remains the proven feature-branch input."
+}

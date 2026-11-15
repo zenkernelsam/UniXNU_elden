@@ -1,0 +1,26 @@
+{
+  "native_common_archive_passed": true,
+  "native_cpp_units": 27,
+  "archive_sha256": "4efc2ad8be37933fcc0c1b1d8b6d7f4acfe09989355476703d70fa6772fe2c4a",
+  "warnings": 14,
+  "board_adapters_pending": [
+    "NativeAdrenoGmuConfig.cpp",
+    "NativeAdrenoGmuPlatform.cpp",
+    "NativeAdrenoKernelTime.cpp",
+    "NativeAdrenoService.cpp"
+  ],
+  "full_kernel_linked": false,
+  "goal_complete": false,
+  "turnip_session": 12623,
+  "rust_bridge_session": 92698,
+  "mac_root": "/Users/ciscohe/Desktop/UniXNU_elden-gpu-offline/lab/gpu-goal-20261115",
+  "host_tools_passed": true,
+  "runtime_patch_lf_26": true,
+  "turnip_built": true,
+  "turnip_sha256": "c021a4e702ed68e2f6f1c994e8868d365d423318c48edd56967d83bad468e443",
+  "turnip_bytes": 17945576,
+  "turnip_session_terminal": true,
+  "rust_bridge_pid": 58195,
+  "rust_cargo_pid": 60048,
+  "rust_bridge_status": "verified live compilation; not yet complete"
+}

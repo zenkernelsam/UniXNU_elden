@@ -1,0 +1,30 @@
+{
+  "artifact": "/Users/ciscohe/Desktop/UniXNU_elden-gpu-offline/lab/gpu-goal-20261115/tree-current/build/mesa-tu-ios/src/freedreno/vulkan/libvulkan_freedreno.dylib",
+  "sha256": "c021a4e702ed68e2f6f1c994e8868d365d423318c48edd56967d83bad468e443",
+  "bytes": 17945576,
+  "macho_header": [
+    4277009103,
+    16777228,
+    0,
+    6
+  ],
+  "build_version": [
+    2,
+    1114112,
+    1704448
+  ],
+  "vulkan_loader_exports": true,
+  "dependencies": [
+    "\t@rpath/libvulkan_freedreno.dylib (compatibility version 0.0.0, current version 0.0.0)",
+    "\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)",
+    "\t/usr/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.12)",
+    "\t/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit (compatibility version 1.0.0, current version 275.0.0)",
+    "\t/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics (compatibility version 64.0.0, current version 1965.2.3)",
+    "\t/System/Library/Frameworks/QuartzCore.framework/QuartzCore (compatibility version 1.2.0, current version 1193.47.2)",
+    "\t/System/Library/Frameworks/Metal.framework/Metal (compatibility version 1.0.0, current version 370.64.2)",
+    "\t/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 2000.67.0)",
+    "\t/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation (compatibility version 150.0.0, current version 4201.0.0)",
+    "\t/usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 228.0.0)"
+  ],
+  "hardware_exercised": false
+}
