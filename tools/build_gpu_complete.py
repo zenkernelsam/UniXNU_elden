@@ -100,7 +100,15 @@ def main():
     # Only the legacy grammar deprecation is suppressed, as in the qualified
     # prior Turnip build. All parser error/counterexample diagnostics remain.
     env['BISON'] = shlex.join([str(bison.resolve()), '-Wno-deprecated'])
-    env['PATH'] = ':'.join(map(str, [args.shader_prefix/'venv/bin', args.shader_prefix/'install/bin',
+    # Mesa uses find_program('bison'), which does not consult BISON. Supply a
+    # private executable wrapper in PATH; never replace the system executable.
+    host_tools = out/'host-tools'
+    host_tools.mkdir(exist_ok=True)
+    wrapper = host_tools/'bison'
+    wrapper.write_text('#!'+sys.executable+'\nimport os,sys\nos.execv('+repr(str(bison.resolve()))+', '+
+                       repr([str(bison.resolve()), '-Wno-deprecated'])+'+sys.argv[1:])\n')
+    wrapper.chmod(0o755)
+    env['PATH'] = ':'.join(map(str, [host_tools, args.shader_prefix/'venv/bin', args.shader_prefix/'install/bin',
                                      Path.home()/'.cargo/bin', llvm])) + ':' + env['PATH']
     env['CARGO_BUILD_JOBS'] = '4'
     env['PYTHONPYCACHEPREFIX'] = str(out/'pycache')
