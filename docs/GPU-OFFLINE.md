@@ -1,8 +1,8 @@
 # Elden GPU offline integration
 
-The user subsequently activated the **complete offline build goal**. Read
-[GPU-GOAL-STATUS.md](GPU-GOAL-STATUS.md) for current work and completion criteria;
-the component results below are only its starting point.
+The **complete offline build was delivered on2026-11-16**. Read
+[GPU-GOAL-STATUS.md](GPU-GOAL-STATUS.md) for its evidence and qualification
+boundaries. This document retains the earlier component-stage record.
 
 The owner authorized a separate GPU workstream on 2026-11-15 while the main
 workstream continues UFS and peripheral integration. This branch does not enable

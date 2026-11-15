@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "archive_sha256": "cef8999016da9aeb3ff69c0ca73043ad839814b58a3dfcaa352374e8069da1f1",
+  "bytes": 87270508,
+  "files": 37,
+  "archive_readback_passed": true,
+  "device_access": false,
+  "default_enabled": false
+}

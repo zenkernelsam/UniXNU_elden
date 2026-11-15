@@ -1,0 +1,160 @@
+{
+  "complete_offline_build": true,
+  "source_revision": "9fca00698102d4631941a5a5d3743fbf2d212b66",
+  "source_script_sha256": "b106fab807fbc8081bc816e5a81be43e87c3b85b2c7929fdcde5439c6565a9a0",
+  "baseline_revision": "a13e5087a8651b3185a0855eacf94923a21e97eb",
+  "baseline_complete": true,
+  "baseline_stages": 28,
+  "native_cpp_units": 27,
+  "core_reviewed_warnings": 14,
+  "runtime_warnings": {
+    "EldenGpuRuntime.cpp": 0,
+    "NativeAdrenoPublish.cpp": 3,
+    "NativeAdrenoMemory.cpp": 1,
+    "EldenGpuVotes.c": 0,
+    "FrameBridge.cpp": 0,
+    "NativeGOPPresenter.cpp": 0,
+    "EldenDisplayGlue.cpp": 5,
+    "firmware": 0
+  },
+  "recovery_warnings": 26,
+  "original_apple_regions_preserved": 30,
+  "gpu_abi": {
+    "gpu_specific_abi_checks_passed": true,
+    "checks": {
+      "original_entries_sha256": true,
+      "accelerator_instance_bytes": 136,
+      "original_superclass_pointer": "0xfffffff006aeb688",
+      "vtable_entries": 168,
+      "owned_override_slots": [
+        0,
+        1,
+        7,
+        39,
+        40,
+        41,
+        140
+      ],
+      "native_original_branches": {
+        "__ZN14AGXAcceleratorC2EPK11OSMetaClass": "0xfffffff004bd3b20",
+        "__ZN14AGXAcceleratorD2Ev": "0xfffffff004bd3b64"
+      },
+      "late_initializers_not_automatic": true,
+      "required_interfaces": {
+        "_elden_gpu_start": "0xfffffff007bff26c",
+        "_elden_gpu_quiesce_for_reboot": "0xfffffff007c00948",
+        "_elden_gpu_display_ready": "0xfffffff007c0306c",
+        "_native_adreno_quiesce_for_reboot": "0xfffffff007bee3fc",
+        "_native_gop_handoff_call": "0xfffffff007c04f04",
+        "_native_gop_handoff_close": "0xfffffff007c04ca8",
+        "_native_gop_handoff_memory": "0xfffffff007c04f08",
+        "_Sm8750RpmhWriteActive": "0xfffffff007bd5648"
+      }
+    },
+    "kernel_sha256": "19cfe3641614a9ef07ca0c221b8b9b4554af21b69537439bca7138d3dc5b3a69",
+    "legacy_emitter_flags": {
+      "abi_qualified": false,
+      "loadable": false,
+      "runtime_qualified": false,
+      "instruction_relocation_complete": false
+    },
+    "scope": "GPU ABI edges only; does not relabel the experimental legacy emitter or assert hardware execution",
+    "hardware": false
+  },
+  "signed_cdhashes": {
+    "plugin": "7c0593a374ae1b621aa0892ba2a9be2d43a4d3f5",
+    "turnip": "d42fc727af0e6592b0f90168b5d85a277a65b57f",
+    "probe": "db6998a8bcf42a731087f33f4399e067b5018d14"
+  },
+  "turnip_binding": "legacy dyld info preserved; chained-import optimization not applicable",
+  "artifacts": {
+    "entry/kernel.macho": {
+      "bytes": 54935656,
+      "sha256": "6107140d70e7feac28a5ffb3f50f6d105f239c15515453f7945fb893aef3c6ab"
+    },
+    "linked/native.macho": {
+      "bytes": 22082536,
+      "sha256": "bb222b1d4e34205f422e1a31922ce53a9486845dc43699fcf399e25aa8c08cfb"
+    },
+    "linked/libEldenGpu.a": {
+      "bytes": 3254440,
+      "sha256": "8888a35ea8f969b8ccfb946911ee11d7ce8cdb540f8e9c9b8e702e842968e623"
+    },
+    "tree/build/adreno-metal-bridge/ios/libadreno_metal_bridge.a": {
+      "bytes": 222474240,
+      "sha256": "e9f16c670b289c493558706fa63160fec1aa475493ac836e7b93b9ba96229b32"
+    },
+    "tree/build/mesa-tu-ios/src/freedreno/vulkan/libvulkan_freedreno.dylib": {
+      "bytes": 17945576,
+      "sha256": "a6b44b1c5ba484c5471607b5a0686c2b337d13fc3c321c4423a11b7fc5c55ea5"
+    },
+    "metal/adrenoprobed-entitlements.plist": {
+      "bytes": 527,
+      "sha256": "e26173b8127b9c10d73179f325c8c0d409c0cc4b47f9a5fdc7c11da40b568243"
+    },
+    "metal/adrenoprobed": {
+      "bytes": 127312,
+      "sha256": "0ed45077782ced34199a550460d411da8bdcf804e89c036b8dc017e2287c05d4"
+    },
+    "metal/org.blu-sharky.adrenoprobed.plist": {
+      "bytes": 513,
+      "sha256": "43c59297d17d71e68bf34e1e33ecd1ddf80b026c8606e4ab708a0da93dd52ed7"
+    },
+    "metal/NativeAdrenoMetal.bundle/NativeAdrenoMetal": {
+      "bytes": 18675712,
+      "sha256": "c8cca77377786363d401c1e147d52210780e74dd0e597d5b09830e42356c69e3"
+    },
+    "metal/NativeAdrenoMetal.bundle/libvulkan_freedreno.dylib": {
+      "bytes": 17362016,
+      "sha256": "1abb95f3392a35373b4e59d8815476cec5dd2003c34ecfdc139d4d18648fe887"
+    },
+    "metal/NativeAdrenoMetal.bundle/Info.plist": {
+      "bytes": 622,
+      "sha256": "fcc04e4436cf7b0d1400b6f3867e61d334870fe28622124ccfbcfbff41c0a046"
+    }
+  },
+  "resumed_userspace": true,
+  "bison": {
+    "path": "/usr/local/opt/bison/bin/bison",
+    "version": "bison (GNU Bison) 3.8.2"
+  },
+  "device_access": false,
+  "hardware_qualified": false,
+  "mainline_merged": false,
+  "default_gpu_enabled": false,
+  "tests": {
+    "frame-test": {
+      "passed": true,
+      "actual_methods": [
+        "bool NativeGOPPresenter::offer(",
+        "IOReturn NativeGOPPresenter::waitSwap(",
+        "IOReturn NativeGOPPresenter::completeSwap(",
+        "void NativeGOPPresenter::abandonSwap(",
+        "void NativeGOPPresenter::dropKept("
+      ],
+      "methods_sha256": "cb8884c8277d06eea250466f35a5bf4bab19cf34ba5663267ee26dbb4a6a359f",
+      "output": "PASS: actual presenter owner isolation, mapping failure fallback, close-during-map and new-owner race; references balanced\n",
+      "hardware": false
+    },
+    "runtime-test": {
+      "passed": true,
+      "functions": [
+        "extern \"C\" int elden_gpu_start(",
+        "extern \"C\" int elden_gpu_quiesce_for_reboot(",
+        "extern \"C\" void elden_gpu_runtime_status("
+      ],
+      "actual_body_sha256": "1acf4c8b2981c51660f97e1efa71ba72365646a525839e5491df5b5df82f32f2",
+      "output": "PASS: actual runtime admission, one attempt, allocation/error/cancel handling, truthful drain status and retained resources; no hardware\n",
+      "hardware": false
+    }
+  },
+  "call_gate_log": "PASS: GPU close gate, overflow refusal, 512 held concurrent calls and3200 denied entries\n",
+  "drain_log": "PASS: 12 actual GPU drain cases including late success, clock reversal/stall, live calls and outstanding fences\n",
+  "notes": [
+    "Global legacy-emitter flags remain false; only GPU-specific ABI checks passed.",
+    "Runtime warnings:3 publisher/1 memory inherited upstream;5 display diagnostics are unchanged baseline expressions. Recovery retains26 baseline diagnostics.",
+    "No hardware power-off, suspend, soft restart or dynamic GPU power-management claim.",
+    "Initial full attempts retained: missing explicit baseline resume, absent LLVM PATH, old system Bison, and BISON environment ignored by Mesa find_program."
+  ],
+  "mac_build": "/Users/ciscohe/Desktop/UniXNU_elden-gpu-offline/lab/gpu-goal-20261115/complete-3"
+}

@@ -1,25 +1,21 @@
 # UniXNU elden — authoritative source repository
 
-GPU goal20261115 (this isolated branch only): user authorized the complete offline
-A830 C++/Elden adapter/Metal/Rust/Turnip build, not component-only completion.
-Read docs/GPU-GOAL-STATUS.md and docs/GPU-OFFLINE.md. No tablet access or automatic
-mainline merge. Mac uses its own /Users/ciscohe/Desktop/UniXNU_elden-gpu-offline
-worktree sharing the repository object database. Source/build/ABI/firmware and
-full-chain delivery remain separate acceptance items; the goal is active.
-
-GPU progress: Elden runtime/framebuffer/recovery adapter now compiles and fully
-links with 30 original Apple execution regions preserved. GPU-specific ABI audit
-passes (136B instance, 168-slot vtable, original C2/D2), while legacy emitter
-abi_qualified/loadable/runtime flags remain unchanged and false. Runtime uses
-shared RPMh owner, TB322FC ACTLR303/GPUCC9800/OPPs, explicit startup/one attempt,
-bounded call/fence drain before UFS stop and resource retention until reset.
-Actual call-gate/drain/presenter/runtime host tests pass; no hardware execution.
-Fresh fixed a13e508 baseline build completed in Mac GPU lab/fresh-base. Next run
-tools/prepare_gpu_complete.py and build_gpu_complete.py to consolidate native,
-Rust/Turnip/Metal, entry and artifact proof. Existing userspace signatures pass.
-Raw Git export now bypasses Windows archive/autocrlf: previous published-CRLF
-diagnosis was wrong. development624bab+26 UniXNU patches remains pinned.
-Goal active; no tablet access or mainline merge. Outputs stay in isolated lab.
+GPU offline objective20261116 (this isolated branch): complete native/Elden
+runtime/framebuffer/recovery/Rust/Turnip/Metal/entry chain passed at9fca006.
+Read docs/GPU-GOAL-STATUS.md, GPU-BUILD.md and GPU-MERGE.md. Mac accepted output
+lab/gpu-goal-20261115/complete-3 uses new fixed-a13e508 baseline (28 stages).
+30 original Apple execution regions preserved; GPU-specific ABI136B/168slots/
+C2/D2 passes. Legacy global ABI/loadable/runtime/relocation flags remain false.
+No hardware qualification, tablet access or mainline merge. Default GPU disabled;
+marker separate; shared votes/memory retained until reset, no power-off claim.
+Rust222474240B/e9f16c67, entry54935656B/6107140d, strict4KiB userland signatures.
+Windows delivery edl_work/gpu-complete-20261116/elden-a830-offline.tar.gz is
+87270508B/cef89990;37 files read back and transferred hash verified. Source and
+evidence published on codex/elden-gpu-offline; all build jobs terminal. Full
+offline objective fulfilled; hardware/merged boot candidate is subsequent work.
+Raw Git export corrects Windows archive/autocrlf issue; development624bab+26
+UniXNU patches and transitive Cargo lock fixed. Private Bison3.8 wrapper repairs
+Mesa find_program; failed attempts retained, resume verifies same-run objects.
 
 Latest v15320261115 offline: drivers/EldenUfsQueue vendors exact ShengUfs b6fe07b3 RootCommands/layout/LICENSE (1d90996f/5f52df07). PRDT body extracted with provider substitution/null/VA-overflow guards; 1MiB/64PRD/256KiB preserved. Bitmap/FIFO core adds pool+generation leases, cancellation/late grant, terminal stop/quarantine; no panic stealing or release of Issued/Quarantined. It is metadata only: native mutex/wait, descriptor retention and hardware submission are NOT connected. Existing eldenUfsIdentity remains prerequisite; new limit tightens all3 SMMU widths plus host32/64, no register I/O.8276 ASan/UBSan cases include4096 upstream differential PRDT,4096 width combinations,3200 concurrent leases under external mutex. ARM64/iOS17 two objects QueueCore32dce56e/DmaPlan58e1f4ca pass zero warnings/no SIMD/init;10 expected exports, only DmaPlan bzero import available in v152. Mac isolated/ufs-queue-core-v153-final; workbench lab/records/ufs-queue-v153-20261115. No full native adapter/kernel/boot/hardware yet, no tablet access or jobs active. Next owned allocation/request-list mapping, actual issue/await and per-slot diagnostics (old global residual must not decide concurrent commands), per-request snapshot/pipeline, full build and QD1/8/32. Preserve v152 candidate, all original write/identity/recovery gates, QRTR/AnyRouter. Full Goal active; charging/endurance/wireless incomplete.
 
