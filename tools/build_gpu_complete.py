@@ -45,7 +45,7 @@ def main():
         if rel.is_absolute() or '..' in rel.parts or sha(args.prepared/rel) != digest:
             raise ValueError('Prepared input differs: ' + name)
     for key, name in [('source_lock_sha256', 'gpu-build.lock.json'), ('firmware_lock_sha256', 'gpu-firmware.lock.json')]:
-        if prepared[key] != sha(ROOT/'config'/name):
+        if prepared[key] != hashlib.sha256((ROOT/'config'/name).read_bytes().replace(b'\r\n', b'\n')).hexdigest():
             raise ValueError('Prepared lock differs: ' + name)
     calls = []
     env = dict(os.environ)

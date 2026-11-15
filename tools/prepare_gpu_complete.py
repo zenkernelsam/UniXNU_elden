@@ -28,8 +28,9 @@ def main():
         subprocess.run([sys.executable, str(ROOT/'tools'/name), *map(str, arguments)], check=True)
     files = {p.relative_to(out).as_posix(): sha(p) for p in sorted(out.rglob('*')) if p.is_file()}
     (out/'prepared.json').write_text(json.dumps({
-        'files': files, 'source_lock_sha256': sha(ROOT/'config/gpu-build.lock.json'),
-        'firmware_lock_sha256': sha(ROOT/'config/gpu-firmware.lock.json'),
+        'files': files, 'source_lock_sha256': hashlib.sha256((ROOT/'config/gpu-build.lock.json').read_bytes().replace(b'\r\n', b'\n')).hexdigest(),
+        'firmware_lock_sha256': hashlib.sha256((ROOT/'config/gpu-firmware.lock.json').read_bytes().replace(b'\r\n', b'\n')).hexdigest(),
+        'lock_text_format': 'LF',
         'device_access': False,
     }, indent=2) + '\n')
     print('Complete inputs exported and hashed; no compilation or device access')
