@@ -1,0 +1,12 @@
+{
+  "repository": "https://github.com/IssacL04/UniXNU-Pagani_SM8750",
+  "commit": "a84204eccb9b183945072e1b9b63de36c8495097",
+  "path": "package/PaganiGpu.cpp",
+  "sha256": "710257b8f39f2bf40009a224d56e05b74cdc140dbc1230d1b5475d7e3505f449",
+  "license_sha256": "5b1d3d911103cb0f41641ec0964c5ac1f7e229f57aa072b6ac38bae913a1307b",
+  "shared_rpmh_header": {
+    "path": "profiles/current-build/sources/a39f9324d152faf7/Sm8750Rpmh.h",
+    "sha256": "a39f9324d152faf7b83063d71784555031d5c4e4f142b359478ccf656562843f",
+    "matches_current_native_provider": true
+  }
+}

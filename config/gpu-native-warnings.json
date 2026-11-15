@@ -1,132 +1,132 @@
 {
   "NativeAdrenoCpu.cpp": {
-    "source_sha256": "295ccb7b43f474b0cf699c0b0b2fe680558c752897baf6f1b73df6e7756eeda8",
+    "source_sha256": "b6bb0dc6643a9e580fb0ab8d45d3239827a86f7b576ebadb1fe5fa65b80ee965",
     "sites": [
       {
         "file": "NativeAdrenoCpu.cpp",
         "line": 56,
         "group": "-Wsign-conversion",
-        "file_sha256": "295ccb7b43f474b0cf699c0b0b2fe680558c752897baf6f1b73df6e7756eeda8"
+        "file_sha256": "b6bb0dc6643a9e580fb0ab8d45d3239827a86f7b576ebadb1fe5fa65b80ee965"
       }
     ],
     "review": "PAGE_SIZE_FIXED on this XNU context makes vm_map_page_size(kernel_map) a positive page size; recorded in a diagnostic uint64 field."
   },
   "NativeAdrenoGmuContext.cpp": {
-    "source_sha256": "575f0720e67ae90ff361f6f4cd9e061d1b9be6044c6f4538afd16680ec158d34",
+    "source_sha256": "0ed3348b09a9ecac01651beaa7d53b3e225d14413c10b5dfb5bc36a98912fda1",
     "sites": [
       {
         "file": "NativeAdrenoGmuContext.cpp",
         "line": 62,
         "group": "-Wsign-conversion",
-        "file_sha256": "575f0720e67ae90ff361f6f4cd9e061d1b9be6044c6f4538afd16680ec158d34"
+        "file_sha256": "0ed3348b09a9ecac01651beaa7d53b3e225d14413c10b5dfb5bc36a98912fda1"
       }
     ],
     "review": "Boolean equality flags shifted through bit8 form a nonnegative <=511 mismatch bitmask."
   },
   "NativeAdrenoGpuContext.cpp": {
-    "source_sha256": "b82cd3f7a8f599b2eb791f09100beae8f04715813db764798d9498d12936929e",
+    "source_sha256": "780c9342e45765fcda4248ec4767f29625e1f1714b2bd575b7f7492386ba92dd",
     "sites": [
       {
         "file": "NativeAdrenoGpuContext.cpp",
         "line": 63,
         "group": "-Wsign-conversion",
-        "file_sha256": "b82cd3f7a8f599b2eb791f09100beae8f04715813db764798d9498d12936929e"
+        "file_sha256": "780c9342e45765fcda4248ec4767f29625e1f1714b2bd575b7f7492386ba92dd"
       }
     ],
     "review": "Boolean equality flags shifted through bit8 form a nonnegative <=511 mismatch bitmask."
   },
   "NativeAdrenoMemory.cpp": {
-    "source_sha256": "aa06e12d603fe6be001808bd579e01f7caa427fa517953dc24efe92784abbcf6",
+    "source_sha256": "4592dbc53e8287785f3c3e7d48dec995a2385ca6ed44307bdaf4d6011fbbdad7",
     "sites": [
       {
         "file": "NativeAdrenoMemory.cpp",
         "line": 25,
         "group": "-Wsign-conversion",
-        "file_sha256": "aa06e12d603fe6be001808bd579e01f7caa427fa517953dc24efe92784abbcf6"
+        "file_sha256": "4592dbc53e8287785f3c3e7d48dec995a2385ca6ed44307bdaf4d6011fbbdad7"
       }
     ],
     "review": "Signed allocation/free delta intentionally updates unsigned system-memory accounting modulo 2^64 under its statistics lock; no DMA address is derived from this diagnostic counter."
   },
   "NativeAdrenoPublish.cpp": {
-    "source_sha256": "425c9c84c0e8cebe17296c04412a46045620ef68e0e0aa12f35970c15d963d02",
+    "source_sha256": "c2c73a9b336920af8497a5012189b749784eeeb4e858e47a49fe3858fe342d4e",
     "sites": [
       {
         "file": "NativeGpuTrace.inc",
         "line": 26,
         "group": "-Wsign-conversion",
-        "file_sha256": "3756f2e9c0bc6d9741ba0fdd870f92ea5cf7475875e534d10f34652abbc87d74"
+        "file_sha256": "a40dec1c2b6228b026a0de27cb0a16090c972b2a568ac963445a619f1f99fe57"
       },
       {
         "file": "NativeAdrenoPublish.cpp",
         "line": 750,
         "group": "-Wsign-conversion",
-        "file_sha256": "425c9c84c0e8cebe17296c04412a46045620ef68e0e0aa12f35970c15d963d02"
+        "file_sha256": "c2c73a9b336920af8497a5012189b749784eeeb4e858e47a49fe3858fe342d4e"
       },
       {
         "file": "NativeAdrenoPublish.cpp",
         "line": 755,
         "group": "-Wsign-conversion",
-        "file_sha256": "425c9c84c0e8cebe17296c04412a46045620ef68e0e0aa12f35970c15d963d02"
+        "file_sha256": "c2c73a9b336920af8497a5012189b749784eeeb4e858e47a49fe3858fe342d4e"
       }
     ],
     "review": "Trace-enabled is written as0/1; process identifiers are copied to uint32 diagnostic protocol fields, with no hardware address or control decision."
   },
   "NativeAdrenoSmmuContext.cpp": {
-    "source_sha256": "2bbecf7add14ab02220f80bfeb4c17ca9e185830bc6a96549ab34df2ae8548b7",
+    "source_sha256": "4276ab64c8f477ab4679fda49f19001701f1927e3e707432425a1b0fe2686b93",
     "sites": [
       {
         "file": "NativeAdrenoSmmuContext.cpp",
         "line": 35,
         "group": "-Wshorten-64-to-32",
-        "file_sha256": "2bbecf7add14ab02220f80bfeb4c17ca9e185830bc6a96549ab34df2ae8548b7"
+        "file_sha256": "4276ab64c8f477ab4679fda49f19001701f1927e3e707432425a1b0fe2686b93"
       }
     ],
     "review": "attach rejects count0 and count>8 before conversion from size_t to unsigned; narrowing cannot lose any accepted value."
   },
   "NativeAdrenoSubmit.cpp": {
-    "source_sha256": "9c77ab3c7fc770a9e97081e3beb6c96bc0f4ba54ea0aa72feccb67bf612fdb92",
+    "source_sha256": "3572cc0c5086a882cf0d66803a6ef9f26717b19fc0ddae012554b58fcf65fe2e",
     "sites": [
       {
         "file": "NativeAdrenoSubmit.cpp",
         "line": 340,
         "group": "-Wsign-conversion",
-        "file_sha256": "9c77ab3c7fc770a9e97081e3beb6c96bc0f4ba54ea0aa72feccb67bf612fdb92"
+        "file_sha256": "3572cc0c5086a882cf0d66803a6ef9f26717b19fc0ddae012554b58fcf65fe2e"
       },
       {
         "file": "NativeAdrenoSubmit.cpp",
         "line": 383,
         "group": "-Wshadow",
-        "file_sha256": "9c77ab3c7fc770a9e97081e3beb6c96bc0f4ba54ea0aa72feccb67bf612fdb92"
+        "file_sha256": "3572cc0c5086a882cf0d66803a6ef9f26717b19fc0ddae012554b58fcf65fe2e"
       },
       {
         "file": "NativeAdrenoSubmit.cpp",
         "line": 463,
         "group": "-Wsign-conversion",
-        "file_sha256": "9c77ab3c7fc770a9e97081e3beb6c96bc0f4ba54ea0aa72feccb67bf612fdb92"
+        "file_sha256": "3572cc0c5086a882cf0d66803a6ef9f26717b19fc0ddae012554b58fcf65fe2e"
       },
       {
         "file": "NativeAdrenoSubmit.cpp",
         "line": 541,
         "group": "-Wsign-conversion",
-        "file_sha256": "9c77ab3c7fc770a9e97081e3beb6c96bc0f4ba54ea0aa72feccb67bf612fdb92"
+        "file_sha256": "3572cc0c5086a882cf0d66803a6ef9f26717b19fc0ddae012554b58fcf65fe2e"
       }
     ],
     "review": "The documented local vm_ deliberately selects the request VM; PID/owner and IOReturn conversions preserve32-bit diagnostic representation and do not change submission addresses."
   },
   "NativeAdrenoUserClient.cpp": {
-    "source_sha256": "2015adcb0f52a3691a2341cd839a26ec1536477481ab5ca10a1fe31dd6de3538",
+    "source_sha256": "5e7b9fa563ebac0b2c4ce3c2f2554d7b159093e84adcc52933975d712f316c6d",
     "sites": [
       {
         "file": "NativeAdrenoUserClient.cpp",
         "line": 304,
         "group": "-Wsign-conversion",
-        "file_sha256": "2015adcb0f52a3691a2341cd839a26ec1536477481ab5ca10a1fe31dd6de3538"
+        "file_sha256": "5e7b9fa563ebac0b2c4ce3c2f2554d7b159093e84adcc52933975d712f316c6d"
       },
       {
         "file": "NativeAdrenoUserClient.cpp",
         "line": 306,
         "group": "-Wsign-conversion",
-        "file_sha256": "2015adcb0f52a3691a2341cd839a26ec1536477481ab5ca10a1fe31dd6de3538"
+        "file_sha256": "5e7b9fa563ebac0b2c4ce3c2f2554d7b159093e84adcc52933975d712f316c6d"
       }
     ],
     "review": "proc_selfpid() is stored in the32-bit import identity/trace fields after successful task import; width is unchanged."

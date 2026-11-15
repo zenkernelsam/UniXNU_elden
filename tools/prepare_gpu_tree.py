@@ -1,8 +1,26 @@
 """Export a complete pinned GPU build tree from Git objects, never dirty files."""
 from pathlib import Path, PurePosixPath
-import argparse, hashlib, io, json, subprocess, tarfile
+import argparse, hashlib, json, subprocess
 
 ROOT=Path(__file__).resolve().parents[1]
+def git_files(repo,commit,prefix):
+    rows=subprocess.check_output(['git','-C',str(repo),'ls-tree','-rz',commit,*(['--',prefix] if prefix else [])]).split(b'\0')
+    entries=[]
+    for row in rows:
+        if not row:continue
+        info,name=row.split(b'\t',1);mode,kind,oid=info.split()
+        if kind==b'commit':continue
+        if kind!=b'blob' or mode==b'120000':raise ValueError('Unsupported source tree entry')
+        entries.append((name.decode(),oid.decode()))
+    data=subprocess.check_output(['git','-C',str(repo),'cat-file','--batch'],input=''.join(oid+'\n' for _,oid in entries).encode())
+    at=0
+    for name,oid in entries:
+        end=data.index(b'\n',at);found,kind,size=data[at:end].split();size=int(size)
+        if found.decode()!=oid or kind!=b'blob':raise ValueError('Git object stream differs')
+        raw=data[end+1:end+1+size];at=end+size+2
+        if len(raw)!=size or data[at-1:at]!=b'\n':raise ValueError('Truncated Git object stream')
+        yield PurePosixPath(name),raw
+    if at!=len(data):raise ValueError('Extra Git object data')
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--references',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
@@ -10,20 +28,14 @@ def main():
     lock=json.loads(a.lock.read_text());out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);records={}
     for name,row in lock['sources'].items():
         repo=a.references/row['directory'];commit=row['commit'];prefix=row.get('prefix','')
-        data=subprocess.check_output(['git','-C',str(repo),'archive','--format=tar',commit,*([prefix] if prefix else [])])
         count=0
-        with tarfile.open(fileobj=io.BytesIO(data)) as archive:
-            for member in archive:
-                path=PurePosixPath(member.name)
-                if path.is_absolute() or '..' in path.parts or member.issym() or member.islnk():raise ValueError('Unsafe export member')
-                if not member.isfile():continue
+        for path,raw in git_files(repo,commit,prefix):
+                if path.is_absolute() or '..' in path.parts:raise ValueError('Unsafe export member')
                 relative=path.relative_to(prefix) if prefix else path
                 dest=out/row['destination']/str(relative)
                 if dest.exists():raise ValueError('Source owner collision: '+str(dest))
-                raw=archive.extractfile(member).read()
-                # Git apply interprets CR bytes as patch context. Some published
-                # patch blobs use CRLF while their target repositories use LF.
-                # Preserve the original hash and normalize patch files only.
+                # Raw Git blobs bypass checkout/archive EOL filters. A genuinely
+                # CRLF patch is normalized explicitly, with both hashes retained.
                 data=raw.replace(b'\r\n',b'\n') if relative.suffix=='.patch' else raw
                 dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(data)
                 records[dest.relative_to(out).as_posix()]={'component':name,'commit':commit,'git_path':str(path),

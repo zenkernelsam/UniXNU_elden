@@ -7,7 +7,7 @@ from pathlib import Path
 import argparse, hashlib, json, subprocess
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--tree',type=Path,required=True);p.add_argument('--mesa-cache',type=Path);a=p.parse_args();tree=a.tree.resolve()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--tree',type=Path,required=True);p.add_argument('--mesa-cache',type=Path);p.add_argument('--runtime-cache',type=Path);a=p.parse_args();tree=a.tree.resolve()
  pins=json.loads((tree/'scripts/data/adreno-compiler-inputs.json').read_text())
  runtime=json.loads((tree/'scripts/data/gpu-metal-vulkan-inputs.json').read_text())['translator']
  build_lock=json.loads((tree/'elden-build-lock.json').read_text())
@@ -21,9 +21,10 @@ def main():
   with (logs/(name+'.log')).open('xb') as f:subprocess.run([str(x) for x in cmd],stdout=f,stderr=subprocess.STDOUT,check=True)
  def checkout(name,path,url,rev,dirs=()):
   if path.exists():raise ValueError('Fresh dependency checkout required: '+str(path))
-  if name=='mesa' and a.mesa_cache:
+  cache=a.mesa_cache if name=='mesa' else a.runtime_cache
+  if cache:
    path.parent.mkdir(parents=True,exist_ok=True)
-   run(['git','clone','--no-hardlinks','--no-checkout','--local',a.mesa_cache,path],name+'-local-cache')
+   run(['git','clone','--no-hardlinks','--no-checkout','--local',cache,path],name+'-local-cache')
    run(['git','-C',path,'remote','set-url','origin',url],name+'-remote')
   else:
    path.mkdir(parents=True);run(['git','init',path],name+'-init');run(['git','-C',path,'remote','add','origin',url],name+'-remote')

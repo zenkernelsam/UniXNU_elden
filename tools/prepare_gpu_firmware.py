@@ -31,7 +31,7 @@ def main():
  lines=['.section __DATA_CONST,__const'];header=['/* Generated local firmware declarations; do not commit binary payloads. */','#pragma once','#include <stdint.h>','#ifdef __cplusplus','extern "C" {','#endif']
  for name,data in images.items():
   target=out/(name+'.bin');target.write_bytes(data);symbol='sm8750_gpu_'+name
-  lines += ['.p2align 12','.globl _'+symbol,'_'+symbol+':','.incbin '+json.dumps(str(target)),
+  lines += ['.p2align 12','.globl _'+symbol,'_'+symbol+':','.incbin '+json.dumps(target.name),
             '_'+symbol+'_end:','.p2align 3','.globl _'+symbol+'_size','_'+symbol+'_size:','.quad _'+symbol+'_end-_'+symbol]
   header += ['extern const uint8_t '+symbol+'[];','extern const uint64_t '+symbol+'_size;']
  header += ['#ifdef __cplusplus','}','#endif']

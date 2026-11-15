@@ -75,7 +75,7 @@
       "sha256": "fd0392a2512092ffe9bbaffaaafa93083607173af7703849998bc3464c6b3051"
     }
   },
-  "compatibility_reason": "A830 frontend a4aa33c and all26 patches apply strictly to624bab after explicitly recorded patch-only CRLF-to-LF export.95c6788 supplies its matching bridge builder; other tooling stays current. Final userspace/native integration remains under construction.",
+  "compatibility_reason": "A830 frontend a4aa33c and all26 patches apply strictly to624bab.95c6788 supplies its matching bridge builder; other tooling stays current. Raw Git blob export bypasses Windows archive/autocrlf conversion. Final consolidated integration remains under construction.",
   "patch_text_transform": "CRLF to LF only for .patch build copies; original Git and transformed SHA256 are both recorded.",
   "runtime": {
     "repository": "https://github.com/steelbrain/metal2vulkan",

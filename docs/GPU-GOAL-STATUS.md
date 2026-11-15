@@ -10,8 +10,8 @@ Hardware rendering is a subsequent validation phase, not an offline claim.
 
 | Requirement | Current evidence | Still needed |
 | --- | --- | --- |
-| Native C++ driver | 27 production C++ core units compiled against the actual source-built OS17 kernel context; archive produced; 14 exact warning sites reviewed by source hash | Elden replacement for four SM8550-bound modules; full native link and original/native ABI bindings |
-| Board adaptation | Pinned resources,14 GPU/3 GMU OPPs/four speed bins; actual HFI startup computation passed50 host cases and native compile; four public Gen8 firmware inputs hash/structure checked | Runtime resource ownership, callbacks, startup/stop/recovery and framebuffer handoff |
+| Native C++ driver | 27 core units plus Elden adapter compiled; full native/prelink and GPU-specific original ABI checks pass;30 original Apple execution regions preserved | Fresh consolidated build; global legacy-emitter flags remain experimental |
+| Board adaptation | Pinned resources/OPPs/firmware; shared RPMh owner; explicit one-attempt startup; bounded call/fence drain; task/epoch-owned framebuffer handoff; actual-function host tests pass | Consolidated artifact and later hardware acceptance; no power-off/soft-restart claim |
 | Turnip | iOS17 ARM64 dylib built (17945576B, SHA c021a4e7…), loader exports and Mach-O target independently checked; exact Mesa85fda3b3 plus23 patches | Consolidated final build, native backend ABI pairing and plugin dependency integration |
 | Rust bridge | iOS ARM64 static library built,222473344B/04fe27f1…; all26 patches applied | Final consolidated build and full native/userland ABI acceptance |
 | Metal plugin | A830 six-SP topology flag, no replay, plugin/probe linked and4KiB signed; strict signatures and entitlement roundtrip passed | Final consolidated build and native framebuffer integration |
@@ -46,12 +46,16 @@ final fresh, consolidated full-chain run. Earlier attempts remain interpretable.
   diagnostics are recorded in `config/gpu-native-warnings.json`, tied to source
   identity and exact sites; this is not a warning-free claim.
 - `NativeAdrenoGmuConfig`, `NativeAdrenoGmuPlatform`, `NativeAdrenoKernelTime` and
-  `NativeAdrenoService` require `ShengGmu.h`. They are SM8550 integration pieces,
-  not a valid Elden implementation. Replacements remain mandatory, not stubs.
-- Initial patch failures were traced to CRLF in the published patch blobs,
-  versus LF runtime sources. All26 A830 patches strictly apply to624bab after
-  changing only line endings. The exporter now records original Git and build
-  hashes separately; no source logic, patch hunk, or validation was omitted.
+  `NativeAdrenoService` bind SM8550. Their providers now come from the real
+  hash-bound SM8750 runtime, adapted in `drivers/EldenGpu/RuntimeSource.py`.
+  Unavailable optional diagnostics remain absent, with original refusal paths.
+- Correction to the first export diagnosis: Windows Git archive/autocrlf
+  converted LF Git blobs to CRLF; the published blobs were not the cause.
+  The exporter now uses ls-tree and cat-file --batch, bypassing both checkout
+  and archive filters. It records raw Git and output hashes separately; only
+  genuinely CRLF patch blobs receive an explicit line-ending transform.
+  All26 A830 patches apply strictly to624bab. Earlier reports remain historical
+  evidence, not the current provenance claim.
 - The active candidate retains A830 Metal `a4aa33c` and runtime624bab with the
   matching upstream bridge builder95c6788, plus current remaining tooling. The
   temporary current-Metal19bb66c/555b experiment is archived as evidence, not
@@ -74,3 +78,26 @@ final fresh, consolidated full-chain run. Earlier attempts remain interpretable.
 The goal stays active until every remaining acceptance item above is actually
 verified. Source preparation, a static core archive, or successful host tests
 alone cannot complete it.
+
+## Runtime integration, 2026-11-15
+
+`full-link-4` in the isolated Mac GPU lab linked kernel2325d974 and native9d9ef6f4.
+The supplementary audit checks original IOGPU entry bytes,136-byte accelerator
+instance,168 vtable slots with seven owned overrides, exact C2/D2 branch targets,
+late initializers and required GPU/frame/RPMh interfaces. It does not overwrite
+the legacy emitter's false ABI/loadability/relocation/runtime qualification flags.
+
+Host tests exercise512 held concurrent calls/3200 denied entries,12 real drain
+cases, and actual runtime/presenter methods for cancellation, mapping failure,
+owner replacement and balanced references. These are not live GPU tests.
+
+The adapter retains donor maximum-valid shared rail/HL0 bandwidth votes pending
+a common consumer ledger. It does not lower shared power during shutdown, claim
+dynamic power management, authenticate the public firmware on hardware, or
+claim that all donor GPU pool/CB/chip assumptions have been observed on Y700.
+Startup is opt-in and requires exact OPP, WC framebuffer and armed recovery.
+GPU drain runs before existing UFS shutdown; panic/watchdog routes are unchanged.
+
+The fresh fixed-source baseline at a13e508 has now completed all kernel stages.
+`tools/build_gpu_complete.py` is the next consolidated build entrypoint; successful
+individual builds do not substitute for its final artifact report.

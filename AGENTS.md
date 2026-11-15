@@ -7,15 +7,19 @@ mainline merge. Mac uses its own /Users/ciscohe/Desktop/UniXNU_elden-gpu-offline
 worktree sharing the repository object database. Source/build/ABI/firmware and
 full-chain delivery remain separate acceptance items; the goal is active.
 
-GPU progress: Rust04fe27f1 (222473344B) and the A830 Metal/plugin/probe/Turnip
-userspace chain now build and pass strict4KiB signatures; no device installation.
-Metal legacy-dyld-info behavior is preserved, not passed to chained-fixup edits.
-EldenVotes uses actual TB322FC14GPU/3GMU OPPs/four fuse bins;50 actual-function
-host cases and native compile pass, with no IO. Public firmware hashes/parser
-are qualified structurally only. User confirmed metal2vulkan development;
-historical624bab+UniXNU26 patches remains fixed, current development divergence
-recorded. Remaining main work is real Elden runtime/framebuffer adapter, full
-native link/ABI and a fresh consolidated complete build. Goal remains active.
+GPU progress: Elden runtime/framebuffer/recovery adapter now compiles and fully
+links with 30 original Apple execution regions preserved. GPU-specific ABI audit
+passes (136B instance, 168-slot vtable, original C2/D2), while legacy emitter
+abi_qualified/loadable/runtime flags remain unchanged and false. Runtime uses
+shared RPMh owner, TB322FC ACTLR303/GPUCC9800/OPPs, explicit startup/one attempt,
+bounded call/fence drain before UFS stop and resource retention until reset.
+Actual call-gate/drain/presenter/runtime host tests pass; no hardware execution.
+Fresh fixed a13e508 baseline build completed in Mac GPU lab/fresh-base. Next run
+tools/prepare_gpu_complete.py and build_gpu_complete.py to consolidate native,
+Rust/Turnip/Metal, entry and artifact proof. Existing userspace signatures pass.
+Raw Git export now bypasses Windows archive/autocrlf: previous published-CRLF
+diagnosis was wrong. development624bab+26 UniXNU patches remains pinned.
+Goal active; no tablet access or mainline merge. Outputs stay in isolated lab.
 
 Latest v15320261115 offline: drivers/EldenUfsQueue vendors exact ShengUfs b6fe07b3 RootCommands/layout/LICENSE (1d90996f/5f52df07). PRDT body extracted with provider substitution/null/VA-overflow guards; 1MiB/64PRD/256KiB preserved. Bitmap/FIFO core adds pool+generation leases, cancellation/late grant, terminal stop/quarantine; no panic stealing or release of Issued/Quarantined. It is metadata only: native mutex/wait, descriptor retention and hardware submission are NOT connected. Existing eldenUfsIdentity remains prerequisite; new limit tightens all3 SMMU widths plus host32/64, no register I/O.8276 ASan/UBSan cases include4096 upstream differential PRDT,4096 width combinations,3200 concurrent leases under external mutex. ARM64/iOS17 two objects QueueCore32dce56e/DmaPlan58e1f4ca pass zero warnings/no SIMD/init;10 expected exports, only DmaPlan bzero import available in v152. Mac isolated/ufs-queue-core-v153-final; workbench lab/records/ufs-queue-v153-20261115. No full native adapter/kernel/boot/hardware yet, no tablet access or jobs active. Next owned allocation/request-list mapping, actual issue/await and per-slot diagnostics (old global residual must not decide concurrent commands), per-request snapshot/pipeline, full build and QD1/8/32. Preserve v152 candidate, all original write/identity/recovery gates, QRTR/AnyRouter. Full Goal active; charging/endurance/wireless incomplete.
 
