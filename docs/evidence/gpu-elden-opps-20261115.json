@@ -1,0 +1,155 @@
+{
+  "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+  "source_sha256": {
+    "arch/arm64/boot/dts/qcom/sm8750.dtsi": "cbf8bad5006ec6d2c3d654aeec94bb0f08be235e03804164a2252e5b65a4e175",
+    "include/dt-bindings/power/qcom,rpmhpd.h": "cef4d459df9c1ba1b12ba90571efd503199b0d3b8e08cfc1959bd49878eee309",
+    "drivers/gpu/drm/msm/adreno/a6xx_catalog.c": "4f7ddd57bd1879988d51d0286ba9855c8d4a7dd3ef46e15b50579a362d091eae"
+  },
+  "gpu": [
+    {
+      "hz": 160000000,
+      "level": 50,
+      "bandwidth_kbps": 2136718,
+      "supported_mask": 15,
+      "acd": 0
+    },
+    {
+      "hz": 222000000,
+      "level": 52,
+      "bandwidth_kbps": 2136718,
+      "supported_mask": 15,
+      "acd": 0
+    },
+    {
+      "hz": 342000000,
+      "level": 56,
+      "bandwidth_kbps": 5285156,
+      "supported_mask": 15,
+      "acd": 0
+    },
+    {
+      "hz": 389000000,
+      "level": 60,
+      "bandwidth_kbps": 6074218,
+      "supported_mask": 15,
+      "acd": 3358089213
+    },
+    {
+      "hz": 443000000,
+      "level": 64,
+      "bandwidth_kbps": 6074218,
+      "supported_mask": 15,
+      "acd": 3224264701
+    },
+    {
+      "hz": 525000000,
+      "level": 80,
+      "bandwidth_kbps": 6074218,
+      "supported_mask": 15,
+      "acd": 3224264701
+    },
+    {
+      "hz": 607000000,
+      "level": 128,
+      "bandwidth_kbps": 8171875,
+      "supported_mask": 15,
+      "acd": 2821611517
+    },
+    {
+      "hz": 660000000,
+      "level": 144,
+      "bandwidth_kbps": 8171875,
+      "supported_mask": 15,
+      "acd": 2284609533
+    },
+    {
+      "hz": 734000000,
+      "level": 192,
+      "bandwidth_kbps": 12449218,
+      "supported_mask": 15,
+      "acd": 2821349373
+    },
+    {
+      "hz": 832000000,
+      "level": 224,
+      "bandwidth_kbps": 16500000,
+      "supported_mask": 15,
+      "acd": 2284478461
+    },
+    {
+      "hz": 900000000,
+      "level": 256,
+      "bandwidth_kbps": 16500000,
+      "supported_mask": 15,
+      "acd": 2284478461
+    },
+    {
+      "hz": 967000000,
+      "level": 320,
+      "bandwidth_kbps": 18597656,
+      "supported_mask": 14,
+      "acd": 2284478461
+    },
+    {
+      "hz": 1050000000,
+      "level": 416,
+      "bandwidth_kbps": 18597656,
+      "supported_mask": 14,
+      "acd": 2821283837
+    },
+    {
+      "hz": 1100000000,
+      "level": 448,
+      "bandwidth_kbps": 18597656,
+      "supported_mask": 12,
+      "acd": 2284412925
+    }
+  ],
+  "gmu": [
+    {
+      "hz": 500000000,
+      "level": 64,
+      "bandwidth_kbps": 0,
+      "supported_mask": 15,
+      "acd": 0
+    },
+    {
+      "hz": 650000000,
+      "level": 128,
+      "bandwidth_kbps": 0,
+      "supported_mask": 15,
+      "acd": 0
+    },
+    {
+      "hz": 687500000,
+      "level": 192,
+      "bandwidth_kbps": 0,
+      "supported_mask": 15,
+      "acd": 0
+    }
+  ],
+  "speed_bins": [
+    {
+      "fuse": 190,
+      "index": 0
+    },
+    {
+      "fuse": 221,
+      "index": 1
+    },
+    {
+      "fuse": 232,
+      "index": 2
+    },
+    {
+      "fuse": 242,
+      "index": 3
+    }
+  ],
+  "description_chip_id": "0x44050000",
+  "source_gmu_chip_id": "0x08000100",
+  "maximum_slices": 3,
+  "selected_frequency": null,
+  "hardware_read": false,
+  "note": "Data only; zero/off entry is added by the runtime. This does not choose a safe live frequency or change a vote."
+}

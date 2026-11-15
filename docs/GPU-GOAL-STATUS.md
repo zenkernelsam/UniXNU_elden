@@ -11,10 +11,10 @@ Hardware rendering is a subsequent validation phase, not an offline claim.
 | Requirement | Current evidence | Still needed |
 | --- | --- | --- |
 | Native C++ driver | 27 production C++ core units compiled against the actual source-built OS17 kernel context; archive produced; 14 exact warning sites reviewed by source hash | Elden replacement for four SM8550-bound modules; full native link and original/native ABI bindings |
-| Board adaptation | Four pinned TB322FC GPU DTS blocks and hashes | Firmware/board inputs, reserved memory, resource ownership, callbacks, startup/stop/recovery and framebuffer fallback |
+| Board adaptation | Pinned resources,14 GPU/3 GMU OPPs/four speed bins; actual HFI startup computation passed50 host cases and native compile; four public Gen8 firmware inputs hash/structure checked | Runtime resource ownership, callbacks, startup/stop/recovery and framebuffer handoff |
 | Turnip | iOS17 ARM64 dylib built (17945576B, SHA c021a4e7…), loader exports and Mach-O target independently checked; exact Mesa85fda3b3 plus23 patches | Consolidated final build, native backend ABI pairing and plugin dependency integration |
-| Rust bridge | Rust1.98 with aarch64-apple-ios installed; all26 recorded patches strictly apply after patch-only LF normalization | Static library and exported bridge ABI |
-| Metal plugin | Source candidates inspected | A830 topology/replay adaptations, plugin/probe builds, dependency and signature checks |
+| Rust bridge | iOS ARM64 static library built,222473344B/04fe27f1…; all26 patches applied | Final consolidated build and full native/userland ABI acceptance |
+| Metal plugin | A830 six-SP topology flag, no replay, plugin/probe linked and4KiB signed; strict signatures and entitlement roundtrip passed | Final consolidated build and native framebuffer integration |
 | Reproducibility | Complete Git-object exporter; source manifests; isolated Mac worktree and tool prefix | One verified complete command sequence from fresh outputs; no implicit dirty-source or prior-object dependencies |
 | Upstream updates | Named-branch locks and proposal reviewer | Extend validation to the whole paired userspace/native chain |
 | Delivery | Existing first-stage docs and new progress sources | Final artifact manifest, acceptance audit and reviewed merge commits |
@@ -56,6 +56,20 @@ final fresh, consolidated full-chain run. Earlier attempts remain interpretable.
   matching upstream bridge builder95c6788, plus current remaining tooling. The
   temporary current-Metal19bb66c/555b experiment is archived as evidence, not
   silently installed. Complete ABI/link and bundle acceptance still remain.
+- User clarified that the desired metal2vulkan source is steelbrain's
+  `development` branch. Official historical metadata95c6788 records624bab on
+  development; current development has diverged. The branch is now explicitly
+  tracked and cloned as a reference, while the compiled pin and26 UniXNU patches
+  remain frozen for reproducibility. The latest tip is a coordinated-update
+  candidate, not silently substituted into this build.
+- The iOS17 Turnip artifact uses legacy dyld-info binding, so the upstream
+  chained-fixup-only self-binding optimization is inapplicable. Its legal legacy
+  representation is preserved and recorded; no binding bytes are reinterpreted.
+  Plugin/Turnip/probe signing and Mach-O version validation passed afterward.
+- `config/gpu-firmware.lock.json` identifies public linux-firmware SM8750 inputs.
+  GMU matches the donor's published hash; SQE/AQE/ZAP differ. Their identity,
+  ZAP metadata/payload structure and8KiB reservation bounds were checked, not
+  on-device authentication or equality to the user's stock Android.
 
 The goal stays active until every remaining acceptance item above is actually
 verified. Source preparation, a static core archive, or successful host tests

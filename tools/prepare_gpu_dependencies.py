@@ -10,6 +10,11 @@ def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--tree',type=Path,required=True);p.add_argument('--mesa-cache',type=Path);a=p.parse_args();tree=a.tree.resolve()
  pins=json.loads((tree/'scripts/data/adreno-compiler-inputs.json').read_text())
  runtime=json.loads((tree/'scripts/data/gpu-metal-vulkan-inputs.json').read_text())['translator']
+ build_lock=json.loads((tree/'elden-build-lock.json').read_text())
+ if build_lock.get('runtime'):
+  selected=build_lock['runtime']
+  if selected['commit']!=runtime['commit'] or selected['ref']!='refs/heads/'+runtime.get('branch',''):
+   raise ValueError('Runtime source metadata differs from the explicit development lock')
  logs=tree/'build/dependency-logs';logs.mkdir(parents=True,exist_ok=True);records={}
  def run(cmd,name):
   print(name,flush=True)

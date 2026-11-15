@@ -1,0 +1,15 @@
+{
+  "artifacts": {
+    "libadreno_metal_bridge.a": {
+      "sha256": "04fe27f173aad4f8d19fbbaa3ed2a70cd075f072ce69d8a6c6a71315ba1ccb9c",
+      "bytes": 222473344
+    },
+    "userspace-a830-ios17-20261115.tar.gz": {
+      "sha256": "c987ea6e64c1cf865e610e46fb9a5749d798a81bc3c6bcd74c7639dbf565e5ec",
+      "bytes": 12160467
+    }
+  },
+  "local_directory": "D:\\Desktop\\Git\\Patch\\Y700-Elden\\edl_work\\gpu-offline-20261115\\userspace",
+  "flashable_boot_image": false,
+  "goal_complete": false
+}

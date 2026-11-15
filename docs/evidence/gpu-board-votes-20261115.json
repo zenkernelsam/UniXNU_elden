@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "host_result": "PASS: 50 Elden OPP/HFI cases; actual functions with synthetic rails, no IO",
+  "object_sha256": "059bf513b2cc4b61a1ef7692585de76080ff9f7a3d1d81c4e22643981aab203a",
+  "exports": [
+    "_elden_gpu_build_startup"
+  ],
+  "imports": [
+    "_AdrenoHfiBcmAux",
+    "_AdrenoHfiBuildBandwidth",
+    "_AdrenoHfiGen8Votes",
+    "_AdrenoHfiStartupValidate",
+    "_bzero",
+    "_memcpy"
+  ],
+  "source_sha256": {
+    "/Users/ciscohe/Desktop/UniXNU_elden-gpu-offline/lab/gpu-goal-20261115/board-votes-inputs/EldenGpuVotes.c": "1f0d17adb483e1ffebd9d9d135dc59d358d757998221404b83ceb1c29f6a317d",
+    "/Users/ciscohe/Desktop/UniXNU_elden-gpu-offline/lab/gpu-goal-20261115/board-votes-inputs/TestVotes.c": "36475ff3aad55a2e9dad82c0db43ba08564d4943d0a04839c88d289b9440d4c8",
+    "/Users/ciscohe/Desktop/UniXNU_elden-gpu-offline/lab/gpu-goal-20261115/tree/kits/AdrenoFirmware/AdrenoHfiVotes.c": "28ac14a79f96afada133b2b98fb5513bdb5e6f6df01abbb32122f44dc7e5e95d",
+    "/Users/ciscohe/Desktop/UniXNU_elden-gpu-offline/lab/gpu-goal-20261115/tree/kits/AdrenoFirmware/AdrenoHfiStartup.c": "a4dfb752f951dd0c44fccc2264f87e57b06aaf2d8a01dd33ec78f7eb0ad1df92",
+    "/Users/ciscohe/Desktop/UniXNU_elden-gpu-offline/lab/gpu-goal-20261115/tree/kits/AdrenoFirmware/AdrenoHfi.c": "767cfebc327b9c8c79d3aac1b078ce44ab1d6493948e15e501c79221c3fbce31",
+    "/Users/ciscohe/Desktop/UniXNU_elden-gpu-offline/lab/gpu-goal-20261115/board-votes-inputs/EldenGpuOpps.h": "d6e25d5dc3fc8dcc3cb90e148cdc2e99963004b32f2332c39256740590b2a653"
+  },
+  "hardware": false,
+  "live_voltage_or_frequency_selected": false
+}

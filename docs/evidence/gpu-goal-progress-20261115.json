@@ -22,5 +22,10 @@
   "turnip_session_terminal": true,
   "rust_bridge_pid": 58195,
   "rust_cargo_pid": 60048,
-  "rust_bridge_status": "verified live compilation; not yet complete"
+  "rust_bridge_status": "completed and linked into Metal plugin",
+  "rust_bridge_session_terminal": true,
+  "metal_bundle_built": true,
+  "metal_bundle_device_installed": false,
+  "elden_vote_cases": 50,
+  "board_runtime_complete": false
 }

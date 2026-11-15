@@ -1,0 +1,8 @@
+{
+  "path": "/Users/ciscohe/Desktop/UniXNU_elden-gpu-offline/lab/gpu-goal-20261115/tree/build/adreno-metal-bridge/ios/libadreno_metal_bridge.a",
+  "bytes": 222473344,
+  "sha256": "04fe27f173aad4f8d19fbbaa3ed2a70cd075f072ce69d8a6c6a71315ba1ccb9c",
+  "architectures": "Non-fat file: /Users/ciscohe/Desktop/UniXNU_elden-gpu-offline/lab/gpu-goal-20261115/tree/build/adreno-metal-bridge/ios/libadreno_metal_bridge.a is architecture: arm64",
+  "source": "Historical steelbrain development624bab plus UniXNU26 patches; user confirmed development branch",
+  "hardware": false
+}
