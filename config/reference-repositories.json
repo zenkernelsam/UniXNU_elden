@@ -17,6 +17,11 @@
       "observed_head": "20ad3d7aca14bd46aecab6335c780f5413fa054b"
     },
     {
+      "name": "AdrenoFirmware-a830",
+      "url": "https://github.com/IssacL04/AdrenoFirmware.git",
+      "observed_head": "20ad3d7aca14bd46aecab6335c780f5413fa054b"
+    },
+    {
       "name": "AdrenoMetal-a830",
       "url": "https://github.com/IssacL04/AdrenoMetal.git",
       "observed_head": "831a9dcbd6ac7de89a11bdaf031e07b9aadfa3c8"

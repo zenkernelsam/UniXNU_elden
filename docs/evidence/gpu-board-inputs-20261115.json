@@ -1,0 +1,69 @@
+{
+  "device": "Lenovo TB322FC / elden",
+  "soc": "SM8750",
+  "linux_commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+  "source_url": "https://github.com/h0cheung/tb322fc-linux-kernel",
+  "files": {
+    "arch/arm64/boot/dts/qcom/sm8750.dtsi": "cbf8bad5006ec6d2c3d654aeec94bb0f08be235e03804164a2252e5b65a4e175",
+    "arch/arm64/boot/dts/qcom/sm8750-lenovo-elden.dts": "0a4361f3f2225befd954dd5420216f357bfa8a68294c28c895ec2478ebea3ba3"
+  },
+  "nodes": {
+    "gpu": {
+      "source": "arch/arm64/boot/dts/qcom/sm8750.dtsi",
+      "line": 3758,
+      "properties_as_written": {
+        "compatible": "\"qcom,adreno-44050000\", \"qcom,adreno\"",
+        "reg": "<0x0 0x03d00000 0x0 0x6c000>, <0x0 0x03d9e000 0x0 0x2000>, <0x0 0x03d61000 0x0 0x800>",
+        "reg-names": "\"kgsl_3d0_reg_memory\", \"cx_mem\", \"cx_dbgc\"",
+        "interrupts": "<GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>",
+        "iommus": "<&adreno_smmu 0 0x0>, <&adreno_smmu 1 0x0>",
+        "nvmem-cell-names": "\"speed_bin\""
+      },
+      "source_block_sha256": "87b149efe4dca1ceb3e985761745d0e70a46b3aec4d909e7d6c9d78c86adaaf8"
+    },
+    "gmu": {
+      "source": "arch/arm64/boot/dts/qcom/sm8750.dtsi",
+      "line": 3906,
+      "properties_as_written": {
+        "compatible": "\"qcom,adreno-gmu-830.1\", \"qcom,adreno-gmu\"",
+        "reg": "<0x0 0x03d37000 0x0 0x68000>",
+        "reg-names": "\"gmu\"",
+        "interrupts": "<GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>",
+        "interrupt-names": "\"hfi\", \"gmu\"",
+        "iommus": "<&adreno_smmu 5 0x0>"
+      },
+      "source_block_sha256": "f2b7ad62fb40079af266d920c0444c1719411a547581d22012c5d0d17ec4b08e"
+    },
+    "gpucc": {
+      "source": "arch/arm64/boot/dts/qcom/sm8750.dtsi",
+      "line": 3969,
+      "properties_as_written": {
+        "compatible": "\"qcom,sm8750-gpucc\"",
+        "reg": "<0x0 0x03d90000 0x0 0x9800>"
+      },
+      "source_block_sha256": "31816e8d1a237c137c0bdb2a6433088fd4b0524325d99d75988d52b8c1c83810"
+    },
+    "adreno_smmu": {
+      "source": "arch/arm64/boot/dts/qcom/sm8750.dtsi",
+      "line": 5548,
+      "properties_as_written": {
+        "compatible": "\"qcom,sm8750-smmu-500\", \"qcom,adreno-smmu\", \"qcom,smmu-500\", \"arm,mmu-500\"",
+        "reg": "<0x0 0x03da0000 0x0 0x40000>",
+        "interrupts": "<GIC_SPI 674 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 678 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 679 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 680 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 681 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 682 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 686 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 687 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 688 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 476 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 574 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 575 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 576 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 577 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 660 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 662 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 665 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 666 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 667 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 669 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 670 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 700 IRQ_TYPE_LEVEL_HIGH>"
+      },
+      "source_block_sha256": "e34c61612493a5fdbb9db5cb2b3ff39b2ff766ab9480a84e5e33da7a083df0c6"
+    }
+  },
+  "status": "Unresolved DTS property text, not a flattened runtime tree or hardware observation",
+  "runtime_enabled": false,
+  "device_access": false,
+  "still_required": [
+    "stock GPU chip/revision and firmware hashes",
+    "actual reserved memory/loader ownership",
+    "live SMMU routes/CB ownership and address widths",
+    "board cmd-db rails and bandwidth votes",
+    "Y700 speed-bin/thermal ceilings",
+    "framebuffer/Metal bridge lifetime and fallback",
+    "native callbacks and full link/ABI audit"
+  ]
+}

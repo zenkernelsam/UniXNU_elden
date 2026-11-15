@@ -1,0 +1,104 @@
+{
+  "passed": true,
+  "scope": "7 upstream host suites and 11 native C component objects; no C++ native driver/link/boot",
+  "source_manifest_sha256": "f3d6ae51ea10a086d6c178bb7c4cd02bc13dd6e7bdc1d2874458088f8f37536b",
+  "toolchain": "Ubuntu clang version 14.0.0-1ubuntu1.1\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin\n",
+  "host_tests": {
+    "power": "PASS: SM8750 clock/power software sequence, 81 read and 38 write failures, five bounded stalls, vendor critical-clock writes and branch HALT/FSM status, live-rate/reset refusals",
+    "zap": "PASS: PAS ordering, signed metadata publication, authentication refusals, bounded busy/resume and WAITQ refusal; software SMC peer only",
+    "socinfo": "PASS: SMEM global cached/uncached socinfo, inaccessible partitions, internal-SKU pcode, bounded malformed records",
+    "hfi": "PASS: 510 modern HFI wrapped command/response cases, 4100 sequence exchanges, padded-space guard, malformed/stale/error/timeout quarantine\nSoftware peer only; no actual GMU ACK, firmware startup, MMIO or GPU execution",
+    "hfi-startup": "PASS: A8xx variable performance table and failure quarantine; four A7xx profiles, 66 per-stage failures, software ACKs and pre-publication refusal",
+    "pm4": "PASS: 2097152 type-7 pairs, 262144 registers, 127 counts, 12256 single-bit corruptions; transactional stream refusals",
+    "a830-hwinit": "PASS: A830 protected initialization, 72 read/224 write failure points, authenticated secure transition, restore image and bounded failures; software CP only"
+  },
+  "native_target": "arm64-apple-ios17.0",
+  "native_objects": {
+    "Sm8750Gmu": {
+      "sha256": "7d6f8ae77262426bca1b08847c33b6a8d5a9f4e4c32e3dec266504bbca2e0586",
+      "undefined": [
+        "_AdrenoFirmwarePlanGmu",
+        "_AdrenoHfiInitializeStopped",
+        "_AdrenoHfiPoll",
+        "_AdrenoHfiSend",
+        "_AdrenoHfiStartupRun",
+        "_AdrenoHfiStartupValidate",
+        "_AdrenoHfiStartupValidateServices"
+      ],
+      "bytes": 9408
+    },
+    "Sm8750GmuCommandDb": {
+      "sha256": "f48466a04c0d41ccd9c810d7631eb3b8898f1a479d558d49aa8e4a3cfcb5a24d",
+      "undefined": [],
+      "bytes": 2184
+    },
+    "Sm8750GpuPower": {
+      "sha256": "db1b02f60866350b3494372edd793bb4d440032a2b04f8cef0583160972d04a9",
+      "undefined": [
+        "_AdrenoHfiArcVotes"
+      ],
+      "bytes": 4664
+    },
+    "Sm8750GpuZap": {
+      "sha256": "d31a88a8245a67fe0b92b9d347b7ef3ee1c892579d32b31f8c59b8cfc868b52c",
+      "undefined": [],
+      "bytes": 1576
+    },
+    "Sm8750SocInfo": {
+      "sha256": "302ac2857405fd72b9588f3a184ca3cde3c047c0270eb0b3dc3a7e952b3786b4",
+      "undefined": [],
+      "bytes": 1912
+    },
+    "Sm8750GpuSmmu": {
+      "sha256": "98865c0bda57ce85a3c1de0615c759032566c0e16d305c623d3cc95a0448810c",
+      "undefined": [],
+      "bytes": 2240
+    },
+    "AdrenoFirmware": {
+      "sha256": "af8ec93d46441a0bacd35d0b84a74320637835105d246b4e769a52178f2eabc7",
+      "undefined": [],
+      "bytes": 968
+    },
+    "AdrenoHfi": {
+      "sha256": "56a9b84b827b34ac45e7ae326a1e58e4d7bbfad2f32eb419074c871ea182a6ae",
+      "undefined": [],
+      "bytes": 2400
+    },
+    "AdrenoHfiStartup": {
+      "sha256": "aa0a3898af69edb6a03fedf477ae951de89c6f5a808b480940d4f85ac34e1ffc",
+      "undefined": [
+        "_AdrenoHfiPoll",
+        "_AdrenoHfiSend"
+      ],
+      "bytes": 5304
+    },
+    "AdrenoHfiVotes": {
+      "sha256": "c8dd2e6b7c19efafb274e6f2f8e79b5fbdd3e43904d87370c2a31c40817d5c1e",
+      "undefined": [],
+      "bytes": 2872
+    },
+    "AdrenoPM4": {
+      "sha256": "8a553880dfcb6ec451d79efbba69a5bdeba7c74a1186d8eace41dfabf1d67b69",
+      "undefined": [],
+      "bytes": 1384
+    }
+  },
+  "native_host_fixtures": false,
+  "native_unresolved_imports_review_required": true,
+  "board_adapted": false,
+  "firmware_executed": false,
+  "device_access": false,
+  "whole_kernel": false,
+  "metal_turnip_built": false,
+  "unrun_suites": {
+    "test_votes.c": "Requires the pinned external Linux source_arc/source_bandwidth oracle. Prior link failure retained; no arithmetic differential-test pass claimed."
+  },
+  "builder_sha256": "fe07215e9708b0e55be9f71117bc5fb04fe39cae96570ca8d9adfe35469bc912",
+  "native_header_refusal_checks": [
+    "wrong_magic",
+    "wrong_cpu",
+    "wrong_kind",
+    "truncated_commands",
+    "wrong_os_version"
+  ]
+}
