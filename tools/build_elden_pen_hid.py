@@ -37,6 +37,11 @@ def main():
             job=rec if name=='EldenPenHid.cpp' else next(j for j in cap['jobs'] if j['file'].endswith('/EldenNvt36536/Runtime.cpp'))
             raw=out/(src.stem+'.raw.o') if name=='EldenPenHid.cpp' else obj
             cmd=[*cpp_flags(job),str(src),'-o',str(raw)]
+            if name=='EldenTouchRuntime.cpp':
+                # Existing C++ aggregate {0} zero-initializes every remaining
+                # field. Retain its one hash-bound baseline diagnostic; verify
+                # the exact site below, never waive a new warning silently.
+                cmd+=['-Wno-error=missing-field-initializers']
             run(cmd,src.stem+'-compile',remap(job['directory']))
             if name=='EldenPenHid.cpp':
                 run([a.llvm/'llvm-objcopy','--remove-section=__DATA,__mod_init_func','--globalize-symbol=__GLOBAL__sub_I_EldenPenHid.cpp',raw,obj],src.stem+'-late')
@@ -52,8 +57,14 @@ def main():
         sec=sections(obj)
         if any(k.endswith('/__mod_init_func') for k in sec):raise ValueError('Unexpected automatic initializer')
         symbols=global_symbols(obj)
+        log=(out/(src.stem+'-compile.log')).read_text()
+        warnings=log.count('warning:')
+        if name=='EldenTouchRuntime.cpp':
+            if warnings!=1 or not re.search(r"DmaSurvey\.h:52:32: warning: missing field 'slot' initializer \[-Wmissing-field-initializers\]",log):
+                raise ValueError('Touch warning differs from the retained baseline')
+        elif warnings:raise ValueError('New pen code must compile without warnings')
         records[name]={'sha256':sha(obj),'source_sha256':sha(src),'imports':[k for k,v in symbols.items() if not v[0]&0xe],
-                       'exports':[k for k,v in symbols.items() if v[0]&0xe],'command':cmd}
+                       'exports':[k for k,v in symbols.items() if v[0]&0xe],'command':cmd,'warnings':warnings}
     run(['ar','rcs',out/'libEldenPen.a',*[out/(Path(n).stem+'.o') for n in records if n!='EldenTouchRuntime.cpp']],'archive')
     (out/'result.json').write_text(json.dumps({'compiled':True,'objects':records,'archive_sha256':sha(out/'libEldenPen.a'),
         'original_abi_source_sha256':sha(a.derived/'source.json'),'touch_hook_compiled':True,
