@@ -1,5 +1,17 @@
 # UniXNU elden — authoritative source repository
 
+Offline peripherals20261116: branch offline-peripheral-fixes, from committed
+main f82da007. Read docs/peripherals/STATUS.md and MAINLINE-HANDOFF-PROMPT.md.
+Active scope: AP501U pen, iOS effects for dual AW86937, RTC/wake, accelerometer/
+gyro rotation, front/rear cameras. Prioritize exact ArmadaOS TB322FC/SM8750,
+then Linux mainline; OS17 interfaces use qualified UniXNU donors. No tablet
+access or automatic merge. Mainline owns Wi-Fi/PCIe/WCN/QRTR and hardware tests.
+Hardware gains/waveform conversion require calibration/limits; unqualified
+output disabled. GPU delivery remains separate and complete. This five-part
+goal stays active until its actual objectives are achieved; component success
+is not global acceptance. Keep code here, raw evidence in workbench, research
+Git-only. Preserve peer work and existing recovery/floor gates.
+
 Latest v17820261116 HARDWARE first WMI timeout: MSI HW0/enableffffffff/mask0, logical/native pending0,
 error0/inflight0/Armed3/count79; used+enabled1fc0ff, disabled0/running0/depth1/active1/mutexes3/polling0.
 All reads0; MHI201; current DAIF200 (IRQ unmasked), MPIDR80010100 vs target0: not target-CPU DAIF proof.
