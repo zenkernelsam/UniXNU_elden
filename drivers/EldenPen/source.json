@@ -1,0 +1,49 @@
+{
+  "sources": [
+    {
+      "repository": "https://github.com/ArmadaOS-Freedom/armadaos-freedom",
+      "commit": "51e87bbe8ea9c7e770a1660d9248bb14ddfcbbb1",
+      "path": "packages/kernel/patches/0164-Input-touchscreen-import-NT36536-host-download-SPI-d.patch",
+      "sha256": "b5aaa9031e3c009c07ab0b9e57332df75ade2c75a672bb624a290dd3e9014f10"
+    },
+    {
+      "repository": "https://github.com/rui12366B/UniXNU-gts7xlwifi",
+      "commit": "88b34f97100a01aab4ea6b86dc9c748b2114c382",
+      "path": "drivers/ShengHidInput/NativeHidInput.cpp",
+      "sha256": "46a470b0ad9ecee9374862f160a6b1bd25df656ee96346d834c723a7b076ce04"
+    }
+  ],
+  "stock_module_sha256": "a3c9fce96b453bd18ab4b44fec67db4504c65b1d5f8fc6218a19f2089be9f2a4",
+  "stock_evidence": "docs/AP501U-PENCIL-FEASIBILITY-20261114.md",
+  "stock_anchors": {
+    "coordinate_be16": "0x4334..0x4344",
+    "signed_tilt_ldrsb": [
+      "0x45cc",
+      "0x45d0"
+    ],
+    "pressure": "0x45b0,0x45e0",
+    "distance": "0x45b8,0x45e8",
+    "buttons": "0x45ec,0x46c8"
+  },
+  "packet_register_byte_included": true,
+  "packet_bytes": 109,
+  "pen_byte_range": [
+    66,
+    79
+  ],
+  "pen_checksum_verified": false,
+  "format_f1_understood": false,
+  "android_observed_limits": {
+    "x": 19040,
+    "y": 30400,
+    "pressure": 4095,
+    "tilt": 60
+  },
+  "native_runtime_hooked": false,
+  "hardware": false,
+  "unchanged_finger_sources": {
+    "drivers/EldenNvt36536/Runtime.cpp": "2d9f97ce84fc24d693974d4d0e6c362c44d7a5bff8255fc850a17c3c427ed92b",
+    "drivers/EldenNvt36536/Protocol.c": "3cd51121d24c2c9296c8c8fb41052b25e773503dcc428901b1694cb8aac4e277",
+    "drivers/EldenNvt36536/PointReport.c": "6588e579847642b151f32c009327461b9818aac54214700356e907e697f19680"
+  }
+}
