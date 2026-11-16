@@ -71,6 +71,24 @@ Mainline prompt: [MAINLINE-HANDOFF-PROMPT.md](MAINLINE-HANDOFF-PROMPT.md).
 
 ## Current status
 
-Branch and scope established. Selected references reviewed. Implementations and
-native/component validation are pending. No component is merge-ready or hardware
-verified yet. Existing GPU delivery remains at its separate documented branch.
+AP501U foundation is implemented in `drivers/EldenPen`: independent109-byte
+packet decoding and acknowledged desired/accepted state, ordered release retry,
+stale-contact expiry and terminal stop/clock-fault behavior. Actual C tests pass
+924 checks under ASan/UBSan; two ARM64/iOS17 scalar objects compile without
+warnings, imports or initializers. Source commits891c065/86fb562 and
+`drivers/EldenPen/validation.json` identify the tested inputs. Synthetic frames
+are used; this is not a raw SPI capture or HID/UI acceptance. Finger source bytes
+match basef82da007 unchanged.
+
+Next: independent Pencil HID publication/OS17 pressure handling, then a hook in
+the real sampling worker outside finger-change suppression and a signed UIKit
+probe. No native HID/full-kernel/boot integration or hardware result yet; pen is
+not merge-ready as a working feature. The other four workstreams remain pending.
+All five requirements remain active. Existing GPU delivery stays separate.
+
+Native workspace: `/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes`,
+sharing Git objects but no mainline build outputs. Component run2 in
+`lab/pen-core-20261116` is accepted; run1's checker mistook a hexadecimal address
+for a vector register. The fixed checker parses instructions; no production code
+changed for that correction. Both attempts are retained under workbench
+`edl_work/pen-core-20261116`; summary is in `lab/records/pen-core-20261116`.

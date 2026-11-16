@@ -1,0 +1,81 @@
+{
+  "passed": true,
+  "host_output": "PASS: 924 checks; synthetic protocol boundaries and actual delivery state; no raw SPI or hardware claim\n",
+  "sources": {
+    "PenReport.c": "598e3d0e6569ebdd121be5938766105d9d46d2d57ff3b53fe6d8a515aeb8943f",
+    "Delivery.c": "9a210ff6b1ba48d5ef9a9a0a792a7af2543935771b1ff8efa1cc025198b25c5b",
+    "TestPen.c": "fb52c485cc4fb36ed3021eaa277324873734c7d20bf364ad082bd84920a139b7",
+    "PenReport.h": "f21cdb71622d89aade4216d2bd21b2f8f036eea344e2498836519271e111ce11",
+    "Delivery.h": "075144430992f7353a2fb73881525e0bf2521042b9c7f8e2244731ac36bf3c79"
+  },
+  "native": {
+    "PenReport.c": {
+      "source_sha256": "598e3d0e6569ebdd121be5938766105d9d46d2d57ff3b53fe6d8a515aeb8943f",
+      "object_sha256": "4e7d50f0b0278d489254a2e50cf3bc27ed05e5080b8921a3bed365be8c89a154",
+      "imports": [],
+      "exports": [
+        "0000000000000000 T _elden_pen_decode"
+      ],
+      "command": [
+        "/Users/ciscohe/toolchains/llvm-20/bin/clang",
+        "-target",
+        "arm64-apple-ios17.0",
+        "-std=c11",
+        "-O2",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-mgeneral-regs-only",
+        "-nostdinc",
+        "-isystem",
+        "/Users/ciscohe/toolchains/llvm-20/lib/clang/20/include",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/drivers/EldenPen/PenReport.c",
+        "-o",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/pen-core-20261116/run2/PenReport.o"
+      ]
+    },
+    "Delivery.c": {
+      "source_sha256": "9a210ff6b1ba48d5ef9a9a0a792a7af2543935771b1ff8efa1cc025198b25c5b",
+      "object_sha256": "a962a0847827821549e6e356e03b4a86d01b1f4de895e592162d55010a2ff09d",
+      "imports": [],
+      "exports": [
+        "00000000000004d0 T _elden_pen_delivery_fault",
+        "00000000000002ec T _elden_pen_delivery_feed",
+        "0000000000000000 T _elden_pen_delivery_init",
+        "0000000000000684 T _elden_pen_delivery_released",
+        "00000000000005a8 T _elden_pen_delivery_stop",
+        "0000000000000044 T _elden_pen_delivery_tick"
+      ],
+      "command": [
+        "/Users/ciscohe/toolchains/llvm-20/bin/clang",
+        "-target",
+        "arm64-apple-ios17.0",
+        "-std=c11",
+        "-O2",
+        "-ffreestanding",
+        "-fno-builtin",
+        "-fno-stack-protector",
+        "-mgeneral-regs-only",
+        "-nostdinc",
+        "-isystem",
+        "/Users/ciscohe/toolchains/llvm-20/lib/clang/20/include",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-c",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/drivers/EldenPen/Delivery.c",
+        "-o",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/pen-core-20261116/run2/Delivery.o"
+      ]
+    }
+  },
+  "warnings": 0,
+  "actual_functions": true,
+  "synthetic_packets": true,
+  "native_hid_linked": false,
+  "hardware": false
+}

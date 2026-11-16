@@ -1,5 +1,16 @@
 # UniXNU elden — authoritative source repository
 
+Pen core20261116: drivers/EldenPen now decodes stock/Armada109B pen fields,
+separates identity/leave/unknown frames, and preserves signed tilt/raw metadata.
+Desired/accepted state retries failed lifts before new presses, expires stale
+contacts and latches clock faults/stop.924 actual-C ASan/UBSan checks pass;
+ARM64/iOS17 two scalar objects have zero warnings/imports/init. See validation.json.
+Synthetic packets, no raw XNU pen capture/checksum/HID/UI/hardware proof. Existing
+finger source bytes unchanged. Next independent OS17 Pencil HID/pressure and
+actual runtime hook/probe. No tablet or mainline changes; five-part Goal active.
+Mac separate UniXNU_elden-offline-peripheral-fixes lab/pen-core-20261116/run2;
+run1 checker hex-address false positive preserved. All component jobs terminal.
+
 Offline peripherals20261116: branch offline-peripheral-fixes, from committed
 main f82da007. Read docs/peripherals/STATUS.md and MAINLINE-HANDOFF-PROMPT.md.
 Active scope: AP501U pen, iOS effects for dual AW86937, RTC/wake, accelerometer/

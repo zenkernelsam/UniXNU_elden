@@ -36,3 +36,9 @@ Run `python3 tools/test_elden_pen.py --llvm /path/to/llvm/bin --output /new/path
 on macOS for actual C host tests with ASan/UBSan and scalar ARM64/iOS17 object
 checks. It uses synthetic packets and an explicitly modeled send callback.
 Native HID, full-kernel and hardware acceptance remain separate.
+
+2026-11-16:924 host checks and both native objects passed; see `validation.json`.
+Both objects have no undefined symbols or automatic initializers and contain no
+FP/SIMD instructions. The initial checker incorrectly matched hex address d0 as
+a vector register; parsing only instruction text fixed it without changing the
+production sources. All original failed/successful logs remain in the workbench.

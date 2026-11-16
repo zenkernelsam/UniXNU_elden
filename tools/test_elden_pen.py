@@ -34,7 +34,7 @@ def main():
         dis=run([a.llvm/'llvm-objdump','--disassemble','--no-show-raw-insn',obj],source.stem+'-disassembly')
         instructions=re.findall(r'^\s*[0-9a-fA-F]+:\s+(.+)$',dis,re.M)
         # Match operands/instructions, not hex addresses such as d0 or d8.
-        if not instructions or any(re.search(r'\b[vsdq][0-9]+(?:\b|\.)',s) for s in instructions):
+        if not instructions or any(re.search(r'\b[vsdqhb][0-9]+(?:\b|\.)',s) for s in instructions):
             raise ValueError('Missing disassembly or unexpected FP/SIMD register')
         headers=run([a.llvm/'llvm-objdump','--macho','--private-headers',obj],source.stem+'-headers')
         if '__mod_init_func' in headers or 'ios' not in headers.lower():raise ValueError('Native metadata differs')
