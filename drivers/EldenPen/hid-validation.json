@@ -1,0 +1,134 @@
+{
+  "source_revision": "adc0d781ea90aa8429951ff37d57514502d61cf4",
+  "native_compiled": true,
+  "touch_hook_compiled": true,
+  "full_native_link": true,
+  "kernel_sha256": "164d3734807f7ec1779da88eb627e8b5831ae25c2aeb4cfd8a3364649c204314",
+  "native_sha256": "3c0e249884d2c8e6f2a4ad423e72d60617f5240d16fdc56c17dae31cd49a46c1",
+  "entry_sha256": "5e322d726ce9e6a3b58280c342622043b152622585696508a82d383684eb922e",
+  "apple_regions_preserved": 30,
+  "objects": {
+    "EldenPenHid.cpp": {
+      "sha256": "7be2e980b945f66d6127a85ab71fe98179f715a4a835501689750c715566fac1",
+      "source_sha256": "97dfb1ddfdfc8a82196e17891d1eddb2f1612bc245de0b59159918294d6e3170",
+      "warnings": 0
+    },
+    "HidReport.c": {
+      "sha256": "f9b306ad9719807eb0caaefd7103361b1e11039c541181355eecd14134183720",
+      "source_sha256": "22b19af8cd3ffc445571ad9c2aee1211b035f1d25ee70a1f4b05312d137249d6",
+      "warnings": 0
+    },
+    "PenReport.c": {
+      "sha256": "4e7d50f0b0278d489254a2e50cf3bc27ed05e5080b8921a3bed365be8c89a154",
+      "source_sha256": "598e3d0e6569ebdd121be5938766105d9d46d2d57ff3b53fe6d8a515aeb8943f",
+      "warnings": 0
+    },
+    "Delivery.c": {
+      "sha256": "a962a0847827821549e6e356e03b4a86d01b1f4de895e592162d55010a2ff09d",
+      "source_sha256": "9a210ff6b1ba48d5ef9a9a0a792a7af2543935771b1ff8efa1cc025198b25c5b",
+      "warnings": 0
+    },
+    "EldenTouchRuntime.cpp": {
+      "sha256": "0cb055bd299aa862bc607fa6b8062017222d281cb0bc522496aff1cb6fd49646",
+      "source_sha256": "1ee3c3edd2691b68e8fc43bd052be9145fa163259ef6be52584923d964e3940a",
+      "warnings": 1
+    }
+  },
+  "host_tests": {
+    "passed": true,
+    "results": {
+      "wire": "PASS: 15 HID encoding and fixed-pressure checks; no OS/HID acceptance claim\n",
+      "pressure": "PASS: 249 actual scoped pressure-hook checks, 220-slot bounds and forwarding; OS services modeled\n"
+    },
+    "sources": {
+      "HidReport.c": "22b19af8cd3ffc445571ad9c2aee1211b035f1d25ee70a1f4b05312d137249d6",
+      "HidReport.h": "67469cc657a8551d447a09a9588805bf894aae439900fc5d4f7df27b77d5cf94",
+      "PressureHook.inc": "b5fd7d41a165c6437cdd1d2a95d7e62642a8298faa6bd84d8e267b5a124461a3",
+      "TestHid.c": "7bc0960ae454cd3c174112e75a7ddf529529f34630b96d647370c03ee3ba6f2c",
+      "TestPressure.cpp": "c4af13660d7a10bf6a8f4cd2c596053cbb8d72b7c66ea3e69a3c5ce0b4ccaed8"
+    },
+    "actual_hook": true,
+    "OS_peers_modeled": true,
+    "hardware": false
+  },
+  "pen_abi": {
+    "pen_specific_abi_checks_passed": true,
+    "kernel_sha256": "164d3734807f7ec1779da88eb627e8b5831ae25c2aeb4cfd8a3364649c204314",
+    "device_vtable_slots": 207,
+    "override_slots": [
+      0,
+      1,
+      7,
+      14,
+      86,
+      87,
+      111,
+      171,
+      173,
+      180
+    ],
+    "override_methods": {
+      "0": "__ZN11EldenPenHidD1Ev",
+      "1": "__ZN11EldenPenHidD0Ev",
+      "7": "__ZNK11EldenPenHid12getMetaClassEv",
+      "14": "__ZN11EldenPenHid4freeEv",
+      "86": "__ZN11EldenPenHid5startEP9IOService",
+      "87": "__ZN11EldenPenHid4stopEP9IOService",
+      "111": "__ZNK11EldenPenHid11getWorkLoopEv",
+      "171": "__ZNK11EldenPenHid18newTransportStringEv",
+      "173": "__ZNK11EldenPenHid16newProductStringEv",
+      "180": "__ZNK11EldenPenHid19newReportDescriptorEPP18IOMemoryDescriptor"
+    },
+    "original_superclass": "0xfffffff006ae6fa0",
+    "late_initializer_not_automatic": true,
+    "interfaces": {
+      "_elden_pen_native_start": "0xfffffff007b97a70",
+      "_elden_pen_native_packet": "0xfffffff007b97c78",
+      "_elden_pen_native_fault": "0xfffffff007b97dc8",
+      "_elden_pen_native_stop": "0xfffffff007b97e40",
+      "_elden_pen_hid_report": "0xfffffff007b98d58",
+      "_elden_pen_pressure_fixed": "0xfffffff007b98e7c",
+      "_elden_touch_runtime_start": "0xfffffff007b574a0",
+      "_elden_touch_request_stop": "0xfffffff007b58224"
+    },
+    "legacy_flags_unchanged": {
+      "abi_qualified": false,
+      "loadable": false,
+      "runtime_qualified": false,
+      "instruction_relocation_complete": false
+    },
+    "hardware": false
+  },
+  "probe": {
+    "compiled": true,
+    "signed_4k": true,
+    "cdhash": "1770b67f1baa6d8a461be84b7846daff1701915b",
+    "sha256": "32b6f57c9eaa597a4a8ff7814613eaa15765993f60de596765649166ff7df52b",
+    "source_sha256": "ff123c9f4a555228d4d8c81e962bd84ccfecffaa5e4768c5fe017104cff1d0dc",
+    "private_entitlements": false,
+    "installed": false,
+    "launched": false,
+    "hardware": false,
+    "input_injection": false
+  },
+  "delivery": {
+    "sha256": "17f29d69b63f153dc96516bdaac2432060c209ffb7e4bf7e74dfda10fcd4bff0",
+    "bytes": 10731316,
+    "entry_sha256": "5e322d726ce9e6a3b58280c342622043b152622585696508a82d383684eb922e",
+    "native_archive_sha256": "d2d423c69cbd0df0b52d7a6d4286c8ca8f636fea414eb006eed921fad0f60288",
+    "default_enabled": false,
+    "hardware": false
+  },
+  "archive_key_members_readback": true,
+  "mainline_baseline": "source-built a13e508/v152; not current Wi-Fi hardware candidate",
+  "replacement_member": "libNativeLegacyDisplay.late.a/EldenNvtRuntime.o",
+  "pending": [
+    "raw SPI pen capture and F1/integrity/scan-mode qualification",
+    "OS service first-read matching and real UIKit Pencil/force acceptance",
+    "tilt to UIKit altitude/azimuth",
+    "mainline integration and boot/menu/trust/floor/recovery audit",
+    "remaining four peripheral workstreams"
+  ],
+  "global_goal_complete": false,
+  "hardware": false
+}

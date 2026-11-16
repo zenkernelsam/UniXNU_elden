@@ -80,11 +80,18 @@ warnings, imports or initializers. Source commits891c065/86fb562 and
 are used; this is not a raw SPI capture or HID/UI acceptance. Finger source bytes
 match basef82da007 unchanged.
 
-Next: independent Pencil HID publication/OS17 pressure handling, then a hook in
-the real sampling worker outside finger-change suppression and a signed UIKit
-probe. No native HID/full-kernel/boot integration or hardware result yet; pen is
-not merge-ready as a working feature. The other four workstreams remain pending.
-All five requirements remain active. Existing GPU delivery stays separate.
+The next layer now builds and fully links: separate OS17 Pencil HID publication,
+owned pressure conversion, and pen sampling outside finger-change suppression.
+Five native objects, original HID tables, linked207-slot inheritance/10exact
+overrides,30original Apple execution regions and entry preparation passed.
+The UIKit diagnostic is signed for iOS17 but uninstalled. Details and reproducible
+commands: [PEN-NATIVE.md](PEN-NATIVE.md), `drivers/EldenPen/hid-validation.json`.
+
+Next: qualify raw pen packet/F1/integrity and scan assumptions, implement UIKit
+polar tilt conversion, then review current-mainline integration/boot and live
+input. This link uses a fixed source-built v152 baseline, not the current Wi-Fi
+candidate. Default stays off; no live-feature readiness claim. The other four
+workstreams remain pending. All five requirements stay active; GPU stays separate.
 
 Native workspace: `/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes`,
 sharing Git objects but no mainline build outputs. Component run2 in

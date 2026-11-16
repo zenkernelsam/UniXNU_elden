@@ -39,11 +39,17 @@
     "pressure": 4095,
     "tilt": 60
   },
-  "native_runtime_hooked": false,
   "hardware": false,
   "unchanged_finger_sources": {
     "drivers/EldenNvt36536/Runtime.cpp": "2d9f97ce84fc24d693974d4d0e6c362c44d7a5bff8255fc850a17c3c427ed92b",
     "drivers/EldenNvt36536/Protocol.c": "3cd51121d24c2c9296c8c8fb41052b25e773503dcc428901b1694cb8aac4e277",
     "drivers/EldenNvt36536/PointReport.c": "6588e579847642b151f32c009327461b9818aac54214700356e907e697f19680"
-  }
+  },
+  "hid_upstream_license": {
+    "path": "drivers/ShengHidInput/LICENSE",
+    "commit": "88b34f97100a01aab4ea6b86dc9c748b2114c382",
+    "sha256": "fc56b096347b83da4a300f97ad6182484941bbeff8becf91914b7fdc203d5a9f"
+  },
+  "decoder_baseline_runtime_hooked": false,
+  "native_integration_record": "hid-validation.json (offline derived worker/full link, not hardware)"
 }

@@ -1,5 +1,19 @@
 # UniXNU elden — authoritative source repository
 
+Pen HID20261116: independent Pencil0x0d/0x20 service, source-bound109B worker
+hook and scoped pressure conversion now compile/full-link over source-built
+v152. Actual15wire+249hook peer checks; five native objects (pen0warnings,
+touch1retained DmaSurvey aggregate warning), original207/220/37tables and final
+10exact subclass overrides/late-init/30Apple regions/entry pass. Final native
+3c0e2498/kernel164d3734/entry5e322d72. UIKit probe32b6f57c/CDHash1770b67f1baa,
+4KiB signed, never installed/run. Defaultoff; no tablet/mainline/boot package.
+Mac separate lab/pen-hid-20261116 native3/kernel1/probe1/entry1; Windows edl_work
+pen-offline.tar.gz10731316B/17f29d69, key members verified. All jobs terminal.
+Read docs/peripherals/PEN-NATIVE.md and drivers/EldenPen/hid-validation.json.
+Next raw pen/F1/integrity/scan qualification and UIKit polar tilt, then current
+mainline integration/boot/live acceptance. Retained service/vtable to reset,
+no full sleep/resume claim. Other four peripherals pending; full Goal active.
+
 Pen core20261116: drivers/EldenPen now decodes stock/Armada109B pen fields,
 separates identity/leave/unknown frames, and preserves signed tilt/raw metadata.
 Desired/accepted state retries failed lifts before new presses, expires stale

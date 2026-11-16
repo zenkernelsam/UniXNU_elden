@@ -26,11 +26,12 @@ contacts. The caller supplies the monotonic time and explicit stale deadline;
 the deadline is a policy parameter, not a measured hardware sampling guarantee.
 Clock reversal latches refusal of new contacts while still allowing a lift.
 
-There is no background thread, device access, HID sender or native runtime hook
-in these components yet. The current finger decoder/worker/HID remain unchanged.
-Upcoming work is the independent OS17 Pencil HID service and a hook outside the
-finger-change condition, followed by a signed UIKit diagnostic and full native
-link. A parser/native object does not prove UIKit Pencil or Notes operation.
+The two C components do not create threads or access devices. The additional
+native service and derived touch-worker hook now build and link, with a signed
+UIKit probe. See `docs/peripherals/PEN-NATIVE.md` and `hid-validation.json` for
+that separate qualification. Original finger source files remain unchanged;
+the link replaces only the derived touch worker member. No live UIKit Pencil
+or Notes operation is proved by these offline builds.
 
 Run `python3 tools/test_elden_pen.py --llvm /path/to/llvm/bin --output /new/path`
 on macOS for actual C host tests with ASan/UBSan and scalar ARM64/iOS17 object
