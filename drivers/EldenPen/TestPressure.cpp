@@ -44,6 +44,8 @@ int main(){
     CHECK(!PenPressure::install(&driver)&&driver.references==0);allocationFail=false;
     CHECK(PenPressure::install(&driver)&&driver.references==1);
     CHECK(PenPressure::install(&driver)&&driver.references==1&&!PenPressure::install(&foreign));
+    uintptr_t *ours=driver.table;driver.table=driverTable;
+    CHECK(!PenPressure::install(&driver));driver.table=ours;
     CHECK(driver.table!=driverTable&&driver.table[198]==(uintptr_t)&PenPressure::dispatch);
     for(unsigned i=0;i<220;++i)if(i!=198)CHECK(driver.table[i]==driverTable[i]);
     OSObject event;event.table=eventTable;event.pressure=32768;

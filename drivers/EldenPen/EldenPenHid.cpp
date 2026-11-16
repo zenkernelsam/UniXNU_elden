@@ -34,10 +34,19 @@ static IORegistryEntry *copyDriver(IORegistryEntry *parent,unsigned depth){
     }
     it->release();return found;
 }
+static bool numberIs(IORegistryEntry *e,const char *name,uint32_t expected){
+    OSObject *value=e->copyProperty(name);OSNumber *number=OSDynamicCast(OSNumber,value);
+    bool ok=number&&number->unsigned32BitValue()==expected;if(value)value->release();return ok;
+}
+static bool flagIsTrue(IORegistryEntry *e,const char *name){
+    OSObject *value=e->copyProperty(name);bool ok=value==kOSBooleanTrue;if(value)value->release();return ok;
+}
 static bool stamp(IORegistryEntry *e){
-    return e&&e->setProperty("Built-In",kOSBooleanTrue)&&e->setProperty("DisplayIntegrated",kOSBooleanTrue)&&
+    bool ok=e&&e->setProperty("Built-In",kOSBooleanTrue)&&e->setProperty("DisplayIntegrated",kOSBooleanTrue)&&
         e->setProperty("PrimaryUsagePage",0x0dULL,32)&&e->setProperty("PrimaryUsage",0x20ULL,32)&&
         e->setProperty("AccurateMaxDigitizerPressureValue",(unsigned long long)EldenPenPressureScale,32);
+    return ok&&flagIsTrue(e,"Built-In")&&flagIsTrue(e,"DisplayIntegrated")&&numberIs(e,"PrimaryUsagePage",0x0d)&&
+        numberIs(e,"PrimaryUsage",0x20)&&numberIs(e,"AccurateMaxDigitizerPressureValue",EldenPenPressureScale);
 }
 static IORegistryEntry *copyParent(IORegistryEntry *entry){
     OSIterator *parents=entry->getParentIterator(gIOServicePlane);if(!parents)return nullptr;
@@ -68,12 +77,13 @@ public:
     }
     bool prepare(){
         if(__atomic_load_n(&stopping,__ATOMIC_ACQUIRE))return false;
-        if(eventDriver)return true;
+        if(eventDriver)return PenPressure::install(eventDriver);
         IORegistryEntry *driver=copyDriver(this,4);if(!driver)return false;
         IORegistryEntry *parent=copyParent(driver);
         bool ok=stamp(driver)&&stamp(parent)&&PenPressure::install(driver);
         if(parent)parent->release();
-        if(ok)eventDriver=driver;else driver->release();return ok;
+        if(ok){eventDriver=driver;IOLog("ELDEN_PEN HID ready usage=13,32 max-force=1000; original pressure hook owned\n");}
+        else driver->release();return ok;
     }
     static IOReturn action(OSObject *owner,void *data,void *,void *,void *){
         EldenPenHid *self=OSDynamicCast(EldenPenHid,owner);

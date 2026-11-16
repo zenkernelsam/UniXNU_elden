@@ -18,25 +18,29 @@ def main():
     if not sources['qualified']:raise ValueError('Original HID ABI not qualified')
     for name,digest in sources['sources'].items():
         if sha(a.derived/name)!=digest:raise ValueError('Derived input changed')
-    flags=[];i=0
-    while i<len(rec['arguments']):
-        v=rec['arguments'][i]
-        if v in ('-o','-MF','-MJ','-MT','-MQ','-serialize-diagnostics'):i+=2;continue
-        if v==rec['file'] or v in ('-MD','-MP','-MMD','-Wno-unnecessary-virtual-specifier'):i+=1;continue
-        flags.append(remap(v));i+=1
-    flags+=['-I',str(a.derived),'-Werror','-mgeneral-regs-only']
+    def cpp_flags(job):
+        flags=[];i=0
+        while i<len(job['arguments']):
+            v=job['arguments'][i]
+            if v in ('-o','-MF','-MJ','-MT','-MQ','-serialize-diagnostics'):i+=2;continue
+            if v==job['file'] or v in ('-MD','-MP','-MMD','-Wno-unnecessary-virtual-specifier'):i+=1;continue
+            flags.append(remap(v));i+=1
+        return flags+['-I',str(a.derived),'-I',remap(str(Path(job['file']).parent)),'-Werror','-mgeneral-regs-only']
     records={}
     def run(cmd,name,cwd=None):
         r=subprocess.run(list(map(str,cmd)),cwd=cwd,capture_output=True);(out/(name+'.log')).write_bytes(r.stdout+r.stderr)
         if r.returncode:raise RuntimeError(name+' failed; logs retained')
         return r.stdout.decode()
-    for name in ('EldenPenHid.cpp','HidReport.c','PenReport.c','Delivery.c'):
+    for name in ('EldenPenHid.cpp','HidReport.c','PenReport.c','Delivery.c','EldenTouchRuntime.cpp'):
         src=a.derived/name;obj=out/(src.stem+'.o')
         if src.suffix=='.cpp':
-            raw=out/(src.stem+'.raw.o');cmd=[*flags,str(src),'-o',str(raw)]
-            run(cmd,src.stem+'-compile',remap(rec['directory']))
-            run([a.llvm/'llvm-objcopy','--remove-section=__DATA,__mod_init_func','--globalize-symbol=__GLOBAL__sub_I_EldenPenHid.cpp',raw,obj],src.stem+'-late')
-            if sections(raw)['__TEXT/__text']!=sections(obj)['__TEXT/__text']:raise ValueError('Late init changed code')
+            job=rec if name=='EldenPenHid.cpp' else next(j for j in cap['jobs'] if j['file'].endswith('/EldenNvt36536/Runtime.cpp'))
+            raw=out/(src.stem+'.raw.o') if name=='EldenPenHid.cpp' else obj
+            cmd=[*cpp_flags(job),str(src),'-o',str(raw)]
+            run(cmd,src.stem+'-compile',remap(job['directory']))
+            if name=='EldenPenHid.cpp':
+                run([a.llvm/'llvm-objcopy','--remove-section=__DATA,__mod_init_func','--globalize-symbol=__GLOBAL__sub_I_EldenPenHid.cpp',raw,obj],src.stem+'-late')
+                if sections(raw)['__TEXT/__text']!=sections(obj)['__TEXT/__text']:raise ValueError('Late init changed code')
         else:
             clang=a.llvm/'clang';resource=subprocess.check_output([str(clang),'-print-resource-dir'],text=True).strip()
             cmd=[str(clang),'-target','arm64-apple-ios17.0','-std=c11','-O2','-ffreestanding','-fno-builtin','-fno-stack-protector','-mgeneral-regs-only',
@@ -50,8 +54,10 @@ def main():
         symbols=global_symbols(obj)
         records[name]={'sha256':sha(obj),'source_sha256':sha(src),'imports':[k for k,v in symbols.items() if not v[0]&0xe],
                        'exports':[k for k,v in symbols.items() if v[0]&0xe],'command':cmd}
-    run(['ar','rcs',out/'libEldenPen.a',*[out/(Path(n).stem+'.o') for n in records]],'archive')
+    run(['ar','rcs',out/'libEldenPen.a',*[out/(Path(n).stem+'.o') for n in records if n!='EldenTouchRuntime.cpp']],'archive')
     (out/'result.json').write_text(json.dumps({'compiled':True,'objects':records,'archive_sha256':sha(out/'libEldenPen.a'),
-        'original_abi_source_sha256':sha(a.derived/'source.json'),'touch_hook_compiled':False,'full_link':False,'hardware':False},indent=2)+'\n')
+        'original_abi_source_sha256':sha(a.derived/'source.json'),'touch_hook_compiled':True,
+        'separate_replacement_object':'EldenTouchRuntime.o (replace existing Runtime.o, do not add alongside it)',
+        'full_link':False,'hardware':False},indent=2)+'\n')
     print('PASS: native pen service and helpers; explicit late initializer, scalar, no automatic init; full link pending')
 if __name__=='__main__':main()
