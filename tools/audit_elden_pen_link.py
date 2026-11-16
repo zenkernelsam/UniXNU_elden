@@ -25,14 +25,15 @@ def main():
     parent=struct.unpack('<207Q',read(0xfffffff005d045c0,207*8))
     child=struct.unpack('<207Q',read(names['__ZTV11EldenPenHid']+16,207*8))
     differences=[i for i in range(207) if parent[i]!=child[i]]
-    expected={0:'D1Ev',1:'D0Ev',7:'getMetaClassEv',14:'4freeEv',86:'5startEP9IOService',87:'4stopEP9IOService',
-              111:'getWorkLoopEv',171:'newTransportStringEv',173:'newProductStringEv',180:'newReportDescriptorEPP18IOMemoryDescriptor'}
+    expected={0:'__ZN11EldenPenHidD1Ev',1:'__ZN11EldenPenHidD0Ev',7:'__ZNK11EldenPenHid12getMetaClassEv',
+              14:'__ZN11EldenPenHid4freeEv',86:'__ZN11EldenPenHid5startEP9IOService',87:'__ZN11EldenPenHid4stopEP9IOService',
+              111:'__ZNK11EldenPenHid11getWorkLoopEv',171:'__ZNK11EldenPenHid18newTransportStringEv',
+              173:'__ZNK11EldenPenHid16newProductStringEv',180:'__ZNK11EldenPenHid19newReportDescriptorEPP18IOMemoryDescriptor'}
     if differences!=sorted(expected):raise ValueError('Unexpected pen vtable override slots')
     matched={}
-    for slot,suffix in expected.items():
-        found=[(n,v) for n,v in names.items() if '11EldenPenHid' in n and n.endswith(suffix)]
-        if len(found)!=1 or child[slot]!=found[0][1]:raise ValueError('Wrong method at slot '+str(slot))
-        name,address=found[0];at=backed_offset(native_image['segments'],address,32,len(native))
+    for slot,name in expected.items():
+        if name not in names or child[slot]!=names[name]:raise ValueError('Wrong method at slot '+str(slot)+': '+name)
+        address=names[name];at=backed_offset(native_image['segments'],address,32,len(native))
         if native[at:at+32]!=read(address,32):raise ValueError('Native method code changed in prelink')
         matched[str(slot)]=name
     base_meta=names['__ZN11IOHIDDevice10gMetaClassE']
