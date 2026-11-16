@@ -2,7 +2,7 @@
 experimental prelink qualification flags or claiming hardware acceptance.
 """
 from pathlib import Path
-import argparse,hashlib,json,struct,sys
+import argparse,hashlib,json,re,struct,subprocess,sys
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for key in ('kernel-build','prelink-tool','output'):p.add_argument('--'+key,type=Path,required=True)
@@ -10,12 +10,31 @@ def main():
     raw=(a.kernel_build/'kernel.macho').read_bytes();im=macho(raw);names={n:v for v,group in exports(raw,im).items() for n in group}
     def read(address,size):
         offset=backed_offset(im['segments'],address,size,len(raw));return raw[offset:offset+size]
+    # Inline virtuals are local symbols in the linked native image; the
+    # prelink export dictionary intentionally omits them. Read the real native
+    # symbol table and bind their bytes to the final image, not a name guess.
+    native_path=a.kernel_build/'native.macho';native=native_path.read_bytes();native_image=macho(native)
+    report=json.loads((a.kernel_build/'result.json').read_text())
+    if hashlib.sha256(native).hexdigest()!=report['native_sha256']:raise ValueError('Native image identity differs')
+    for line in subprocess.check_output(['xcrun','nm','-n',str(native_path)],text=True).splitlines():
+        match=re.match(r'^([0-9a-fA-F]+)\s+[sStT]\s+(\S+)$',line)
+        if match and '11EldenPenHid' in match[2]:
+            address=int(match[1],16)
+            if match[2] in names and names[match[2]]!=address:raise ValueError('Native/prelink symbol address differs')
+            names[match[2]]=address
     parent=struct.unpack('<207Q',read(0xfffffff005d045c0,207*8))
     child=struct.unpack('<207Q',read(names['__ZTV11EldenPenHid']+16,207*8))
     differences=[i for i in range(207) if parent[i]!=child[i]]
-    allowed={v for n,v in names.items() if '11EldenPenHid' in n and any(s in n for s in ('D0Ev','D1Ev','D2Ev','getMetaClass','4free','5start','4stop','getWorkLoop','newTransportString','newProductString','newReportDescriptor'))}
-    if len(differences)!=10 or any(child[i] not in allowed for i in differences):raise ValueError('Unexpected pen vtable override')
-    if child[180] not in {v for n,v in names.items() if '11EldenPenHid' in n and 'newReportDescriptor' in n}:raise ValueError('Wrong descriptor slot')
+    expected={0:'D1Ev',1:'D0Ev',7:'getMetaClassEv',14:'4freeEv',86:'5startEP9IOService',87:'4stopEP9IOService',
+              111:'getWorkLoopEv',171:'newTransportStringEv',173:'newProductStringEv',180:'newReportDescriptorEPP18IOMemoryDescriptor'}
+    if differences!=sorted(expected):raise ValueError('Unexpected pen vtable override slots')
+    matched={}
+    for slot,suffix in expected.items():
+        found=[(n,v) for n,v in names.items() if '11EldenPenHid' in n and n.endswith(suffix)]
+        if len(found)!=1 or child[slot]!=found[0][1]:raise ValueError('Wrong method at slot '+str(slot))
+        name,address=found[0];at=backed_offset(native_image['segments'],address,32,len(native))
+        if native[at:at+32]!=read(address,32):raise ValueError('Native method code changed in prelink')
+        matched[str(slot)]=name
     base_meta=names['__ZN11IOHIDDevice10gMetaClassE']
     if struct.unpack('<Q',read(names['__ZN11EldenPenHid10superClassE'],8))[0]!=base_meta:raise ValueError('Wrong HID superclass')
     initializers=[]
@@ -31,7 +50,7 @@ def main():
     if any(n not in names for n in required):raise ValueError('Missing pen/touch interface')
     meta=json.loads((a.kernel_build/'kernel.json').read_text())
     result={'pen_specific_abi_checks_passed':True,'kernel_sha256':hashlib.sha256(raw).hexdigest(),
-            'device_vtable_slots':207,'override_slots':differences,'original_superclass':hex(base_meta),
+            'device_vtable_slots':207,'override_slots':differences,'override_methods':matched,'original_superclass':hex(base_meta),
             'late_initializer_not_automatic':True,'interfaces':{n:hex(names[n]) for n in required},
             'legacy_flags_unchanged':{k:meta.get(k) for k in ('abi_qualified','loadable','runtime_qualified','instruction_relocation_complete')},
             'hardware':False}
