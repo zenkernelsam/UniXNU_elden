@@ -68,7 +68,7 @@ def main():
     run(['ar','rcs',out/'libEldenPen.a',*[out/(Path(n).stem+'.o') for n in records if n!='EldenTouchRuntime.cpp']],'archive')
     (out/'result.json').write_text(json.dumps({'compiled':True,'objects':records,'archive_sha256':sha(out/'libEldenPen.a'),
         'original_abi_source_sha256':sha(a.derived/'source.json'),'touch_hook_compiled':True,
-        'separate_replacement_object':'EldenTouchRuntime.o (replace existing Runtime.o, do not add alongside it)',
+        'separate_replacement_object':'EldenTouchRuntime.o replaces display archive EldenNvtRuntime.o; never add alongside it',
         'full_link':False,'hardware':False},indent=2)+'\n')
     print('PASS: native pen service and helpers; explicit late initializer, scalar, no automatic init; full link pending')
 if __name__=='__main__':main()
