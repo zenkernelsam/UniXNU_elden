@@ -12,10 +12,19 @@ int elden_pen_decode(const uint8_t *p,size_t bytes,const EldenPenLimits *limits,
        (limits->max_pressure!=4095&&limits->max_pressure!=8191)||
        !limits->max_tilt||limits->max_tilt>90)return EldenPenArgument;
     if(bytes!=EldenPenPacketBytes)return EldenPenLength;
+    uint8_t sum=0;for(unsigned i=1;i<=65;++i)sum=(uint8_t)(sum+p[i]);
+    if(sum)return EldenPenEnvelope;
     EldenPenFrame f={0};f.kind=p[66];
     if(f.kind==EldenPenLeave){*out=f;return EldenPenOk;}
     if(f.kind==EldenPenIdentity){
         for(unsigned i=0;i<6;++i)f.identity[i]=p[67+i];
+        *out=f;return EldenPenOk;
+    }
+    if(f.kind==EldenPenInfo){
+        for(unsigned i=0;i<9;++i)f.info_raw[i]=p[67+i];
+        f.serial=(uint32_t)p[67]|((uint32_t)p[68]<<8)|((uint32_t)(p[69]&63u)<<16);
+        f.vendor=(uint16_t)((p[69]>>6)|((uint16_t)p[70]<<2)|((uint16_t)(p[71]&63u)<<10));
+        f.product=(uint16_t)((p[71]>>6)|((uint16_t)p[72]<<2)|((uint16_t)(p[73]&63u)<<10));
         *out=f;return EldenPenOk;
     }
     if(f.kind!=EldenPenCoordinate)return EldenPenUnsupported;

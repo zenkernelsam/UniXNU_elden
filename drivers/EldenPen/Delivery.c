@@ -54,10 +54,10 @@ int elden_pen_delivery_feed(EldenPenDelivery *s,const EldenPenFrame *f,uint64_t 
     if(f->kind==EldenPenLeave)release(s);
     else if(f->kind==EldenPenCoordinate){
         s->desired=*f;s->dirty=1;s->has_coordinate=1;s->last_coordinate=now;
-    }else if(f->kind!=EldenPenIdentity){
+    }else if(f->kind!=EldenPenIdentity&&f->kind!=EldenPenInfo){
         release(s);int rc=flush(s,send,context);return rc?rc:EldenPenUnsupported;
     }
-    /* Identity is metadata only; it neither moves the pen nor refreshes its
+    /* F0/F1 are metadata only; neither moves the pen nor refreshes its
      * contact deadline. A release must succeed before a new contact is sent. */
     return flush(s,send,context);
 }

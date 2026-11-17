@@ -42,8 +42,12 @@ static void decode_cases(void){
         if(!rc)CHECK(f.tilt_x==signed_value);
     }
     packet(p,1);CHECK(!elden_pen_decode(p,109,&limits,&before));
-    for(unsigned i=0;i<=65;++i){p[i]^=0x5a;CHECK(!elden_pen_decode(p,109,&limits,&f));CHECK(!memcmp(&f,&before,sizeof(f)));}
-    p[66]=0xf1;CHECK(elden_pen_decode(p,109,&limits,&f)==EldenPenUnsupported);CHECK(!memcmp(&f,&before,sizeof(f)));
+    p[65]=1;CHECK(elden_pen_decode(p,109,&limits,&f)==EldenPenEnvelope);CHECK(!memcmp(&f,&before,sizeof(f)));p[65]=0;
+    for(unsigned i=0;i<65;++i){
+        p[i]^=0x5a;uint8_t sum=0;for(unsigned j=1;j<65;++j)sum=(uint8_t)(sum+p[j]);p[65]=(uint8_t)(0u-sum);
+        CHECK(!elden_pen_decode(p,109,&limits,&f));CHECK(!memcmp(&f,&before,sizeof(f)));
+    }
+    p[66]=0xf2;CHECK(elden_pen_decode(p,109,&limits,&f)==EldenPenUnsupported);CHECK(!memcmp(&f,&before,sizeof(f)));
     p[66]=0xf0;for(unsigned i=0;i<6;++i)p[67+i]=(uint8_t)(i+1);
     CHECK(!elden_pen_decode(p,109,&limits,&f));CHECK(f.kind==EldenPenIdentity&&!f.tip&&!f.in_range&&f.identity[5]==6);
     p[66]=0xff;CHECK(!elden_pen_decode(p,109,&limits,&f));CHECK(f.kind==EldenPenLeave&&!f.tip&&!f.buttons);
@@ -83,7 +87,11 @@ static void delivery_cases(void){
     old=sink.count;CHECK(elden_pen_delivery_feed(&s,&down,201,send,&sink)==EldenPenClock);CHECK(sink.count==old);
     CHECK(!elden_pen_delivery_init(&s,100));CHECK(!elden_pen_delivery_feed(&s,&down,0,send,&sink));
     old=sink.count;CHECK(!elden_pen_delivery_feed(&s,&down,100,send,&sink));CHECK(sink.count==old+2&&!sink.trace[old].tip);
-    leave.kind=0xf1;CHECK(elden_pen_delivery_feed(&s,&leave,101,send,&sink)==EldenPenUnsupported);CHECK(elden_pen_delivery_released(&s));
+    leave.kind=0xf2;CHECK(elden_pen_delivery_feed(&s,&leave,101,send,&sink)==EldenPenUnsupported);CHECK(elden_pen_delivery_released(&s));
+    CHECK(!elden_pen_delivery_init(&s,100));CHECK(!elden_pen_delivery_feed(&s,&down,0,send,&sink));
+    identity.kind=EldenPenInfo;old=sink.count;
+    CHECK(!elden_pen_delivery_feed(&s,&identity,99,send,&sink));CHECK(sink.count==old&&s.accepted.tip);
+    CHECK(!elden_pen_delivery_tick(&s,100,send,&sink));CHECK(elden_pen_delivery_released(&s));
     CHECK(elden_pen_delivery_init(&s,0)==EldenPenDeliveryArgument);
 }
 int main(void){decode_cases();delivery_cases();printf("PASS: %u checks; synthetic protocol boundaries and actual delivery state; no raw SPI or hardware claim\n",checks);return 0;}
