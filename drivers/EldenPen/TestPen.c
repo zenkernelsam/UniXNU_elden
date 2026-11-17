@@ -42,7 +42,7 @@ static void decode_cases(void){
         if(!rc)CHECK(f.tilt_x==signed_value);
     }
     packet(p,1);CHECK(!elden_pen_decode(p,109,&limits,&before));
-    p[65]=1;CHECK(elden_pen_decode(p,109,&limits,&f)==EldenPenEnvelope);CHECK(!memcmp(&f,&before,sizeof(f)));p[65]=0;
+    f=before;p[65]=1;CHECK(elden_pen_decode(p,109,&limits,&f)==EldenPenEnvelope);CHECK(!memcmp(&f,&before,sizeof(f)));p[65]=0;
     for(unsigned i=0;i<65;++i){
         p[i]^=0x5a;uint8_t sum=0;for(unsigned j=1;j<65;++j)sum=(uint8_t)(sum+p[j]);p[65]=(uint8_t)(0u-sum);
         CHECK(!elden_pen_decode(p,109,&limits,&f));CHECK(!memcmp(&f,&before,sizeof(f)));
