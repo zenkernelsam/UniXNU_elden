@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "checks": 34,
+  "reference_kernel_sha256": "5e322d726ce9e6a3b58280c342622043b152622585696508a82d383684eb922e",
+  "methods": {
+    "16": "0xfffffff004afb494",
+    "23": "0xfffffff004afcfb8",
+    "24": "0xfffffff004afefdc",
+    "25": "0xfffffff004afe4c4",
+    "26": "0xfffffff004affd00",
+    "27": "0xfffffff004afef64"
+  },
+  "event_data_offset": 16,
+  "event_minimum_bytes_for_polar": 76,
+  "orientation_offset": 64,
+  "altitude_offset": 68,
+  "azimuth_offset": 72,
+  "orientation_field": "0xb001f",
+  "polar_type": 1,
+  "altitude_field": "0xb000f",
+  "azimuth_field": "0xb0010",
+  "orientation_setter_is_noop": true,
+  "driver_expansion_offset": 256,
+  "pending_vendor_offset": 368,
+  "pending_load_words": [
+    "0xf9408008",
+    "0xf940b900"
+  ],
+  "vendor_fields": {
+    "page": "0x10000",
+    "usage": "0x10001",
+    "length": "0x10003",
+    "data": "0x10004"
+  },
+  "scope": "Original accessors/instruction anchors with synthetic memory; no UIKit or hardware claim",
+  "hardware": false
+}

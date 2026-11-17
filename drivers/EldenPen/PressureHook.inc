@@ -14,20 +14,23 @@ template<typename R,typename... A> static R call(void *o,unsigned slot,A... args
 static bool exactEvent(OSObject *e){
     return e&&*reinterpret_cast<uintptr_t **>(e)==reinterpret_cast<uintptr_t *>(ELDEN_PEN_EVENT_VPTR)&&e->metaCast("IOHIDEvent");
 }
-static void convert(OSObject *e){
+#include "PoseHook.inc"
+static void convert(OSObject *e,const Pose &pose){
     if(!exactEvent(e)||call<uint32_t>(e,GetType)!=11||call<int32_t,uint32_t,IOOptionBits>(e,GetInteger,0xb0004,0)!=0)return;
     int32_t value=call<int32_t,uint32_t,IOOptionBits>(e,GetFixed,0xb000a,0),scaled;
     if(elden_pen_pressure_fixed(value,&scaled)){__atomic_fetch_add(&rejected,1u,__ATOMIC_RELAXED);return;}
     call<void,uint32_t,int32_t,IOOptionBits>(e,SetFixed,0xb000a,scaled,0);
     __atomic_fetch_add(&converted,1u,__ATOMIC_RELAXED);
+    applyPose(e,pose);
 }
 static void dispatch(IOService *self,OSObject *event,IOOptionBits options){
     if(self==__atomic_load_n(&ownedDriver,__ATOMIC_ACQUIRE)&&*reinterpret_cast<uintptr_t **>(self)==ownedTable&&exactEvent(event)&&call<uint32_t>(event,GetType)==11){
+        const Pose pose=pendingPose(self);
         OSArray *children=*reinterpret_cast<OSArray **>(reinterpret_cast<uint8_t *>(event)+24);
-        if(!children)convert(event);
+        if(!children)convert(event,pose);
         else if(OSDynamicCast(OSArray,children)&&children->getCount()<=16){
-            if(!children->getCount())convert(event);
-            for(unsigned i=0;i<children->getCount();++i)convert(children->getObject(i));
+            if(!children->getCount())convert(event,pose);
+            for(unsigned i=0;i<children->getCount();++i)convert(children->getObject(i),pose);
         }else __atomic_fetch_add(&rejected,1u,__ATOMIC_RELAXED);
     }
     reinterpret_cast<void (*)(IOService *,OSObject *,IOOptionBits)>(__atomic_load_n(&originalDispatch,__ATOMIC_ACQUIRE))(self,event,options);

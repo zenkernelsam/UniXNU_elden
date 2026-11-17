@@ -6,7 +6,7 @@
 static unsigned checks;
 #define CHECK(v) do{++checks;if(!(v)){fprintf(stderr,"line%d: %s\n",__LINE__,#v);exit(1);}}while(0)
 int main(void){
-    uint8_t d[256],unchanged[256],r[10],saved[10];size_t bytes=123;
+    uint8_t d[256],unchanged[256],r[EldenPenHidBytes],saved[EldenPenHidBytes];size_t bytes=123;
     memset(d,0xa5,sizeof(d));memcpy(unchanged,d,sizeof(d));
     CHECK(elden_pen_hid_descriptor(4095,d,4,&bytes)!=0&&bytes==123&&!memcmp(d,unchanged,sizeof(d)));
     CHECK(!elden_pen_hid_descriptor(4095,d,sizeof(d),&bytes)&&bytes<sizeof(d));
@@ -20,7 +20,7 @@ int main(void){
     maxItems=0;for(size_t i=0;i+5<bytes;++i)if(d[i]==0x16&&d[i+1]==1&&d[i+2]==0xe0&&d[i+3]==0x26&&d[i+4]==0xff&&d[i+5]==0x1f)maxItems++;
     CHECK(maxItems==1);
     EldenPenFrame f={0};f.kind=EldenPenCoordinate;f.x=0x1234;f.y=0x4567;f.pressure=4095;f.tip=1;f.in_range=1;f.buttons=3;f.tilt_x=-60;f.tilt_y=60;
-    const uint8_t expected[10]={7,0x33,0x34,0x12,0x67,0x45,0xff,0xf,0xc4,0x3c};
+    const uint8_t expected[EldenPenHidBytes]={7,0x33,0x34,0x12,0x67,0x45,0xff,0xf,0xc4,0x3c,0xe7,1,0xc4,0x3c,0x34,0x12,0x67,0x45};
     CHECK(!elden_pen_hid_report(&f,4095,r)&&!memcmp(r,expected,sizeof(r)));
     memcpy(saved,r,sizeof(r));f.pressure=4096;CHECK(elden_pen_hid_report(&f,4095,r)!=0&&!memcmp(saved,r,sizeof(r)));
     f.pressure=0;f.tip=0;f.buttons=0;CHECK(!elden_pen_hid_report(&f,4095,r)&&r[1]==0x10);

@@ -5,7 +5,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-enum { EldenPenHidBytes=10, EldenPenPressureScale=1000, EldenPenDescriptorCapacity=256 };
+enum { EldenPenHidBytes=18, EldenPenPressureScale=1000, EldenPenDescriptorCapacity=256 };
 /* OS17 donor keyboard-first matching + separate Stylus application0x0d/0x20.
  * Reports1/2 exist for matching but are never sent. Pen report ID7 only.
  * Secondary button is Barrel Switch2, never falsely labeled eraser/invert. */

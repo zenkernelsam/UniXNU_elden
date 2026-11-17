@@ -31,7 +31,7 @@ def main():
         r=subprocess.run(list(map(str,cmd)),cwd=cwd,capture_output=True);(out/(name+'.log')).write_bytes(r.stdout+r.stderr)
         if r.returncode:raise RuntimeError(name+' failed; logs retained')
         return r.stdout.decode()
-    for name in ('EldenPenHid.cpp','HidReport.c','PenReport.c','Delivery.c','EldenTouchRuntime.cpp'):
+    for name in ('EldenPenHid.cpp','HidReport.c','PenReport.c','Delivery.c','Tilt.c','EldenTouchRuntime.cpp'):
         src=a.derived/name;obj=out/(src.stem+'.o')
         if src.suffix=='.cpp':
             job=rec if name=='EldenPenHid.cpp' else next(j for j in cap['jobs'] if j['file'].endswith('/EldenNvt36536/Runtime.cpp'))

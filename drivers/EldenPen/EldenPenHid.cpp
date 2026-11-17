@@ -4,6 +4,7 @@
 #include "EldenPenNative.h"
 #include "Delivery.h"
 #include "HidReport.h"
+#include "Tilt.h"
 #include <IOKit/IOBufferMemoryDescriptor.h>
 #include <IOKit/IOWorkLoop.h>
 #include <IOKit/IOLib.h>
@@ -144,5 +145,8 @@ extern "C" int elden_pen_native_stop(void){
     for(unsigned n=0;n<30&&!elden_pen_delivery_released(&delivery);++n){IOSleep(8);rc=elden_pen_delivery_tick(&delivery,nowUs(),sendPen,nullptr);}
     IOLog("ELDEN_PEN stop released=%u result=%x sent=%u failures=%u; service retained\n",
           unsigned(elden_pen_delivery_released(&delivery)),unsigned(rc),delivery.sent,delivery.failures);
+    IOLog("ELDEN_PEN pose converted=%u missing=%u rejected=%u; degrees contract, live mounting unverified\n",
+          __atomic_load_n(&PenPressure::poseConverted,__ATOMIC_RELAXED),__atomic_load_n(&PenPressure::poseMissing,__ATOMIC_RELAXED),
+          __atomic_load_n(&PenPressure::poseRejected,__ATOMIC_RELAXED));
     return elden_pen_delivery_released(&delivery)?0:(rc?rc:int(kIOReturnNotReady));
 }
