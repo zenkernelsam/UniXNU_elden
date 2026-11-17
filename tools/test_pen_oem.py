@@ -25,8 +25,8 @@ def main():
         for name in ('PenReport.c','PenReport.h','Delivery.c','Delivery.h'):
             data=subprocess.check_output(['git','-C',str(ROOT),'show',rev+':drivers/EldenPen/'+name]) if rev else (DRIVER/name).read_bytes()
             (folder/name).write_bytes(data)
-            if name.endswith('.c'):
-                obj=folder/(Path(name).stem+'.o');run(['xcrun','clang','-std=c11',*flags,'-c',folder/name,'-o',obj],label+'-'+name);objects.append(obj)
+        for name in ('PenReport.c','Delivery.c'):
+            obj=folder/(Path(name).stem+'.o');run(['xcrun','clang','-std=c11',*flags,'-c',folder/name,'-o',obj],label+'-'+name);objects.append(obj)
         native=subprocess.check_output(['git','-C',str(ROOT),'show',OLD+':drivers/EldenPen/EldenPenHid.cpp']).decode() if rev else (DRIVER/'EldenPenHid.cpp').read_text()
         body=function(native,'extern "C" int elden_pen_native_packet(');(folder/'ActualPacket.inc').write_text(body+'\n')
         # Stage the test beside the selected headers; quoted includes must not
