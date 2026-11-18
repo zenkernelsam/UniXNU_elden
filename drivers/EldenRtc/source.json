@@ -1,0 +1,26 @@
+{
+  "files": {
+    "ArmDTPlatform.cpp": {
+      "repository": "https://github.com/UniXNU/ArmDTPlatform.git",
+      "commit": "e8bd8d5de395c6cbc00d762c1bef57dbd15a448d",
+      "path": "ArmDTPlatform.cpp",
+      "sha256": "5f3d2c5356e4e25865c987ae61a093bd6342bf7f45bfe096ab24e7f2b134ea5a"
+    },
+    "rtc-pm8xxx.c": {
+      "repository": "https://github.com/h0cheung/tb322fc-linux-kernel",
+      "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+      "path": "drivers/rtc/rtc-pm8xxx.c",
+      "sha256": "a7364852aae55844e117d7799bd1be339775ae576af6d131269da6d5500826d6"
+    }
+  },
+  "board": {
+    "compatible": "qcom,pmk8350-rtc",
+    "pmic": "PMK8550",
+    "sid": 0,
+    "control": 24902,
+    "counter": 24904,
+    "alarm": 25088
+  },
+  "persistent_offset_source_verified": false,
+  "hardware": false
+}

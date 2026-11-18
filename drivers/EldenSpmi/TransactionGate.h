@@ -5,10 +5,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-enum { EldenSpmiAdcOwner=1, EldenSpmiBtOwner=2 };
+enum { EldenSpmiAdcOwner=1, EldenSpmiBtOwner=2, EldenSpmiRtcOwner=3 };
 typedef void (*EldenSpmiDelay)(void *,unsigned);
-/* One bus0/EE0 gate shared by ADC and WCN. Called only from their worker
- * threads. The transaction must not sleep or log while holding the gate.
+/* One bus0/EE0 gate shared by ADC, WCN and the rare RTC callbacks. Called from
+ * their workers or early platform clock initialization, never IRQ context.
+ * The transaction must not sleep or log while holding the gate.
  * Timeout poisons the bus gate; no later normal client may issue a command.
  * The established recovery route remains independent after stopping clients. */
 int elden_spmi_transaction_acquire(unsigned owner,void *context,EldenSpmiDelay delay);
