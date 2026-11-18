@@ -47,10 +47,11 @@ int main(int argc,char **argv){
     EldenAwImage image,sentinel={1,2,3,4};image=sentinel;CHECK(!elden_aw_image(data,size,&image));CHECK(image.base==0x800&&image.waves==5);
     uint8_t bad[4096];memcpy(bad,data,size);bad[100]^=1;CHECK(elden_aw_image(bad,size,&sentinel)==EldenAwIntegrity&&sentinel.base==1);
     Chip bus;EldenAwChip chip;setup(&bus,&chip,data,size,0x5a);uint16_t id=0;CHECK(!elden_aw_identity(&chip,&id)&&id==0x9370&&bus.writes==0);
+    unsigned before_init=bus.ops;
     CHECK(!elden_aw_initialize(&chip,data,size,64));CHECK(chip.ready&&!chip.busy&&bus.start_count==0&&bus.readback==size-4);
     CHECK(!memcmp(bus.ram+0x800,data+4,size-4)&&!(bus.registers[0x45]&4));
     CHECK(bus.registers[0x06]%32==9&&bus.registers[0x5e]==0);
-    unsigned initial_ops=bus.ops;CHECK(!elden_aw_ram_start(&chip,1,64,10000));CHECK(bus.registers[0x07]==64&&bus.registers[0x12]>>4==0);
+    unsigned initial_ops=bus.ops-before_init;CHECK(!elden_aw_ram_start(&chip,1,64,10000));CHECK(bus.registers[0x07]==64&&bus.registers[0x12]>>4==0);
     CHECK(chip.busy&&bus.start_count==1&&elden_aw_ram_start(&chip,1,64,10000)==EldenAwArgument);
     CHECK(elden_aw_poll(&chip)==0);bus.time=chip.deadline;CHECK(elden_aw_poll(&chip)==1&&!chip.busy);
     CHECK(!elden_aw_ram_start(&chip,1,1,1000));bus.registers[2]=1;bus.registers[0x3f]=0;CHECK(elden_aw_poll(&chip)==1&&!chip.busy&&chip.completions==1);
