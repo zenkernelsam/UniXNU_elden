@@ -19,6 +19,13 @@ static inline unsigned aw_shift(unsigned mask){unsigned n=0;while(mask&&!(mask&1
 #define min_t(type,a,b) ((type)(a)<(type)(b)?(type)(a):(type)(b))
 #define EINVAL 22
 #define EILSEQ 84
+#define ENODEV 19
+static inline int aw_memcmp(const void *left,const void *right,size_t bytes){
+    const uint8_t *a=left,*b=right;
+    for(size_t i=0;i<bytes;++i)if(a[i]!=b[i])return a[i]<b[i]?-1:1;
+    return 0;
+}
+#define memcmp(a,b,n) aw_memcmp(a,b,n)
 static inline uint16_t aw_be16(const void *p){const uint8_t *b=p;return (uint16_t)(((uint16_t)b[0]<<8)|b[1]);}
 #define get_unaligned_be16(p) aw_be16(p)
 #define be16_to_cpu(v) aw_be16(&(v))
