@@ -6,7 +6,8 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for key in ('source','base-native','llvm','output'):p.add_argument('--'+key,type=Path,required=True)
-    a=p.parse_args();out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);cap=json.loads((a.base_native/'capture.json').read_text());record=json.loads((a.source/'source.json').read_text())
+    a=p.parse_args();a.source=a.source.resolve(strict=True);a.base_native=a.base_native.resolve(strict=True);a.llvm=a.llvm.resolve(strict=True)
+    out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);cap=json.loads((a.base_native/'capture.json').read_text());record=json.loads((a.source/'source.json').read_text())
     for name,digest in record['sources'].items():
         if sha(a.source/name)!=digest:raise ValueError('RTC source changed')
     job=next(x for x in cap['jobs'] if x['file'].endswith('/ArmDTPlatform.cpp'));old=job['file'].split('/research/',1)[0];project=a.base_native/'build/project'
@@ -20,7 +21,9 @@ def main():
         if v==job['file'] or v in ('-MD','-MP','-MMD','-Wno-unnecessary-virtual-specifier'):i+=1;continue
         flags.append(remap(v));i+=1
     def run(cmd,name,cwd=None):
-        r=subprocess.run(list(map(str,cmd)),cwd=cwd,capture_output=True);(out/(name+'.log')).write_bytes(r.stdout+r.stderr);r.check_returncode();return r.stdout.decode()
+        r=subprocess.run(list(map(str,cmd)),cwd=cwd,capture_output=True);(out/(name+'.log')).write_bytes(r.stdout+r.stderr)
+        if r.returncode:raise RuntimeError(name+' failed; inspect retained compile log')
+        return r.stdout.decode()
     records={};resource=run([a.llvm/'clang','-print-resource-dir'],'resource').strip()
     for name in ('ArmDTPlatform.cpp','Native.cpp','Core.c','Spmi.c','TransactionGate.c'):
         source=a.source/name;obj=out/(source.stem+'.o')
