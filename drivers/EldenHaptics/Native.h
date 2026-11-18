@@ -13,6 +13,8 @@ int elden_haptics_native_close(uint64_t owner,uint64_t epoch);
 int elden_haptics_native_submit(uint64_t owner,uint64_t epoch,uint64_t id,uint64_t delay_us,
     uint32_t duration_us,uint8_t motor_mask,uint8_t wave,uint16_t intensity_q15);
 int elden_haptics_native_cancel(uint64_t owner,uint64_t epoch,uint64_t id);
+int elden_haptics_native_submit_effect(uint64_t owner,uint64_t epoch,uint64_t id,uint32_t effect_id,uint64_t delay_us,uint16_t intensity_q15);
+int elden_haptics_native_effect_info(uint32_t effect_id,uint64_t output[4]);
 int elden_haptics_native_result(uint64_t owner,uint64_t epoch,uint64_t id,EldenHapticsResult *);
 void elden_haptics_native_info(uint64_t output[8]);
 #ifdef __cplusplus

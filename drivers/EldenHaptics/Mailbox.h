@@ -9,6 +9,7 @@ enum {EldenHapticsMailEmpty=0,EldenHapticsMailPending=1,EldenHapticsMailExecutin
 typedef struct {
     EldenHapticsRequest request;EldenHapticsResult result;
     uint16_t intensity_q15;
+    uint32_t effect_id; /*0=RAM, >0 immutable native catalog; never raw PCM*/
     uint8_t state,cancel,cancel_sent,reserved;
 } EldenHapticsMail;
 typedef struct {
@@ -21,7 +22,9 @@ typedef struct {
  * completion can never silently overflow a separate result ring. */
 int elden_haptics_mail_open(EldenHapticsMailbox *,uint64_t owner,uint64_t epoch);
 int elden_haptics_mail_submit(EldenHapticsMailbox *,const EldenHapticsRequest *,uint16_t intensity_q15);
+int elden_haptics_mail_submit_effect(EldenHapticsMailbox *,const EldenHapticsRequest *,uint16_t intensity_q15,uint32_t effect_id);
 int elden_haptics_mail_take(EldenHapticsMailbox *,EldenHapticsRequest *,uint16_t *intensity_q15);
+int elden_haptics_mail_take_native(EldenHapticsMailbox *,EldenHapticsRequest *,uint16_t *intensity_q15,uint32_t *effect_id);
 int elden_haptics_mail_cancel(EldenHapticsMailbox *,uint64_t owner,uint64_t epoch,uint64_t id);
 int elden_haptics_mail_next_cancel(EldenHapticsMailbox *,EldenHapticsRequest *);
 int elden_haptics_mail_finish(EldenHapticsMailbox *,const EldenHapticsResult *);

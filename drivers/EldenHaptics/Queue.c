@@ -122,6 +122,7 @@ int elden_haptics_queue_step(EldenHapticsQueue *q,uint64_t now){
     int rc=q->io.admit(q->io.context,r->owner,r->epoch);
     if(!rc&&now-r->not_before_us>q->limits.max_late_us)rc=EldenHapticsRequestStale;
     if(!rc)rc=account(q,r,now);
+    if(!rc&&q->io.reserve)rc=q->io.reserve(q->io.context,r,now);
     if(rc){complete(q,(unsigned)index,EldenHapticsFailed,rc);return rc;}
     q->active_index=index;q->active_deadline=now+r->duration_us;
     for(unsigned m=0;m<2;++m)if(r->gain[m]){

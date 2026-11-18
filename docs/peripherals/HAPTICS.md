@@ -8,6 +8,11 @@ Current native details: [HAPTICS-NATIVE.md](HAPTICS-NATIVE.md) and
 RTP/controller and explicit compiler update is in [HAPTICS-RTP.md](HAPTICS-RTP.md).
 Measured bank, native request/catalog/shared budget and system Actuator remain.
 
+Latest native request/catalog/shared-budget implementation is now in
+[HAPTICS-BROKER.md](HAPTICS-BROKER.md); it replaces the separate RAM-only worker
+with one actual arbiter and version2 client. Measured bank and system Actuator
+remain unaccepted; default output is disabled.
+
 ## Source and transport
 
 Board facts are fixed TB322FC/SM8750 Linux6f97250e: AW86937 at0x5a/0x5b,

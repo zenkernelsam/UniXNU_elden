@@ -1,0 +1,127 @@
+{
+  "passed_offline": true,
+  "native_source_Git_index_matches": {
+    "AwChip.h": "94da5f4d5be599d52448fe627f5f5c777aa299aa18999549198afb7d361d0080",
+    "AwKernelShim.h": "4d139a8f72401ee36981600a97c041adb0245997be7c5aff529734107282cd3b",
+    "AwRtp.h": "0cad3de5565b8a3ada818545302354a43cd11c73b131574fe2d0e3d20c80f297",
+    "Bus.c": "232cf7a1d53bbee59e8206193ce21199cae688479f2d8ecce4248e04229f23e4",
+    "Bus.h": "9d3977decc36b082152362f289a0e1cb79c2176284514b7bd0ca0104a475419b",
+    "Board.h": "e6e2cc135499d7df9c46fff4e4e6658269ffde0d7e00fe23e8f991891af27a73",
+    "Platform.c": "2967046fc8a536ee281363822d62a6100248205bb1afac8d1bb76f0c3f1c397b",
+    "Platform.h": "d67cc41bea918bb7eca271776c306fe708e547c09968d48dba285cc20b5eacf7",
+    "Queue.c": "b9bfacb47b8ed9b733b07f4f3d654e72b1ebf07c1e20e77ee5ef5d84796c9295",
+    "Queue.h": "c26985adf0c520602e2bc6dc8810ec0d33aaff3f4ab078899d7eab5a603a3be2",
+    "Mailbox.c": "539aa3cc8c29c93a3f26167d4931714862bee203761dc6ec963b61d69dc75a7c",
+    "Mailbox.h": "e264de8e3846d151a691ff48f424bb501f9fb038cd5fc495bce8aad1bab7c267",
+    "RtpStream.c": "88c2ebc941b7d6eaef40d773ee5d4c92cfc7bafcaadf1ee4e29c1dbacf07202a",
+    "RtpStream.h": "44643394fc96311eac0c9dc40f44074fc533e534cdd872c39e48ed40ae1b7da1",
+    "Budget.c": "e25207132704e226a75a5b4009fb6d7f4d317011552b4c74a4a3036ceda57083",
+    "Budget.h": "2764b06b8cda9b93e8240dcd1c2ba1c61269f3c1b68342819ad337d77327845e",
+    "Catalog.c": "5eed76f8ba800f421dd0ea183959719aca7b1a15df02fcd08084f8dc74d129bf",
+    "Catalog.h": "40266ef5f298f71e3f50528cfa323df8a864b33094c329d7884fe9824c0df354",
+    "Broker.c": "925bf9e3944163690a6814433120a1f024df6f6a1e8ed3ffc059747743bbf0b5",
+    "Broker.h": "d04ce23ae93a7db1ee6efca06a1e40c43af18a6017a91005c4b9ec63a96d1638",
+    "Native.h": "f0c3e17a463a14df7150f22c51c06bf3eaad1a92a032429e86b4585d5e8e4adb",
+    "ClientMethods.inc": "6dc48e1fb9f150987a1f0958e0703e7b5e7e4661a1cdbef83d3bd0d790005b3d",
+    "Native.cpp": "74b65fb00714e11088a63e47e8e81ad42aaebf5dfdc4e4bd8072d1be6ccc6def"
+  },
+  "archive_bytes": 25996657,
+  "archive_sha256": "5c704b1fca62a33ee817dc0e71f3acce36a8e0ed94c90f43e18998f8209e784c",
+  "native_sha256": "b6a7209529d2b5b9f5422b620358cb1cdc7bed98a662263a6b4d95bd7208024c",
+  "kernel_sha256": "d64231c6f491161fab05163c2a00d6a0532ab50a95d99057683ed4a31b6ea097",
+  "original_Apple_regions": 30,
+  "broker_composition_checks": 283066,
+  "actual_budget_checks": 151,
+  "actual_client_service_handler_checks": 98,
+  "RTP_regression_checks": 362399,
+  "catalog_negative_cases": 9,
+  "native_objects": 12,
+  "native_request_catalog_shared_budget_connected": true,
+  "default_catalog_count": 0,
+  "measured_bank_available": false,
+  "hardware": false,
+  "mainline_merged": false,
+  "boot_packaged": false,
+  "goal_complete": false,
+  "system_Actuator_connected": false,
+  "ABI": {
+    "haptics_component_abi_link_passed": true,
+    "classes": {
+      "18EldenHapticsClient": {
+        "slots": 186,
+        "overrides": {
+          "0": [
+            "__ZN18EldenHapticsClientD1Ev"
+          ],
+          "1": [
+            "__ZN18EldenHapticsClientD0Ev"
+          ],
+          "7": [
+            "__ZNK18EldenHapticsClient12getMetaClassEv"
+          ],
+          "14": [
+            "__ZN18EldenHapticsClient4freeEv"
+          ],
+          "86": [
+            "__ZN18EldenHapticsClient5startEP9IOService"
+          ],
+          "168": [
+            "__ZN18EldenHapticsClient14externalMethodEjP25IOExternalMethodArgumentsP24IOExternalMethodDispatchP8OSObjectPv"
+          ],
+          "172": [
+            "__ZN18EldenHapticsClient11clientCloseEv"
+          ]
+        },
+        "superclass": "12IOUserClient"
+      },
+      "19EldenHapticsService": {
+        "slots": 168,
+        "overrides": {
+          "0": [
+            "__ZN19EldenHapticsServiceD1Ev"
+          ],
+          "1": [
+            "__ZN19EldenHapticsServiceD0Ev"
+          ],
+          "7": [
+            "__ZNK19EldenHapticsService12getMetaClassEv"
+          ],
+          "86": [
+            "__ZN19EldenHapticsService5startEP9IOService"
+          ],
+          "140": [
+            "__ZN19EldenHapticsService13newUserClientEP4taskPvjP12OSDictionaryPP12IOUserClient"
+          ],
+          "141": [
+            "__ZN19EldenHapticsService13newUserClientEP4taskPvjPP12IOUserClient"
+          ]
+        },
+        "superclass": "9IOService"
+      }
+    },
+    "late_initializer_not_automatic": true,
+    "startup_call": "0xfffffff007b5fe2c",
+    "recovery_calls": [
+      "0xfffffff007b450dc",
+      "0xfffffff007b45194",
+      "0xfffffff007b45238"
+    ],
+    "shared_gcc_owner": "0xfffffff007c9cd50",
+    "touch_shared_contract": "0xfffffff007b5c560",
+    "kernel_sha256": "d64231c6f491161fab05163c2a00d6a0532ab50a95d99057683ed4a31b6ea097",
+    "legacy_flags_unchanged": {
+      "abi_qualified": false,
+      "loadable": false,
+      "runtime_qualified": false,
+      "instruction_relocation_complete": false
+    },
+    "hardware": false
+  },
+  "evidence": "lab/records/haptics-broker-20261119",
+  "remaining": [
+    "measured per-motor waveform/gain/thermal and bus qualification",
+    "actual iOS17 Actuator and capability/preset service route",
+    "current-mainline and hardware acceptance",
+    "suspend/resume"
+  ]
+}

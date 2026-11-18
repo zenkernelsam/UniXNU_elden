@@ -6,6 +6,11 @@ with the existing native service, pen and RTC. Original142 vibration recipes and
 production bank, native RTP request/catalog/shared-budget broker or system Actuator
 connection yet. Output stays disabled; the full five-part Goal remains active.
 
+The newer [HAPTICS-BROKER.md](HAPTICS-BROKER.md) supersedes the missing native
+request/catalog/shared-budget statement: those are implemented and fully linked
+with the real v2 service. Actual measured waveform bank and system Actuator
+remain missing; the delivered build still has no output catalog.
+
 ## Controller and stream
 
 OEM module f688fcae's actual theory-time map is reg46&60:00=24k,20=48k,40=12k.

@@ -32,7 +32,8 @@ def main():
     cflags=[a.llvm/'clang','-target','arm64-apple-ios17.0','-std=c11','-O2','-ffreestanding','-fno-builtin','-fno-stack-protector','-mgeneral-regs-only',
             '-nostdinc','-isystem',Path(resource)/'include','-Wall','-Wextra','-Werror']
     for folder,name in [('haptics','EldenHapticsNative.cpp'),('haptics','Platform.c'),('haptics','GeniCore.c'),('haptics','Bus.c'),
-                        ('haptics','AwChip.c'),('haptics','Queue.c'),('haptics','Mailbox.c'),('haptics','RtpStream.c'),('touch','EldenTouchRuntime.cpp')]:
+                        ('haptics','AwChip.c'),('haptics','Queue.c'),('haptics','Mailbox.c'),('haptics','RtpStream.c'),
+                        ('haptics','Budget.c'),('haptics','Catalog.c'),('haptics','Broker.c'),('touch','EldenTouchRuntime.cpp')]:
         src=a.source/folder/name;obj=out/(src.stem+'.o');raw=out/(src.stem+'.raw.o') if name=='EldenHapticsNative.cpp' else obj
         if src.suffix=='.cpp':
             selected=job if folder=='haptics' else next(j for j in cap['jobs'] if j['file'].endswith('/EldenNvt36536/Runtime.cpp'))
@@ -64,6 +65,7 @@ def main():
     (out/'result.json').write_text(json.dumps({'compiled':True,'objects':records,'archive_sha256':sha(out/'libEldenHaptics.a'),
         'touch_platform_sha256':sha(toc),'touch_platform_report_sha256':sha(a.touch_build/'result.json'),
         'source_record_sha256':sha(a.source/'source.json'),'calibration_present':r['calibration'] is not None,
+        'catalog_present':r['catalog'] is not None,
         'full_link':False,'hardware':False,'separate_replacements':['EldenNvtPlatform.o','EldenNvtRuntime.o']},indent=2)+'\n')
     print('PASS: native service/worker and actual driver chain; explicit late initialization; calibration '+('external' if r['calibration'] else 'disabled'))
 if __name__=='__main__':main()

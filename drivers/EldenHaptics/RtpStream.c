@@ -17,17 +17,20 @@ static int preflight(const EldenRtpLimits *l,const EldenRtpClip *c,uint64_t squa
     unsigned motors=0;
     for(unsigned m=0;m<2;m++)if(c->mask&(1u<<m)){
         motors++;if(!c->pcm[m]||!c->gain[m]||c->gain[m]>l->max_gain[m])return -13;
-        uint64_t rolling=0,peak=0;uint32_t running_on=0,peak_on=0;
+        uint64_t rolling=0,peak=0;
         for(size_t i=0;i<c->frames;i++){
             int value=c->pcm[m][i];unsigned magnitude=(unsigned)(value<0?-value:value);
             if(magnitude>l->max_sample[m])return -13;
-            rolling+=(uint64_t)magnitude*magnitude*c->gain[m]*c->gain[m];if(magnitude)running_on++;
+            rolling+=(uint64_t)magnitude*magnitude*c->gain[m]*c->gain[m];
             if(i>=l->window_frames){int old=c->pcm[m][i-l->window_frames];unsigned oldmag=(unsigned)(old<0?-old:old);
-                rolling-=(uint64_t)oldmag*oldmag*c->gain[m]*c->gain[m];if(oldmag)running_on--;}
-            if(rolling>peak)peak=rolling;if(running_on>peak_on)peak_on=running_on;
+                rolling-=(uint64_t)oldmag*oldmag*c->gain[m]*c->gain[m];}
+            if(rolling>peak)peak=rolling;
         }
-        if(peak>l->max_window_squares[m]||peak_on>l->max_window_on_frames[m])return -13;
-        squares[m]=peak;on[m]=peak_on;
+        // A zero PCM crossing does not turn a running motor off. Reserve its
+        // entire streaming window, separately from the squared sample proxy.
+        uint32_t motor_on=(uint32_t)(c->frames<l->window_frames?c->frames:l->window_frames);
+        if(peak>l->max_window_squares[m]||motor_on>l->max_window_on_frames[m])return -13;
+        squares[m]=peak;on[m]=motor_on;
     }
     // Measured complete status+payload path, not raw I2C clock frequency.
     if(l->measured_min_payload_bps<24000u*motors*5u/4u)return -13;
@@ -53,6 +56,9 @@ int elden_rtp_stream_start(EldenRtpStream *s,EldenAwChip *chips[2],const EldenRt
     uint64_t now=io->now_us(io->context);if(now>UINT64_MAX-500000)return -22;
     EldenRtpStream value={0};value.io=*io;value.limits=*l;value.clip=*clip;value.start_us=value.last_us=now;
     value.startup_deadline=now+500000;value.state=EldenRtpStarting;value.active=clip->mask;*s=value;
+    // Retain every selected chip before even the first preparation STOP: a
+    // failing STOP may still leave physical motion; its callback must retry.
+    for(unsigned m=0;m<2;m++)if(s->active&(1u<<m))s->motor[m].chip=chips[m];
     // Prepare both chips before either GO; preserve simultaneous effect timing.
     for(unsigned m=0;m<2;m++)if(s->active&(1u<<m)){
         rc=elden_aw_rtp_prepare(&s->motor[m],chips[m],24000,clip->gain[m],duration+500000);

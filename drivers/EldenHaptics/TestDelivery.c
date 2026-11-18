@@ -25,7 +25,7 @@ static Delivery *delivery(const uint8_t *firmware,size_t bytes){
     // not exported as measured or written into the production native catalog.
     static const EldenHapticsClickPoint points[]={{0,{0,0}},{32767,{32,24}}};
     EldenHapticsQueueLimits limits={points,20000,100000,1000000,{100000,100000},100000,{UINT64_C(1)<<40,UINT64_C(1)<<40},64,2,{64,64},3};
-    EldenHapticsQueueIo qio={d,delivery_admit,delivery_start,delivery_poll,delivery_stop,delivery_complete};
+    EldenHapticsQueueIo qio={d,delivery_admit,delivery_start,delivery_poll,delivery_stop,delivery_complete,NULL};
     CHECK(!elden_haptics_queue_init(&d->queue,&limits,&qio));CHECK(!elden_haptics_mail_open(&d->mail,1,2));d->connected=1;return d;
 }
 static void send(Delivery *d,uint64_t id,uint8_t mask){

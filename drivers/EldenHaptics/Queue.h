@@ -32,6 +32,10 @@ typedef struct {
     int (*poll)(void *,unsigned motor); /*0 pending,1 actual stop/done,<0 error*/
     int (*stop)(void *,unsigned motor); /*real stopped/standby result*/
     void (*complete)(void *,const EldenHapticsResult *);
+    /* Optional persistent native RAM/RTP budget, called after this queue's
+     * own limits and before a physical start. Existing standalone users may
+     * leave NULL; the native broker supplies the actual shared provider. */
+    int (*reserve)(void *,const EldenHapticsRequest *,uint64_t now_us);
 } EldenHapticsQueueIo;
 typedef struct {EldenHapticsRequest request;uint8_t used,cancel,reserved[6];uint64_t sequence;} EldenHapticsQueueSlot;
 typedef struct {uint64_t expires_us,square[2];uint32_t duration_us;uint8_t mask,used;} EldenHapticsBudget;

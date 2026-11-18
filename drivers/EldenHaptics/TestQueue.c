@@ -24,7 +24,7 @@ static EldenHapticsQueueLimits limits(EldenHapticsClickPoint *points){
 static void init(EldenHapticsQueue *q,Peer *v){
     memset(q,0,sizeof(*q));memset(v,0,sizeof(*v));v->epoch=1;
     EldenHapticsClickPoint points[]={{0,{0,0}},{16384,{16,12}},{32767,{32,24}}};EldenHapticsQueueLimits l=limits(points);
-    EldenHapticsQueueIo io={v,admit,start,poll,stop,done};CHECK(!elden_haptics_queue_init(q,&l,&io));
+    EldenHapticsQueueIo io={v,admit,start,poll,stop,done,NULL};CHECK(!elden_haptics_queue_init(q,&l,&io));
     points[2].gain[0]=128;CHECK(q->points[2].gain[0]==32); /* immutable copied LUT */
 }
 int main(void){

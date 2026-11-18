@@ -41,7 +41,10 @@ int main(int argc,char **argv){
     CHECK(!elden_rtp_stream_step(&s)&&s.sent[0]==128&&s.sent[1]==128&&s.state==EldenRtpPlaying);
     // Almost-empty while actually playing must never report completion.
     p->bus.motor[0].reg[1]=16;p->bus.motor[1].reg[1]=16;CHECK(!elden_rtp_stream_step(&s));
-    for(unsigned i=0;i<2;i++){p->bus.motor[i].reg[0x3f]=0;p->bus.motor[i].reg[2]=1;}
+    // DONE may be read/cleared before the following state read reaches standby.
+    for(unsigned i=0;i<2;i++)p->bus.motor[i].reg[2]=1;
+    CHECK(!elden_rtp_stream_step(&s));
+    for(unsigned i=0;i<2;i++){p->bus.motor[i].reg[0x3f]=0;p->bus.motor[i].reg[2]=0;}
     CHECK(elden_rtp_stream_step(&s)==1&&s.state==EldenRtpComplete&&!s.active);free(p);
     for(unsigned mode=0;mode<4;mode++){
         p=setup(firmware,n);memset(&s,0,sizeof(s));chips[0]=&p->chips[0];chips[1]=&p->chips[1];io.context=p;l=profile();
@@ -58,6 +61,7 @@ int main(int argc,char **argv){
     p=setup(firmware,n);memset(&s,0,sizeof(s));chips[0]=&p->chips[0];chips[1]=&p->chips[1];io.context=p;l=profile();l.max_duration_us=60000000;
     EldenRtpClip long_clip={{long_pcm,long_pcm},1440000,24000,3,{32,24},1};
     CHECK(!elden_rtp_stream_start(&s,chips,&io,&l,&long_clip));CHECK(!elden_rtp_stream_stop(&s)&&s.state==EldenRtpCancelled);
+    CHECK(p->on[0]==24000&&p->on[1]==24000); // silence still has active motors
     free(p);free(long_pcm);
     printf("PASS: %u actual RTP/GENI/AW checks; rate/threshold/GO/burst/AES/DONE, two-chip feed, measured bandwidth gate and retained failures; hardware modeled\n",checks);
 }

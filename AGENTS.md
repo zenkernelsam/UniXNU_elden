@@ -1,5 +1,22 @@
 # UniXNU elden — authoritative source repository
 
+Broker20261119: actual native v2 user client effect-id request route and same
+worker RAM/RTP arbiter/shared64slot budgets now implemented/full-linked. No
+raw PCM/gain uploads; budgets survive client reconnect, active/failedSTOP never
+expire, zeroPCM counts motorON, fresh time afterSTOP prevents false rollback.
+Read-clear DONE latched across state read. Source4/native4/host6/inputs3/kernel2:
+151budget/283066broker/98actual client-handler/362399RTP regression +9catalog
+negatives pass ASan/UBSan; positive schema fixtures HOSTONLY/not native inputs.
+Catalog binds/replays actual source/bank/parser/compiler/Cmapper/PCM/nativecal/
+bandwidth; defaultcatalog0/gain0, measured input still missing/outputdisabled.
+Twelveobjects scalar/fullkernel d64231c6/native b6a72095, Apple30/168service+
+186client/pen207+10/RTC/lateinit/stop→RTC→UFS pass. Global flagsunchangedfalse.
+Archive25996657B/5c704b1f/523verified,23native source files/replaymatchGit,
+standaloneFW/syntheticpositiveinputs excluded/native embedsoriginal bytes.
+Alljobs terminal. Read HAPTICS-BROKER.md/broker-validation.json. Actual system
+Actuator/capability/preset/measuredwaveforms +hardware and all other Goal parts
+remain incomplete. No tablet/auto merge; mainline owns Wi-Fi/PCIe/QRTR/hardware.
+
 RTP/compiler20261119: exact OEM rate/time12/FIFOthreshold3/AFS-AES512 oracle,
 owned prepare-both/GO/feed/STOP-restore and24k up60s fair stream implemented.
 00=24k/20=48k/40=12k; AES is NOT completion. GENI tx16words/64B only after

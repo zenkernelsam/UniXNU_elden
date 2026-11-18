@@ -7,9 +7,10 @@
 #include "Native.h"
 #include "Platform.h"
 #include "AwChip.h"
-#include "Mailbox.h"
+#include "Broker.h"
 #include "EldenHapticsFirmware.h" // generated from exact original input, not in Git
 #include "EldenHapticsCalibration.h" // default disabled; reviewed external limits only
+#include "EldenHapticsCatalog.h" // immutable measured effect clips, default empty
 #include <IOKit/IODeviceMemory.h>
 #include <IOKit/IOMemoryDescriptor.h>
 #include <IOKit/IOLib.h>
@@ -57,9 +58,9 @@ struct Context {
     static void operator delete(void *p) noexcept{if(p)IOFree(p,sizeof(Context));}
     Window windows[7];IOLock *lock=nullptr;IOService *service=nullptr;
     EldenHapticsPlatform platform={};EldenHapticsBus bus={};EldenAwChip chips[2]={};
-    EldenHapticsMailbox mailbox={};EldenHapticsQueue queue={};
-    uint64_t owner=0,epoch=1,next_owner=1,cleanup_deadline=0;
-    uint32_t client_live=0,phase=0,ready_mask=0,queue_ready=0,stopped=0,thermal_ready=0;
+    EldenHapticsBroker broker={};
+    uint64_t cleanup_deadline=0;
+    uint32_t phase=0,ready_mask=0,queue_ready=0,stopped=0,thermal_ready=0;
     int error=0;bool maps_ready=false;
     bool map(){
         return windows[EldenHapticsGcc].map(ELDEN_HAPTICS_GCC_BASE,ELDEN_HAPTICS_GCC_BYTES)&&
@@ -84,7 +85,7 @@ static uint64_t now_us(void *){
 static int delay_us(void *,unsigned us){if(us>=1000)IOSleep((us+999)/1000);else IODelay(us);return 0;}
 static bool thermal(Context *c){
     int temp;uint32_t epoch,cycle;
-    bool ready=ELDEN_HAPTICS_HAS_LIMITS&&elden_battery_temperature_get(&temp,&epoch,&cycle)&&epoch&&cycle&&
+    bool ready=(ELDEN_HAPTICS_HAS_LIMITS||ELDEN_HAPTICS_HAS_CATALOG)&&elden_battery_temperature_get(&temp,&epoch,&cycle)&&epoch&&cycle&&
         temp>=ELDEN_HAPTICS_MIN_TEMP_CENTI&&temp<=ELDEN_HAPTICS_MAX_TEMP_CENTI;
     __atomic_store_n(&c->thermal_ready,ready?1u:0u,__ATOMIC_RELEASE);return ready;
 }
@@ -118,7 +119,7 @@ static int chip_admit(void *v,uint8_t addr,EldenAwOperation op){
     Context *c=static_cast<Context *>(v);if(addr!=0x5a&&addr!=0x5b)return -22;
     int rc=platform_admit(c,op==EldenAwStop);if(rc)return rc;
     if(op==EldenAwPlay&&(__atomic_load_n(&stop_requested,__ATOMIC_ACQUIRE)||!thermal(c)||
-       !__atomic_load_n(&c->client_live,__ATOMIC_ACQUIRE)))return -13;
+       elden_broker_output_admit(&c->broker)))return -13;
     return 0;
 }
 static int firmware(void *,const uint8_t *p,size_t n){
@@ -126,25 +127,17 @@ static int firmware(void *,const uint8_t *p,size_t n){
     for(size_t i=0;i<n;i++)if(p[i]!=elden_haptics_firmware[i])return -84;return 0;
 }
 static int chip_delay(void *v,unsigned low,unsigned high){if(low>high||high>500000)return -22;return delay_us(v,low);}
-static int queue_admit(void *v,uint64_t owner,uint64_t epoch){
-    Context *c=static_cast<Context *>(v);
-    if(__atomic_load_n(&stop_requested,__ATOMIC_ACQUIRE)||!__atomic_load_n(&c->client_live,__ATOMIC_ACQUIRE)||
-       __atomic_load_n(&c->owner,__ATOMIC_ACQUIRE)!=owner||c->epoch!=epoch)return -125;
-    return thermal(c)?0:-13;
+static int broker_admit(void *v,int cleanup){
+    Context *c=static_cast<Context *>(v);int rc=platform_admit(c,cleanup);if(rc)return rc;
+    if(!cleanup&&(__atomic_load_n(&stop_requested,__ATOMIC_ACQUIRE)||!thermal(c)))return -13;return 0;
 }
-static int queue_start(void *v,unsigned motor,uint8_t wave,uint8_t gain,uint32_t duration){
-    Context *c=static_cast<Context *>(v);return motor<2?elden_aw_ram_start(&c->chips[motor],wave,gain,duration):-22;
-}
-static int queue_poll(void *v,unsigned motor){return motor<2?elden_aw_poll(&static_cast<Context *>(v)->chips[motor]):-22;}
-static int queue_stop(void *v,unsigned motor){return motor<2?elden_aw_stop(&static_cast<Context *>(v)->chips[motor]):-22;}
-static void completed(void *v,const EldenHapticsResult *r){
-    Context *c=static_cast<Context *>(v);IOLockLock(c->lock);int rc=elden_haptics_mail_finish(&c->mailbox,r);IOLockUnlock(c->lock);
-    if(rc)__atomic_store_n(&c->error,rc,__ATOMIC_RELEASE);
-}
+static void broker_lock(void *v,int acquire){Context *c=static_cast<Context *>(v);if(acquire)IOLockLock(c->lock);else IOLockUnlock(c->lock);}
+static void *broker_allocate(void *,size_t bytes){return bytes&&bytes<=1440000?IOMalloc(bytes):nullptr;}
+static void broker_release(void *,void *p,size_t bytes){if(p&&bytes)IOFree(p,bytes);}
 static int prepare(Context *c){
     c->maps_ready=c->map();if(!c->maps_ready)return -12;
     EldenHapticsPlatformIo io={c,read,write,platform_admit,gcc_lock,touch_contract,now_us,delay_us};
-    int rc=elden_haptics_platform_acquire(&c->platform,&io,400000);if(rc)return rc;
+    int rc=elden_haptics_platform_acquire(&c->platform,&io,ELDEN_HAPTICS_BUS_HZ);if(rc)return rc;
     EldenHapticsBusIo bus_io;
     if((rc=elden_haptics_platform_bus_io(&c->platform,&bus_io))||(rc=elden_haptics_bus_acquire(&c->bus,&bus_io)))return rc;
     EldenAwIo chip_io={c,chip_read,chip_write,chip_admit,firmware,now_us,chip_delay};
@@ -153,22 +146,18 @@ static int prepare(Context *c){
            (rc=elden_aw_initialize(&c->chips[m],elden_haptics_firmware,sizeof(elden_haptics_firmware),elden_haptics_max_gain[m])))return rc;
         __atomic_fetch_or(&c->ready_mask,1u<<m,__ATOMIC_RELEASE);
     }
-    if(ELDEN_HAPTICS_HAS_LIMITS){
-        EldenHapticsQueueIo qio={c,queue_admit,queue_start,queue_poll,queue_stop,completed};
-        rc=elden_haptics_queue_init(&c->queue,&elden_haptics_limits,&qio);if(rc)return rc;
-        __atomic_store_n(&c->queue_ready,1u,__ATOMIC_RELEASE);
-    }
+    EldenHapticsBrokerIo bio={c,broker_admit,broker_lock,now_us,broker_allocate,broker_release};
+    EldenAwChip *chips[]={&c->chips[0],&c->chips[1]};
+    rc=elden_broker_init(&c->broker,&bio,chips,ELDEN_HAPTICS_HAS_LIMITS?&elden_haptics_limits:nullptr,
+        ELDEN_HAPTICS_HAS_LIMITS||ELDEN_HAPTICS_HAS_CATALOG?&elden_haptics_shared_limits:nullptr,
+        ELDEN_HAPTICS_HAS_CATALOG?&elden_haptics_rtp_limits:nullptr,elden_haptics_effects,ELDEN_HAPTICS_EFFECT_COUNT);
+    if(rc)return rc;__atomic_store_n(&c->queue_ready,c->broker.ram_ready?1u:0u,__ATOMIC_RELEASE);
     return 0;
 }
 static int stop(Context *c){
-    __atomic_store_n(&c->client_live,0u,__ATOMIC_RELEASE);
-    IOLockLock(c->lock);elden_haptics_mail_stop(&c->mailbox);IOLockUnlock(c->lock);
     c->cleanup_deadline=now_us(c)+1000000;c->platform.cleanup=1;
     int error=0;
-    if(c->queue_ready){
-        int rc=elden_haptics_queue_stop(&c->queue,now_us(c));if(rc)error=rc;
-        if(!elden_haptics_queue_terminal(&c->queue)&&!error)error=-16;
-    }
+    if(c->broker.initialized)error=elden_broker_stop(&c->broker);
     // Even partial init or failed GO may leave a physical chip active.
     for(unsigned m=0;m<2;m++)if(c->chips[m].io.admit){int rc=elden_aw_stop(&c->chips[m]);if(rc&&!error)error=rc;}
     if(error||c->bus.held||c->platform.held)return error?error:-125;
@@ -177,17 +166,8 @@ static int stop(Context *c){
     return 0;
 }
 static bool process(Context *c){
-    EldenHapticsRequest r;uint16_t intensity=0;
-    IOLockLock(c->lock);int cancel=elden_haptics_mail_next_cancel(&c->mailbox,&r);IOLockUnlock(c->lock);
-    if(!cancel)(void)elden_haptics_queue_cancel(&c->queue,r.owner,r.epoch,r.id);
-    IOLockLock(c->lock);int take=elden_haptics_mail_take(&c->mailbox,&r,&intensity);IOLockUnlock(c->lock);
-    if(!take){
-        int rc=elden_haptics_queue_submit(&c->queue,r.owner,r.epoch,r.id,r.not_before_us,r.duration_us,r.mask,r.wave,intensity);
-        if(rc){EldenHapticsResult result={r.owner,r.epoch,r.id,EldenHapticsFailed,rc};completed(c,&result);}
-    }
-    if(c->queue_ready){int rc=elden_haptics_queue_step(&c->queue,now_us(c));
-        if(c->queue.held||c->queue.stopping){__atomic_store_n(&c->error,rc?rc:c->queue.error,__ATOMIC_RELEASE);return false;}}
-    return true;
+    int rc=elden_broker_step(&c->broker);
+    if(c->broker.held||c->broker.stopping){__atomic_store_n(&c->error,rc?rc:c->broker.error,__ATOMIC_RELEASE);return false;}return true;
 }
 static bool publish(Context *);
 static void worker(void *,wait_result_t){
@@ -202,7 +182,7 @@ static void worker(void *,wait_result_t){
     else{__atomic_store_n(&c->error,rc,__ATOMIC_RELEASE);log("\nELDEN_HAPTICS initialization refused; retained to reset\n");}
     while(!rc&&!__atomic_load_n(&stop_requested,__ATOMIC_ACQUIRE)){
         if(!process(c))break;
-        IOLockLock(c->lock);bool work=elden_haptics_mail_work(&c->mailbox);IOLockUnlock(c->lock);
+        bool work=elden_broker_work(&c->broker)!=0;
         IOSleep(work?1:10);
     }
     __atomic_store_n(&c->phase,3u,__ATOMIC_RELEASE);int stopped=stop(c);
@@ -233,87 +213,44 @@ extern "C" int elden_haptics_stop_for_reboot(void){
 extern "C" int elden_haptics_native_open(uint64_t *owner,uint64_t *epoch){
     if(!owner||!epoch)return -22;Context *c=__atomic_load_n(&active,__ATOMIC_ACQUIRE);
     if(!c||__atomic_load_n(&c->phase,__ATOMIC_ACQUIRE)!=2||__atomic_load_n(&stop_requested,__ATOMIC_ACQUIRE))return -19;
-    IOLockLock(c->lock);int rc=-16;
-    if(c->next_owner!=UINT64_MAX){uint64_t next=c->next_owner;rc=elden_haptics_mail_open(&c->mailbox,next,c->epoch);
-        if(!rc){++c->next_owner;__atomic_store_n(&c->owner,next,__ATOMIC_RELEASE);__atomic_store_n(&c->client_live,1u,__ATOMIC_RELEASE);*owner=next;*epoch=c->epoch;}}
-    IOLockUnlock(c->lock);return rc;
+    return elden_broker_open(&c->broker,owner,epoch);
 }
 extern "C" int elden_haptics_native_close(uint64_t owner,uint64_t epoch){
     Context *c=__atomic_load_n(&active,__ATOMIC_ACQUIRE);if(!c)return -19;
-    IOLockLock(c->lock);int rc=elden_haptics_mail_close(&c->mailbox,owner,epoch);
-    if(!rc)__atomic_store_n(&c->client_live,0u,__ATOMIC_RELEASE);IOLockUnlock(c->lock);return rc;
+    return elden_broker_close(&c->broker,owner,epoch);
 }
 extern "C" int elden_haptics_native_submit(uint64_t owner,uint64_t epoch,uint64_t id,uint64_t delay,uint32_t duration,uint8_t mask,uint8_t wave,uint16_t intensity){
     Context *c=__atomic_load_n(&active,__ATOMIC_ACQUIRE);
-    if(!c||!__atomic_load_n(&c->queue_ready,__ATOMIC_ACQUIRE)||__atomic_load_n(&stop_requested,__ATOMIC_ACQUIRE))return -13;
-    if(!id||delay>1000000||!duration||duration>elden_haptics_limits.max_duration_us||!mask||mask&~3u||!wave||wave>c->chips[0].waves||
-       intensity>32767||!thermal(c))return -13;
-    uint64_t now=now_us(c);if(now>UINT64_MAX-delay)return -22;
-    EldenHapticsRequest r={owner,epoch,id,now+delay,duration,mask,wave,{0,0},0};
-    IOLockLock(c->lock);int rc=elden_haptics_mail_submit(&c->mailbox,&r,intensity);IOLockUnlock(c->lock);return rc;
+    if(!c||__atomic_load_n(&c->phase,__ATOMIC_ACQUIRE)!=2||__atomic_load_n(&stop_requested,__ATOMIC_ACQUIRE))return -13;
+    return elden_broker_submit_ram(&c->broker,owner,epoch,id,delay,duration,mask,wave,intensity);
+}
+extern "C" int elden_haptics_native_submit_effect(uint64_t owner,uint64_t epoch,uint64_t id,uint32_t effect,uint64_t delay,uint16_t intensity){
+    Context *c=__atomic_load_n(&active,__ATOMIC_ACQUIRE);
+    if(!c||__atomic_load_n(&c->phase,__ATOMIC_ACQUIRE)!=2||__atomic_load_n(&stop_requested,__ATOMIC_ACQUIRE))return -13;
+    return elden_broker_submit_effect(&c->broker,owner,epoch,id,effect,delay,intensity);
+}
+extern "C" int elden_haptics_native_effect_info(uint32_t id,uint64_t output[4]){
+    if(!output)return -22;
+    const EldenHapticsEffect *e=elden_haptics_catalog_find(elden_haptics_effects,ELDEN_HAPTICS_EFFECT_COUNT,id);
+    if(!e)return -116;output[0]=e->id;output[1]=e->frames;output[2]=e->mask;output[3]=24000;return 0;
 }
 extern "C" int elden_haptics_native_cancel(uint64_t owner,uint64_t epoch,uint64_t id){
     Context *c=__atomic_load_n(&active,__ATOMIC_ACQUIRE);if(!c)return -19;
-    IOLockLock(c->lock);int rc=elden_haptics_mail_cancel(&c->mailbox,owner,epoch,id);IOLockUnlock(c->lock);return rc;
+    return elden_broker_cancel(&c->broker,owner,epoch,id);
 }
 extern "C" int elden_haptics_native_result(uint64_t owner,uint64_t epoch,uint64_t id,EldenHapticsResult *result){
     Context *c=__atomic_load_n(&active,__ATOMIC_ACQUIRE);if(!c)return -19;
-    IOLockLock(c->lock);int rc=elden_haptics_mail_result(&c->mailbox,owner,epoch,id,result);IOLockUnlock(c->lock);return rc;
+    return elden_broker_result(&c->broker,owner,epoch,id,result);
 }
 extern "C" void elden_haptics_native_info(uint64_t output[8]){
-    if(!output)return;for(unsigned i=0;i<8;i++)output[i]=0;output[0]=1;
+    if(!output)return;for(unsigned i=0;i<8;i++)output[i]=0;output[0]=2;
     Context *c=__atomic_load_n(&active,__ATOMIC_ACQUIRE);if(!c){output[5]=(uint64_t)(int64_t)__atomic_load_n(&startup_error,__ATOMIC_ACQUIRE);return;}
     output[1]=__atomic_load_n(&c->phase,__ATOMIC_ACQUIRE);output[2]=__atomic_load_n(&c->ready_mask,__ATOMIC_ACQUIRE);
-    output[3]=ELDEN_HAPTICS_HAS_LIMITS;output[4]=__atomic_load_n(&c->thermal_ready,__ATOMIC_ACQUIRE);
+    output[3]=(ELDEN_HAPTICS_HAS_LIMITS?1u:0u)|(ELDEN_HAPTICS_HAS_CATALOG?2u:0u);output[4]=__atomic_load_n(&c->thermal_ready,__ATOMIC_ACQUIRE);
     output[5]=(uint64_t)(int64_t)__atomic_load_n(&c->error,__ATOMIC_ACQUIRE);
     output[6]=__atomic_load_n(&c->stopped,__ATOMIC_ACQUIRE);output[7]=__atomic_load_n(&c->queue_ready,__ATOMIC_ACQUIRE);
 }
-class EldenHapticsClient final : public IOUserClient {
-    OSDeclareDefaultStructors(EldenHapticsClient)
-    uint64_t owner=0,epoch=0;
-public:
-    bool start(IOService *provider) override{
-        if(!IOUserClient::start(provider))return false;
-        if(elden_haptics_native_open(&owner,&epoch)){IOUserClient::stop(provider);return false;}return true;
-    }
-    IOReturn clientClose() override{if(owner){(void)elden_haptics_native_close(owner,epoch);owner=0;}terminate();return kIOReturnSuccess;}
-    void free() override{if(owner){(void)elden_haptics_native_close(owner,epoch);owner=0;}IOUserClient::free();}
-    IOReturn externalMethod(uint32_t selector,IOExternalMethodArguments *a,IOExternalMethodDispatch *,OSObject *,void *) override{
-        if(!a||!owner||a->structureInputSize||a->structureOutputSize||a->structureInputDescriptor||a->structureOutputDescriptor)return kIOReturnBadArgument;
-        int rc=-22;
-        if(selector==0&&a->scalarInputCount==0&&a->scalarOutputCount==8&&a->scalarOutput){elden_haptics_native_info(a->scalarOutput);return kIOReturnSuccess;}
-        if(selector==1&&a->scalarInputCount==6&&a->scalarInput&&a->scalarOutputCount==0){
-            const uint64_t *in=a->scalarInput;
-            if(in[2]>UINT32_MAX||in[3]>3||in[4]>127||in[5]>32767)return kIOReturnBadArgument;
-            rc=elden_haptics_native_submit(owner,epoch,in[0],in[1],(uint32_t)in[2],(uint8_t)in[3],(uint8_t)in[4],(uint16_t)in[5]);
-        }else if(selector==2&&a->scalarInputCount==1&&a->scalarInput&&a->scalarOutputCount==0)rc=elden_haptics_native_cancel(owner,epoch,a->scalarInput[0]);
-        else if(selector==3&&a->scalarInputCount==1&&a->scalarInput&&a->scalarOutputCount==3&&a->scalarOutput){
-            EldenHapticsResult result;rc=elden_haptics_native_result(owner,epoch,a->scalarInput[0],&result);
-            if(!rc){a->scalarOutput[0]=result.state;a->scalarOutput[1]=(uint64_t)(int64_t)result.error;a->scalarOutput[2]=result.id;}
-        }
-        return rc==0?kIOReturnSuccess:rc==-16?kIOReturnBusy:rc==-13||rc==-125?kIOReturnNotPermitted:rc==-116?kIOReturnNotFound:rc==-19?kIOReturnNotReady:kIOReturnBadArgument;
-    }
-};
-OSDefineMetaClassAndStructors(EldenHapticsClient,IOUserClient)
-class EldenHapticsService final : public IOService {
-    OSDeclareDefaultStructors(EldenHapticsService)
-    IOReturn client(task_t task,void *security,UInt32 type,OSDictionary *properties,IOUserClient **out){
-        if(out)*out=nullptr;if(!out||type!=0)return kIOReturnBadArgument;
-        if(IOUserClient::clientHasPrivilege(task,kIOClientPrivilegeAdministrator)!=kIOReturnSuccess)return kIOReturnNotPermitted;
-        EldenHapticsClient *c=OSTypeAlloc(EldenHapticsClient);if(!c)return kIOReturnNoMemory;
-        if(!c->initWithTask(task,security,type,properties)||!c->attach(this)){c->release();return kIOReturnError;}
-        if(!c->start(this)){c->detach(this);c->release();return kIOReturnNotReady;}*out=c;return kIOReturnSuccess;
-    }
-public:
-    bool start(IOService *provider) override{
-        if(!IOService::start(provider))return false;setName("EldenHaptics");
-        if(!setProperty("EldenHapticsProtocolVersion",1u,32)||!setProperty("CalibrationAvailable",(bool)ELDEN_HAPTICS_HAS_LIMITS)){
-            IOService::stop(provider);return false;}return true;
-    }
-    IOReturn newUserClient(task_t task,void *s,UInt32 t,OSDictionary *p,IOUserClient **out) override{return client(task,s,t,p,out);}
-    IOReturn newUserClient(task_t task,void *s,UInt32 t,IOUserClient **out) override{return client(task,s,t,nullptr,out);}
-};
-OSDefineMetaClassAndStructors(EldenHapticsService,IOService)
+#include "ClientMethods.inc"
 namespace {
 static bool publish(Context *c){
     void *handle=OSMetaClass::preModLoad(g_kernel_kmod_info.name);if(!handle)return false;

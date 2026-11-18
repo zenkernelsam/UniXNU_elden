@@ -43,6 +43,10 @@ failed:
 int elden_aw_rtp_go(EldenAwRtp *r){
     if(!r||!r->owned||r->held||r->started)return EldenAwArgument;
     int rc=aw_rtp_clock(r);if(rc)return rc;EldenAwChip *c=r->chip;
+    // SYSINT is read-clear. Discard only the previous stopped run's DONE;
+    // reject a real fault rather than carrying a stale completion into GO.
+    unsigned irq;rc=aw_reg_read(c,2,&irq);if(rc)return aw_rtp_fail(r,rc);
+    if(irq&0xe6)return aw_rtp_fail(r,EldenAwCancelled);r->done_seen=0;
     uint64_t now=c->io.now_us(c->io.context);if(now>UINT64_MAX-r->duration_us)return EldenAwArgument;
     r->last_clock=now;r->deadline=now+r->duration_us;
     r->started=1;c->busy=1;c->deadline=r->deadline;c->last_clock=r->last_clock;
@@ -55,7 +59,8 @@ int elden_aw_rtp_status(EldenAwRtp *r,EldenAwRtpStatus *out){
     if(!r||!out||!r->owned||r->held)return EldenAwCancelled;
     int rc=aw_rtp_clock(r);if(rc)return rc;unsigned sysst,irq,state;
     if((rc=aw_reg_read(r->chip,1,&sysst))||(rc=aw_reg_read(r->chip,2,&irq))||(rc=aw_reg_read(r->chip,0x3f,&state)))return aw_rtp_fail(r,rc);
-    EldenAwRtpStatus value={(uint8_t)((sysst>>3)&1),(uint8_t)((sysst>>4)&1),(uint8_t)(state&15),(uint8_t)(irq&0xe6),(uint8_t)(irq&1)};
+    if(irq&1)r->done_seen=1;
+    EldenAwRtpStatus value={(uint8_t)((sysst>>3)&1),(uint8_t)((sysst>>4)&1),(uint8_t)(state&15),(uint8_t)(irq&0xe6),r->done_seen};
     if(value.faults)return aw_rtp_fail(r,EldenAwCancelled);*out=value;return 0;
 }
 int elden_aw_rtp_feed(EldenAwRtp *r,const int8_t *data,size_t n){

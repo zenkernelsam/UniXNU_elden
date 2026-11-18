@@ -28,6 +28,7 @@ EldenIconCpuPayload.h
 EldenNvtFirmware.h
 EldenHapticsFirmware.h
 EldenHapticsCalibration.h
+EldenHapticsCatalog.h
 /lab/
 /maintenance/
 /local-maintenance.toml

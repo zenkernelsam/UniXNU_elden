@@ -8,7 +8,7 @@ extern "C" {
 enum {EldenAwRtpRunning=1,EldenAwRtpDrained=2,EldenAwRtpStopped=3};
 typedef struct {
     EldenAwChip *chip;uint32_t rate_hz,duration_us;
-    uint8_t saved[7],changed,owned,held,started;
+    uint8_t saved[7],changed,owned,held,started,done_seen;
     uint64_t last_clock,deadline;
 } EldenAwRtp;
 typedef struct {uint8_t almost_full,almost_empty,state,faults,done;} EldenAwRtpStatus;

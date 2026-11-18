@@ -20,17 +20,21 @@ int elden_haptics_mail_open(EldenHapticsMailbox *m,uint64_t who,uint64_t epoch){
     for(unsigned i=0;i<EldenHapticsQueueSlots;i++)if(m->slots[i].state)return EldenHapticsRequestBusy;
     m->owner=who;m->epoch=epoch;m->last_id=0;return 0;
 }
-int elden_haptics_mail_submit(EldenHapticsMailbox *m,const EldenHapticsRequest *r,uint16_t intensity){
-    if(!r||!r->id||!r->mask||r->mask>3||!r->wave||r->wave>127||!r->duration_us||r->duration_us>250000||
+static int submit(EldenHapticsMailbox *m,const EldenHapticsRequest *r,uint16_t intensity,uint32_t effect){
+    if(!r||!r->id||!r->mask||r->mask>3||!r->wave||r->wave>127||!r->duration_us||r->duration_us>(effect?60000000u:250000u)||
        r->reserved||r->gain[0]||r->gain[1]||intensity>32767)return EldenHapticsRequestArgument;
     if(!owner(m,r->owner,r->epoch)||m->closing||m->stopping||m->held)return EldenHapticsRequestDenied;
     if(r->id<=m->last_id)return EldenHapticsRequestStale;
     int empty=-1;for(unsigned i=0;i<EldenHapticsQueueSlots;i++)if(!m->slots[i].state){empty=(int)i;break;}
     if(empty<0)return EldenHapticsRequestBusy;
-    EldenHapticsMail value={0};value.request=*r;value.intensity_q15=intensity;value.state=EldenHapticsMailPending;
+    EldenHapticsMail value={0};value.request=*r;value.intensity_q15=intensity;value.effect_id=effect;value.state=EldenHapticsMailPending;
     m->slots[empty]=value;m->last_id=r->id;return 0;
 }
-int elden_haptics_mail_take(EldenHapticsMailbox *m,EldenHapticsRequest *out,uint16_t *intensity){
+int elden_haptics_mail_submit(EldenHapticsMailbox *m,const EldenHapticsRequest *r,uint16_t intensity){return submit(m,r,intensity,0);}
+int elden_haptics_mail_submit_effect(EldenHapticsMailbox *m,const EldenHapticsRequest *r,uint16_t intensity,uint32_t effect){
+    if(!effect)return EldenHapticsRequestArgument;return submit(m,r,intensity,effect);
+}
+static int take(EldenHapticsMailbox *m,EldenHapticsRequest *out,uint16_t *intensity,uint32_t *effect){
     if(!m||!out||!intensity)return EldenHapticsRequestArgument;
     if(m->stopping||m->held||m->closing)return EldenHapticsRequestDenied;
     int at=-1;uint64_t id=UINT64_MAX;
@@ -38,7 +42,13 @@ int elden_haptics_mail_take(EldenHapticsMailbox *m,EldenHapticsRequest *out,uint
         id=m->slots[i].request.id;at=(int)i;
     }
     if(at<0)return EldenHapticsRequestBusy;
-    m->slots[at].state=EldenHapticsMailExecuting;*out=m->slots[at].request;*intensity=m->slots[at].intensity_q15;return 0;
+    if(m->slots[at].effect_id&&!effect)return EldenHapticsRequestDenied;
+    m->slots[at].state=EldenHapticsMailExecuting;*out=m->slots[at].request;*intensity=m->slots[at].intensity_q15;
+    if(effect)*effect=m->slots[at].effect_id;return 0;
+}
+int elden_haptics_mail_take(EldenHapticsMailbox *m,EldenHapticsRequest *out,uint16_t *intensity){return take(m,out,intensity,0);}
+int elden_haptics_mail_take_native(EldenHapticsMailbox *m,EldenHapticsRequest *out,uint16_t *intensity,uint32_t *effect){
+    if(!effect)return EldenHapticsRequestArgument;return take(m,out,intensity,effect);
 }
 int elden_haptics_mail_cancel(EldenHapticsMailbox *m,uint64_t who,uint64_t epoch,uint64_t id){
     if(!owner(m,who,epoch)||!id)return EldenHapticsRequestDenied;
