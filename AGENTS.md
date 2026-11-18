@@ -1,5 +1,19 @@
 # UniXNU elden — authoritative source repository
 
+Camera/motion cores20261119: exact Gen4 Linux6f97250e sensor325+438register
+entries/eight power-control-stream bodies now adapted to owned CCI/power/real
+receiver proofs.820cases882646checks +scalar native pass; native CCI/CAMSS/frames/
+OS17 camera absent. Expected IDs38ee/08a8 are SOURCE facts, not observed hardware.
+Motion source-bound OS17 QMI/SSC/integer math only (no QRTR/SM8250/fake gravity),
+strict complete-message/duplicate/wire/float/identity/mount/clock checks and
+gravity-axis hold implemented.2622678checks +original truncation regressions/
+scalar native pass. Exact Gen4 transport/attributes/samples/HID/UI absent.
+Read CAMERA-CORE.md/MOTION-CORE.md and driver validation. Accepted source2/host2;
+all jobs terminal. Reference sync68roots allHEADs unchanged, no changed refs,
+42current/14detached/3dirty/7diverged/2known errors; review outside research.
+Five-part Goal active. Continue actual GPIO/wake, native motion/CCI/pipeline and
+continuous/system haptics; no tablet/auto merge, preserve mainline/GPU/QRTR.
+
 Wake protocol20261119: exact stock module a3c9fce9 oracle1024 passes; real15→
 KEY_WAKEUP143 and panel50:13/50:11/IRQ-wake relocation/arguments qualified.
 3439actual gesture/oracle/envelope/disabled-policy checks and38actual SPI/fault

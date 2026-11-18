@@ -1,0 +1,24 @@
+{
+  "repository": "https://github.com/rui12366B/UniXNU-gts7xlwifi",
+  "commit": "88b34f97100a01aab4ea6b86dc9c748b2114c382",
+  "files": [
+    {
+      "file": "T970Ssc.c",
+      "path": "package/T970Ssc.c",
+      "sha256": "6212e9218ad9ff237af50daf796e30bd9c54770ccb29cd8dd37bc24dcbd1b1fc",
+      "bytes": 13023
+    },
+    {
+      "file": "T970Ssc.h",
+      "path": "package/T970Ssc.h",
+      "sha256": "f58f4c5d6f5e59678f42af08f34193710c23543bb5e37ed96e8e5fbd1835615a",
+      "bytes": 6336
+    }
+  ],
+  "scope": "QMI/SSC/protobuf and integer float conversion only",
+  "QRTR_or_SM8250_MMIO_copied": false,
+  "fake_gravity_copied": false,
+  "donor_real_accelerometer_streaming_qualified": false,
+  "exact_Gen4_transport_native_connected": false,
+  "hardware": false
+}

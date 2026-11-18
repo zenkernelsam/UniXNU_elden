@@ -1,0 +1,24 @@
+{
+  "repository": "https://github.com/h0cheung/tb322fc-linux-kernel",
+  "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+  "sources": [
+    {
+      "file": "s5kjns.c",
+      "path": "drivers/media/i2c/s5kjns.c",
+      "sha256": "8f8d6bfb99b7439fad2869ed56c890482576b0ecae6ed2910a70c1f90edb15a0",
+      "bytes": 24290,
+      "license": "GPL-2.0-only"
+    },
+    {
+      "file": "gc08a8.c",
+      "path": "drivers/media/i2c/gc08a8.c",
+      "sha256": "1c33d381232d96cd8d133b3ad3cd4c25e05967b84144777f6343e05fd2967d6a",
+      "bytes": 25431,
+      "license": "GPL-2.0-only"
+    }
+  ],
+  "board": "Armada TB322FC SM8750",
+  "hardware_verified": false,
+  "camera_DT_control_nodes_only": true,
+  "native_CCI_CAMSS_provider_connected": false
+}

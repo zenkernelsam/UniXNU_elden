@@ -4,6 +4,8 @@
 
 2026-11-19 新证据：AP501U 的 F1/原厂校验/同报告 polar tilt，RTC 的真实 PMK8550 观察通道/系统时钟，以及双 AW86937 的 SE6/队列/工作线程/管理员用户接口和触控共享 GCC 修补。三者的固定 v152 离线链接 kernel4889eee6、Apple30 和各组件 ABI/停止顺序已检查，没有刷机或实机验收。入口为 PEN-NATIVE.md、RTC-WAKE.md、HAPTICS-NATIVE.md 与各 driver 的 validation JSON。马达校准为空，输出仍拒绝；连续 RTP、官方 waveform 编译和系统 Actuator 路由仍待完成。请评审后按当前主线源码移植，保留你的触控/SMMU/Wi-Fi/回程修复。
 
+随后新增 WAKE-PROTOCOL.md（原厂双击15/50:13/50:11命令与过滤）、MOTION-CORE.md（无假重力的SSC协议/单位/安装矩阵/旋转保持）、CAMERA-CORE.md（精确Gen4传感器原始配置/电源/控制/启停逻辑）。三者目前是离线核心与对象证据；GPIO/PDC唤醒、真实Gen4传感器传输/HID、CCI/CAMSS/出图和相机服务仍待接。不要把参考DTS或主机模拟回包当作设备实测，不要移入T970的SM8250寄存器或假传感器。工作台 lab/records 和 lab/reference-reviews 已有 compact 交接记录；完整大清单在已校验的私有归档，重复副本按用户要求进入Windows回收站。
+
 主线仍独占平板、刷写和当前 Wi-Fi/PCIe/WCN/QRTR 的实机迭代；离线线程不操作设备、不自动合并。你完成当前一轮并恢复安全基线后，再 fetch 并只读核对该分支的状态、已验证提交、构建/ABI结果及硬件缺口。只有组件明确具备集成证据后，才按当前主线源码评审、挑选对应提交和重建，不能整份旧目录/旧内核覆盖主线，也不能把规划或组件编译视为实机成功。注意共享电源、总线、IRQ、DMA及停止/回程顺序，保留你的最新修复。
 
 板级实现优先 ArmadaOS-Freedom 的 TB322FC/SM8750 文档、固定内核和适用补丁，其次 Linux mainline；iPadOS 接口参考成熟 UniXNU 与同版 OS17 实现。不要搬用三代/五代的寄存器或固件。真机前重新核准入、候选完整摘要、原有 floor1738713600@0/父链3 和自动回程。

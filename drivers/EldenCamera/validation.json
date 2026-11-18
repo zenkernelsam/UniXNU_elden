@@ -1,0 +1,66 @@
+{
+  "passed_offline_core": true,
+  "checks": 882646,
+  "cases": 820,
+  "object_sha256": "5bd0ea4cc7edd60f79664a4c0dec5ec32044b8c1971bc5bb927e62f251106a5a",
+  "source_record_sha256": "0b43e37bc64c2f0d43f230d737745f2757fa5a958752e99cd413780552666077",
+  "record_sha256": "f1d6eb956df90403a8f96f765b98584d4454fe7e3fd99730062446ef2e574493",
+  "Core_c_sha256": "541c7d616b2e003e86e541dc9d817f55fe199c05f50768529b6866c386599970",
+  "Git_index_source_replay_matches_compiled_input": true,
+  "evidence": "lab/records/camera-core-20261119",
+  "scalar_ARM64_iOS17": true,
+  "native_provider_connected": false,
+  "hardware": false,
+  "full_link": false,
+  "boot_packaged": false,
+  "goal_complete": false,
+  "upstream_bodies_unchanged": {
+    "s5kjns": {
+      "tables": 3,
+      "table_entries": 325,
+      "body_sha256": {
+        "power_on": "b0cddfba68e04f0efc9e0deccda0c56204cac7746e0fb32d1d8d519ff901e038",
+        "power_off": "e5ab52260bc7f2654f16687999f983a537cf8546b3a1c44b8cfc300e18fb7bf2",
+        "set_ctrl": "7c6a2a2ae66b881b65e9c287b5d1449591518fa1936bba7954be90a8309afa3b",
+        "s_stream": "40b8f916e0458518e0c24eb731c07425817ab3e293f8f621ec49519d2459016f"
+      },
+      "definitions": [
+        "#define S5KJNS_WIDTH 4080",
+        "#define S5KJNS_HEIGHT 3072",
+        "#define S5KJNS_HTS 5840",
+        "#define S5KJNS_VTS 3184",
+        "#define S5KJNS_EXPOSURE_MAX (S5KJNS_VTS - 10)",
+        "#define S5KJNS_PIXEL_RATE 558933333"
+      ],
+      "gain": [
+        32,
+        2048,
+        32
+      ]
+    },
+    "gc08a8": {
+      "tables": 2,
+      "table_entries": 438,
+      "body_sha256": {
+        "power_on": "5c9554494f7d737b96a487eaeb60fde0ebe740c6c5a58dd99ecd666d1a279cdf",
+        "power_off": "bd9e0ac07b06bd9ca60a7242e250f343b6a728f1d71c10b6a3a50d6a6b2a650e",
+        "set_ctrl": "b827e3adbc7339c53bb9ca11e710c5fded505ef328ab119465e1381db838ec19",
+        "s_stream": "130328f8da157c931082aaed339d4717d0c19b41363b140455bdbb99cda317a7"
+      },
+      "definitions": [
+        "#define GC08A8_WIDTH 3264",
+        "#define GC08A8_HEIGHT 2448",
+        "#define GC08A8_HTS 3652",
+        "#define GC08A8_VTS 2548",
+        "#define GC08A8_EXPOSURE_MAX (GC08A8_VTS - 16)",
+        "#define GC08A8_PIXEL_RATE 281600000"
+      ],
+      "gain": [
+        1024,
+        16384,
+        1024
+      ]
+    }
+  },
+  "camera_frames_verified": false
+}
