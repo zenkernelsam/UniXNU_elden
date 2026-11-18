@@ -24,7 +24,8 @@ typedef struct {
 } EldenHapticsBus;
 /* Zero-initialize once before acquire; never overwrite an acquired/held lease.
  * Caller exclusively owns SE6/clock/pins and serializes BOTH motor instances.
- * Ready FIFO I2C firmware/clock is required. No SE firmware, DMA or GSI takeover.
+ * Ready32-bit,>=16-word FIFO I2C firmware/clock is required. Writes up to64B
+ * split into63B payloads, reads up to16B into4B bursts. No DMA/GSI takeover.
  * Poll-only: core status bits are enabled, external SE IRQ output is suppressed.
  * All changed configuration is captured/restored. Failure retains the lease. */
 int elden_haptics_bus_acquire(EldenHapticsBus *,const EldenHapticsBusIo *);

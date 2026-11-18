@@ -32,7 +32,7 @@ def main():
     cflags=[a.llvm/'clang','-target','arm64-apple-ios17.0','-std=c11','-O2','-ffreestanding','-fno-builtin','-fno-stack-protector','-mgeneral-regs-only',
             '-nostdinc','-isystem',Path(resource)/'include','-Wall','-Wextra','-Werror']
     for folder,name in [('haptics','EldenHapticsNative.cpp'),('haptics','Platform.c'),('haptics','GeniCore.c'),('haptics','Bus.c'),
-                        ('haptics','AwChip.c'),('haptics','Queue.c'),('haptics','Mailbox.c'),('touch','EldenTouchRuntime.cpp')]:
+                        ('haptics','AwChip.c'),('haptics','Queue.c'),('haptics','Mailbox.c'),('haptics','RtpStream.c'),('touch','EldenTouchRuntime.cpp')]:
         src=a.source/folder/name;obj=out/(src.stem+'.o');raw=out/(src.stem+'.raw.o') if name=='EldenHapticsNative.cpp' else obj
         if src.suffix=='.cpp':
             selected=job if folder=='haptics' else next(j for j in cap['jobs'] if j['file'].endswith('/EldenNvt36536/Runtime.cpp'))

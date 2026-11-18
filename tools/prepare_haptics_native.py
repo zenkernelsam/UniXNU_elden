@@ -64,7 +64,7 @@ def main():
     sys.path.insert(0,str(DRIVER));from AwSource import derive;from GeniSource import sources
     (h/'AwChip.c').write_bytes(derive())
     for name,data in sources().items():(h/name).write_bytes(data)
-    for name in ('AwChip.h','AwKernelShim.h','Bus.c','Bus.h','Board.h','Platform.c','Platform.h','Queue.c','Queue.h','Mailbox.c','Mailbox.h','Native.h'):
+    for name in ('AwChip.h','AwKernelShim.h','AwRtp.h','Bus.c','Bus.h','Board.h','Platform.c','Platform.h','Queue.c','Queue.h','Mailbox.c','Mailbox.h','RtpStream.c','RtpStream.h','Native.h'):
         shutil.copyfile(DRIVER/name,h/name)
     shutil.copyfile(DRIVER/'Native.cpp',h/'EldenHapticsNative.cpp')
     data=a.firmware.read_bytes();(h/'EldenHapticsFirmware.h').write_text('#pragma once\nstatic const unsigned char elden_haptics_firmware[]={'+','.join(hex(v) for v in data)+'};\n')

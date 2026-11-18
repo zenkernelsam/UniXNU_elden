@@ -23,4 +23,4 @@ def derive():
             if text.count(before)!=1:raise ValueError('Original loop-selection anchor changed')
             text=text.replace(before,'FIELD_PREP(AW86927_WAVCFG9_SEQ1LOOP_MASK, 0)')
         selected.append(text)
-    return ('/* SPDX-License-Identifier: GPL-2.0-only */\n/* Exact fixed Gen4 source bodies + explicit adapter. */\n#include "AwKernelShim.h"\n'+definitions+'\n'+(HERE/'AwAdapter.inc').read_text()+'\n'+'\n\n'.join(selected)+'\n'+(HERE/'AwPublic.inc').read_text()).encode()
+    return ('/* SPDX-License-Identifier: GPL-2.0-only */\n/* Exact fixed Gen4 source bodies + explicit adapter. */\n#include "AwKernelShim.h"\n'+definitions+'\n'+(HERE/'AwAdapter.inc').read_text()+'\n'+'\n\n'.join(selected)+'\n'+(HERE/'AwPublic.inc').read_text()+'\n'+(HERE/'AwRtp.inc').read_text()).encode()

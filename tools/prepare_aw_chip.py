@@ -7,9 +7,9 @@ def main():
     out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);sys.path.insert(0,str(DRIVER));from AwSource import derive
     from GeniSource import sources
     (out/'AwChip.c').write_bytes(derive())
-    for name in ['AwChip.h','AwKernelShim.h']:shutil.copyfile(DRIVER/name,out/name)
+    for name in ['AwChip.h','AwKernelShim.h','AwRtp.h']:shutil.copyfile(DRIVER/name,out/name)
     for name,data in sources().items():(out/name).write_bytes(data)
-    for name in ['Bus.h','Bus.c','Board.h','Platform.h','Platform.c','Queue.h','Queue.c']:
+    for name in ['Bus.h','Bus.c','Board.h','Platform.h','Platform.c','Queue.h','Queue.c','RtpStream.h','RtpStream.c']:
         shutil.copyfile(DRIVER/name,out/name)
     rows={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.is_file()}
     (out/'source.json').write_text(json.dumps({'sources':rows,'upstream':json.loads((DRIVER/'source.json').read_text()),

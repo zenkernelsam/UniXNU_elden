@@ -13,7 +13,7 @@ typedef struct {uint8_t reg[129],ram[4096],rtp[256];unsigned position,rtp_count,
 typedef struct {
     uint32_t se[0x1000/4];Motor motor[2];EldenHapticsBus bus;
     uint64_t now;
-    uint8_t address,operation,hold,stage,tx[8];unsigned tx_used,commands,fail_command;
+    uint8_t address,operation,hold,stage,tx[64];unsigned tx_used,commands,fail_command;
     unsigned cancelled,aborted,drop_cancel,drop_abort,stall,no_data,io_fault,ops,deny;
     unsigned bad_write,reg_writes,last_reg,last_value,reenter,reentered;
     uint8_t pointer[2];uint32_t received;unsigned rx_words;
@@ -32,7 +32,7 @@ static void execute_write(Model *m){
             if(at==0x40||at==0x41)chip->position=((unsigned)chip->reg[0x40]<<8)|chip->reg[0x41];
             if(at==0x09&&value==1){
                 if((chip->reg[8]&3)==3)chip->reg[0x3f]=0;
-                else{chip->reg[0x3f]=1;chip->starts++;}
+                else{chip->reg[0x3f]=(chip->reg[8]&3)==1?8:1;chip->starts++;}
             }
         }
     }
@@ -69,13 +69,13 @@ static int write_reg(void *p,uint32_t reg,uint32_t value){
     Model *m=p;if(++m->ops==m->io_fault)return -71;CHECK(reg<0x1000&&!(reg&3));
     ++m->reg_writes;m->last_reg=reg;m->last_value=value;
     if(reg==GENI_TX_FIFO){
-        CHECK(m->stage==1&&m->tx_used+4<=8);
+        CHECK(m->stage==1&&m->tx_used+4<=64);
         for(unsigned i=0;i<4;++i)m->tx[m->tx_used++]=(uint8_t)(value>>(i*8));return 0;
     }
     if(reg==GENI_M_CMD0){
         m->operation=(uint8_t)(value>>27);m->address=(uint8_t)((value>>9)&127);m->hold=!!(value&GENI_STOP_STRETCH);
         CHECK(m->se[GENI_STATUS/4]==0);m->se[GENI_STATUS/4]=1;m->commands++;
-        if(m->operation==GENI_OP_WRITE){CHECK(m->se[GENI_TX_LEN/4]<=8);m->stage=1;m->tx_used=0;}
+        if(m->operation==GENI_OP_WRITE){CHECK(m->se[GENI_TX_LEN/4]<=64);m->stage=1;m->tx_used=0;}
         else{CHECK(m->operation==GENI_OP_READ);m->stage=3;}
         if(m->reenter&&!m->reentered){
             m->reentered=1;uint8_t v=0;
@@ -93,6 +93,7 @@ static int delay(void *p,unsigned us){((Model *)p)->now+=us;return 0;}
 static void initial(Model *m){
     memset(m,0,sizeof(*m));m->se[GENI_FW_REVISION/4]=GENI_PROTO_I2C<<8;m->se[GENI_CLK_CFG/4]=1;m->se[GENI_SCL_COUNTERS/4]=0x123456;
     m->se[GENI_TX_LEN/4]=17;m->se[GENI_RX_LEN/4]=18;m->se[GENI_SE_IRQ_EN/4]=7;
+    m->se[0xe24/4]=(32u<<24)|(16u<<16);
     for(unsigned n=0;n<2;++n){m->motor[n].reg[0x57]=0x93;m->motor[n].reg[0x58]=0x70;}
 }
 static EldenHapticsBusIo callbacks(Model *m){EldenHapticsBusIo io={m,read_reg,write_reg,admit,now,delay};return io;}

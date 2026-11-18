@@ -111,6 +111,10 @@ writes now use the same guard, and either sibling's release preserves a live
 wrapper1 peer. Details: [HAPTICS-NATIVE.md](HAPTICS-NATIVE.md).
 
 Continue wake/motion/camera implementation and haptics continuous/system effects.
+RTP/controller and explicit Apple compiler now have additional native/full-link
+evidence in [HAPTICS-RTP.md](HAPTICS-RTP.md): up60s, measured bandwidth/rolling
+budget provider gates and original142recipe/17AHAP tests with synthetic peers.
+Native request/catalog/shared budget, Actuator and measured bank still remain.
 Motion and camera foundations now have code/native evidence in
 [MOTION-CORE.md](MOTION-CORE.md) and [CAMERA-CORE.md](CAMERA-CORE.md). Neither has
 an actual Gen4 native producer/pipeline or hardware acceptance yet. All current

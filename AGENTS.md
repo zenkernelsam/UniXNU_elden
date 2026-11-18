@@ -1,5 +1,19 @@
 # UniXNU elden — authoritative source repository
 
+RTP/compiler20261119: exact OEM rate/time12/FIFOthreshold3/AFS-AES512 oracle,
+owned prepare-both/GO/feed/STOP-restore and24k up60s fair stream implemented.
+00=24k/20=48k/40=12k; AES is NOT completion. GENI tx16words/64B only after
+actual32bit/>=16FIFO, old packing/error path retained.361674modeled RTP checks,
+bus/delivery regressions/nine native pass. Kernel14f945b5/nativec54fd2fb links
+library; Apple30/pen207+10/RTC/168service+186client/late-init/recovery pass again.
+Original142recipes/17AHAP compiler passes with SYNTHETIC template/gain peers and
+actual C mapper; production rejects peers/duplicate banks. Measured template/
+gain/source-envelope/legacy policies remain unqualified. Native RTP request/
+catalog/shared-budget and system Actuator are MISSING; outputdisabled.
+Read HAPTICS-RTP.md/rtp-validation.json. Archive21828210B/94e011f5/276verified,
+standalone FW/synthetic bank excluded, native containsoriginal bytes. All jobs
+terminal/full five-part Goal active/no tablet or automatic merge.
+
 Camera/motion cores20261119: exact Gen4 Linux6f97250e sensor325+438register
 entries/eight power-control-stream bodies now adapted to owned CCI/power/real
 receiver proofs.820cases882646checks +scalar native pass; native CCI/CAMSS/frames/

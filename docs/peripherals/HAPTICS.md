@@ -5,7 +5,8 @@ and native SE6/worker/root-only user client now compile and fully link offline.
 Current native details: [HAPTICS-NATIVE.md](HAPTICS-NATIVE.md) and
 `drivers/EldenHaptics/native-validation.json`. The portable milestone is in
 `validation.json`; raw evidence/assets stay in the workbench. Continuous RTP,
-source-bound waveform compiler and system Actuator remain to implement.
+RTP/controller and explicit compiler update is in [HAPTICS-RTP.md](HAPTICS-RTP.md).
+Measured bank, native request/catalog/shared budget and system Actuator remain.
 
 ## Source and transport
 
@@ -58,8 +59,8 @@ signed conversions pass. Native scalar objects compile. Hardware/MMIO/IOKit
 peers remain modeled and no real motor is driven by these checks.
 
 Native platform/worker/user client is now linked and separately checked as
-documented above. Next: actual continuous FIFO RTP, Actuator and source-bound
-waveform compiler. Keep calibration/firmware/stop gates and default-off behavior. The
+documented above. Next: native RTP requests/catalog/shared budget, system Actuator
+and measured templates. Keep calibration/firmware/stop gates/default-off behavior. The
 requested haptic scope includes continuous effects and system interaction;
 single RAM clicks alone do not complete it. Mainline owns calibrated motor
 trials, current source integration, power/temperature and combined-load checks.
