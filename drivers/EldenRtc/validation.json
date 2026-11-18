@@ -1,0 +1,141 @@
+{
+  "source_commit": "b34169765f40ac58ac7397598c4be935590eed9f",
+  "artifact_sha256": "8ea11374b2f1c3e0dcb421b40f02a59e5382133cbdbf20104d1b3e5f46e9b1aa",
+  "evidence": "lab/records/offline-peripherals-20261119",
+  "hardware_accepted": false,
+  "boot_packaged": false,
+  "goal_complete": false,
+  "host_report_sha256": "b7bf1574a409f7264df898386ceefd8c17fe624c0aa28c35424171591eab4193",
+  "native_report_sha256": "fd6b2302e027c8458e72a7d67a850229326823d2aa9671227a680c2b88e4795d",
+  "native_objects": 5,
+  "native_sha256": "7b83d8f83e857ee572a6740c3591f12b9644cc6a957814bcfcdafa68f4647bbc",
+  "kernel_sha256": "246ac1ec664f1332c76aa2f98dc9d0284fdd6fdf97f3a257bcafda0ddfbd01ed",
+  "original_apple_regions": 30,
+  "link_audit": {
+    "rtc_component_link_passed": true,
+    "kernel_sha256": "246ac1ec664f1332c76aa2f98dc9d0284fdd6fdf97f3a257bcafda0ddfbd01ed",
+    "native_sha256": "7b83d8f83e857ee572a6740c3591f12b9644cc6a957814bcfcdafa68f4647bbc",
+    "registration_only_initializer": "0xfffffff007b9ade8",
+    "actual_clock_callbacks": [
+      "0xfffffff007b9a934",
+      "0xfffffff007b9a9f0"
+    ],
+    "recovery_rtc_stop_call": "0xfffffff007b3d0dc",
+    "following_ufs_stop_call": "0xfffffff007b3d194",
+    "exports": {
+      "_elden_rtc_core_read": "0xfffffff007b9b0b0",
+      "_elden_rtc_core_learn": "0xfffffff007b9b138",
+      "_elden_rtc_spmi_read": "0xfffffff007b9b380",
+      "_elden_spmi_transaction_acquire": "0xfffffff007b97ee4",
+      "_elden_spmi_transaction_release": "0xfffffff007b97f9c",
+      "__ZN13ArmDTPlatform15getGMTTimeOfDayEv": "0xfffffff007b2c8c0",
+      "__ZN13ArmDTPlatform15setGMTTimeOfDayEl": "0xfffffff007b2ce94"
+    },
+    "section_extents": {
+      "ArmDTPlatform.cpp": {
+        "__TEXT/__text": {
+          "bytes": 4188,
+          "flags": 2147484672,
+          "sha256": "390cc844f181b9bc241aaf2241f321c63676e53d81356fd311e301fae3bb38f9"
+        },
+        "__DATA/__common": {
+          "bytes": 80,
+          "flags": 1,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "__DATA/__const": {
+          "bytes": 1896,
+          "flags": 0,
+          "sha256": "43a994de8e61bfab3e4e655ff5d064edd5459c4c3bccc3c114794d193d46930d"
+        },
+        "__TEXT/__cstring": {
+          "bytes": 375,
+          "flags": 2,
+          "sha256": "549f0e5f0adc725ab46ea6a852b4e7c14324ed535a77fb99557703d1c143f1e5"
+        },
+        "__DATA_CONST/__kalloc_type": {
+          "bytes": 64,
+          "flags": 134217728,
+          "sha256": "d96108f47cf868d77a3f147aaa138dd0d407f7827a16a8cd620471e25ed64abe"
+        },
+        "__DATA/__bss": {
+          "bytes": 16,
+          "flags": 1,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "__DATA/__mod_init_func": {
+          "bytes": 8,
+          "flags": 9,
+          "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+        }
+      },
+      "Native.cpp": {
+        "__TEXT/__text": {
+          "bytes": 1372,
+          "flags": 2147484672,
+          "sha256": "ddd0143d252107021509ab3543d8793f1b204d882a41cb8385ef19ccff3feabc"
+        },
+        "__DATA/__bss": {
+          "bytes": 184,
+          "flags": 1,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "__TEXT/__cstring": {
+          "bytes": 10,
+          "flags": 2,
+          "sha256": "daea1e874ba5bead6618abdf78a6d6ac66bea10f0a2c56aa79b3bd2036c2fa1f"
+        },
+        "__DATA/__const": {
+          "bytes": 16,
+          "flags": 0,
+          "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+        },
+        "__DATA/__mod_init_func": {
+          "bytes": 8,
+          "flags": 9,
+          "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+        }
+      },
+      "Core.c": {
+        "__TEXT/__text": {
+          "bytes": 1000,
+          "flags": 2147484672,
+          "sha256": "e16291a0e9d48cd020def0304f50235af18b3c305ff4e8c9556cb83c826ad54f"
+        }
+      },
+      "Spmi.c": {
+        "__TEXT/__text": {
+          "bytes": 1288,
+          "flags": 2147484672,
+          "sha256": "e0e041ec5fa528becb55a83cc6e103c2ccab512ccfdeb557c96307f257e7da78"
+        }
+      },
+      "TransactionGate.c": {
+        "__TEXT/__text": {
+          "bytes": 280,
+          "flags": 2147484672,
+          "sha256": "413d1f669f36fc4e18ca5c9238bd12199379263c22ac45e24b5684d32cfad4b8"
+        },
+        "__DATA/__bss": {
+          "bytes": 4,
+          "flags": 1,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    "hardware": false,
+    "legacy_flags_unchanged": {
+      "abi_qualified": false,
+      "loadable": false,
+      "runtime_qualified": false,
+      "instruction_relocation_complete": false
+    }
+  },
+  "persistent_offset_verified": false,
+  "wake_implemented": false,
+  "remaining": [
+    "actual PMIC epoch and persistent offset location",
+    "mainline initializer/clock/recovery integration",
+    "hardware retention and suspend/wake"
+  ]
+}

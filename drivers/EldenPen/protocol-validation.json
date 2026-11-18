@@ -1,0 +1,75 @@
+{
+  "source_commit": "b34169765f40ac58ac7397598c4be935590eed9f",
+  "artifact_sha256": "8ea11374b2f1c3e0dcb421b40f02a59e5382133cbdbf20104d1b3e5f46e9b1aa",
+  "evidence": "lab/records/offline-peripherals-20261119",
+  "hardware_accepted": false,
+  "boot_packaged": false,
+  "goal_complete": false,
+  "decoder_delivery_checks": 932,
+  "hid_wire_checks": 15,
+  "actual_scoped_hook_checks": 310,
+  "tilt_pairs": 14641,
+  "tilt_error_degrees_bound": 0.00015,
+  "oem_instruction_f1_cases": 139,
+  "oem_instruction_envelope_cases": 32,
+  "original_os17_field_assertions": 34,
+  "native_objects": 6,
+  "native_report_sha256": "272cee466a43f1eda6c80e6c6a1c0ae023ee908ac3a8ca79aae961d0d09cd87a",
+  "native_sha256": "22bd9626c1e8efe93fe5a1070575a5bf7065a12dcca7b3e166af78a4fafff700",
+  "kernel_sha256": "2240372e7e84f247820310b482757d934cb8723b87b45c0266e6e355782b24af",
+  "rtc_combined_kernel_sha256": "246ac1ec664f1332c76aa2f98dc9d0284fdd6fdf97f3a257bcafda0ddfbd01ed",
+  "link_abi": {
+    "pen_specific_abi_checks_passed": true,
+    "kernel_sha256": "2240372e7e84f247820310b482757d934cb8723b87b45c0266e6e355782b24af",
+    "device_vtable_slots": 207,
+    "override_slots": [
+      0,
+      1,
+      7,
+      14,
+      86,
+      87,
+      111,
+      171,
+      173,
+      180
+    ],
+    "override_methods": {
+      "0": "__ZN11EldenPenHidD1Ev",
+      "1": "__ZN11EldenPenHidD0Ev",
+      "7": "__ZNK11EldenPenHid12getMetaClassEv",
+      "14": "__ZN11EldenPenHid4freeEv",
+      "86": "__ZN11EldenPenHid5startEP9IOService",
+      "87": "__ZN11EldenPenHid4stopEP9IOService",
+      "111": "__ZNK11EldenPenHid11getWorkLoopEv",
+      "171": "__ZNK11EldenPenHid18newTransportStringEv",
+      "173": "__ZNK11EldenPenHid16newProductStringEv",
+      "180": "__ZNK11EldenPenHid19newReportDescriptorEPP18IOMemoryDescriptor"
+    },
+    "original_superclass": "0xfffffff006ae6fa0",
+    "late_initializer_not_automatic": true,
+    "interfaces": {
+      "_elden_pen_native_start": "0xfffffff007b97a70",
+      "_elden_pen_native_packet": "0xfffffff007b97c78",
+      "_elden_pen_native_fault": "0xfffffff007b97df4",
+      "_elden_pen_native_stop": "0xfffffff007b97e6c",
+      "_elden_pen_hid_report": "0xfffffff007b99198",
+      "_elden_pen_pressure_fixed": "0xfffffff007b992dc",
+      "_elden_touch_runtime_start": "0xfffffff007b574a0",
+      "_elden_touch_request_stop": "0xfffffff007b58224"
+    },
+    "legacy_flags_unchanged": {
+      "abi_qualified": false,
+      "loadable": false,
+      "runtime_qualified": false,
+      "instruction_relocation_complete": false
+    },
+    "hardware": false
+  },
+  "remaining": [
+    "raw XNU SPI/integrity and scan assumptions",
+    "UIKit polar pressure/units and mounting",
+    "Notes/PencilKit/palm/release/sleep",
+    "current mainline integration and hardware trial"
+  ]
+}

@@ -33,7 +33,8 @@ def main():
         run(cmd,source.stem+'-compile',cwd);dis=run([a.llvm/'llvm-objdump','--disassemble','--no-show-raw-insn',obj],source.stem+'-asm');ops=re.findall(r'^\s*[0-9a-fA-F]+:\s+(.+)$',dis,re.M)
         if not ops or any(re.search(r'\b[vsdqhb][0-9]+(?:\b|\.)',s) for s in ops):raise ValueError('Non-scalar RTC code')
         symbols=global_symbols(obj);records[name]={'source_sha256':sha(source),'object_sha256':sha(obj),'imports':[n for n,v in symbols.items() if not v[0]&0xe],
-                'exports':[n for n,v in symbols.items() if v[0]&0xe],'command':list(map(str,cmd)),'sections':{k:len(v) for k,v in sections(obj).items()}}
+                'exports':[n for n,v in symbols.items() if v[0]&0xe],'command':list(map(str,cmd)),
+                'sections':{k:{'bytes':v[0],'flags':v[1],'sha256':v[2]} for k,v in sections(obj).items()}}
     run(['ar','rcs',out/'libEldenRtc.a',out/'Native.o',out/'Core.o',out/'Spmi.o'],'archive')
     (out/'result.json').write_text(json.dumps({'compiled':True,'objects':records,'archive_sha256':sha(out/'libEldenRtc.a'),
         'source_record_sha256':sha(a.source/'source.json'),'separate_replacements':['ArmDTPlatform.o','TransactionGate.o'],

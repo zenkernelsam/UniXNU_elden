@@ -71,31 +71,37 @@ Mainline prompt: [MAINLINE-HANDOFF-PROMPT.md](MAINLINE-HANDOFF-PROMPT.md).
 
 ## Current status
 
-AP501U foundation is implemented in `drivers/EldenPen`: independent109-byte
-packet decoding and acknowledged desired/accepted state, ordered release retry,
-stale-contact expiry and terminal stop/clock-fault behavior. Actual C tests pass
-924 checks under ASan/UBSan; two ARM64/iOS17 scalar objects compile without
-warnings, imports or initializers. Source commits891c065/86fb562 and
-`drivers/EldenPen/validation.json` identify the tested inputs. Synthetic frames
-are used; this is not a raw SPI capture or HID/UI acceptance. Finger source bytes
-match basef82da007 unchanged.
+Implementation through `b341697` is archived and verified on 2026-11-19:
 
-The next layer now builds and fully links: separate OS17 Pencil HID publication,
-owned pressure conversion, and pen sampling outside finger-change suppression.
-Five native objects, original HID tables, linked207-slot inheritance/10exact
-overrides,30original Apple execution regions and entry preparation passed.
-The UIKit diagnostic is signed for iOS17 but uninstalled. Details and reproducible
-commands: [PEN-NATIVE.md](PEN-NATIVE.md), `drivers/EldenPen/hid-validation.json`.
+| Component | Implemented and checked offline | Next missing implementation/acceptance |
+| --- | --- | --- |
+| AP501U | Independent109B decoder and HID; actual OEM F1/envelope instruction qualification; same-report polar tilt;932 core,15 wire/310 scoped-hook checks;14641 tilt pairs; six scalar objects and full link/207-slot inheritance/10 overrides | Raw XNU frames/scan/integrity beyond envelope; real UIKit pressure/polar axes, Notes/PencilKit/palm/release/sleep; current mainline integration |
+| Dual haptics | Actual fixed Gen4 AW init/stop/RAM full readback, GENI two-chip bus, calibrated queue and rolling limits;126515 AW +52762 GENI/AW +154 queue checks;142 Apple recipes/17 AHAP/1467 import cases and65536 signed conversions | Native SE6 ownership/worker/user client, continuous waveform compiler/RTP/system Actuator, measured per-motor calibration; shared wrapper1 clocks |
+| RTC | Real PMK8550 read/carry via observer-only SPMI/shared gate; volatile system-learned offset; upstream board-clock registration/get/set added to existing platform; five scalar objects/full link; actual initializer/callback/recovery audit | Persistent offset/epoch identity, wake source/alarm and sleep lifecycle; current-mainline/hardware retention |
+| Wake | Exact NT36536 gesture/PM symbol and SM8750 PDC162→109 sources identified | Decode actual low-power command/gesture wake and suspend/resume; no permanent CPU polling substitute |
+| Motion | OS17 SSC/protobuf/HID donor and Gen4 transport gap documented; no proven APPS IMU node | Actual OEM sensor/config/SSC transport, unit/mount transforms and CoreMotion/UI delivery |
+| Cameras | Exact Gen4 S5KJNS rear/GC08A8 front control nodes and driver/CAMSS sources identified | Actual CCI/sensor/CSI/VFE/DMA and OS17 camera service; real sensor identity/calibration/frames |
 
-Next: qualify raw pen packet/F1/integrity and scan assumptions, implement UIKit
-polar tilt conversion, then review current-mainline integration/boot and live
-input. This link uses a fixed source-built v152 baseline, not the current Wi-Fi
-candidate. Default stays off; no live-feature readiness claim. The other four
-workstreams remain pending. All five requirements stay active; GPU stays separate.
+Current combined RTC+pen kernel SHA256 is
+`246ac1ec664f1332c76aa2f98dc9d0284fdd6fdf97f3a257bcafda0ddfbd01ed`;
+native `7b83d8f83e857ee572a6740c3591f12b9644cc6a957814bcfcdafa68f4647bbc`.
+All30 original Apple execution regions and pen inheritance/late initialization
+remain checked. The RTC constructor only registers exact callbacks, and its
+recovery call precedes the actual UFS shutdown. These are offline component
+checks over fixed source-built v152 inputs; global prelink ABI/loadable/runtime/
+relocation flags remain false. No boot candidate has been installed or tested.
 
-Native workspace: `/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes`,
-sharing Git objects but no mainline build outputs. Component run2 in
-`lab/pen-core-20261116` is accepted; run1's checker mistook a hexadecimal address
-for a vector register. The fixed checker parses instructions; no production code
-changed for that correction. Both attempts are retained under workbench
-`edl_work/pen-core-20261116`; summary is in `lab/records/pen-core-20261116`.
+Evidence: workbench `lab/records/offline-peripherals-20261119`. One delivery tar
+under `edl_work/offline-peripherals-20261119` is24,340,607B, SHA256
+`8ea11374b2f1c3e0dcb421b40f02a59e5382133cbdbf20104d1b3e5f46e9b1aa`;
+all264 member hashes were verified. It contains no raw Apple assets or motor
+firmware. Native Mac workspace remains
+`/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes`; all these jobs
+are terminal. Earlier unsuccessful attempts and their logs remain archived.
+
+Component entries: [PEN-NATIVE.md](PEN-NATIVE.md), [HAPTICS.md](HAPTICS.md),
+[RTC-WAKE.md](RTC-WAKE.md), and the source-bound validation JSON in each driver.
+Next prioritize actual native haptics, then implement wake/motion/camera paths.
+The current touch platform still has unguarded shared-vote RMW: merely declaring
+`sm8750_gcc_vote_owner` for the haptics provider does not make that path safe.
+All affected wrapper1 writers and stop order need a reviewed integration.

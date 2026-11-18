@@ -1,5 +1,33 @@
 # AP501U native HID integration — offline, default off
 
+## Current protocol/tilt update, 2026-11-19
+
+`drivers/EldenPen/protocol-validation.json` supersedes the old five-object
+milestone below. The actual stock NT36536 instruction fragments now qualify F1
+serial/vendor/product packing and the checksum over envelope bytes1..65. F1
+retains an existing contact rather than causing a false lift; metadata never
+refreshes its stale-contact deadline. This envelope does not checksum pen data
+starting at byte66.139 F1/32 envelope instruction cases and the original/fixed
+native callback regressions passed with synthetic memory, not a device boot.
+
+The independent report7 is now18B. Its same-report vendor metadata carries
+signed tilt and coordinates; the scoped dispatch hook consumes the original
+pending message matching the event timestamp. No global latest-tilt cache is
+used. The actual OS17 accessor/vptr/expansion offsets were checked against
+original bytes:37event/220driver slots, dispatch198, polar type at offset64,
+altitude68/azimuth72. The orientation setter field0xb001f is a no-op, so the
+qualified hook sets/readbacks the actual type and polar fields. Conversion uses
+integer CORDIC/sqrt into IOHID degreesQ16, not UIKit radians. All14641 signed
+degree pairs match the host reference within0.00015 degrees. Hardware mounting
+and UIKit conversion still require the real probe.
+
+Latest results:932 decoder/delivery checks,15 wire/310 scoped-hook checks, six
+scalar ARM64 objects and full pen link2240372e. RTC combined link246ac1ec retains
+the same207-slot/10-exact-overrides and late initializer audit. The older signed
+UIKit probe/CDHash remains uninstalled. Archive and current remaining work are
+listed in [STATUS.md](STATUS.md). The following section describes the original
+2026-11-16 delivery; its counts and entry/tar hashes are historical.
+
 The independent pen service, real sampling hook and ordinary UIKit probe now
 build. A complete native/kernel link and entry preparation passed over the
 source-built fixed v152 baseline; this is **not** a merged current Wi-Fi boot

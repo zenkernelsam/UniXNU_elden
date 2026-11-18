@@ -1,0 +1,32 @@
+{
+  "source_commit": "b34169765f40ac58ac7397598c4be935590eed9f",
+  "artifact_sha256": "8ea11374b2f1c3e0dcb421b40f02a59e5382133cbdbf20104d1b3e5f46e9b1aa",
+  "evidence": "lab/records/offline-peripherals-20261119",
+  "hardware_accepted": false,
+  "boot_packaged": false,
+  "goal_complete": false,
+  "aw_actual_driver_checks": 126515,
+  "geni_aw_composed_checks": 52762,
+  "apple_recipe_count": 142,
+  "ahap_count": 17,
+  "apple_import_checks": 1467,
+  "signed_conversion_checks": 65536,
+  "actual_queue_checks": 154,
+  "firmware_sha256": "84598d2a5130f7fe6bccba5cfbcafa1341d2d5bfe2f7d1361142cb78783ce79d",
+  "native_platform_connected": false,
+  "system_actuator_connected": false,
+  "rtp_implemented": false,
+  "mechanical_calibration_verified": false,
+  "report_sha256": {
+    "apple-haptics-20261118/test1/result.json": "956c1d8cb801a50405d6fe0f7b8badb6cd90bc92427f12576d2e6472e38226a8",
+    "aw-bus-20261118/test2/result.json": "a5cb4fd64c7f5809f4b1d09db3db57ebcf739b120c869ce5e71ce331cf7b3abb",
+    "aw-core-20261118/test3/result.json": "0685d5553c9ecaa65f31724fb3ee71914ddbc7decb0966a63a035cf4e59d5cde",
+    "haptics-queue-20261118/test1/result.json": "8876a319ebc5660aedc950646d01ba316c4cce28e4806e282183fb7d40f39344"
+  },
+  "remaining": [
+    "native shared-clock SE6 owner and bounded worker/user client",
+    "source-bound continuous waveform compiler and RTP",
+    "actual iOS system actuator route",
+    "motor calibration and mainline/hardware acceptance"
+  ]
+}

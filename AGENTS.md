@@ -1,5 +1,25 @@
 # UniXNU elden — authoritative source repository
 
+Peripherals20261119: committed implementation through b341697 now has actual
+F1/envelope instruction qualification, same-report polar tilt (14641pairs),
+932decoder/delivery +15wire/310scoped-hook checks and six-object/full pen link.
+RTC native2/kernel1 full link246ac1ec/7b83d8f8 passes one register-only initializer,
+exact callbacks and RTC-before-UFS recovery calls; five scalar objects, Apple30,
+pen207slots/10overrides retained. PMK8550 RTC observer/shared gate3 is read-only;
+volatile learned offset only, no persistent epoch/alarm/wake acceptance.
+Dual AW86937 actual source/core126515 +GENI composition52762 +queue154 pass;
+142Apple recipes/17AHAP/1467import +65536signed sample checks, no calibrated live
+output/native SE6/system Actuator/RTP yet. Next actual shared-clock SE6 native
+owner/worker, then wake/motion/camera pipeline implementations. Existing touch
+Platform raw vote RMW does not participate in the GCC guard; integration must
+fix/qualify all wrapper1 mutators before concurrent haptics, not assume it does.
+Records lab/records/offline-peripherals-20261119; sole delivery tar24340607B/
+8ea11374,264members verified, no Apple assets/motor firmware inside. Mac isolated
+lab pen-protocol-20261117/rtc-20261119 and aw/apple/queue20261118, all jobs terminal.
+Read updated docs/peripherals/STATUS.md, PEN-NATIVE.md, RTC-WAKE.md, HAPTICS.md.
+Five-part Goal remains active; offline links are not current-mainline boot/live
+acceptance. No tablet, automatic merge or subagents; GPU/peer Wi-Fi preserved.
+
 Pen HID20261116: independent Pencil0x0d/0x20 service, source-bound109B worker
 hook and scoped pressure conversion now compile/full-link over source-built
 v152. Actual15wire+249hook peer checks; five native objects (pen0warnings,
