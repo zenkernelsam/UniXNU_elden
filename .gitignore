@@ -26,6 +26,8 @@ backups/
 # Generated headers contain externally supplied Apple/Novatek executable bytes.
 EldenIconCpuPayload.h
 EldenNvtFirmware.h
+EldenHapticsFirmware.h
+EldenHapticsCalibration.h
 /lab/
 /maintenance/
 /local-maintenance.toml

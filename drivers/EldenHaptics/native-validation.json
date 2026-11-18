@@ -1,0 +1,102 @@
+{
+  "archive_sha256": "8f5edc573e62b8207c73fb582a6195da76deb447b5e072f91375cbe7377a830a",
+  "archive_bytes": 22492147,
+  "source_record_sha256": "9914c957b7c348179e82860ceaf9e56019e4ec61196c20ecdc1e6fe82941661f",
+  "native_sha256": "3ae88218356370f41d34f6ca5d29c63a5d41d36a948543fbab191029e74df845",
+  "kernel_sha256": "4889eee6af10d10d816f9f8e79704385d264a05c0590cc54cfccec080c21c72c",
+  "evidence": "lab/records/haptics-native-20261119",
+  "platform_cases": 66,
+  "platform_checks": 3755,
+  "touch_platform_checks": 304168,
+  "mailbox_checks": 2362,
+  "actual_mailbox_queue_geni_aw_composition_checks": 91341,
+  "compiled_new_objects": 8,
+  "separate_touch_platform_replacement": true,
+  "full_link_passed": true,
+  "original_apple_regions": 30,
+  "abi": {
+    "haptics_component_abi_link_passed": true,
+    "classes": {
+      "18EldenHapticsClient": {
+        "slots": 186,
+        "overrides": {
+          "0": [
+            "__ZN18EldenHapticsClientD1Ev"
+          ],
+          "1": [
+            "__ZN18EldenHapticsClientD0Ev"
+          ],
+          "7": [
+            "__ZNK18EldenHapticsClient12getMetaClassEv"
+          ],
+          "14": [
+            "__ZN18EldenHapticsClient4freeEv"
+          ],
+          "86": [
+            "__ZN18EldenHapticsClient5startEP9IOService"
+          ],
+          "168": [
+            "__ZN18EldenHapticsClient14externalMethodEjP25IOExternalMethodArgumentsP24IOExternalMethodDispatchP8OSObjectPv"
+          ],
+          "172": [
+            "__ZN18EldenHapticsClient11clientCloseEv"
+          ]
+        },
+        "superclass": "12IOUserClient"
+      },
+      "19EldenHapticsService": {
+        "slots": 168,
+        "overrides": {
+          "0": [
+            "__ZN19EldenHapticsServiceD1Ev"
+          ],
+          "1": [
+            "__ZN19EldenHapticsServiceD0Ev"
+          ],
+          "7": [
+            "__ZNK19EldenHapticsService12getMetaClassEv"
+          ],
+          "86": [
+            "__ZN19EldenHapticsService5startEP9IOService"
+          ],
+          "140": [
+            "__ZN19EldenHapticsService13newUserClientEP4taskPvjP12OSDictionaryPP12IOUserClient"
+          ],
+          "141": [
+            "__ZN19EldenHapticsService13newUserClientEP4taskPvjPP12IOUserClient"
+          ]
+        },
+        "superclass": "9IOService"
+      }
+    },
+    "late_initializer_not_automatic": true,
+    "startup_call": "0xfffffff007b5fe2c",
+    "recovery_calls": [
+      "0xfffffff007b450dc",
+      "0xfffffff007b45194",
+      "0xfffffff007b45238"
+    ],
+    "shared_gcc_owner": "0xfffffff007c98d50",
+    "touch_shared_contract": "0xfffffff007b5c560",
+    "kernel_sha256": "4889eee6af10d10d816f9f8e79704385d264a05c0590cc54cfccec080c21c72c",
+    "legacy_flags_unchanged": {
+      "abi_qualified": false,
+      "loadable": false,
+      "runtime_qualified": false,
+      "instruction_relocation_complete": false
+    },
+    "hardware": false
+  },
+  "calibration_present": false,
+  "standalone_motor_firmware_file_packaged": false,
+  "native_embeds_verified_motor_firmware": true,
+  "hardware": false,
+  "mainline_merged": false,
+  "boot_packaged": false,
+  "remaining": [
+    "calibrated continuous RTP and waveform compiler",
+    "actual iOS system Actuator route",
+    "current mainline integration and hardware calibration/acceptance",
+    "full suspend/resume"
+  ]
+}

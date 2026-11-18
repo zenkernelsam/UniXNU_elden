@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 static unsigned checks;
+extern volatile uint32_t sm8750_gcc_vote_owner;
 #define CHECK(x) do{checks++;if(!(x)){fprintf(stderr,"line%d: %s\n",__LINE__,#x);exit(1);}}while(0)
 struct model {
     uint32_t gcc[0x60000/4],pins[0x4000/4],irq[0x1000/4],se[0x4000/4],qup[0x2000/4];
@@ -50,6 +51,7 @@ static void write(void *context,enum EldenTouchSpace space,uint32_t address,uint
         value=value&2?value&~(1u<<31):value|(1u<<31);
         if(!m->update_stuck)value&=~1u;
     }
+    if(space==EldenTouchGcc&&address==ELDEN_TOUCH_GCC_VOTE)CHECK(sm8750_gcc_vote_owner==0x544f5543u);
     *reg(m,space,address)=value;
 }
 static void delay(void *context,unsigned us){((struct model *)context)->delay+=us;}
@@ -67,6 +69,7 @@ static struct model *fresh(EldenTouchPlatform *p){
     m->irq[0]=0x20000000;return m;
 }
 int main(void){
+    CHECK(elden_touch_shared_gcc_contract()==1);
     EldenTouchPlatform p;struct model *m=fresh(&p);uint32_t vote=m->gcc[ELDEN_TOUCH_GCC_VOTE/4],cfg=m->gcc[(ELDEN_TOUCH_GCC_S4_RCG+4)/4];
     CHECK(!elden_touch_platform_acquire(&p));CHECK(p.acquired&&!p.quarantined);
     CHECK(!p.spi.use_dma&&!p.spi.allow_fifo_disabled&&p.spi.poll_only==1);
@@ -80,6 +83,17 @@ int main(void){
     CHECK(m->gcc[(ELDEN_TOUCH_GCC_S4_RCG+4)/4]==cfg);
     CHECK(m->se[SE_IRQ_EN/4]==0x123&&m->se[GENI_OUTPUT_CTRL/4]==0x41);
     CHECK(m->pins[0]==0x10000080&&m->irq[0]==0x20000000);free(m);
+    // A newly acquired haptics S6 vote keeps wrapper1 alive when touch stops.
+    m=fresh(&p);CHECK(!elden_touch_platform_acquire(&p));
+    m->gcc[ELDEN_TOUCH_GCC_VOTE/4]|=1u<<28;
+    CHECK(!elden_touch_platform_release(&p));
+    CHECK((m->gcc[ELDEN_TOUCH_GCC_VOTE/4]&((15u<<18)|(1u<<28)))==((15u<<18)|(1u<<28)));
+    CHECK(!(m->gcc[ELDEN_TOUCH_GCC_VOTE/4]&(1u<<26))&&!sm8750_gcc_vote_owner);free(m);
+    // Never steal another native provider's shared owner, even during failure.
+    m=fresh(&p);sm8750_gcc_vote_owner=0x48415036u;
+    CHECK(elden_touch_platform_acquire(&p)!=0&&p.quarantined);
+    CHECK(sm8750_gcc_vote_owner==0x48415036u&&!m->se_writes);
+    sm8750_gcc_vote_owner=0;free(m);
     /* Survey mode records disabled/active DMA as data, never takes over SE. */
     for(unsigned survey=0;survey<3;survey++){
         m=fresh(&p);p.survey_only=true;vote=m->gcc[ELDEN_TOUCH_GCC_VOTE/4];

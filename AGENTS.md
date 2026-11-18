@@ -1,5 +1,23 @@
 # UniXNU elden — authoritative source repository
 
+Haptics native20261119: actual SE6/shared touch vote guard, GENI/AW chain,
+reserved-result mailbox, root-only IOUserClient and worker compile/full-link.
+Source2/native2/kernel1: kernel4889eee6/native3ae88218, seven library objects,
+one touch worker and one separately tested touch platform.66platform cases/
+3755checks,touch304168,mailbox2362,composed91341 pass ASan/UBSan. Service168slots/
+6exact overrides,client186slots/7exact overrides,late metaclass/startup and real
+haptics→RTC→UFS calls pass. Apple30/pen207+10/RTC initializer retained/reaudited.
+Defaultoff; measured calibration absent, playback refused. Actual qualified
+battery temperature cache reused; battery data is not motor thermal proof.
+No reset pulse/DMA/GSI takeover/raw user gain or voltage. Unknown state/failed
+stop retains maps/physical ownership. Mainline port/hardware, continuous RTP/
+waveform compiler/system Actuator and suspend remain open. Private tar22492147B/
+8f5edc57,180members verified; standalone firmware excluded, native embeds its
+verified bytes.16source files exactly match Git index. Records lab/records/
+haptics-native-20261119; all jobs terminal. Read HAPTICS-NATIVE.md and driver
+native-validation.json. Continue exact OEM double-tap/low-power path and other
+motion/camera implementations. Five-part Goal active; no tablet/automatic merge.
+
 Peripherals20261119: committed implementation through b341697 now has actual
 F1/envelope instruction qualification, same-report polar tilt (14641pairs),
 932decoder/delivery +15wire/310scoped-hook checks and six-object/full pen link.

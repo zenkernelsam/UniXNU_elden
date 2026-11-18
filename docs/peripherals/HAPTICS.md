@@ -1,9 +1,11 @@
 # Dual AW86937 and iOS effects — offline driver chain
 
-The actual Gen4 AW driver, two-chip GENI bus, calibrated queue and Apple effect
-importer are implemented and tested offline. Native MMIO/service, continuous
-RTP and system Actuator routing remain to implement. The current results are
-`drivers/EldenHaptics/validation.json`; raw evidence/assets stay in the workbench.
+The actual Gen4 AW driver, two-chip GENI bus, calibrated queue, Apple importer
+and native SE6/worker/root-only user client now compile and fully link offline.
+Current native details: [HAPTICS-NATIVE.md](HAPTICS-NATIVE.md) and
+`drivers/EldenHaptics/native-validation.json`. The portable milestone is in
+`validation.json`; raw evidence/assets stay in the workbench. Continuous RTP,
+source-bound waveform compiler and system Actuator remain to implement.
 
 ## Source and transport
 
@@ -26,9 +28,10 @@ partial buffer. Acquire refuses active DMA/GSI; external SE IRQ output is
 suppressed, metadata restored/read back with output last. Timeout requires actual
 cancel/abort acknowledgement and idle; uncertainty holds the lease until reset.
 
-The present touch Platform source still performs unguarded wrapper1 vote RMW.
-The new native provider must qualify a shared-clock integration for all affected
-mutators; a haptics-only lock would not protect that earlier touch code.
+Touch's two wrapper1 vote RMW operations now use the same GCC guard. Both
+touch/haptics preserve shared wrapper votes while a sibling SE remains active.
+The native link replaces the exact touch platform rather than assuming the
+old unguarded source participated. Current-mainline port remains separate.
 
 ## Requests and effect data
 
@@ -54,9 +57,9 @@ GENI→AW→two-chip composition passes52762; queue154. Apple import1467 and all
 signed conversions pass. Native scalar objects compile. Hardware/MMIO/IOKit
 peers remain modeled and no real motor is driven by these checks.
 
-Next: owned SE6 native acquisition/restoration and bounded IOKit worker/user
-client; then actual continuous FIFO RTP, Actuator and source-bound waveform
-compiler. Keep calibration/firmware/stop gates and default-off behavior. The
+Native platform/worker/user client is now linked and separately checked as
+documented above. Next: actual continuous FIFO RTP, Actuator and source-bound
+waveform compiler. Keep calibration/firmware/stop gates and default-off behavior. The
 requested haptic scope includes continuous effects and system interaction;
 single RAM clicks alone do not complete it. Mainline owns calibrated motor
 trials, current source integration, power/temperature and combined-load checks.

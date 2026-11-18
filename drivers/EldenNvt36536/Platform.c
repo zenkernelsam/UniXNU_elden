@@ -12,6 +12,13 @@
 #define CFG_RATE_MASK ((7u<<8)|(3u<<12)|31u)
 #define PIN_MASK (3u|(15u<<2)|(7u<<6)|(1u<<9))
 #define ACTIVE_MASK ((1u<<0)|(1u<<12))
+/* Same guard as the native PCIe/BT/backlight providers. Only the two shared
+ * wrapper1 vote RMW operations acquire it; no lock is held over SPI/DMA. */
+__attribute__((weak)) volatile uint32_t sm8750_gcc_vote_owner;
+#define TOUCH_GCC_OWNER 0x544f5543u
+#define WRAPPER1_VOTES (15u<<18)
+#define WRAPPER1_OTHER_SE ((255u<<22)&~(1u<<26))
+uint32_t elden_touch_shared_gcc_contract(void){return 1;}
 static const uint32_t branches[]={ELDEN_TOUCH_GCC_HALT_CORE_2X,ELDEN_TOUCH_GCC_HALT_CORE,
     ELDEN_TOUCH_GCC_HALT_M_AHB,ELDEN_TOUCH_GCC_HALT_S_AHB,ELDEN_TOUCH_GCC_HALT_S4};
 /* qcom-geni-se.c IRQ enable registers and DMA pointer/attribute state.
@@ -29,6 +36,27 @@ static uint32_t rd(EldenTouchPlatform *p,enum EldenTouchSpace space,uint32_t reg
 static void wr(EldenTouchPlatform *p,enum EldenTouchSpace space,uint32_t reg,uint32_t value){p->io.write(p->io.context,space,reg,value);}
 static void delay(EldenTouchPlatform *p,unsigned us){p->io.delay(p->io.context,us);}
 static int fail(EldenTouchPlatform *p,int error,bool quarantine){p->error=error;p->quarantined|=quarantine;return error;}
+static int shared_vote(EldenTouchPlatform *p,bool restoring){
+    bool acquired=false;
+    for(unsigned n=0;n<100;n++){
+        uint32_t empty=0;
+        if(__atomic_compare_exchange_n(&sm8750_gcc_vote_owner,&empty,TOUCH_GCC_OWNER,false,__ATOMIC_ACQUIRE,__ATOMIC_RELAXED)){
+            acquired=true;break;
+        }
+        delay(p,1);
+    }
+    if(!acquired)return fail(p,GENI_ERR_IO,true);
+    uint32_t current=rd(p,EldenTouchGcc,ELDEN_TOUCH_GCC_VOTE),mask=ELDEN_TOUCH_GCC_VOTE_MASK;
+    if(restoring&&current&WRAPPER1_OTHER_SE)mask&=~WRAPPER1_VOTES;
+    if(!restoring)p->original_vote=current; // snapshot while actually serialized
+    uint32_t value=restoring?(current&~mask)|(p->original_vote&mask):current|mask;
+    wr(p,EldenTouchGcc,ELDEN_TOUCH_GCC_VOTE,value);
+    bool good=(rd(p,EldenTouchGcc,ELDEN_TOUCH_GCC_VOTE)&mask)==(value&mask);
+    uint32_t owner=TOUCH_GCC_OWNER;
+    bool released=__atomic_compare_exchange_n(&sm8750_gcc_vote_owner,&owner,0u,false,__ATOMIC_RELEASE,__ATOMIC_RELAXED);
+    if(!good||!released)return fail(p,GENI_ERR_IO,true);
+    return 0;
+}
 static int wait(EldenTouchPlatform *p,uint32_t reg,uint32_t mask,bool set){
     for(unsigned n=0;n<500;n++){
         if((rd(p,EldenTouchGcc,reg)&mask)==(set?mask:0))return 0;
@@ -96,11 +124,8 @@ int elden_touch_platform_release(EldenTouchPlatform *p){
         p->touched_cfg=false;
     }
     if(p->touched_clock){
-        uint32_t live=rd(p,EldenTouchGcc,ELDEN_TOUCH_GCC_VOTE);
-        wr(p,EldenTouchGcc,ELDEN_TOUCH_GCC_VOTE,(live&~ELDEN_TOUCH_GCC_VOTE_MASK)|(p->original_vote&ELDEN_TOUCH_GCC_VOTE_MASK));
-        if((rd(p,EldenTouchGcc,ELDEN_TOUCH_GCC_VOTE)&ELDEN_TOUCH_GCC_VOTE_MASK)!=(p->original_vote&ELDEN_TOUCH_GCC_VOTE_MASK))
-            return fail(p,GENI_ERR_IO,true);
-        live=rd(p,EldenTouchGcc,ELDEN_TOUCH_GCC_S4_RCG);
+        if(shared_vote(p,true))return p->error;
+        uint32_t live=rd(p,EldenTouchGcc,ELDEN_TOUCH_GCC_S4_RCG);
         wr(p,EldenTouchGcc,ELDEN_TOUCH_GCC_S4_RCG,(live&~CMD_ROOT_EN)|(p->original_cmd&CMD_ROOT_EN));
         if((rd(p,EldenTouchGcc,ELDEN_TOUCH_GCC_S4_RCG)&CMD_ROOT_EN)!=(p->original_cmd&CMD_ROOT_EN))
             return fail(p,GENI_ERR_IO,true);
@@ -172,7 +197,7 @@ int elden_touch_platform_acquire(EldenTouchPlatform *p){
     p->touched_clock=true;
     wr(p,EldenTouchGcc,ELDEN_TOUCH_GCC_S4_RCG,p->original_cmd|CMD_ROOT_EN);
     if(wait(p,ELDEN_TOUCH_GCC_S4_RCG,CMD_ROOT_OFF,false))return p->error;
-    wr(p,EldenTouchGcc,ELDEN_TOUCH_GCC_VOTE,p->original_vote|ELDEN_TOUCH_GCC_VOTE_MASK);
+    if(shared_vote(p,false))return p->error;
     for(unsigned i=0;i<sizeof(branches)/sizeof(branches[0]);i++)if(wait(p,branches[i],ELDEN_TOUCH_GCC_CLK_OFF,false))return p->error;
     p->stage=2;
     p->spi.se=(struct geni_io){p,se_read,se_write,se_delay};

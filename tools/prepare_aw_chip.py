@@ -9,7 +9,8 @@ def main():
     (out/'AwChip.c').write_bytes(derive())
     for name in ['AwChip.h','AwKernelShim.h']:shutil.copyfile(DRIVER/name,out/name)
     for name,data in sources().items():(out/name).write_bytes(data)
-    for name in ['Bus.h','Bus.c']:shutil.copyfile(DRIVER/name,out/name)
+    for name in ['Bus.h','Bus.c','Board.h','Platform.h','Platform.c','Queue.h','Queue.c']:
+        shutil.copyfile(DRIVER/name,out/name)
     rows={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.is_file()}
     (out/'source.json').write_text(json.dumps({'sources':rows,'upstream':json.loads((DRIVER/'source.json').read_text()),
         'single_shot_delta':'SEQ1LOOP infinite15 to0 only','native_bus_connected':False,'hardware':False},indent=2)+'\n')

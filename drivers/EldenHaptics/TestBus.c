@@ -161,4 +161,5 @@ int main(int argc,char **argv){
     size_t bytes=fread(firmware,1,sizeof(firmware),f);CHECK(bytes==1436&&!ferror(f));CHECK(!fclose(f));
     basic();faults();composed(firmware,bytes);
     printf("PASS: %u GENI/AW checks; one actual bus for two chip instances, full readback, timeout acknowledgement and refusal; MMIO modeled\n",checks);
+    return 0;
 }

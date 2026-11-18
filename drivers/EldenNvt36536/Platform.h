@@ -36,6 +36,8 @@ int elden_touch_platform_acquire(EldenTouchPlatform *);
 int elden_touch_platform_activate_dma(EldenTouchPlatform *);
 int elden_touch_platform_transfer(EldenTouchPlatform *,const uint8_t *,uint8_t *,size_t);
 int elden_touch_platform_release(EldenTouchPlatform *);
+/* Source contract version, not a hardware-readiness or calibration flag. */
+uint32_t elden_touch_shared_gcc_contract(void);
 #ifdef __cplusplus
 }
 #endif
