@@ -1,0 +1,22 @@
+{
+  "oem_original_instruction_cases": 1024,
+  "gesture_checks": 3439,
+  "actual_spi_command_checks": 38,
+  "objects": {
+    "EldenNvtProtocol.o": "82a785b6b2ca7680e99da911fae35444088a4e1e04f5cf5e0764f7045590a188",
+    "Gesture.o": "322b4e5ef4a17e185141eac8fe6cf183f7ae41668060ece5960a6b9574fda768"
+  },
+  "source_inputs": {
+    "drivers/EldenWake/Gesture.c": "d92ff1bab191636e303f329970d361b50a96400947af7b15ef9306bc7cb24c16",
+    "drivers/EldenWake/Gesture.h": "3acda12dc6bbcbb8f445870ea5d95453a69e4cf182c4c8087fb3462b8a7772dc",
+    "drivers/EldenNvt36536/Protocol.c": "981b249f627e3d4072cb09d50e093262f78625c74b90f0288af830261d712fcd",
+    "drivers/EldenNvt36536/Protocol.h": "6d396e49ae54c7c33d55af50e87405e6ae6099a360104dc3426fff9536bd151f"
+  },
+  "oem_report_sha256": "d701dc6fe1ea66bfa6b7fb2d673014f6409ccc2e036c893cfefc4cff4cfb56dc",
+  "evidence": "lab/records/wake-protocol-20261119",
+  "native_source_matches_Git_index": true,
+  "GPIO_PDC_native_connected": false,
+  "full_link": false,
+  "hardware": false,
+  "goal_complete": false
+}

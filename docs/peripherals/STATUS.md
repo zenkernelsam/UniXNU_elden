@@ -78,7 +78,7 @@ Implementation through `b341697` is archived and verified on 2026-11-19:
 | AP501U | Independent109B decoder and HID; actual OEM F1/envelope instruction qualification; same-report polar tilt;932 core,15 wire/310 scoped-hook checks;14641 tilt pairs; six scalar objects and full link/207-slot inheritance/10 overrides | Raw XNU frames/scan/integrity beyond envelope; real UIKit pressure/polar axes, Notes/PencilKit/palm/release/sleep; current mainline integration |
 | Dual haptics | Actual Gen4 AW/GENI/queue plus native SE6/worker/root-only user client/shared touch vote guard; full link/168-service +186-client ABI;66 platform/3755 checks,304168 touch,2362 mailbox/91341 composed; earlier Apple import/sample conversion retained | Continuous waveform compiler/RTP/system Actuator, measured per-motor calibration; current mainline/hardware/sleep acceptance |
 | RTC | Real PMK8550 read/carry via observer-only SPMI/shared gate; volatile system-learned offset; upstream board-clock registration/get/set added to existing platform; five scalar objects/full link; actual initializer/callback/recovery audit | Persistent offset/epoch identity, wake source/alarm and sleep lifecycle; current-mainline/hardware retention |
-| Wake | Exact NT36536 gesture/PM symbol and SM8750 PDC162→109 sources identified | Decode actual low-power command/gesture wake and suspend/resume; no permanent CPU polling substitute |
+| Wake | Exact OEM caller/ID15/KEY_WAKEUP143 and panel50:13/50:11/IRQ-wake oracle1024;3439 actual gesture and38 SPI/fault checks; two scalar native objects/one new protocol function | Actual owned GPIO162/PDC109 IRQ, normal worker/HID drain/resume and display/system sleep; no permanent polling substitute |
 | Motion | OS17 SSC/protobuf/HID donor and Gen4 transport gap documented; no proven APPS IMU node | Actual OEM sensor/config/SSC transport, unit/mount transforms and CoreMotion/UI delivery |
 | Cameras | Exact Gen4 S5KJNS rear/GC08A8 front control nodes and driver/CAMSS sources identified | Actual CCI/sensor/CSI/VFE/DMA and OS17 camera service; real sensor identity/calibration/frames |
 
@@ -111,6 +111,8 @@ writes now use the same guard, and either sibling's release preserves a live
 wrapper1 peer. Details: [HAPTICS-NATIVE.md](HAPTICS-NATIVE.md).
 
 Continue wake/motion/camera implementation and haptics continuous/system effects.
+Wake protocol is now recorded in [WAKE-PROTOCOL.md](WAKE-PROTOCOL.md); its command
+delivery is separate from the still-missing native IRQ/power/resume path.
 The delivered haptics calibration is absent/output disabled; host synthetic
 gains are not measured limits. Mainline still needs a reviewed source port to
 its current touch/SPMI/recovery code. No tablet or automatic merge occurred.

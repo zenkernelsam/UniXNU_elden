@@ -57,10 +57,16 @@ python3 tools/audit_elden_rtc_link.py --kernel-build /new/rtc-kernel \
 
 ## Wake implementation remaining
 
+The actual OEM command/decoder foundation now compiles, documented in
+[WAKE-PROTOCOL.md](WAKE-PROTOCOL.md). ID15 maps to KEY_WAKEUP143; panel paths
+send50:13 gesture or50:11 deep sleep.1024 original instruction cases and3439
+decoder/38 SPI checks pass. Generic PM callbacks only update flags/completion.
+GPIO/PDC/native worker/system-power delivery remains unimplemented.
+
 Original NT36536 symbols include gesture report0x144c, gesture switch0x1a44 and
 PM callbacks0x5c28/0x5c48. ID30/packet[2]==1 normalizes through packet[3], then a
-12..24 switch. `nvt_gesture_switch` only changes a flag. Actual low-power host
-command, allowed wake event and resume transport must be decoded before use.
+12..24 switch. `nvt_gesture_switch` only changes a flag. Resume transport and
+the actual native allowed-wake lifecycle still need integration/qualification.
 Exact SM8750 PDC maps GPIO162 to109. Screen-off and full system-suspend are
 different paths; permanent full-power polling is not hardware double-tap wake.
 

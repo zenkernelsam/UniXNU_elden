@@ -156,3 +156,9 @@ int elden_nvt_points(EldenNvtDevice *d,uint8_t out[109]){
     uint8_t points[108];int error=elden_nvt_read(d,ELDEN_NVT_EVENT,points,sizeof(points));
     if(!error){out[0]=0;memcpy(out+1,points,sizeof(points));}return error;
 }
+int elden_nvt_low_power_command(EldenNvtDevice *d,bool gesture){
+    if(!valid(d)||!d->identified||!d->ready||d->pid!=0x6097)return EldenNvtArgument;
+    /* page() binds the original event address even if a preceding firmware
+     * operation changed the inherited SPI page. No reset or IRQ write. */
+    return byte(d,ELDEN_NVT_EVENT+0x50,gesture?0x13:0x11);
+}

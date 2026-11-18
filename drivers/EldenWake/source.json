@@ -1,0 +1,19 @@
+{
+  "primary_board_repository": "https://github.com/h0cheung/tb322fc-linux-kernel",
+  "primary_board_commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+  "original_module_sha256": "a3c9fce96b453bd18ab4b44fec67db4504c65b1d5f8fc6218a19f2089be9f2a4",
+  "original_module_bytes": 604536,
+  "gesture_report_offset": "0x144c",
+  "gesture_table_relocations": ["0x14e4", "0x14e8"],
+  "gesture_call_offset": "0x4230",
+  "panel_callback_offset": "0x4d48",
+  "deep_command_call": "0x4fc8",
+  "gesture_command_call": "0x5104",
+  "irq_wake_call": "0x5118",
+  "double_tap_id": 15,
+  "double_tap_linux_key": 143,
+  "gpio": 162,
+  "pdc_mapping": 109,
+  "GPIO_IRQ_native_provider_implemented": false,
+  "hardware": false
+}

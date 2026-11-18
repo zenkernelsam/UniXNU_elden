@@ -1,5 +1,15 @@
 # UniXNU elden — authoritative source repository
 
+Wake protocol20261119: exact stock module a3c9fce9 oracle1024 passes; real15→
+KEY_WAKEUP143 and panel50:13/50:11/IRQ-wake relocation/arguments qualified.
+3439actual gesture/oracle/envelope/disabled-policy checks and38actual SPI/fault
+checks pass; two scalar ARM64/iOS17 objects, only one new protocol export.
+No runtime hook/GPIO-PDC provider/full link/boot/hardware. Command0 means SPI
+delivery, not low-power acceptance. Generic PM callbacks only flags/completion.
+Read WAKE-PROTOCOL.md and drivers/EldenWake/validation.json. Next actual owned
+GPIO162/PDC109, worker/HID drain/resume and display/system sleep integration;
+motion/camera and continuous/system haptics remain active. No tablet/auto merge.
+
 Haptics native20261119: actual SE6/shared touch vote guard, GENI/AW chain,
 reserved-result mailbox, root-only IOUserClient and worker compile/full-link.
 Source2/native2/kernel1: kernel4889eee6/native3ae88218, seven library objects,

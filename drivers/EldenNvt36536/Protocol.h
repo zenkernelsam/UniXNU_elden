@@ -36,6 +36,11 @@ int elden_nvt_identify(EldenNvtDevice *,bool reset);
 int elden_nvt_firmware_info(EldenNvtDevice *);
 int elden_nvt_upload(EldenNvtDevice *,const EldenNvtImage *);
 int elden_nvt_points(EldenNvtDevice *,uint8_t out[109]);
+/* Exact OEM panel-off bytes {0x50,0x13} gesture / {0x50,0x11} deep sleep.
+ * Caller owns and quiesces the normal point worker and keeps its SPI/DMA maps.
+ * Return0 proves bounded SPI command delivery only, not low-power acceptance
+ * or GPIO/PDC/system wake. Resume requires actual firmware/transport restore. */
+int elden_nvt_low_power_command(EldenNvtDevice *,bool gesture);
 #ifdef __cplusplus
 }
 #endif
