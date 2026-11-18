@@ -1,0 +1,35 @@
+{
+  "sources": [
+    {
+      "file": "aw86927.c",
+      "repository": "https://github.com/h0cheung/tb322fc-linux-kernel",
+      "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+      "path": "drivers/input/misc/aw86927.c",
+      "sha256": "a7ffb037b494f043ab0b7d9334861467eeb3f479d0ba19d371c784bc9f8c8388"
+    },
+    {
+      "file": "GeniI2c.c",
+      "repository": "https://github.com/IssacL04/UniXNU-Pagani-Drivers",
+      "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+      "path": "drivers/PaganiSpeaker/GeniI2c.c",
+      "sha256": "1fc5a6cbee3d71f9a246626cc79448af502e711ffe65e2a2849371556f537b98"
+    },
+    {
+      "file": "GeniI2c.h",
+      "repository": "https://github.com/IssacL04/UniXNU-Pagani-Drivers",
+      "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+      "path": "drivers/PaganiSpeaker/GeniI2c.h",
+      "sha256": "8a7981642856f1e0747f1734ff49b4ae6655d94f3d55a6cdc396fa28eeed4b8b"
+    }
+  ],
+  "firmware": {
+    "repository": "https://github.com/ArmadaOS-Freedom/armadaos-freedom",
+    "commit": "51e87bbe8ea9c7e770a1660d9248bb14ddfcbbb1",
+    "path": "system_files/usr/lib/firmware/awinic/y700-gen4-haptic.bin",
+    "bytes": 1436,
+    "sha256": "84598d2a5130f7fe6bccba5cfbcafa1341d2d5bfe2f7d1361142cb78783ce79d"
+  },
+  "primary_board": "TB322FC SM8750 exact6f97250e Elden DTS",
+  "mechanically_calibrated": false,
+  "hardware": false
+}
