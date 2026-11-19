@@ -1,0 +1,72 @@
+{
+  "repository": "https://github.com/h0cheung/tb322fc-linux-kernel",
+  "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+  "files": [
+    {
+      "path": "drivers/pinctrl/qcom/pinctrl-sm8750.c",
+      "sha256": "9764b4a28ee8189dc3c48b1657ccf8ec8c000733403db381edcce17ce15e32fe",
+      "bytes": 55646
+    },
+    {
+      "path": "drivers/pinctrl/qcom/pinctrl-msm.c",
+      "sha256": "d6638c03c09f5c0b24d9e343e19fb04ad7d483ec4f1c5fdabde4efc3570d59f8",
+      "bytes": 43920
+    },
+    {
+      "path": "drivers/irqchip/qcom-pdc.c",
+      "sha256": "7084a97a58a4b6a19f7ce230045368aded9a9eff16e0c317726f917407143182",
+      "bytes": 11989
+    },
+    {
+      "path": "arch/arm64/boot/dts/qcom/sm8750.dtsi",
+      "sha256": "cbf8bad5006ec6d2c3d654aeec94bb0f08be235e03804164a2252e5b65a4e175",
+      "bytes": 191275
+    },
+    {
+      "path": "arch/arm64/boot/dts/qcom/sm8750-lenovo-elden.dts",
+      "sha256": "0a4361f3f2225befd954dd5420216f357bfa8a68294c28c895ec2478ebea3ba3",
+      "bytes": 54331
+    },
+    {
+      "path": "include/linux/soc/qcom/irq.h",
+      "sha256": "7888744f9f63c1d161956fbc54b109342ded3257bf0eb4f3b72a68873c723c38",
+      "bytes": 1101
+    }
+  ],
+  "route": {
+    "gpio": 162,
+    "pdc_pin": 109,
+    "parent_range": [
+      98,
+      609,
+      32
+    ],
+    "gic_SPI": 620,
+    "gic_INTID": 652,
+    "edge": "falling",
+    "inverted_parent_edge": "rising"
+  },
+  "tlmm": {
+    "physical": 253370368,
+    "irq_cfg": 8,
+    "irq_status": 12,
+    "target_shift": 8,
+    "wake_present_bit": 6,
+    "wake_enable_bit": 7,
+    "summary_INTID": 240
+  },
+  "pdc": {
+    "physical": 186777600,
+    "version_register": 4096,
+    "pin_cfg": 708,
+    "type_falling": 2,
+    "threshold": 197120,
+    "old_enable_register": 28,
+    "old_enable_bit": 13,
+    "new_enable_bit": 3
+  },
+  "GIC_physical": 369098752,
+  "source_identity_only": true,
+  "hardware": false,
+  "note": "Armada TB322FC README sources this exact board commit; no Sheng/other-Soc routing addresses."
+}

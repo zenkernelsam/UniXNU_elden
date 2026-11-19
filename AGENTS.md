@@ -1,5 +1,23 @@
 # UniXNU elden — authoritative source repository
 
+WakeIRQ20261119: exact frozen6f97250e rawGit map162→109→SPI620/INTID652,
+TLMMtarget8 and PDCtype2/version3.2 checked; native exclusive attach/readback/
+own mask/RWP/active+handler drain/own pending clear, no summary240/peer652 mask.
+Latched request no wrap; immediateIRQ selfmask accepted. Native<3.2 REFUSES
+beforeattach until real sharedbankprovider; portablelegacy siblingRMW tested.
+Actual serialized flow pause/inputrelease/50:13or11/ownedIRQ/checked109Bgesture15/
+realwakerequest/actualpowerready/restore+release/resume; requiredproviders no
+successdefaults.50route1392/12actualnativeIRQ16439/flow1233 checks ASan/UBSan;
+OS/MMIO/GIC/HID/power modeled. Four scalarobjects/noinit/kernel2 63486fdf/native
+bbd93bc8 full link/Apple30/ActuatorABI originalIOBuffer/pen20710/RTC/recovery pass.
+Actual wake internaledges/initcount/originalowners preserved, NO currentworker/
+display/systemPMhooks; GOPlogicalPM not panelready. Source15files/53regulararchive
+members verified19273807B/08e9be2d. Read WAKE-IRQ.md/irq-validation.json.
+Alljobs terminal/no tablet/no automerge/no subagents; Goalactive. NEXT original
+touchworker reversiblepause/finger+penrelease/DMAidle/retained maps/actualdisplay
+power+firmwarerestore before enabling real doubletap; nativeSSC/camera remain.
+Actuatorprofile/catalog/calibration stillNULL/off. Mainline/GPU/QRTR kept separate.
+
 Actuator20261119: actual signed OS17 HAL/type1 native client/fresh397312B ring/
 original owning worker/live AW route now full-linked offline.13native lifecycle
 scenarios140checks/135actualHAL/4117ring/285013live +165budget/283066broker/

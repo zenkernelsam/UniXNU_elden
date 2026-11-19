@@ -1,8 +1,9 @@
 # NT36536 wake protocol — exact OEM, offline implementation
 
 The double-tap decoder and original low-power SPI command are implemented and
-compile for ARM64/iOS17. GPIO/PDC IRQ, native worker pause/resume and actual
-display/system wake remain to implement; this is not a live wake feature.
+compile for ARM64/iOS17. Subsequent owned GPIO/PDC IRQ/native adapter/serialized
+flow are implemented and linked in [WAKE-IRQ.md](WAKE-IRQ.md). Actual worker/PM
+pause/resume and display/system wake remain to connect; this is not live wake.
 Current evidence is workbench `lab/records/wake-protocol-20261119` and
 `drivers/EldenWake/validation.json`. No tablet/boot/mainline changes occurred.
 
@@ -43,7 +44,8 @@ System-sleep and display-off routes need separate actual lifecycle evidence.
 Resume must disable/drain wake delivery, restore real transport/firmware/PID/HID
 and then resume normal frames. Never replace hardware wake with a permanent
 full-power polling loop or fabricate route readiness from the mapping alone.
-No native GPIO/PDC producer or system power callback is connected in this build.
+This protocol milestone had no native GPIO/PDC producer. WAKE-IRQ.md now records
+that subsequent native library; actual system power/touch callbacks remain absent.
 
 ```sh
 python3 tools/analysis/audit_nvt_wake_oem.py --module /original/nvt_36xxx.ko \

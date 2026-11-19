@@ -87,7 +87,7 @@ component rows include earlier independently accepted milestones:
 | AP501U | Independent109B decoder and HID; actual OEM F1/envelope instruction qualification; same-report polar tilt;932 core,15 wire/310 scoped-hook checks;14641 tilt pairs; six scalar objects and full link/207-slot inheritance/10 overrides | Raw XNU frames/scan/integrity beyond envelope; real UIKit pressure/polar axes, Notes/PencilKit/palm/release/sleep; current mainline integration |
 | Dual haptics | Exact Gen4 AW/GENI/queue/native worker; Apple compiler, RAM/RTP broker/shared budgets and signed48k HAL/type1 ring;16scalar objects/full link,168-service/186-client ABI, actual original IOBuffer calls;13native lifecycle scenarios/135HAL checks | Measured per-motor waveform/gain/thermal/bandwidth, product capabilities/tunings/VirtualAudio and actual iOS playback; current mainline/hardware/sleep acceptance |
 | RTC | Real PMK8550 read/carry via observer-only SPMI/shared gate; volatile system-learned offset; upstream board-clock registration/get/set added to existing platform; five scalar objects/full link; actual initializer/callback/recovery audit | Persistent offset/epoch identity, wake source/alarm and sleep lifecycle; current-mainline/hardware retention |
-| Wake | Exact OEM caller/ID15/KEY_WAKEUP143 and panel50:13/50:11/IRQ-wake oracle1024;3439 actual gesture and38 SPI/fault checks; two scalar native objects/one new protocol function | Actual owned GPIO162/PDC109 IRQ, normal worker/HID drain/resume and display/system sleep; no permanent polling substitute |
+| Wake | Exact OEM gesture/protocol plus owned GPIO162/PDC109/INTID652 native IRQ and serialized flow;50route/12nativeIRQ scenarios/1233flow checks;four scalar objects/full link | Actual current touch worker/HID pause/resume, real display/system power callbacks and PDC/gesture hardware; no polling or fake power readiness |
 | Motion | Source-bound integer QMI/SSC discovery/requests/client/sample parser, strict malformed data/mount/units/clock/gravity-axis hold;2622678 checks and scalar native | Exact Gen4 transport/attributes/SUIDs/real samples and mount/time qualification, actual IOHID/CoreMotion/UI |
 | Cameras | Actual fixed Gen4 sensor325+438 register entries/eight power-control-stream bodies, owned CCI/power/receiver adapter;820 scenarios/882646 checks and scalar native | Actual CCI/CAMSS/CSI/VFE/DMA/SMMU/IRQ/buffers/OS17 service, sensor identities/calibration/frames |
 
@@ -132,8 +132,10 @@ Motion and camera foundations now have code/native evidence in
 [MOTION-CORE.md](MOTION-CORE.md) and [CAMERA-CORE.md](CAMERA-CORE.md). Neither has
 an actual Gen4 native producer/pipeline or hardware acceptance yet. All current
 jobs are terminal; selected source inputs remain frozen after the68-root review.
-Wake protocol is now recorded in [WAKE-PROTOCOL.md](WAKE-PROTOCOL.md); its command
-delivery is separate from the still-missing native IRQ/power/resume path.
+Wake protocol is recorded in [WAKE-PROTOCOL.md](WAKE-PROTOCOL.md); its command
+delivery is separate from physical sleep. [WAKE-IRQ.md](WAKE-IRQ.md) now adds
+owned native IRQ/flow and full link63486fdf over Actuator. Actual original-worker
+and display/system PM connection remains absent; full Goal stays active.
 The delivered haptics calibration is absent/output disabled; host synthetic
 gains are not measured limits. Mainline still needs a reviewed source port to
 its current touch/SPMI/recovery code. No tablet or automatic merge occurred.
