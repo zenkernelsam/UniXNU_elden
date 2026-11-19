@@ -32,6 +32,15 @@ int elden_shared_budget_ram(EldenSharedBudget *,uint64_t owner,uint64_t epoch,ui
 /* confirmed only after actual stop/standby. A failed stop permanently pins its
  * reservation until physical reset/new boot, with no release success stub. */
 int elden_shared_budget_finish(EldenSharedBudget *,uint64_t owner,uint64_t epoch,uint64_t id,uint64_t now_us,int confirmed);
+/* Live streams reserve a maximum window for an unknown future waveform.
+ * After REAL STOP, retain that whole window cost only through observed end+
+ * window; do not hold a short effect for the planned maximum stream length. */
+int elden_shared_budget_finish_actual(EldenSharedBudget *,uint64_t owner,uint64_t epoch,uint64_t id,uint64_t now_us,int confirmed);
+/* Worker-only live settlement after real STOP. The conservative observed
+ * moving-window costs may decrease a reserved maximum, never exceed it or
+ * revive a held entry. No user-client supplies these values. */
+int elden_shared_budget_settle_actual(EldenSharedBudget *,uint64_t owner,uint64_t epoch,uint64_t id,uint64_t now_us,
+    int confirmed,const uint64_t observed_squares[2],const uint32_t observed_on_us[2]);
 int elden_shared_budget_active(const EldenSharedBudget *);
 #ifdef __cplusplus
 }

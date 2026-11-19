@@ -33,6 +33,49 @@ def shared_header(r):
     square=pair(s['max_squares'],1,maximum)
     return ('static const EldenSharedBudgetLimits elden_haptics_shared_limits={'+str(window)+',{'+','.join(map(str,on))+'},'+str(dual)+',{' +
             ','.join(str(v)+'ULL' for v in square)+'},3};\n'),s
+def actuator_header(path):
+    prefix='#pragma once\n#include "ActuatorLive.h"\n'
+    if path is None:return prefix+'#define ELDEN_HAPTICS_HAS_ACTUATOR 0\nstatic const EldenActuatorLimits elden_actuator_limits={};\n',None
+    path=Path(path).resolve(strict=True);r=read(path)
+    if 'actuator' not in r:return prefix+'#define ELDEN_HAPTICS_HAS_ACTUATOR 0\nstatic const EldenActuatorLimits elden_actuator_limits={};\n',None
+    if r.get('board')!='TB322FC' or r.get('firmware_sha256')!=FIRMWARE or r.get('boost_mv')!=7000 or r.get('chip_ids')!=[0x9370,0x9370] or r.get('hardware_qualified') is not True:
+        raise ValueError('Live Actuator native calibration differs')
+    a=r['actuator'];_,shared=shared_header(r);evidence=[]
+    if not a.get('evidence') or not a.get('review_notes') or a.get('decimation')!='box2-48k-to24k':raise ValueError('Actuator measurement/decimation contract missing')
+    for row in a['evidence']:
+        p=(path.parent/row['path']).resolve(strict=True)
+        if sha(p)!=digest(row['sha256']):raise ValueError('Actuator evidence changed')
+        evidence.append({'bytes':p.stat().st_size,'sha256':row['sha256']})
+    window=integer(a['window_frames'],64,240000)
+    if window!=shared['window_us']*24000//1000000:raise ValueError('Actuator and native moving windows differ')
+    on=pair(a['max_on_frames'],1,window);squares=pair(a['max_squares'],1,(1<<63)-1)
+    gain=pair(a['gain'],1,128);native_gain=pair(r['limits']['max_gain'],1,128)
+    if sum(gain)>r['limits']['max_sum_gain'] or any(gain[i]>native_gain[i] for i in range(2)):raise ValueError('Actuator gains exceed native limits')
+    for m in range(2):
+        if (on[m]*1000000+23999)//24000>shared['max_on_us'][m] or squares[m]>shared['max_squares'][m]:raise ValueError('Actuator exceeds native rolling budget')
+    dual=min(on)
+    if (dual*1000000+23999)//24000>shared['max_dual_on_us']:raise ValueError('Actuator dual budget')
+    bandwidth=integer(a['measured_min_payload_bps'],60000,1000000)
+    if a['measured_bus_hz']!=r['bus_hz'] or a['bandwidth_evidence_sha256'] not in [e['sha256'] for e in evidence]:raise ValueError('Live full-path bandwidth evidence differs')
+    run=integer(a['max_run_us'],1,60000000);gap=integer(a['max_gap_us'],1,10000)
+    missing=integer(a['max_missing_frames'],1,48000);silence=integer(a['silence_frames'],1,24000);lateness=integer(a['max_startup_lateness_us'],1,250000)
+    channels=a['channels']
+    if len(channels)!=2:raise ValueError('Two Actuator measured sample maps required')
+    lines=[prefix,'#define ELDEN_HAPTICS_HAS_ACTUATOR 1'];maps=[]
+    for m,ch in enumerate(channels):
+        peak=integer(ch['drive_peak_q15'],1,32767);points=ch['points']
+        if not 2<=len(points)<=256 or points[0]!=[0,0] or points[-1][0]!=32767:raise ValueError('Actuator LUT endpoints')
+        previous=(-1,-1)
+        for x,y in points:
+            integer(x,0,32767);integer(y,0,peak)
+            if x<=previous[0] or y<previous[1]:raise ValueError('Actuator LUT monotonicity')
+            previous=(x,y)
+        symbol='elden_actuator_lut'+str(m);lines.append('static const EldenHapticsGainPoint '+symbol+'[]={'+','.join('{'+str(x)+','+str(y)+'}' for x,y in points)+'};')
+        cost=integer(ch['mapper_square_budget_q30'],1,(1<<63)-1)
+        maps.append('{'+symbol+','+str(len(points))+','+str(peak)+',24000,64,'+str(cost)+'ULL}')
+    lines.append('static const EldenActuatorLimits elden_actuator_limits={{'+','.join(maps)+'},'+str(window)+',{'+','.join(map(str,on))+'},'+
+                 ','.join(map(str,[run,gap,missing,silence,bandwidth,lateness]))+',{'+','.join(str(v)+'ULL' for v in squares)+'},{'+','.join(map(str,gain))+'},3};')
+    return '\n'.join(lines)+'\n',{'native_calibration_sha256':sha(path),'evidence':evidence,'review_notes':a['review_notes'],'physical_qualification_by_tool':False}
 def catalog_header(path,calibration_path):
     prefix='#pragma once\n#include "Catalog.h"\n'
     if path is None:

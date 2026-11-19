@@ -29,6 +29,7 @@ EldenNvtFirmware.h
 EldenHapticsFirmware.h
 EldenHapticsCalibration.h
 EldenHapticsCatalog.h
+EldenActuatorCalibration.h
 /lab/
 /maintenance/
 /local-maintenance.toml

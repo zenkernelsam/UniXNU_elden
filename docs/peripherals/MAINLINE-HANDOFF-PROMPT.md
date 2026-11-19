@@ -12,6 +12,8 @@ HAPTICS-BROKER.md 为后续最新衔接：原生v2客户端增加effect-id请求
 
 主线仍独占平板、刷写和当前 Wi-Fi/PCIe/WCN/QRTR 的实机迭代；离线线程不操作设备、不自动合并。你完成当前一轮并恢复安全基线后，再 fetch 并只读核对该分支的状态、已验证提交、构建/ABI结果及硬件缺口。只有组件明确具备集成证据后，才按当前主线源码评审、挑选对应提交和重建，不能整份旧目录/旧内核覆盖主线，也不能把规划或组件编译视为实机成功。注意共享电源、总线、IRQ、DMA及停止/回程顺序，保留你的最新修复。
 
+最新衔接 HAPTICS-ACTUATOR.md：iOS17签名HAL、真实type1客户端、397312B新会话ring和原有SE6/AW worker已连接源码并完整离线链接kernel6c644610/native4a674e31。13原生生命周期场景/140检查、135实际HAL接口、4117ring与285013实际live组合通过；16scalar对象、168service/186client及pen/RTC/Apple30/停止顺序复核通过。特别修复捕获头文件的IOBuffer getBytesNoCopy错误槽43，现在直接调用OS17原始导出；原生prepare槽27和所有调用有审计，旧错误件拒绝。默认校准/目录/Actuator profile仍空，未驱动实机、未打开MG/closed-loop/preset或VirtualAudio补丁。先按当前主线review/移植，保留全部Wi-Fi/SMMU/触控/GPU/回程；实测gain/双负载/温度/带宽及系统type1权限后才逐层开放。私有归档22802522B/663bad26、264members已核，工作台lab/records/haptics-actuator-20261119。原生wake/SSC/camera和完整五项Goal继续，不因这批离线链接清flag。
+
 板级实现优先 ArmadaOS-Freedom 的 TB322FC/SM8750 文档、固定内核和适用补丁，其次 Linux mainline；iPadOS 接口参考成熟 UniXNU 与同版 OS17 实现。不要搬用三代/五代的寄存器或固件。真机前重新核准入、候选完整摘要、原有 floor1738713600@0/父链3 和自动回程。
 
 马达尤其需要机械/电气校准：Apple 效果强度不是硬件 gain，不能直接回放或线性放大后认为安全。仅启用有已验证增益/boost/频率/时长/双路预算和停止保护的效果；未校准连续RTP保持关闭。传感器方向和相机数据必须来自真实硬件；前后摄像头设备树节点存在不等于 ISP/出图完成。把接入这些分支作为后续衔接事项，继续当前 Wi-Fi 进度，不提前宣称五项已完成。

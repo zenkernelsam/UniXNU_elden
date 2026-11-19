@@ -11,8 +11,11 @@
 #include "EldenHapticsFirmware.h" // generated from exact original input, not in Git
 #include "EldenHapticsCalibration.h" // default disabled; reviewed external limits only
 #include "EldenHapticsCatalog.h" // immutable measured effect clips, default empty
+#include "ActuatorLive.h"
+#include "EldenActuatorCalibration.h" // absent measured live PCM profile is default-off
 #include <IOKit/IODeviceMemory.h>
 #include <IOKit/IOMemoryDescriptor.h>
+#include <IOKit/IOBufferMemoryDescriptor.h>
 #include <IOKit/IOLib.h>
 #include <IOKit/IOLocks.h>
 #include <IOKit/IOService.h>
@@ -21,6 +24,10 @@
 #include <libkern/c++/OSMetaClass.h>
 #include <kern/thread.h>
 #include <kern/sched_prim.h>
+#include <kern/clock.h>
+#include <kern/task.h>
+#include <sys/proc.h>
+#include <sys/codesign.h>
 #include <mach/kmod.h>
 #include <pexpert/pexpert.h>
 extern kmod_info_t g_kernel_kmod_info;
@@ -31,6 +38,11 @@ int elden_recovery_armed(void);
 extern volatile int native_owner_data_status,elden_init_exec_accepted;
 void elden_usb_log_putc(char);
 bool elden_battery_temperature_get(int *,uint32_t *,uint32_t *);
+const EldenActuatorLimits *elden_actuator_profile_get(void);
+// The captured headers place getBytesNoCopy at a different vtable slot from
+// OS17's original IOBuffer class. Bind its exact exported method directly;
+// an explicitly qualified C++ virtual still uses the captured table in kext mode.
+void *elden_actuator_buffer_bytes(IOBufferMemoryDescriptor *) __asm__("__ZN24IOBufferMemoryDescriptor14getBytesNoCopyEv");
 boolean_t ml_at_interrupt_context(void);
 void elden_haptics_static_init(void) __asm__("__GLOBAL__sub_I_EldenHapticsNative.cpp");
 }
@@ -53,12 +65,16 @@ struct Window {
         __asm__ volatile("str %w0,[%1]\n\tdsb sy"::"r"(value),"r"(p):"memory");return 0;
     }
 };
+struct ActuatorSession;
 struct Context {
     static void *operator new(size_t n) noexcept{return IOMalloc(n);}
     static void operator delete(void *p) noexcept{if(p)IOFree(p,sizeof(Context));}
     Window windows[7];IOLock *lock=nullptr;IOService *service=nullptr;
     EldenHapticsPlatform platform={};EldenHapticsBus bus={};EldenAwChip chips[2]={};
     EldenHapticsBroker broker={};
+    struct ActuatorSession *actuator=nullptr,*retired_actuators=nullptr;
+    const EldenActuatorLimits *actuator_profile=nullptr;
+    uint32_t actuator_enabled=0,actuator_opens=0;
     uint64_t cleanup_deadline=0;
     uint32_t phase=0,ready_mask=0,queue_ready=0,stopped=0,thermal_ready=0;
     int error=0;bool maps_ready=false;
@@ -85,7 +101,7 @@ static uint64_t now_us(void *){
 static int delay_us(void *,unsigned us){if(us>=1000)IOSleep((us+999)/1000);else IODelay(us);return 0;}
 static bool thermal(Context *c){
     int temp;uint32_t epoch,cycle;
-    bool ready=(ELDEN_HAPTICS_HAS_LIMITS||ELDEN_HAPTICS_HAS_CATALOG)&&elden_battery_temperature_get(&temp,&epoch,&cycle)&&epoch&&cycle&&
+    bool ready=(ELDEN_HAPTICS_HAS_LIMITS||ELDEN_HAPTICS_HAS_CATALOG||ELDEN_HAPTICS_HAS_ACTUATOR)&&elden_battery_temperature_get(&temp,&epoch,&cycle)&&epoch&&cycle&&
         temp>=ELDEN_HAPTICS_MIN_TEMP_CENTI&&temp<=ELDEN_HAPTICS_MAX_TEMP_CENTI;
     __atomic_store_n(&c->thermal_ready,ready?1u:0u,__ATOMIC_RELEASE);return ready;
 }
@@ -134,6 +150,7 @@ static int broker_admit(void *v,int cleanup){
 static void broker_lock(void *v,int acquire){Context *c=static_cast<Context *>(v);if(acquire)IOLockLock(c->lock);else IOLockUnlock(c->lock);}
 static void *broker_allocate(void *,size_t bytes){return bytes&&bytes<=1440000?IOMalloc(bytes):nullptr;}
 static void broker_release(void *,void *p,size_t bytes){if(p&&bytes)IOFree(p,bytes);}
+#include "NativeActuator.inc"
 static int prepare(Context *c){
     c->maps_ready=c->map();if(!c->maps_ready)return -12;
     EldenHapticsPlatformIo io={c,read,write,platform_admit,gcc_lock,touch_contract,now_us,delay_us};
@@ -149,15 +166,17 @@ static int prepare(Context *c){
     EldenHapticsBrokerIo bio={c,broker_admit,broker_lock,now_us,broker_allocate,broker_release};
     EldenAwChip *chips[]={&c->chips[0],&c->chips[1]};
     rc=elden_broker_init(&c->broker,&bio,chips,ELDEN_HAPTICS_HAS_LIMITS?&elden_haptics_limits:nullptr,
-        ELDEN_HAPTICS_HAS_LIMITS||ELDEN_HAPTICS_HAS_CATALOG?&elden_haptics_shared_limits:nullptr,
+        ELDEN_HAPTICS_HAS_LIMITS||ELDEN_HAPTICS_HAS_CATALOG||ELDEN_HAPTICS_HAS_ACTUATOR?&elden_haptics_shared_limits:nullptr,
         ELDEN_HAPTICS_HAS_CATALOG?&elden_haptics_rtp_limits:nullptr,elden_haptics_effects,ELDEN_HAPTICS_EFFECT_COUNT);
     if(rc)return rc;__atomic_store_n(&c->queue_ready,c->broker.ram_ready?1u:0u,__ATOMIC_RELEASE);
+    actuator_mode(c);
     return 0;
 }
 static int stop(Context *c){
     c->cleanup_deadline=now_us(c)+1000000;c->platform.cleanup=1;
     int error=0;
-    if(c->broker.initialized)error=elden_broker_stop(&c->broker);
+    error=actuator_shutdown(c);
+    if(c->broker.initialized){int rc=elden_broker_stop(&c->broker);if(rc&&!error)error=rc;}
     // Even partial init or failed GO may leave a physical chip active.
     for(unsigned m=0;m<2;m++)if(c->chips[m].io.admit){int rc=elden_aw_stop(&c->chips[m]);if(rc&&!error)error=rc;}
     if(error||c->bus.held||c->platform.held)return error?error:-125;
@@ -166,6 +185,8 @@ static int stop(Context *c){
     return 0;
 }
 static bool process(Context *c){
+    int actuator_rc=actuator_round(c);
+    if(actuator_rc&&c->broker.held){__atomic_store_n(&c->error,actuator_rc,__ATOMIC_RELEASE);return false;}
     int rc=elden_broker_step(&c->broker);
     if(c->broker.held||c->broker.stopping){__atomic_store_n(&c->error,rc?rc:c->broker.error,__ATOMIC_RELEASE);return false;}return true;
 }
@@ -182,10 +203,11 @@ static void worker(void *,wait_result_t){
     else{__atomic_store_n(&c->error,rc,__ATOMIC_RELEASE);log("\nELDEN_HAPTICS initialization refused; retained to reset\n");}
     while(!rc&&!__atomic_load_n(&stop_requested,__ATOMIC_ACQUIRE)){
         if(!process(c))break;
-        bool work=elden_broker_work(&c->broker)!=0;
+        bool work=elden_broker_work(&c->broker)!=0||__atomic_load_n(&c->actuator,__ATOMIC_ACQUIRE)!=nullptr;
         IOSleep(work?1:10);
     }
-    __atomic_store_n(&c->phase,3u,__ATOMIC_RELEASE);int stopped=stop(c);
+    IOLockLock(c->lock);__atomic_store_n(&c->phase,3u,__ATOMIC_RELEASE);IOLockUnlock(c->lock);
+    int stopped=stop(c);
     if(stopped)__atomic_store_n(&c->error,stopped,__ATOMIC_RELEASE);
     __atomic_store_n(&c->stopped,stopped?2u:1u,__ATOMIC_RELEASE);
     __atomic_store_n(&c->phase,4u,__ATOMIC_RELEASE);log(stopped?"\nELDEN_HAPTICS stop unconfirmed; maps retained\n":"\nELDEN_HAPTICS stopped; maps retained\n");
@@ -250,6 +272,28 @@ extern "C" void elden_haptics_native_info(uint64_t output[8]){
     output[5]=(uint64_t)(int64_t)__atomic_load_n(&c->error,__ATOMIC_ACQUIRE);
     output[6]=__atomic_load_n(&c->stopped,__ATOMIC_ACQUIRE);output[7]=__atomic_load_n(&c->queue_ready,__ATOMIC_ACQUIRE);
 }
+extern "C" int elden_haptics_actuator_allowed(void *task){
+    Context *c=__atomic_load_n(&active,__ATOMIC_ACQUIRE);
+    if(!c||!__atomic_load_n(&c->actuator_enabled,__ATOMIC_ACQUIRE)||!task)return 0;
+    proc_t process=(proc_t)get_bsdtask_info((task_t)task);if(!process||!csproc_get_platform_binary(process))return 0;
+    char name[32]={0};proc_name(proc_pid(process),name,sizeof(name));
+    return !strcmp(name,"audiomxd")||!strcmp(name,"mediaserverd");
+}
+extern "C" int elden_haptics_actuator_open(uint64_t *owner,uint64_t *epoch){
+    Context *c=__atomic_load_n(&active,__ATOMIC_ACQUIRE);return c?actuator_open(c,owner,epoch):-19;
+}
+extern "C" int elden_haptics_actuator_close(uint64_t owner,uint64_t epoch){
+    Context *c=__atomic_load_n(&active,__ATOMIC_ACQUIRE);return c?actuator_close(c,owner,epoch):-19;
+}
+extern "C" int elden_haptics_actuator_request(uint64_t owner,uint64_t epoch,int start){
+    Context *c=__atomic_load_n(&active,__ATOMIC_ACQUIRE);return c?actuator_request(c,owner,epoch,start):-19;
+}
+extern "C" int elden_haptics_actuator_info(uint64_t owner,uint64_t epoch,uint64_t output[8]){
+    Context *c=__atomic_load_n(&active,__ATOMIC_ACQUIRE);return c?actuator_info(c,owner,epoch,output):-19;
+}
+extern "C" IOMemoryDescriptor *elden_haptics_actuator_memory(uint64_t owner,uint64_t epoch){
+    Context *c=__atomic_load_n(&active,__ATOMIC_ACQUIRE);return c?actuator_memory(c,owner,epoch):nullptr;
+}
 #include "ClientMethods.inc"
 namespace {
 static bool publish(Context *c){
@@ -259,6 +303,16 @@ static bool publish(Context *c){
     // Retain the service to reset, including failed partial registration.
     c->service=service;
     if(!service->init()||!service->attach(IOService::getPlatform())||!service->start(IOService::getPlatform()))return false;
+    if(__atomic_load_n(&c->actuator_enabled,__ATOMIC_ACQUIRE)){
+        service->setProperty("NativeSandboxGrantProcess","audiomxd,mediaserverd");
+        service->setProperty("EldenActuatorABI",ELDEN_ACTUATOR_VERSION,32);
+    }
+    // Matching notifications may open the service immediately. Publish the
+    // admitted phase before registerService, after broker/chips are ready.
+    IOLockLock(c->lock);
+    bool admitted=!__atomic_load_n(&stop_requested,__ATOMIC_ACQUIRE);
+    if(admitted)__atomic_store_n(&c->phase,2u,__ATOMIC_RELEASE);
+    IOLockUnlock(c->lock);if(!admitted)return false;
     service->registerService();return true;
 }
 }

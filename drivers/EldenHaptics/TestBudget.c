@@ -31,6 +31,22 @@ int main(void){
     for(unsigned i=0;i<64;i++)CHECK(!elden_shared_budget_finish(&b,1,1,i+1,10000000,1));
     CHECK(!elden_shared_budget_reserve(&b,2,1,1,10100001,20000,zero_square,zero_on,0));
     CHECK(elden_shared_budget_reserve(&b,2,1,2,UINT64_MAX-1,20000,zero_square,zero_on,0)==-22);
+    memset(&b,0,sizeof(b));l=limits();CHECK(!elden_shared_budget_init(&b,&l));
+    CHECK(!elden_shared_budget_reserve(&b,1,1,1,0,60000000,squares,on,20000));
+    CHECK(!elden_shared_budget_finish_actual(&b,1,1,1,20000,1));
+    CHECK(b.slots[0].expires_us==120000); // physical early STOP, not planned60s
+    CHECK(!elden_shared_budget_reserve(&b,2,1,1,120001,20000,squares,on,20000));
+    memset(&b,0,sizeof(b));l=limits();CHECK(!elden_shared_budget_init(&b,&l));
+    uint64_t reserved_square[2]={1000,1000},actual_square[2]={10,20};uint32_t reserved_on[2]={30000,30000},actual_on[2]={1000,2000};
+    CHECK(!elden_shared_budget_reserve(&b,1,1,1,0,60000000,reserved_square,reserved_on,30000));
+    CHECK(!elden_shared_budget_settle_actual(&b,1,1,1,3000,1,actual_square,actual_on));
+    CHECK(!elden_shared_budget_active(&b)&&b.slots[0].squares[0]==10&&b.slots[0].on_us[1]==2000&&b.slots[0].dual_us==1000&&b.slots[0].expires_us==103000);
+    CHECK(!elden_shared_budget_reserve(&b,2,1,1,3001,20000,squares,on,20000)); // actual cost survives reconnect
+    CHECK(elden_shared_budget_settle_actual(&b,1,1,1,3002,1,actual_square,actual_on)==-125); // already finished
+    actual_on[0]=30001;
+    CHECK(elden_shared_budget_settle_actual(&b,2,1,1,3003,1,actual_square,actual_on)==-13);
+    CHECK(b.slots[1].held&&elden_shared_budget_active(&b));
+    CHECK(elden_shared_budget_finish_actual(&b,2,1,1,10000000,1)==-125); // a later flag cannot erase the overrun
     puts("PASS: shared RAM/RTP budgets, reconnects, active/failed-stop retention, slot limits and clock refusal");
     printf("%u actual budget checks\n",checks);return 0;
 }

@@ -71,18 +71,27 @@ Mainline prompt: [MAINLINE-HANDOFF-PROMPT.md](MAINLINE-HANDOFF-PROMPT.md).
 
 ## Current status
 
-Implementation through `b341697` is archived and verified on 2026-11-19:
+Latest Actuator milestone on2026-11-19 is in
+[HAPTICS-ACTUATOR.md](HAPTICS-ACTUATOR.md): signed OS17 HAL and real type1
+client/ring/original-worker connection, full offline kernel6c644610/native4a674e31.
+13 native lifecycle scenarios/140 checks and135 HAL interface checks pass;
+actual IOBuffer direct-call ABI defect fixed and old wrong-slot image rejected.
+Calibration/catalog/profile remain absent/output disabled. Product capabilities,
+tunings/VirtualAudio, calibrated hardware and all five-part acceptance remain open.
+Private22802522B/663bad26 archive264members verified; workbench
+`lab/records/haptics-actuator-20261119` has the current receipt. The following
+component rows include earlier independently accepted milestones:
 
 | Component | Implemented and checked offline | Next missing implementation/acceptance |
 | --- | --- | --- |
 | AP501U | Independent109B decoder and HID; actual OEM F1/envelope instruction qualification; same-report polar tilt;932 core,15 wire/310 scoped-hook checks;14641 tilt pairs; six scalar objects and full link/207-slot inheritance/10 overrides | Raw XNU frames/scan/integrity beyond envelope; real UIKit pressure/polar axes, Notes/PencilKit/palm/release/sleep; current mainline integration |
-| Dual haptics | Actual Gen4 AW/GENI/queue plus native SE6/worker/root-only user client/shared touch vote guard; full link/168-service +186-client ABI;66 platform/3755 checks,304168 touch,2362 mailbox/91341 composed; earlier Apple import/sample conversion retained | Continuous waveform compiler/RTP/system Actuator, measured per-motor calibration; current mainline/hardware/sleep acceptance |
+| Dual haptics | Exact Gen4 AW/GENI/queue/native worker; Apple compiler, RAM/RTP broker/shared budgets and signed48k HAL/type1 ring;16scalar objects/full link,168-service/186-client ABI, actual original IOBuffer calls;13native lifecycle scenarios/135HAL checks | Measured per-motor waveform/gain/thermal/bandwidth, product capabilities/tunings/VirtualAudio and actual iOS playback; current mainline/hardware/sleep acceptance |
 | RTC | Real PMK8550 read/carry via observer-only SPMI/shared gate; volatile system-learned offset; upstream board-clock registration/get/set added to existing platform; five scalar objects/full link; actual initializer/callback/recovery audit | Persistent offset/epoch identity, wake source/alarm and sleep lifecycle; current-mainline/hardware retention |
 | Wake | Exact OEM caller/ID15/KEY_WAKEUP143 and panel50:13/50:11/IRQ-wake oracle1024;3439 actual gesture and38 SPI/fault checks; two scalar native objects/one new protocol function | Actual owned GPIO162/PDC109 IRQ, normal worker/HID drain/resume and display/system sleep; no permanent polling substitute |
 | Motion | Source-bound integer QMI/SSC discovery/requests/client/sample parser, strict malformed data/mount/units/clock/gravity-axis hold;2622678 checks and scalar native | Exact Gen4 transport/attributes/SUIDs/real samples and mount/time qualification, actual IOHID/CoreMotion/UI |
 | Cameras | Actual fixed Gen4 sensor325+438 register entries/eight power-control-stream bodies, owned CCI/power/receiver adapter;820 scenarios/882646 checks and scalar native | Actual CCI/CAMSS/CSI/VFE/DMA/SMMU/IRQ/buffers/OS17 service, sensor identities/calibration/frames |
 
-Latest combined haptics+RTC+pen kernel SHA256 is
+Earlier haptics-native combined haptics+RTC+pen kernel SHA256 is
 `4889eee6af10d10d816f9f8e79704385d264a05c0590cc54cfccec080c21c72c`;
 native `3ae88218356370f41d34f6ca5d29c63a5d41d36a948543fbab191029e74df845`.
 All30 original Apple execution regions and pen inheritance/late initialization
@@ -116,8 +125,9 @@ evidence in [HAPTICS-RTP.md](HAPTICS-RTP.md): up60s, measured bandwidth/rolling
 budget provider gates and original142recipe/17AHAP tests with synthetic peers.
 Native requests/catalog/shared budget now connect through the actual v2 broker;
 see [HAPTICS-BROKER.md](HAPTICS-BROKER.md), kernel d64231c6 and actual handler/
-budget/composed tests. Defaultcatalog0/no measured bank/outputdisabled. System
-Actuator/capability/preset and calibrated hardware acceptance still remain.
+budget/composed tests. Defaultcatalog0/no measured bank/outputdisabled. Subsequent
+HAL/native Actuator source/full link now exists in HAPTICS-ACTUATOR.md; system
+capability/preset/VirtualAudio and calibrated hardware acceptance still remain.
 Motion and camera foundations now have code/native evidence in
 [MOTION-CORE.md](MOTION-CORE.md) and [CAMERA-CORE.md](CAMERA-CORE.md). Neither has
 an actual Gen4 native producer/pipeline or hardware acceptance yet. All current

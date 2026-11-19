@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleExecutable</key><string>EldenActuator</string>
+<key>CFBundleIdentifier</key><string>org.unixnu.elden.actuator</string>
+<key>CFBundleName</key><string>EldenActuator</string>
+<key>CFBundlePackageType</key><string>BNDL</string>
+<key>CFBundleVersion</key><string>1</string>
+<key>CFBundleShortVersionString</key><string>1.0</string>
+<key>MinimumOSVersion</key><string>17.0</string>
+<key>CFBundleSupportedPlatforms</key><array><string>iPhoneOS</string></array>
+<key>CFPlugInFactories</key><dict><key>7A64D5C2-1EBD-4D6D-9730-045EA23BCDC1</key><string>EldenActuator_Create</string></dict>
+<key>CFPlugInTypes</key><dict><key>443ABAB8-E7B3-491A-B985-BEB9187030DB</key><array><string>7A64D5C2-1EBD-4D6D-9730-045EA23BCDC1</string></array></dict>
+</dict></plist>

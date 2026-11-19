@@ -74,6 +74,7 @@ int elden_broker_open(EldenHapticsBroker *b,uint64_t *owner,uint64_t *epoch){
     if(!b||!owner||!epoch||!__atomic_load_n(&b->initialized,__ATOMIC_ACQUIRE))return -22;
     lock(b);int rc=-16;
     if(__atomic_load_n(&b->held,__ATOMIC_ACQUIRE)||__atomic_load_n(&b->stopping,__ATOMIC_ACQUIRE)){unlock(b);return -125;}
+    if(__atomic_load_n(&b->current_kind,__ATOMIC_ACQUIRE)){unlock(b);return -16;}
     if(b->next_owner!=UINT64_MAX){uint64_t next=b->next_owner;rc=elden_haptics_mail_open(&b->mail,next,b->epoch);
         if(!rc){b->next_owner++;__atomic_store_n(&b->live_owner,next,__ATOMIC_RELEASE);*owner=next;*epoch=b->epoch;}}
     unlock(b);return rc;
@@ -86,7 +87,8 @@ static int submit(EldenHapticsBroker *b,EldenHapticsRequest *r,uint64_t delay,ui
     if(!r->id||delay>1000000||intensity>32767)return -22;
     int rc=elden_broker_output_admit(b);if(rc)return rc;
     uint64_t now=b->io.now_us(b->io.context);if(now>UINT64_MAX-delay)return -22;r->not_before_us=now+delay;
-    lock(b);rc=effect?elden_haptics_mail_submit_effect(&b->mail,r,intensity,effect):elden_haptics_mail_submit(&b->mail,r,intensity);unlock(b);return rc;
+    lock(b);rc=__atomic_load_n(&b->current_kind,__ATOMIC_ACQUIRE)==3?-16:
+        effect?elden_haptics_mail_submit_effect(&b->mail,r,intensity,effect):elden_haptics_mail_submit(&b->mail,r,intensity);unlock(b);return rc;
 }
 int elden_broker_submit_ram(EldenHapticsBroker *b,uint64_t owner,uint64_t epoch,uint64_t id,uint64_t delay,uint32_t duration,uint8_t mask,uint8_t wave,uint16_t intensity){
     if(!b||!b->initialized||!b->ram_ready||!duration||duration>b->ram.limits.max_duration_us||!mask||mask&~3u||!wave)return -13;
@@ -131,6 +133,7 @@ static int end_rtp(EldenHapticsBroker *b,int error,uint32_t state){
 }
 int elden_broker_step(EldenHapticsBroker *b){
     if(!b||!b->initialized)return -22;if(__atomic_load_n(&b->held,__ATOMIC_ACQUIRE))return b->error?b->error:-125;
+    if(__atomic_load_n(&b->current_kind,__ATOMIC_ACQUIRE)==3)return 0; // actual retained Actuator worker path
     // Only the worker reads chip state. API threads consume the atomic held
     // gate and mailbox owner rather than racing AW's register-state updates.
     if(b->chips[0]->held||b->chips[1]->held||!b->chips[0]->ready||!b->chips[1]->ready)return fail(b,-125);
@@ -157,6 +160,7 @@ int elden_broker_step(EldenHapticsBroker *b){
     now=b->io.now_us(b->io.context);
     // Do not take another request across a still-active hardware/BSD callback.
     lock(b);
+    if(__atomic_load_n(&b->current_kind,__ATOMIC_ACQUIRE)==3){unlock(b);return 0;}
     uint64_t first=UINT64_MAX;EldenHapticsMail *next=0;
     for(unsigned i=0;i<EldenHapticsQueueSlots;i++)if(b->mail.slots[i].state==EldenHapticsMailPending&&b->mail.slots[i].request.id<first){next=&b->mail.slots[i];first=next->request.id;}
     int rc=-16;if(next&&now>=next->request.not_before_us)rc=elden_haptics_mail_take_native(&b->mail,&b->current,&b->current_intensity,&b->effect_id);
@@ -179,6 +183,7 @@ int elden_broker_stop(EldenHapticsBroker *b){
     if(!b||!b->initialized)return -22;
     __atomic_store_n(&b->stopping,1u,__ATOMIC_RELEASE);__atomic_store_n(&b->live_owner,0u,__ATOMIC_RELEASE);
     lock(b);elden_haptics_mail_stop(&b->mail);unlock(b);int error=0;
+    if(__atomic_load_n(&b->current_kind,__ATOMIC_ACQUIRE)==3)return fail(b,-125); // native must first stop/release actual Actuator
     if(b->current_kind==2){int rc=elden_rtp_stream_stop(&b->rtp);if(rc)error=rc;
         rc=end_rtp(b,rc,EldenHapticsCancelled);if(rc&&!error)error=rc;}
     if(b->ram_ready){int rc=elden_haptics_queue_stop(&b->ram,b->io.now_us(b->io.context));if(rc&&!error)error=rc;
@@ -188,4 +193,41 @@ int elden_broker_stop(EldenHapticsBroker *b){
 }
 int elden_broker_work(EldenHapticsBroker *b){
     if(!b||!b->initialized)return 0;lock(b);int work=elden_haptics_mail_work(&b->mail);unlock(b);return work;
+}
+int elden_broker_actuator_claim(EldenHapticsBroker *b,uint64_t owner,uint64_t epoch){
+    if(!b||!b->initialized||!b->budget.initialized)return -13;
+    lock(b);
+    int rc=0;
+    if(b->mail.owner!=owner||b->mail.epoch!=epoch||b->mail.closing||b->mail.stopping||b->mail.held||b->held||b->stopping)rc=-125;
+    else if(__atomic_load_n(&b->current_kind,__ATOMIC_ACQUIRE)||elden_haptics_mail_work(&b->mail))rc=-16;
+    if(!rc){EldenHapticsRequest r={0};r.owner=owner;r.epoch=epoch;b->current=r;
+        __atomic_store_n(&b->current_kind,3u,__ATOMIC_RELEASE);}
+    unlock(b);return rc;
+}
+int elden_broker_actuator_reserve(EldenHapticsBroker *b,uint64_t owner,uint64_t epoch,uint64_t run,uint32_t lease,
+    const uint64_t square[2],const uint32_t on[2]){
+    if(!b||!square||!on||__atomic_load_n(&b->current_kind,__ATOMIC_ACQUIRE)!=3||b->current.owner!=owner||b->current.epoch!=epoch)return -116;
+    int rc=elden_broker_output_admit(b);if(rc)return rc;
+    uint32_t time[2];for(unsigned m=0;m<2;m++)time[m]=(uint32_t)(((uint64_t)on[m]*1000000+23999)/24000);
+    uint32_t dual=time[0]<time[1]?time[0]:time[1];
+    return elden_shared_budget_reserve(&b->budget,owner,epoch,run,b->io.now_us(b->io.context),lease,square,time,dual);
+}
+int elden_broker_actuator_finish(EldenHapticsBroker *b,uint64_t owner,uint64_t epoch,uint64_t run,int confirmed){
+    if(!b||__atomic_load_n(&b->current_kind,__ATOMIC_ACQUIRE)!=3||b->current.owner!=owner||b->current.epoch!=epoch)return -116;
+    int rc=elden_shared_budget_finish_actual(&b->budget,owner,epoch,run,b->io.now_us(b->io.context),confirmed);
+    if(rc)fail(b,rc);return rc;
+}
+int elden_broker_actuator_settle(EldenHapticsBroker *b,uint64_t owner,uint64_t epoch,uint64_t run,int confirmed,
+    const uint64_t square[2],const uint32_t on[2]){
+    if(!b||__atomic_load_n(&b->current_kind,__ATOMIC_ACQUIRE)!=3||b->current.owner!=owner||b->current.epoch!=epoch)return -116;
+    uint32_t time[2]={0};
+    if(confirmed){if(!square||!on)return -22;
+        for(unsigned m=0;m<2;m++){if(on[m]>240000)return -22;time[m]=(uint32_t)(((uint64_t)on[m]*1000000+23999)/24000);}}
+    int rc=elden_shared_budget_settle_actual(&b->budget,owner,epoch,run,b->io.now_us(b->io.context),confirmed,square,time);
+    if(rc)fail(b,rc);return rc;
+}
+int elden_broker_actuator_release(EldenHapticsBroker *b,uint64_t owner,uint64_t epoch,int confirmed){
+    if(!b||__atomic_load_n(&b->current_kind,__ATOMIC_ACQUIRE)!=3||b->current.owner!=owner||b->current.epoch!=epoch)return -116;
+    if(!confirmed||b->held||elden_shared_budget_active(&b->budget))return fail(b,-125);
+    lock(b);__atomic_store_n(&b->current_kind,0u,__ATOMIC_RELEASE);unlock(b);return 0;
 }

@@ -6,7 +6,9 @@ Current native details: [HAPTICS-NATIVE.md](HAPTICS-NATIVE.md) and
 `drivers/EldenHaptics/native-validation.json`. The portable milestone is in
 `validation.json`; raw evidence/assets stay in the workbench. Continuous RTP,
 RTP/controller and explicit compiler update is in [HAPTICS-RTP.md](HAPTICS-RTP.md).
-Measured bank, native request/catalog/shared budget and system Actuator remain.
+Measured bank and actual system playback remain. The native broker and the
+subsequent HAL/native Actuator implementation are now fully linked offline:
+[HAPTICS-ACTUATOR.md](HAPTICS-ACTUATOR.md). Calibration/output remain disabled.
 
 Latest native request/catalog/shared-budget implementation is now in
 [HAPTICS-BROKER.md](HAPTICS-BROKER.md); it replaces the separate RAM-only worker
@@ -64,8 +66,9 @@ signed conversions pass. Native scalar objects compile. Hardware/MMIO/IOKit
 peers remain modeled and no real motor is driven by these checks.
 
 Native platform/worker/user client is now linked and separately checked as
-documented above. Next: native RTP requests/catalog/shared budget, system Actuator
-and measured templates. Keep calibration/firmware/stop gates/default-off behavior. The
+documented above. Native RTP/catalog/shared budget and HAL/native Actuator code
+are now implemented. Next: measured templates/limits, actual system route and
+hardware qualification. Keep calibration/firmware/stop gates/default-off behavior. The
 requested haptic scope includes continuous effects and system interaction;
 single RAM clicks alone do not complete it. Mainline owns calibrated motor
 trials, current source integration, power/temperature and combined-load checks.

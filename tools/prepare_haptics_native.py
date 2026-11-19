@@ -74,13 +74,18 @@ def main():
     sys.path.insert(0,str(DRIVER));from AwSource import derive;from GeniSource import sources
     (h/'AwChip.c').write_bytes(derive())
     for name,data in sources().items():(h/name).write_bytes(data)
-    for name in ('AwChip.h','AwKernelShim.h','AwRtp.h','Bus.c','Bus.h','Board.h','Platform.c','Platform.h','Queue.c','Queue.h','Mailbox.c','Mailbox.h','RtpStream.c','RtpStream.h','Budget.c','Budget.h','Catalog.c','Catalog.h','Broker.c','Broker.h','Native.h','ClientMethods.inc'):
+    for name in ('AwChip.h','AwKernelShim.h','AwRtp.h','Bus.c','Bus.h','Board.h','Platform.c','Platform.h','Queue.c','Queue.h','Mailbox.c','Mailbox.h','RtpStream.c','RtpStream.h','Budget.c','Budget.h','Catalog.c','Catalog.h','Broker.c','Broker.h','Native.h','ClientMethods.inc','SampleMap.h','SampleMap.c'):
         shutil.copyfile(DRIVER/name,h/name)
+    for original,dest in [('Abi.h','Abi.h'),('Ring.c','ActuatorRing.c'),('Live.h','ActuatorLive.h'),('Live.c','ActuatorLive.c'),('Profile.cpp','ActuatorProfile.cpp'),('NativeActuator.inc','NativeActuator.inc')]:
+        shutil.copyfile(DRIVER/'actuator'/original,h/dest)
+    live=h/'ActuatorLive.c';live.write_text(live.read_text().replace('#include "Live.h"','#include "ActuatorLive.h"'))
     shutil.copyfile(DRIVER/'Native.cpp',h/'EldenHapticsNative.cpp')
     data=a.firmware.read_bytes();(h/'EldenHapticsFirmware.h').write_text('#pragma once\nstatic const unsigned char elden_haptics_firmware[]={'+','.join(hex(v) for v in data)+'};\n')
     text,cal=calibration(a.calibration,fw['sha256']);(h/'EldenHapticsCalibration.h').write_text(text)
     from NativeInputs import catalog_header
     text,catalog=catalog_header(a.catalog,a.calibration);(h/'EldenHapticsCatalog.h').write_text(text)
+    from NativeInputs import actuator_header
+    text,actuator=actuator_header(a.calibration);(h/'EldenActuatorCalibration.h').write_text(text)
     pen=read(a.pen_source/'source.json');built=read(a.pen_build/'result.json')
     if not built['compiled']:raise ValueError('Pen/touch parent incomplete')
     for name,digest in pen['sources'].items():
@@ -96,6 +101,6 @@ def main():
     rows={str(p.relative_to(out)):sha(p) for p in out.rglob('*') if p.is_file()}
     (out/'source.json').write_text(json.dumps({'sources':rows,'upstream':spec,'firmware_sha256':fw['sha256'],
         'pen_source_record_sha256':sha(a.pen_source/'source.json'),'parent_touch_source_sha256':expected,
-        'calibration':cal,'catalog':catalog,'public_raw_register_or_gain':False,'hardware':False},indent=2)+'\n')
+        'calibration':cal,'catalog':catalog,'actuator':actuator,'public_raw_register_or_gain':False,'hardware':False},indent=2)+'\n')
     print('Prepared actual haptics/native/firmware and pen-preserving touch entry; calibration '+('external reviewed input' if cal else 'absent/output disabled'))
 if __name__=='__main__':main()

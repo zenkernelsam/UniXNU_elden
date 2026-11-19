@@ -3,8 +3,10 @@
 The actual native service now uses one broker for both RAM clicks and immutable
 RTP effects. Its source, shared budget, catalog builder, client handlers and full
 kernel link are checked offline. The delivered catalog/calibration remain absent
-and output disabled. No iOS Actuator service, measured Taptic conversion or
-hardware acceptance is claimed; the whole five-part Goal stays active.
+and output disabled. The subsequent actual OS17 HAL/native Actuator source and
+offline full link are in [HAPTICS-ACTUATOR.md](HAPTICS-ACTUATOR.md). Real iOS system
+route, measured Taptic conversion and hardware acceptance remain incomplete;
+the whole five-part Goal stays active.
 
 ## Connected execution path
 
@@ -39,7 +41,8 @@ No raw PCM/gain/voltage/register upload or caller-selected owner/epoch is expose
 | 4 | id, immutable effect-id, delay-us, intensity-Q15 | Queued RTP catalog effect |
 | 5 | effect-id | id/frame-count/mask/rate metadata; no user gain or PCM |
 
-Service remains administrator-only. Handler input counts/descriptors/narrowing,
+Type0 remains administrator-only; the separate system type1 route is described
+in HAPTICS-ACTUATOR.md. Handler input counts/descriptors/narrowing,
 owner close races and failed-output preservation use the actual code in
 `ClientMethods.inc`; native and host peer tests include exactly the same methods.
 Selectors0..3 keep their shapes. Service property reports version2/catalog count.

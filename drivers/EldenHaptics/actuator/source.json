@@ -1,0 +1,17 @@
+{
+  "repository": "https://github.com/IssacL04/UniXNU-Pagani-Drivers",
+  "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+  "file": "PaganiAudioPlugIn.c",
+  "path": "drivers/PaganiAudio/hal/PaganiAudioPlugIn.c",
+  "sha256": "2b67019bcd39d7a9ed7bd90420ebe2b978f46ca319b4543a29fad2947eab8891",
+  "bytes": 97040,
+  "license": "BSD-2-Clause-Patent",
+  "scope": "Original OS17 Actuator format and device/stream property function bodies only; no Pagani voltage/SoC/audio backend",
+  "native_actuator_connected": false,
+  "hardware": false,
+  "license_file": {
+    "path": "drivers/PaganiAudio/LICENSE",
+    "sha256": "5b1d3d911103cb0f41641ec0964c5ac1f7e229f57aa072b6ac38bae913a1307b",
+    "bytes": 2673
+  }
+}

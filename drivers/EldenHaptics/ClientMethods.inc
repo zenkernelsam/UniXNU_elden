@@ -3,19 +3,36 @@
 class EldenHapticsClient final : public IOUserClient {
     OSDeclareDefaultStructors(EldenHapticsClient)
     uint64_t owner=0,epoch=0;
+    bool actuator=false;
 public:
+    void useActuator(bool enabled){actuator=enabled;}
     bool start(IOService *provider) override{
         if(!IOUserClient::start(provider))return false;
-        if(elden_haptics_native_open(&owner,&epoch)){IOUserClient::stop(provider);return false;}return true;
+        int rc=actuator?elden_haptics_actuator_open(&owner,&epoch):elden_haptics_native_open(&owner,&epoch);
+        if(rc){IOUserClient::stop(provider);return false;}return true;
     }
-    IOReturn clientClose() override{uint64_t who=__atomic_exchange_n(&owner,0u,__ATOMIC_ACQ_REL);if(who)(void)elden_haptics_native_close(who,epoch);terminate();return kIOReturnSuccess;}
-    void free() override{uint64_t who=__atomic_exchange_n(&owner,0u,__ATOMIC_ACQ_REL);if(who)(void)elden_haptics_native_close(who,epoch);IOUserClient::free();}
+    IOReturn clientClose() override{uint64_t who=__atomic_exchange_n(&owner,0u,__ATOMIC_ACQ_REL);
+        if(who){if(actuator)(void)elden_haptics_actuator_close(who,epoch);else(void)elden_haptics_native_close(who,epoch);}terminate();return kIOReturnSuccess;}
+    void free() override{uint64_t who=__atomic_exchange_n(&owner,0u,__ATOMIC_ACQ_REL);
+        if(who){if(actuator)(void)elden_haptics_actuator_close(who,epoch);else(void)elden_haptics_native_close(who,epoch);}IOUserClient::free();}
+    IOReturn clientMemoryForType(UInt32 type,IOOptionBits *options,IOMemoryDescriptor **out) override{
+        if(out)*out=nullptr;uint64_t who=__atomic_load_n(&owner,__ATOMIC_ACQUIRE);
+        if(!actuator||!who||type!=EldenActuatorMemory||!options||!out)return kIOReturnBadArgument;
+        IOMemoryDescriptor *memory=elden_haptics_actuator_memory(who,epoch);if(!memory)return kIOReturnNotReady;
+        *options=0;*out=memory;return kIOReturnSuccess;
+    }
     IOReturn externalMethod(uint32_t selector,IOExternalMethodArguments *a,IOExternalMethodDispatch *,OSObject *,void *) override{
         uint64_t who=__atomic_load_n(&owner,__ATOMIC_ACQUIRE);
         if(!a||!who||a->structureInputSize||a->structureOutputSize||a->structureInputDescriptor||a->structureOutputDescriptor)return kIOReturnBadArgument;
         int rc=-22;
-        if(selector==0&&a->scalarInputCount==0&&a->scalarOutputCount==8&&a->scalarOutput){elden_haptics_native_info(a->scalarOutput);return kIOReturnSuccess;}
-        if(selector==1&&a->scalarInputCount==6&&a->scalarInput&&a->scalarOutputCount==0){
+        if(actuator){
+            if(selector==EldenActuatorInfo&&a->scalarInputCount==0&&a->scalarOutputCount==8&&a->scalarOutput)
+                rc=elden_haptics_actuator_info(who,epoch,a->scalarOutput);
+            else if((selector==EldenActuatorStart||selector==EldenActuatorStop)&&a->scalarInputCount==0&&a->scalarOutputCount==0)
+                rc=elden_haptics_actuator_request(who,epoch,selector==EldenActuatorStart);
+        }
+        else if(selector==0&&a->scalarInputCount==0&&a->scalarOutputCount==8&&a->scalarOutput){elden_haptics_native_info(a->scalarOutput);return kIOReturnSuccess;}
+        else if(selector==1&&a->scalarInputCount==6&&a->scalarInput&&a->scalarOutputCount==0){
             const uint64_t *in=a->scalarInput;
             if(in[2]>UINT32_MAX||in[3]>3||in[4]>127||in[5]>32767)return kIOReturnBadArgument;
             rc=elden_haptics_native_submit(who,epoch,in[0],in[1],(uint32_t)in[2],(uint8_t)in[3],(uint8_t)in[4],(uint16_t)in[5]);
@@ -41,9 +58,11 @@ OSDefineMetaClassAndStructors(EldenHapticsClient,IOUserClient)
 class EldenHapticsService final : public IOService {
     OSDeclareDefaultStructors(EldenHapticsService)
     IOReturn client(task_t task,void *security,UInt32 type,OSDictionary *properties,IOUserClient **out){
-        if(out)*out=nullptr;if(!out||type!=0)return kIOReturnBadArgument;
-        if(IOUserClient::clientHasPrivilege(task,kIOClientPrivilegeAdministrator)!=kIOReturnSuccess)return kIOReturnNotPermitted;
+        if(out)*out=nullptr;if(!out||type>1)return kIOReturnBadArgument;
+        if(type==1){if(!elden_haptics_actuator_allowed(task))return kIOReturnNotPermitted;}
+        else if(IOUserClient::clientHasPrivilege(task,kIOClientPrivilegeAdministrator)!=kIOReturnSuccess)return kIOReturnNotPermitted;
         EldenHapticsClient *c=OSTypeAlloc(EldenHapticsClient);if(!c)return kIOReturnNoMemory;
+        c->useActuator(type==1);
         if(!c->initWithTask(task,security,type,properties)||!c->attach(this)){c->release();return kIOReturnError;}
         if(!c->start(this)){c->detach(this);c->release();return kIOReturnNotReady;}*out=c;return kIOReturnSuccess;
     }

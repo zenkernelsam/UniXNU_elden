@@ -1,5 +1,25 @@
 # UniXNU elden — authoritative source repository
 
+Actuator20261119: actual signed OS17 HAL/type1 native client/fresh397312B ring/
+original owning worker/live AW route now full-linked offline.13native lifecycle
+scenarios140checks/135actualHAL/4117ring/285013live +165budget/283066broker/
+118actualhandlers/ninecatalog+15Actuator negatives pass ASan/UBSan; OS/MMIO are
+peers,positiveprofile HOSTONLY. Snapshot commands under lock/acknowledged running,
+late service notification/phase publication fence and retained8distinct sessions.
+Actual original IOBuffer ABI found captured slot43=appendBytes; direct original
+getBytesNoCopy export fixes it, prepare27 and real authorization/profile/live/
+broker calls audited; oldkernel3 rejected.16scalar objects/native9/source8;
+15motor objects0warnings/1touch baseline.430used dependencies hashchecked. Separate
+profileNULL keeps lifecycle compiled without synthetic enabled native inputs.
+kernel4 6c644610/native4a674e31, Apple30/service168client186(6/8)/pen207(10)/RTC/
+real recovery pass, globalflagsfalse. Profile/catalog/calibration absent/outputoff;
+MG/capability/closed-loop/preset/VirtualAudio/systemplayback/hardware UNQUALIFIED.
+Archive22802522B/663bad26/264regular members verified;SDKsymlinks/standaloneFW/
+syntheticpositiveassets excluded. Read HAPTICS-ACTUATOR.md/actuator-validation.json.
+Alljobs terminal/no tablet/no automerge/no subagents. Full five-part Goal active:
+continue actual GPIO-PDC wake/resume, Gen4SSC/native HID and CCI/CAMSS/pipeline;
+mainline owns hardware/Wi-Fi/PCIe/WCN/QRTR, GPU separate. Do not close Goal here.
+
 Broker20261119: actual native v2 user client effect-id request route and same
 worker RAM/RTP arbiter/shared64slot budgets now implemented/full-linked. No
 raw PCM/gain uploads; budgets survive client reconnect, active/failedSTOP never

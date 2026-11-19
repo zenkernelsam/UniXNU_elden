@@ -33,11 +33,18 @@ def main():
             '-nostdinc','-isystem',Path(resource)/'include','-Wall','-Wextra','-Werror']
     for folder,name in [('haptics','EldenHapticsNative.cpp'),('haptics','Platform.c'),('haptics','GeniCore.c'),('haptics','Bus.c'),
                         ('haptics','AwChip.c'),('haptics','Queue.c'),('haptics','Mailbox.c'),('haptics','RtpStream.c'),
-                        ('haptics','Budget.c'),('haptics','Catalog.c'),('haptics','Broker.c'),('touch','EldenTouchRuntime.cpp')]:
+                        ('haptics','Budget.c'),('haptics','Catalog.c'),('haptics','Broker.c'),('haptics','SampleMap.c'),
+                        ('haptics','ActuatorRing.c'),('haptics','ActuatorLive.c'),('haptics','ActuatorProfile.cpp'),('touch','EldenTouchRuntime.cpp')]:
         src=a.source/folder/name;obj=out/(src.stem+'.o');raw=out/(src.stem+'.raw.o') if name=='EldenHapticsNative.cpp' else obj
         if src.suffix=='.cpp':
             selected=job if folder=='haptics' else next(j for j in cap['jobs'] if j['file'].endswith('/EldenNvt36536/Runtime.cpp'))
             cmd=[*cpp_flags(selected),'-I',str(src.parent),'-Werror','-mgeneral-regs-only',str(src),'-o',str(raw)]
+            if name=='EldenHapticsNative.cpp':
+                private=[Path(v).parent/'bsd' for v in cpp_flags(selected) if v.endswith('/.cache/xnu-work/osfmk')]
+                private=list(dict.fromkeys(private))
+                if len(private)!=1 or not (private[0]/'sys/proc.h').is_file() or not (private[0]/'sys/codesign.h').is_file():
+                    raise ValueError('Actual captured XNU private BSD headers absent/ambiguous')
+                cmd+=['-I',str(private[0]),'-MD','-MF',str(out/'Native.d')]
             if folder=='touch':cmd+=['-Wno-error=missing-field-initializers']
             run(cmd,src.stem+'-compile',remap(selected['directory']))
             if name=='EldenHapticsNative.cpp':
@@ -56,6 +63,15 @@ def main():
         symbols=global_symbols(obj);records[name]={'source_sha256':sha(src),'object_sha256':sha(obj),'warnings':warnings,
             'imports':[n for n,v in symbols.items() if not v[0]&0xe],'exports':[n for n,v in symbols.items() if v[0]&0xe],
             'command':list(map(str,cmd)),'sections':{k:{'bytes':v[0],'flags':v[1],'sha256':v[2]} for k,v in sec.items()}}
+        if name=='EldenHapticsNative.cpp':
+            import shlex
+            dependency_text=(out/'Native.d').read_text().replace('\\\n',' ')
+            paths=shlex.split(dependency_text.split(':',1)[1]);dependencies={}
+            for v in paths:
+                path=Path(v);path=path if path.is_absolute() else Path(remap(selected['directory']))/path
+                if not path.is_file():raise ValueError('Used native dependency absent')
+                dependencies[str(path.resolve())]=sha(path)
+            records[name]['used_dependency_sha256']=dependencies
     touch=json.loads((a.touch_build/'result.json').read_text());toc=a.touch_build/'EldenNvtPlatform.o'
     if not touch['passed'] or sha(toc)!=touch['object_sha256'] or touch['sources']['drivers/EldenNvt36536/Platform.c']!=sha(ROOT/'drivers/EldenNvt36536/Platform.c'):
         raise ValueError('Shared touch platform source/object differs')
@@ -66,6 +82,7 @@ def main():
         'touch_platform_sha256':sha(toc),'touch_platform_report_sha256':sha(a.touch_build/'result.json'),
         'source_record_sha256':sha(a.source/'source.json'),'calibration_present':r['calibration'] is not None,
         'catalog_present':r['catalog'] is not None,
+        'actuator_profile_present':r['actuator'] is not None,
         'full_link':False,'hardware':False,'separate_replacements':['EldenNvtPlatform.o','EldenNvtRuntime.o']},indent=2)+'\n')
     print('PASS: native service/worker and actual driver chain; explicit late initialization; calibration '+('external' if r['calibration'] else 'disabled'))
 if __name__=='__main__':main()

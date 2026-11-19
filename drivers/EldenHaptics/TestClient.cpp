@@ -2,6 +2,7 @@
 /* Run the SAME native user-client/service handlers with explicit IOKit peers.
  * Final original vtable qualification remains a separate full-link audit. */
 #include "Native.h"
+#include "Abi.h"
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -10,6 +11,8 @@
 static unsigned checks;
 #define CHECK(x) do{checks++;if(!(x)){std::fprintf(stderr,"line%d: %s\n",__LINE__,#x);std::exit(1);}}while(0)
 using IOReturn=int;using UInt32=uint32_t;using task_t=void *;
+using IOOptionBits=uint32_t;
+class IOMemoryDescriptor {public:unsigned retains=0;void retain(){retains++;}};
 enum {kIOReturnSuccess=0,kIOReturnBadArgument=1,kIOReturnBusy=2,kIOReturnNotPermitted=3,kIOReturnNotFound=4,
       kIOReturnNotReady=5,kIOReturnNoMemory=6,kIOReturnError=7,kIOReturnTimeout=8,kIOReturnIOError=9};
 struct OSObject {virtual ~OSObject()=default;};struct OSDictionary:OSObject{};
@@ -20,6 +23,8 @@ struct IOExternalMethodArguments {
 };
 static unsigned opened,closed,called;static int rc,open_rc,privilege_rc;static uint64_t args[8];static bool fail_init,fail_attach,fail_alloc;
 static unsigned terminations,base_stops;
+static unsigned actuator_opens,actuator_closes,actuator_requests,actuator_maps;
+static int actuator_allow=0,actuator_rc=0;static IOMemoryDescriptor memory;
 class IOUserClient;
 class IOService:public OSObject {
 public:
@@ -36,6 +41,7 @@ public:
     static IOReturn clientHasPrivilege(task_t,const char *){return privilege_rc;}
     virtual IOReturn clientClose(){return kIOReturnSuccess;}
     virtual IOReturn externalMethod(uint32_t,IOExternalMethodArguments *,IOExternalMethodDispatch *,OSObject *,void *){return kIOReturnBadArgument;}
+    virtual IOReturn clientMemoryForType(UInt32,IOOptionBits *,IOMemoryDescriptor **){return kIOReturnBadArgument;}
     void terminate(){terminations++;}
 };
 static const char kIOClientPrivilegeAdministrator[]="administrator";
@@ -60,6 +66,14 @@ extern "C" int elden_haptics_native_result(uint64_t o,uint64_t e,uint64_t id,Eld
 }
 extern "C" int elden_haptics_native_effect_info(uint32_t id,uint64_t out[4]){called++;if(rc)return rc;out[0]=id;out[1]=24;out[2]=3;out[3]=24000;return 0;}
 extern "C" void elden_haptics_native_info(uint64_t out[8]){called++;for(unsigned i=0;i<8;i++)out[i]=i==0?2:i;}
+extern "C" int elden_haptics_actuator_allowed(void *){return actuator_allow;}
+extern "C" int elden_haptics_actuator_open(uint64_t *o,uint64_t *e){actuator_opens++;if(actuator_rc)return actuator_rc;*o=21;*e=8;return 0;}
+extern "C" int elden_haptics_actuator_close(uint64_t o,uint64_t e){CHECK(o==21&&e==8);actuator_closes++;return 0;}
+extern "C" int elden_haptics_actuator_request(uint64_t o,uint64_t e,int start){CHECK(o==21&&e==8&&(start==0||start==1));actuator_requests++;return actuator_rc;}
+extern "C" int elden_haptics_actuator_info(uint64_t o,uint64_t e,uint64_t out[8]){CHECK(o==21&&e==8);if(actuator_rc)return actuator_rc;
+    for(unsigned i=0;i<8;i++)out[i]=i==0?ELDEN_ACTUATOR_MAGIC:i;return 0;}
+extern "C" IOMemoryDescriptor *elden_haptics_actuator_memory(uint64_t o,uint64_t e){CHECK(o==21&&e==8);actuator_maps++;
+    if(actuator_rc)return nullptr;memory.retain();return &memory;}
 #include "ClientMethods.inc"
 static IOReturn call(EldenHapticsClient &c,unsigned selector,IOExternalMethodArguments &a){return c.externalMethod(selector,&a,nullptr,nullptr,nullptr);}
 int main(){
@@ -87,11 +101,25 @@ int main(){
     CHECK(client.clientClose()==0&&closed==1&&terminations==1);client.free();CHECK(closed==1);before=called;CHECK(call(client,2,a)==kIOReturnBadArgument&&called==before);
     EldenHapticsService service;IOUserClient *opened_client=reinterpret_cast<IOUserClient *>(1);
     privilege_rc=1;before=opened;CHECK(service.newUserClient(nullptr,nullptr,0,&opened_client)==kIOReturnNotPermitted&&!opened_client&&opened==before);
-    privilege_rc=0;CHECK(service.newUserClient(nullptr,nullptr,1,&opened_client)==kIOReturnBadArgument&&!opened_client);
+    privilege_rc=0;CHECK(service.newUserClient(nullptr,nullptr,2,&opened_client)==kIOReturnBadArgument&&!opened_client);
+    CHECK(service.newUserClient(nullptr,nullptr,1,&opened_client)==kIOReturnNotPermitted&&!opened_client&&!actuator_opens);
     fail_alloc=true;CHECK(service.newUserClient(nullptr,nullptr,0,&opened_client)==kIOReturnNoMemory&&!opened_client);fail_alloc=false;
     fail_init=true;CHECK(service.newUserClient(nullptr,nullptr,0,&opened_client)==kIOReturnError&&!opened_client);fail_init=false;
     fail_attach=true;CHECK(service.newUserClient(nullptr,nullptr,0,&opened_client)==kIOReturnError&&!opened_client);fail_attach=false;
     open_rc=-19;CHECK(service.newUserClient(nullptr,nullptr,0,&opened_client)==kIOReturnNotReady&&!opened_client);open_rc=0;
     CHECK(service.newUserClient(nullptr,nullptr,0,&opened_client)==0&&opened_client);opened_client->clientClose();opened_client->release();
-    CHECK(closed==2);std::printf("PASS: %u actual native client/service method checks; privilege/shape/narrowing/owner-close/receipt preservation; IOKit peers modeled\n",checks);return 0;
+    CHECK(closed==2);
+    actuator_allow=1;CHECK(service.newUserClient(nullptr,nullptr,1,&opened_client)==0&&opened_client&&actuator_opens==1);
+    IOMemoryDescriptor *descriptor=reinterpret_cast<IOMemoryDescriptor *>(1);IOOptionBits options=9;
+    CHECK(opened_client->clientMemoryForType(7,&options,&descriptor)==kIOReturnBadArgument&&!descriptor&&!actuator_maps);
+    CHECK(opened_client->clientMemoryForType(EldenActuatorMemory,&options,&descriptor)==0&&descriptor==&memory&&!options&&memory.retains==1);
+    a={};a.scalarOutput=output;a.scalarOutputCount=8;
+    CHECK(opened_client->externalMethod(EldenActuatorInfo,&a,nullptr,nullptr,nullptr)==0&&output[0]==ELDEN_ACTUATOR_MAGIC);
+    for(unsigned selector=0;selector<6;selector++){a={};unsigned calls=called;
+        CHECK(opened_client->externalMethod(selector,&a,nullptr,nullptr,nullptr)==kIOReturnBadArgument&&called==calls);}
+    a={};CHECK(opened_client->externalMethod(EldenActuatorStart,&a,nullptr,nullptr,nullptr)==0&&actuator_requests==1);
+    a.scalarInputCount=1;a.scalarInput=input;CHECK(opened_client->externalMethod(EldenActuatorStart,&a,nullptr,nullptr,nullptr)==kIOReturnBadArgument&&actuator_requests==1);
+    actuator_rc=-110;a={};CHECK(opened_client->externalMethod(EldenActuatorStop,&a,nullptr,nullptr,nullptr)==kIOReturnTimeout);actuator_rc=0;
+    opened_client->clientClose();opened_client->release();CHECK(actuator_closes==1&&closed==2);
+    std::printf("PASS: %u actual native client/service method checks; privilege/shape/narrowing/owner-close/receipt/memory and Actuator isolation; IOKit peers modeled\n",checks);return 0;
 }

@@ -51,7 +51,7 @@ int elden_shared_budget_ram(EldenSharedBudget *b,uint64_t owner,uint64_t epoch,u
     for(unsigned m=0;m<2;m++)if(gain[m]){squares[m]=(uint64_t)gain[m]*gain[m]*16129*frames;on[m]=peak;}
     return elden_shared_budget_reserve(b,owner,epoch,id,now,duration+250000,squares,on,gain[0]&&gain[1]?peak:0);
 }
-int elden_shared_budget_finish(EldenSharedBudget *b,uint64_t owner,uint64_t epoch,uint64_t id,uint64_t now,int confirmed){
+static int finish(EldenSharedBudget *b,uint64_t owner,uint64_t epoch,uint64_t id,uint64_t now,int confirmed,int actual){
     if(!b||!b->initialized||!owner||!epoch||!id||(confirmed!=0&&confirmed!=1))return -22;
     int clock=clock_step(b,now);
     for(unsigned i=0;i<EldenSharedBudgetSlots;i++){
@@ -61,9 +61,32 @@ int elden_shared_budget_finish(EldenSharedBudget *b,uint64_t owner,uint64_t epoc
         if(e->held)return -125;
         e->active=0;
         if(now>UINT64_MAX-b->limits.window_us){e->held=1;return -22;}
-        uint64_t after=now+b->limits.window_us;if(after>e->expires_us)e->expires_us=after;return 0;
+        uint64_t after=now+b->limits.window_us;if(actual||after>e->expires_us)e->expires_us=after;return 0;
     }
     return clock?clock:-116; // no physical start/reservation for a rejected request
+}
+int elden_shared_budget_finish(EldenSharedBudget *b,uint64_t owner,uint64_t epoch,uint64_t id,uint64_t now,int confirmed){
+    return finish(b,owner,epoch,id,now,confirmed,0);
+}
+int elden_shared_budget_finish_actual(EldenSharedBudget *b,uint64_t owner,uint64_t epoch,uint64_t id,uint64_t now,int confirmed){
+    return finish(b,owner,epoch,id,now,confirmed,1);
+}
+int elden_shared_budget_settle_actual(EldenSharedBudget *b,uint64_t owner,uint64_t epoch,uint64_t id,uint64_t now,
+    int confirmed,const uint64_t square[2],const uint32_t on[2]){
+    if(!b||!b->initialized||!owner||!epoch||!id||(confirmed!=0&&confirmed!=1))return -22;
+    if(!confirmed)return finish(b,owner,epoch,id,now,0,1);
+    if(!square||!on)return -22;
+    int rc=clock_step(b,now);if(rc)return finish(b,owner,epoch,id,now,0,1);
+    for(unsigned i=0;i<EldenSharedBudgetSlots;i++){
+        EldenSharedBudgetEntry *e=&b->slots[i];
+        if(!e->used||e->owner!=owner||e->epoch!=epoch||e->id!=id)continue;
+        if(!e->active||e->held)return -125;
+        for(unsigned m=0;m<2;m++)if(square[m]>e->squares[m]||on[m]>e->on_us[m]){e->held=1;return -13;}
+        for(unsigned m=0;m<2;m++){e->squares[m]=square[m];e->on_us[m]=on[m];}
+        e->dual_us=on[0]<on[1]?on[0]:on[1];
+        return finish(b,owner,epoch,id,now,1,1);
+    }
+    return -116;
 }
 int elden_shared_budget_active(const EldenSharedBudget *b){
     if(!b||!b->initialized)return 0;

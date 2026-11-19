@@ -17,7 +17,16 @@ int elden_haptics_native_submit_effect(uint64_t owner,uint64_t epoch,uint64_t id
 int elden_haptics_native_effect_info(uint32_t effect_id,uint64_t output[4]);
 int elden_haptics_native_result(uint64_t owner,uint64_t epoch,uint64_t id,EldenHapticsResult *);
 void elden_haptics_native_info(uint64_t output[8]);
+/* System audio client path: exact platform-binary/name authorization is
+ * checked by the actual service before open. Every open receives a new ring. */
+int elden_haptics_actuator_allowed(void *task);
+int elden_haptics_actuator_open(uint64_t *owner,uint64_t *epoch);
+int elden_haptics_actuator_close(uint64_t owner,uint64_t epoch);
+int elden_haptics_actuator_request(uint64_t owner,uint64_t epoch,int start);
+int elden_haptics_actuator_info(uint64_t owner,uint64_t epoch,uint64_t output[8]);
 #ifdef __cplusplus
 }
+class IOMemoryDescriptor;
+extern "C" IOMemoryDescriptor *elden_haptics_actuator_memory(uint64_t owner,uint64_t epoch);
 #endif
 #endif

@@ -42,6 +42,16 @@ int elden_broker_stop(EldenHapticsBroker *);
 int elden_broker_work(EldenHapticsBroker *);
 /* Same native worker's AW playback admission; never asks userspace for gains. */
 int elden_broker_output_admit(EldenHapticsBroker *);
+/* Native shared-memory Actuator owns the same session. Claim is metadata only;
+ * only the retained worker reserves/finishes physical runs and releases after
+ * its actual STOP/standby proof. No mailbox request can bypass this ownership. */
+int elden_broker_actuator_claim(EldenHapticsBroker *,uint64_t owner,uint64_t epoch);
+int elden_broker_actuator_reserve(EldenHapticsBroker *,uint64_t owner,uint64_t epoch,uint64_t run_id,
+    uint32_t lease_us,const uint64_t squares[2],const uint32_t on_frames[2]);
+int elden_broker_actuator_finish(EldenHapticsBroker *,uint64_t owner,uint64_t epoch,uint64_t run_id,int confirmed);
+int elden_broker_actuator_settle(EldenHapticsBroker *,uint64_t owner,uint64_t epoch,uint64_t run_id,int confirmed,
+    const uint64_t observed_squares[2],const uint32_t observed_on_frames[2]);
+int elden_broker_actuator_release(EldenHapticsBroker *,uint64_t owner,uint64_t epoch,int confirmed);
 #ifdef __cplusplus
 }
 #endif
