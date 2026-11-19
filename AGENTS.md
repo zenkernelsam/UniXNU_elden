@@ -1,5 +1,25 @@
 # UniXNU elden — authoritative source repository
 
+InputSleep20261119: real nonterminal penpause/resume+exact originaltouchworker
+Flow/SPI/IRQ/firmware/powergate/wait/stop hooks now full-linked. Same HID/clock,
+failedliftpending/clockrollbackstoprefuse; source-derived worker only executor,
+PMcommands2.5s boundedack/no synchronousselfack; actual50:13/11+OEM50ms/109Bgesture15/
+realpowerready gate/originalNVTupload/PID/release/resume. GestureIRQevent,request/
+deepcommandwait avoids staleIRQspin; afterassert_wait nonsleep latchpeek only.
+Stop wakes worker/waits realinput+IRQstop beforeterminalHID withdraw; uncertain
+retains/quarantinesmaps, successfulphysicalcleanup keepsContextrefs toreset.
+No actualboardpowerprovider installed; defaultwakeoff/GOPlogicalPM notpanelready.
+12actualcoordinator534/pen952/nativeIRQ12/16441/flow1233/route1392checks ASan/UBSan,
+OS/MMIO/power/HID/SRAM modeled. Source7/native7/protocol4/wakenative2/kernel4
+b448a408/nativec4081be7; currentprotocol4casts bytesunchanged0warnings, oldtouch
+aggregate1retained. Actualworkeredges/onlyruntime+protocolreplaced/Apple30/pen/
+motion20710/Actuator168186/RTC/recovery pass/globalflagsfalse.19sourcefiles159regular
+archiveverified21619763B/b8a559c2;standaloneNVTexcluded. Read INPUT-SLEEP.md/
+sleep-validation.json. Alljobs terminal/no tablet/automerge/subagents; Goalactive.
+NEXT actualboardpanel/backlight/systempowerprovider +mainlineport/hardwarecycles;
+realGen4SSC/sample/UI,cameraactualpower/CSI/VFE/DMA/frames and calibratedhaptics
+systemroute stillpending. Preserve mainlineWi-Fi/GPU/QRTR/floor/recovery/peerwork.
+
 CameraCCI20261119: exact6f97250e20396B/b5ed3d8e controller source/v2timing
 37.5MHz400k/writeQ0readQ1 qualified; controller0rear0xac7b000458+1front0xac7c000459,
 BOTHinternalmaster0. Actual originalread/write bodies onlyIOwrappers+threeu32

@@ -29,7 +29,7 @@ static int flush(EldenPenDelivery *s,EldenPenSend send,void *context){
         int rc=emit(s,&neutral,send,context);if(rc)return rc;
         s->release_pending=0;
     }
-    if(!s->dirty||s->stopped||s->clock_fault)return 0;
+    if(!s->dirty||s->stopped||s->clock_fault||s->paused)return 0;
     if(!s->has_accepted||!equal(&s->accepted,&s->desired)){
         int rc=emit(s,&s->desired,send,context);if(rc)return rc;
     }
@@ -50,6 +50,7 @@ int elden_pen_delivery_feed(EldenPenDelivery *s,const EldenPenFrame *f,uint64_t 
     int fault=clock_step(s,now);
     if(fault){int rc=flush(s,send,context);return rc?rc:fault;}
     if(s->stopped){int rc=flush(s,send,context);return rc?rc:EldenPenStopped;}
+    if(s->paused){int rc=flush(s,send,context);return rc?rc:EldenPenPaused;}
     if(s->has_coordinate&&now-s->last_coordinate>=s->stale_us)release(s);
     if(f->kind==EldenPenLeave)release(s);
     else if(f->kind==EldenPenCoordinate){
@@ -69,6 +70,18 @@ int elden_pen_delivery_fault(EldenPenDelivery *s,uint64_t now,EldenPenSend send,
 int elden_pen_delivery_stop(EldenPenDelivery *s,uint64_t now,EldenPenSend send,void *context){
     if(!s||!send||!s->stale_us)return EldenPenDeliveryArgument;
     s->stopped=1;return elden_pen_delivery_fault(s,now,send,context);
+}
+int elden_pen_delivery_pause(EldenPenDelivery *s,uint64_t now,EldenPenSend send,void *context){
+    if(!s||!send||!s->stale_us)return EldenPenDeliveryArgument;
+    if(s->stopped)return EldenPenStopped;
+    s->paused=1;return elden_pen_delivery_fault(s,now,send,context);
+}
+int elden_pen_delivery_resume(EldenPenDelivery *s,uint64_t now){
+    if(!s||!s->stale_us)return EldenPenDeliveryArgument;
+    if(s->stopped)return EldenPenStopped;
+    int rc=clock_step(s,now);if(rc)return rc;
+    if(!s->paused||!elden_pen_delivery_released(s))return EldenPenPaused;
+    s->dirty=s->has_coordinate=0;s->desired=(EldenPenFrame){0};s->paused=0;return 0;
 }
 int elden_pen_delivery_released(const EldenPenDelivery *s){
     return s&&!s->release_pending&&(!s->has_accepted||!active(&s->accepted));

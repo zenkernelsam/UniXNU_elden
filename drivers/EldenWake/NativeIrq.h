@@ -19,6 +19,10 @@ int elden_wake_native_irq_stop(uint64_t owner,uint64_t epoch);
  * This is a wake-request event, not a decoded gesture or system-wake success. */
 const void *elden_wake_native_irq_event(void);
 int elden_wake_native_irq_take(uint64_t owner,uint64_t epoch,uint32_t *events);
+/* No latch consumption; after assert_wait the owning worker uses this to
+ * close IRQ-arrived-before-sleep. No provider/MMIO callback after assert_wait;
+ * this is1pending/0none/error state only, not fresh hardware admission proof. */
+int elden_wake_native_irq_pending(uint64_t owner,uint64_t epoch);
 #ifdef __cplusplus
 }
 #endif

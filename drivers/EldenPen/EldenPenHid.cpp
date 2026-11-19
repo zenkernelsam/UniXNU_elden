@@ -139,6 +139,16 @@ extern "C" int elden_pen_native_packet(const uint8_t *packet,size_t bytes){
 extern "C" int elden_pen_native_fault(void){
     return enabled?elden_pen_delivery_fault(&delivery,nowUs(),sendPen,nullptr):0;
 }
+extern "C" int elden_pen_native_pause(void){
+    if(!enabled)return 0;if(stopped)return EldenPenStopped;
+    int rc=elden_pen_delivery_pause(&delivery,nowUs(),sendPen,nullptr);
+    for(unsigned n=0;n<30&&!elden_pen_delivery_released(&delivery);++n){IOSleep(8);rc=elden_pen_delivery_tick(&delivery,nowUs(),sendPen,nullptr);}
+    if(rc)return rc;
+    return elden_pen_delivery_released(&delivery)?0:int(kIOReturnNotReady);
+}
+extern "C" int elden_pen_native_resume(void){
+    return enabled?elden_pen_delivery_resume(&delivery,nowUs()):0;
+}
 extern "C" int elden_pen_native_stop(void){
     if(!enabled)return 0;stopped=1;
     int rc=elden_pen_delivery_stop(&delivery,nowUs(),sendPen,nullptr);

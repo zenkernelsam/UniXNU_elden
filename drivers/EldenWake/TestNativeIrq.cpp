@@ -81,8 +81,10 @@ int main(){
     CHECK(!elden_wake_native_irq_arm(11,7));gic[(0x200+4*(652/32))/4]|=1u<<(652%32);
     interrupt_context=true;handler(handler_context);interrupt_context=false;
     CHECK(wakes==1&&active->pending==1&&!active->inflight&&!(gic[(0x100+4*(652/32))/4]&(1u<<(652%32))));
+    CHECK(elden_wake_native_irq_pending(11,7)==1&&active->pending==1);
     CHECK(elden_wake_native_irq_arm(11,7)==-16);CHECK(elden_wake_native_irq_event()!=nullptr);
     CHECK(!elden_wake_native_irq_disarm(11,7)&&drain_writes==2);CHECK(!elden_wake_native_irq_take(11,7,&n)&&n==1&&!active->pending);
+    CHECK(elden_wake_native_irq_pending(11,7)==0);
     CHECK(!elden_wake_native_irq_arm(11,7));CHECK(!elden_wake_native_irq_stop(11,7)&&!active->ready&&active->route.state==EldenWakeRouteStopped);
     CHECK(tlmm[2]==0x340&&pdc[(0x110+4*109)/4]==0x100&&allocations.size()==1);
     setup();CHECK(!acquire());gic_active=true;CHECK(elden_wake_native_irq_arm(11,7)==-110&&delays==2000&&active->route.state==EldenWakeRouteHeld&&!drain_writes);

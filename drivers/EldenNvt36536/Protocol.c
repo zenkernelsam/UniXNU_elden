@@ -72,7 +72,7 @@ static int transfer(EldenNvtDevice *d,size_t bytes,bool receive){
 }
 static int page(EldenNvtDevice *d,uint32_t address){
     if(!valid(d)||address>0x7fffff)return EldenNvtArgument;
-    d->tx[0]=0xff;d->tx[1]=address>>15;d->tx[2]=address>>7;return transfer(d,3,false);
+    d->tx[0]=0xff;d->tx[1]=(uint8_t)(address>>15);d->tx[2]=(uint8_t)(address>>7);return transfer(d,3,false);
 }
 static int write(EldenNvtDevice *d,uint32_t address,const uint8_t *data,size_t bytes){
     if(!data||!bytes||bytes>ELDEN_NVT_FW_CHUNK||address>0x7fffff||bytes-1>0x7fffff-address)return EldenNvtArgument;
@@ -81,7 +81,7 @@ static int write(EldenNvtDevice *d,uint32_t address,const uint8_t *data,size_t b
 }
 static int byte(EldenNvtDevice *d,uint32_t address,uint8_t value){return write(d,address,&value,1);}
 static int number(EldenNvtDevice *d,uint32_t address,uint32_t value,unsigned size){
-    uint8_t data[4];for(unsigned i=0;i<size;i++)data[i]=value>>(8*i);return write(d,address,data,size);
+    uint8_t data[4];for(unsigned i=0;i<size;i++)data[i]=(uint8_t)(value>>(8*i));return write(d,address,data,size);
 }
 int elden_nvt_read(EldenNvtDevice *d,uint32_t address,uint8_t *out,size_t bytes){
     if(!out||!bytes||bytes>108||address>0x7fffff||bytes-1>0x7fffff-address)return EldenNvtArgument;
@@ -109,7 +109,7 @@ int elden_nvt_identify(EldenNvtDevice *d,bool reset){
 int elden_nvt_firmware_info(EldenNvtDevice *d){
     uint8_t info[38];int error=elden_nvt_read(d,ELDEN_NVT_EVENT+0x78,info,sizeof(info));if(error)return error;
     if((unsigned)info[0]+info[1]!=255)return EldenNvtFirmware;
-    uint16_t pid=info[34]|(uint16_t)info[35]<<8;if(pid!=0x6097)return EldenNvtChip;
+    uint16_t pid=(uint16_t)((uint16_t)info[34]|(uint16_t)info[35]<<8);if(pid!=0x6097)return EldenNvtChip;
     d->pid=pid;d->firmware_version=info[0];return 0;
 }
 int elden_nvt_upload(EldenNvtDevice *d,const EldenNvtImage *supplied){

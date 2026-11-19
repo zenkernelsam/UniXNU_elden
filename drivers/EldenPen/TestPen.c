@@ -93,5 +93,19 @@ static void delivery_cases(void){
     CHECK(!elden_pen_delivery_feed(&s,&identity,99,send,&sink));CHECK(sink.count==old&&s.accepted.tip);
     CHECK(!elden_pen_delivery_tick(&s,100,send,&sink));CHECK(elden_pen_delivery_released(&s));
     CHECK(elden_pen_delivery_init(&s,0)==EldenPenDeliveryArgument);
+    // A failed nonterminal lift stays paused and cannot admit a new sample.
+    CHECK(!elden_pen_delivery_init(&s,100));CHECK(!elden_pen_delivery_feed(&s,&down,300,send,&sink));sink.fail=2;
+    CHECK(elden_pen_delivery_pause(&s,301,send,&sink)==-99&&s.paused&&!s.stopped&&s.release_pending);
+    CHECK(elden_pen_delivery_resume(&s,302)==EldenPenPaused&&s.paused);
+    CHECK(elden_pen_delivery_feed(&s,&down,303,send,&sink)==-99&&s.paused&&s.release_pending);
+    old=sink.count;CHECK(!elden_pen_delivery_tick(&s,304,send,&sink)&&sink.count==old+1&&!sink.trace[old].tip&&s.paused);
+    CHECK(!elden_pen_delivery_resume(&s,305)&&!s.paused&&!s.stopped);
+    old=sink.count;CHECK(!elden_pen_delivery_tick(&s,306,send,&sink)&&sink.count==old); // no stale pre-sleep contact
+    CHECK(!elden_pen_delivery_feed(&s,&down,307,send,&sink)&&s.accepted.tip);
+    CHECK(!elden_pen_delivery_pause(&s,308,send,&sink)&&elden_pen_delivery_released(&s));
+    CHECK(elden_pen_delivery_resume(&s,307)==EldenPenClock&&s.paused);
+    CHECK(elden_pen_delivery_resume(&s,309)==EldenPenClock); // cannot clear rollback by wake
+    CHECK(!elden_pen_delivery_init(&s,100));CHECK(!elden_pen_delivery_pause(&s,400,send,&sink));
+    CHECK(!elden_pen_delivery_stop(&s,401,send,&sink));CHECK(elden_pen_delivery_resume(&s,402)==EldenPenStopped);
 }
 int main(void){decode_cases();delivery_cases();printf("PASS: %u checks; synthetic protocol boundaries and actual delivery state; no raw SPI or hardware claim\n",checks);return 0;}

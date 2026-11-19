@@ -61,7 +61,9 @@ The actual OEM command/decoder foundation now compiles, documented in
 [WAKE-PROTOCOL.md](WAKE-PROTOCOL.md). ID15 maps to KEY_WAKEUP143; panel paths
 send50:13 gesture or50:11 deep sleep.1024 original instruction cases and3439
 decoder/38 SPI checks pass. Generic PM callbacks only update flags/completion.
-GPIO/PDC/native worker/system-power delivery remains unimplemented.
+GPIO/PDC/native library and subsequent original-worker reversible pause/resume
+now have code/link evidence in WAKE-IRQ.md and INPUT-SLEEP.md. Actual board
+system/display-power provider and physical wake remain incomplete.
 
 Original NT36536 symbols include gesture report0x144c, gesture switch0x1a44 and
 PM callbacks0x5c28/0x5c48. ID30/packet[2]==1 normalizes through packet[3], then a

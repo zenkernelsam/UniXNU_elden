@@ -87,7 +87,7 @@ component rows include earlier independently accepted milestones:
 | AP501U | Independent109B decoder and HID; actual OEM F1/envelope instruction qualification; same-report polar tilt;932 core,15 wire/310 scoped-hook checks;14641 tilt pairs; six scalar objects and full link/207-slot inheritance/10 overrides | Raw XNU frames/scan/integrity beyond envelope; real UIKit pressure/polar axes, Notes/PencilKit/palm/release/sleep; current mainline integration |
 | Dual haptics | Exact Gen4 AW/GENI/queue/native worker; Apple compiler, RAM/RTP broker/shared budgets and signed48k HAL/type1 ring;16scalar objects/full link,168-service/186-client ABI, actual original IOBuffer calls;13native lifecycle scenarios/135HAL checks | Measured per-motor waveform/gain/thermal/bandwidth, product capabilities/tunings/VirtualAudio and actual iOS playback; current mainline/hardware/sleep acceptance |
 | RTC | Real PMK8550 read/carry via observer-only SPMI/shared gate; volatile system-learned offset; upstream board-clock registration/get/set added to existing platform; five scalar objects/full link; actual initializer/callback/recovery audit | Persistent offset/epoch identity, wake source/alarm and sleep lifecycle; current-mainline/hardware retention |
-| Wake | Exact OEM gesture/protocol plus owned GPIO162/PDC109/INTID652 native IRQ and serialized flow;50route/12nativeIRQ scenarios/1233flow checks;four scalar objects/full link | Actual current touch worker/HID pause/resume, real display/system power callbacks and PDC/gesture hardware; no polling or fake power readiness |
+| Wake | Exact OEM GPIO/PDC route and serialized flow now hooked into original worker;reversible pen/finger release,real Protocol restore/event wait/stop;12coordinator534checks and full link | Current-mainline port, actual display/system power provider and physical PDC/gesture/sleep/pen/finger cycles; no fake power readiness |
 | Motion | Strict integer QMI/SSC sample core plus same-OS17 real accel/gyro IOHIDDevice/driver/constructor adapter;95core-HID/five actual native scenarios/152checks,two scalar objects and207/10/full link | Exact Gen4 transport/attributes/SUIDs/real samples and mount/time qualification; actual CoreMotion/UI and complete J317 orientation/SPU contract |
 | Cameras | Exact Gen4 sensor/core plus CCIv2 read/write bodies, actual native CCI0/CCI1 mapping/owned IRQ drain and sensor binding;135CCI/11native scenarios with full sensor path,three new scalarobjects/full link | Actual shared power/CAMCC/GDSC/MCLK/pin provider, CAMSS/CSI/VFE/DMA/SMMU/IRQ/buffers/OS17 service, sensor identity/calibration/frames |
 
@@ -138,6 +138,9 @@ Camera now has [CAMERA-CCI.md](CAMERA-CCI.md): source-bound exact CCI controller
 queues/timing, signed-shift fix, native mapping/IRQ drain and core binding; full
 kernel5c952842 and existing component audits pass. Actual power/receiver/frames/
 OS17 camera and full five-part acceptance remain incomplete.
+Latest original-worker input-sleep milestone is [INPUT-SLEEP.md](INPUT-SLEEP.md),
+full linked kernelb448a408. Actual board power provider is absent/default-off;
+no tablet, current-mainline merge or real sleep/wake acceptance occurred.
 Wake protocol is recorded in [WAKE-PROTOCOL.md](WAKE-PROTOCOL.md); its command
 delivery is separate from physical sleep. [WAKE-IRQ.md](WAKE-IRQ.md) now adds
 owned native IRQ/flow and full link63486fdf over Actuator. Actual original-worker

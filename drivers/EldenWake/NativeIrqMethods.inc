@@ -112,3 +112,13 @@ extern "C" int elden_wake_native_irq_take(uint64_t owner,uint64_t epoch,uint32_t
     rc=__atomic_load_n(&c->error,__ATOMIC_ACQUIRE);if(rc)return rc;
     uint32_t n=__atomic_exchange_n(&c->pending,0u,__ATOMIC_ACQ_REL);*events=n;return 0;
 }
+extern "C" int elden_wake_native_irq_pending(uint64_t owner,uint64_t epoch){
+    Context *c=find(owner,epoch);if(!c)return -116;
+    if(!__atomic_load_n(&c->ready,__ATOMIC_ACQUIRE))return -125;
+    // The owning worker calls this only after an already-admitted round and
+    // assert_wait. A latch peek cannot invoke provider/route callbacks that
+    // might sleep/arm another wait and overwrite that pending scheduler wait.
+    // This is notification state only, not fresh power/route admission proof.
+    int rc=__atomic_load_n(&c->error,__ATOMIC_ACQUIRE);if(rc)return rc;
+    return __atomic_load_n(&c->pending,__ATOMIC_ACQUIRE)?1:0;
+}

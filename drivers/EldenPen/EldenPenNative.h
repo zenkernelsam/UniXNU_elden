@@ -12,6 +12,10 @@ int elden_pen_native_start(void);
 int elden_pen_native_packet(const uint8_t *,size_t);
 int elden_pen_native_fault(void);
 int elden_pen_native_stop(void);
+/* Original touch worker only. Reversible actual release keeps the same pen
+ * service and clock; resume refuses an unacknowledged lift or terminal stop. */
+int elden_pen_native_pause(void);
+int elden_pen_native_resume(void);
 #ifdef __cplusplus
 }
 #endif

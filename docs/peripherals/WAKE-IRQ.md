@@ -2,8 +2,9 @@
 
 The exact TB322FC GPIO162/PDC109 route, actual native IRQ adapter and serialized
 wake flow are implemented and fully linked over the fixed Actuator/RTC/pen image.
-They are not called by the current touch worker or display/system PM callbacks.
-This is an offline component, not a demonstrated double-tap-to-wake feature.
+Subsequent original-worker pause/gesture/firmware-resume hooks are implemented
+in [INPUT-SLEEP.md](INPUT-SLEEP.md). Actual display/system PM provider remains
+absent/default-off. This is not a demonstrated double-tap-to-wake feature.
 The full five-part Goal and real sleep/wake acceptance remain incomplete.
 
 ## Exact board route
@@ -71,7 +72,8 @@ power-ready callback may resume, after real IRQ drain, latched-event retirement,
 original firmware/transport/PID/HID restore and input release. Failed requests
 or unavailable power never fabricate normal input readiness.
 
-Mainline still needs to connect pause/resume to its latest actual touch worker,
+INPUT-SLEEP.md now connects reversible pause/resume to the frozen original worker.
+Mainline still needs to port to its latest actual touch worker,
 nonterminal finger/pen release, actual display/rail/firmware callbacks and system
 wake request. Existing terminal `elden_pen_native_stop()`/touch teardown cannot
 serve as a reversible pause. The frozen GOP PM callback only schedules logical
