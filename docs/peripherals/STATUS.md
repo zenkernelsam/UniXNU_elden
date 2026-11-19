@@ -71,6 +71,13 @@ Mainline prompt: [MAINLINE-HANDOFF-PROMPT.md](MAINLINE-HANDOFF-PROMPT.md).
 
 ## Current status
 
+Subsequent [SENSOR-RPC.md](SENSOR-RPC.md) adds source-derived FastRPC listener,
+read-only registry/pack service and actual owner/provider binding.14 scenarios/
+15625checks plus original pack tests, three scalarobjects and fullkernel9f694592/
+native8fc04ebd pass; retained SSC/input-sleep/pen/Actuator/RTC/camera/Apple30 audits
+pass. Real GLINK/ownedDMA/immutable same-device registry providers remain absent,
+so this does not qualify sensorPD/samples/UI rotation. Default remains off.
+
 Latest SSC native milestone on2026-11-19 is [MOTION-SSC.md](MOTION-SSC.md):
 service400 discovery/strict attributes/per-sensor demand and a real native
 worker connect to the existing OS17 HID.26manager18372 +6native614 checks,

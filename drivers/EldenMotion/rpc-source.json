@@ -1,0 +1,50 @@
+{
+  "repository": "https://github.com/rui12366B/UniXNU-Pagani-Drivers",
+  "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+  "files": [
+    {
+      "file": "PaganiSensorsRpc.c",
+      "path": "drivers/PaganiSensors/SensorsRpc.c",
+      "bytes": 39049,
+      "sha256": "ea11dc684c4196c860a07f0d44a2af9d7f832682cc01d43e0ea4106ce95e1def"
+    },
+    {
+      "file": "PaganiSensorsRpc.h",
+      "path": "drivers/PaganiSensors/SensorsRpc.h",
+      "bytes": 9366,
+      "sha256": "b8bf81c2a885182e9e73c815d35f00d4913bcd198dbd5720b04edaac79d5274d"
+    },
+    {
+      "file": "PaganiSensorsPack.c",
+      "path": "drivers/PaganiSensors/SensorsPack.c",
+      "bytes": 6172,
+      "sha256": "92359204eafd700e1110ccd6864bbecb389f153fa59b222e37ba29e278ab7964"
+    },
+    {
+      "file": "PaganiSensorsPack.h",
+      "path": "drivers/PaganiSensors/SensorsPack.h",
+      "bytes": 3076,
+      "sha256": "5bb9342cadb2b2873573ab9b15e34534f2a9e8fa8ee95d7a7f0cd4e949583553"
+    },
+    {
+      "file": "PaganiSensorsText.h",
+      "path": "drivers/PaganiSensors/SensorsText.h",
+      "bytes": 2716,
+      "sha256": "f1ded8c9d12adb15f7368e95abfd9b3fcae94c0f1d282ba1229e139869c68ce4"
+    },
+    {
+      "file": "PaganiTest-rpc.c",
+      "path": "drivers/PaganiSensors/Test/rpc.c",
+      "bytes": 48657,
+      "sha256": "dd1a71762a127d344fbc65248cc011f538ef9feff812c7a791175f73e1381edc"
+    },
+    {
+      "file": "PaganiTest-check.h",
+      "path": "drivers/PaganiSensors/Test/check.h",
+      "bytes": 1690,
+      "sha256": "c38141454396cdd38796b45bf66dd2689c907014b3ac3a7b481a6ec2edff404d"
+    }
+  ],
+  "scope": "FastRPC scalar metadata/reverse file-service protocol and read-only pack only; no donor native board/MMIO or memory defaults",
+  "hardware": false
+}

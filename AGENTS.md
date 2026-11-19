@@ -1,5 +1,23 @@
 # UniXNU elden — authoritative source repository
 
+SensorRPC20261119: source-derived FastRPC/listener/readonlyregistry+actual
+providerbinding fullkernel9f694592/native8fc04ebd overSSC1640a2d3. Source7/native6/
+kernel4;14actualscenarios15625checks+originalpacktests ASan/UBSan,transport/DMA/
+clock/filesmodeled.3scalarobjects0warnings/noinit;actualcalls/Apple30/pen+motion
+20710/Actuator168186/directIOBuffer/RTC/input-sleep/camera/SSC/recoverypass.
+Exact6f97250e fastrpc63705B/45395295 confirmsPD2/40B/12B/ctxshift4/maskff0/
+ADSPDMA32/sessiontag32fromDTregNOTappsSMMUhardwareCB. No donorRAM/bank/default
+librarypath/emptyregistry success. ActualimmutableOEMpack/hash/build/device/
+calibrationandownedGLINK/IOVA/cache/fenceprovidersrequired,notinstalled.
+Nonreusedcookies/coherentreplyledger;timeout/linkchange/STOPwakecloseadmission,
+retainedarenaheapmapscontexttoreset;nofakeunmap/environmentwrite;boundedpaths/
+packextents. Source-listener not automaticallystarted;nosensorPD/samples/UI
+rotationorhardwareproof/globalflagsfalse. Read SENSOR-RPC.md/rpc-validation.
+No tablet/automerge/subagents;fullfivepartGoalactive. NEXTactualsharednative
+GLINK/DMA/immutablefileprovider+PDreplies/SSCsamples+J317SPU/UI;wakepanelPM,
+cameraactualpower/frames,hapticssystemcalibration,RTCpersistence stillremain.
+Preserve mainlineWi-Fi/PCIe/WCN/QRTR/GPU/peerwork/floor/recovery gates.
+
 MotionSSC20261119: real400client/per-sensor connection/strictattributes +native
 worker/providerboundary/actualOS17HIDdemand/time/delivery/stop full-linked over
 latestinput-sleep. Source6/native8/kernel6 1640a2d3/native1041abbe;26actualmanager
