@@ -71,6 +71,16 @@ Mainline prompt: [MAINLINE-HANDOFF-PROMPT.md](MAINLINE-HANDOFF-PROMPT.md).
 
 ## Current status
 
+Latest [ADSP-CHANNELS.md](ADSP-CHANNELS.md) extends the one original ADSP registry
+and GLINK worker with epoch/status/observed close, then connects a concrete
+FastRPC endpoint to memory/cache/RPC.17/1554 registry,9/143 endpoint and final
+source6 combined18/1823 checks plus14 actual archive/call-audit checks pass.
+Three scalarobjects (one endpoint signedness warning), fullkernel e05271d2/
+native b3220203 and all inherited Apple/peripheral/recovery audits pass. Only
+two actual type-layout archive consumers are replaced; old ADSP firmware/power
+paths remain. Real owner retirement/SMMU/capture and SSC shared QRTR clients
+remain absent; no automatic startup, tablet/sample/UI or whole-Goal acceptance.
+
 Latest [SENSOR-MEMORY.md](SENSOR-MEMORY.md) adds actual native IOKit highRAM→low
 IOVA/4Ktable graph plus live memory→cache→RPC binding.18allocator75240 and19stack
 9989checks,7scalarobjects and fullkernel10a5d84d/nativea44297b9 pass. Direct

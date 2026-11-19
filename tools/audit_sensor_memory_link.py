@@ -1,6 +1,7 @@
 """Audit actual sensor memory direct IOKit ABI and full table/RPC call edges."""
 from pathlib import Path
 import argparse,hashlib,json,re,struct,subprocess,sys
+from peripheral_archive_audit import retained_archive
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def signed(v,b):return v-(1<<b) if v&(1<<(b-1)) else v
 def main():
@@ -57,13 +58,14 @@ def main():
     for n in ('__ZN24IOBufferMemoryDescriptor14getBytesNoCopyEv','__ZN25IOGeneralMemoryDescriptor7prepareEj','__ZN25IOGeneralMemoryDescriptor18getPhysicalSegmentEyPyj','__ZN11IOMemoryMap17getVirtualAddressEv'):
         if n not in built['objects']['NativeMemory.o']['imports']:raise ValueError('Direct original ABI import absent')
     before=json.loads((a.parent/'link-command.json').read_text());after=json.loads((a.kernel_build/'link-command.json').read_text())
+    retained={}
     for v in before:
-        if v.startswith('-Wl,-force_load,') and after.count(v)!=1:raise ValueError('Existing owner/archive lost')
+        if v.startswith('-Wl,-force_load,'):retained[Path(v.split(',',2)[2]).name]=retained_archive(v,after,r)
     metadata=json.loads((a.kernel_build/'kernel.json').read_text());flags={n:metadata.get(n) for n in ('abi_qualified','loadable','runtime_qualified','instruction_relocation_complete')}
     if any(v is not False for v in flags.values()):raise ValueError('Global experimental flags changed')
     result={'native_memory_table_RPC_component_link_passed':True,'kernel_sha256':r['kernel_sha256'],'native_sha256':r['native_sha256'],
         'actual_direct_original_Iokit_and_table_RPC_calls':edges,'original_prepare_slot':27,'captured_bytes_slot43_rejected':True,
-        'PAR_read_write_restore_cache_instructions_present':True,'original_archive_inputs_and_init_count_retained':True,'no_new_startup':True,
+        'PAR_read_write_restore_cache_instructions_present':True,'original_archive_inputs_and_init_count_retained':True,'actual_retained_archive_checks':retained,'no_new_startup':True,
         'shared_actual_SMMU_GLINK_owner_or_Y700_capture':False,'hardware':False,'global_flags':flags}
     a.output.write_text(json.dumps(result,indent=2)+'\n');print('PASS: actual original IOKit/PAR/cache/4K table→pack→RPC paths, unchanged owners/initializers; no new startup')
 if __name__=='__main__':main()

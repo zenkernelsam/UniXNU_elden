@@ -2,6 +2,7 @@
 from pathlib import Path
 import argparse,hashlib,json,re,struct,subprocess,sys
 from replay_xnu_objects import sections
+from peripheral_archive_audit import retained_archive
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def signed(v,b):return v-(1<<b) if v&(1<<(b-1)) else v
 def main():
@@ -59,16 +60,17 @@ def main():
     changes=[n for n,row in report['ufs_members'].items() if row['before']!=row['after']]
     if changes!=['ShengUfs.o']:raise ValueError('Other UFS owner changed')
     before_cmd=json.loads((a.parent/'link-command.json').read_text());after_cmd=json.loads((a.kernel_build/'link-command.json').read_text())
+    retained={}
     for v in before_cmd:
         if v.startswith('-Wl,-force_load,') and not v.endswith('/libShengUfs.a'):
-            if after_cmd.count(v)!=1:raise ValueError('Existing peripheral archive lost or duplicated')
+            retained[Path(v.split(',',2)[2]).name]=retained_archive(v,after_cmd,report)
     for name in ('NativeSsc.o','Ssc.o','SscCodec.o','SscWire.o','SscPb.o'):
         if any(n.endswith('/__mod_init_func') for n in sections(a.ssc_build/name)):raise ValueError('Unexpected automatic SSC initializer')
     metadata=json.loads((a.kernel_build/'kernel.json').read_text());flags={n:metadata.get(n) for n in ('abi_qualified','loadable','runtime_qualified','instruction_relocation_complete')}
     if any(v is not False for v in flags.values()):raise ValueError('Global experimental flags changed')
     result={'ssc_component_link_passed':True,'kernel_sha256':report['kernel_sha256'],'native_sha256':report['native_sha256'],
             'actual_calls':edges,'recovery_order_calls':[hex(n) for n in sequence],'no_SSC_auto_start':True,'init_count_preserved':len(initial),
-            'unchanged_peripheral_archives_retained':True,'only_changed_UFS_member':changes,'legacy_flags':flags,
+            'unchanged_peripheral_archives_retained':all(r['unchanged_path'] for r in retained.values()),'actual_retained_archive_checks':retained,'only_changed_UFS_member':changes,'legacy_flags':flags,
             'shared_QRTR_board_power_mount_clock_provider':False,'sensor_PD_registry_file_service':False,'real_sensor_samples_or_UI_rotation':False,'hardware':False}
     a.output.write_text(json.dumps(result,indent=2)+'\n');print('PASS: actual SSC worker/strict parser/HID calls, no auto-start, motion→haptics→RTC→UFS recovery and existing archives retained')
 if __name__=='__main__':main()

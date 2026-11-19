@@ -1,5 +1,23 @@
 # UniXNU elden — authoritative source repository
 
+AdspChannels20261120: sole original registry/GLINK epoch/status/actual localACK+
+peerCLOSE/queuecallback fence and concrete FastRPC endpoint fully linked over
+sensor-memory. source6/native10,endpoint-source3/native4,finalstacksource6;
+17scenarios1554+9/143+18/1823 ASan/UBSan,14actualar/functionboundary checks.
+SMEM/locks/doorbell/OS/physicalowner modeled. Three scalarobjects,noinit/SIMD;
+endpoint1signednesswarning retained,other2zero. Fullkernel e05271d2/native
+b3220203; onlyAdspProbe.o/QcomGlink.o layoutconsumers changed,allothermembers/
+Apple30/penmotion20710/Actuator168186/RTC/camera/sleep/SSC/memorypackRPC/recovery
+audits pass/globalflagsfalse. FixedPagani c888efd3 protocolfromSheng08cde20e;
+no board/FW/powerdefault import,originalADSPbringupunchanged. PeerCLOSE!=local
+ACK; retainedclosedregistrations/noautoreopen. GLINKfenceTHENactualremote
+retirementTHENSMMUwithdraw; allrefsretainreset,physicalDSPDMA notproved.
+No actualretirement/SMMU/captureprovider orautoendpointstart/tablet/samples/UI;
+mainlineownsQRTR/Wifi/hardware. Read ADSP-CHANNELS.md/adsp-validation.json.
+NEXT realsharedQRTRclient+Gen4PD/mounttime/samples/J317SPU; cameraactualpower/
+frames,wakepanelPM,hapticssystemcal/RTCpersistence remain. FivepartGoalactive;
+noautomerge/subagents,preservepeer/GPU/floor/recovery.
+
 SensorMemory20261120: actualIOKit highPA→lowIOVA/4Ktables+memory→sealedcache→RPC
 fullkernel10a5d84d/nativea44297b9. Source4/native4/kernel1;18allocator75240/
 19stack9989checks ASan/UBSan,IOKit/cache/PAR/MMIO/GLINK/VFS/clockidentitymodeled.

@@ -1,0 +1,289 @@
+{
+  "schema": 1,
+  "branch": "offline-peripheral-fixes",
+  "parent_commit": "b0ffda1edd2eca2d86d0235379d8fa78840ff9e4",
+  "kernel_sha256": "e05271d2d252e61d147cebe5708590742886e8b8ad7d3ae753b0186219d4fc7e",
+  "native_sha256": "b3220203dec510c590a31dfbe68bafe2daa44629890226e807ac89d5aae6331f",
+  "parent_kernel_sha256": "10a5d84dbffae54ee1377b46591aba51793646211c2bf5f1cc3a6c5792addf76",
+  "source_files": {
+    "drivers/EldenMotion/AdspChannel.h": "e4da262a6b9272533cc7bffec48a2ab2f749c3e78adfb2db4018b18ed2a0e667",
+    "drivers/EldenMotion/AdspChannelSource.py": "b56c4e9c3230cb13fbe98bbaf490f9b34c44894b5e28f68b3a3573c7593d774b",
+    "drivers/EldenMotion/AdspEndpoint.cpp": "83475dcd3864c702b8b9f4d335f5e18bd276ceb6f2235747281788bbd912380b",
+    "drivers/EldenMotion/AdspEndpoint.h": "96a9ab6c0c71e34fad9688236b18f5807ef4ad5eb2f186bef77442441e206f45",
+    "drivers/EldenMotion/AdspEndpointMethods.inc": "1b9371db4a076442bb029dd15fb174bcb515dfa2ea5bff2fc80c23b2a9cd63a6",
+    "drivers/EldenMotion/AdspPublicMethods.inc": "8a57da83ed8652086ab4c9ab0a3bc0835dddcd6fb2c930e3288e6b72fbdb5539",
+    "drivers/EldenMotion/AdspRegistryMethods.inc": "e7f5d2d2438517c5e912cd37b84a9f0291d1fd7096554ff81bb7b44c700c1195",
+    "drivers/EldenMotion/GlinkClosePublic.inc": "1383852ff0d50a2910d21b03c77dddaac8921235d46d27a0a93ca0dcb3d458b7",
+    "drivers/EldenMotion/TestAdspChannels.cpp": "9363b32b0e611a3cd24336ba9c1e6eee705539c226e2695764a82dcdd1162d41",
+    "drivers/EldenMotion/TestAdspEndpoint.cpp": "4ca21e082e57fa7df51881fffc94c81492c9d93a2a211a5404db4ebd4875c7a7",
+    "drivers/EldenMotion/glink-source.json": "9d2c44ae772d939598cc32b0585c6be928460576d2789129fbc2883fad0ce55b",
+    "drivers/EldenMotion/upstream/PaganiQcomGlink.c": "4e7536e915982a1ab5f431b8b57a14f0c7de4c58b23e18a04f8d2cbb0f093365",
+    "drivers/EldenMotion/upstream/PaganiQcomGlink.h": "e38f079b9095820e82beb7f4b141112f82ae51ec8f6b8a49b9fa1e149e69064b",
+    "tools/audit_adsp_endpoint_link.py": "41c09fdf7fbef439e2ada17b1b5f6c6db5c4f8f474926c5a5da13ef83032aac7",
+    "tools/audit_motion_ssc_link.py": "2f9c2e032944102fe53d0806590d6d7b50ce55e4daf207fcb1941e7cee447e0d",
+    "tools/audit_sensor_memory_link.py": "3e03d5b1022344b38b49f33523581d2304676d1f5dce35be114a67ebe4703cbf",
+    "tools/audit_sensor_pack_link.py": "06dd83d4af8e77fd0127dcc1384b0c94c5f5a75863b5ecb5dbbd55ea71c2dc30",
+    "tools/audit_sensor_rpc_link.py": "f54fd2e65acc8e62e467dd7d1af82005d8f6e941c90b08506561fddaec6a9e59",
+    "tools/link_adsp_endpoint.py": "af860f488acec9d06e7febd1cd73de75704a9e38dc80d77efd71fbb3572a2267",
+    "tools/peripheral_archive_audit.py": "6a94f9ad6b5fafa361aed1fc814d3779de8f642ec2b6e3870cbeab538d32406c",
+    "tools/peripheral_startup_audit.py": "88b5eed4296368435f7fdfceef289bd9083568e0168d47992e95c8b84f55ae70",
+    "tools/prepare_adsp_channels.py": "a06c98fc85936f7277ea43c7ccb367b7c5dbf77762e340f9e0d9434b0736d542",
+    "tools/prepare_adsp_endpoint.py": "7a23040ae7a33691ac0289000c2cffa03775233967a1a457a80e95c36b52556b",
+    "tools/test_adsp_channels.py": "3f1e6ad4e747c777df00e78ecd4c1e285e1da065f3a46e543df430906aaedd50",
+    "tools/test_adsp_endpoint.py": "5cd815c54afb61703fb5b9d006e80805c326153ead1919386ee042af00666501",
+    "tools/test_peripheral_link_audit.py": "8b09e3a2ffcc6b0234d1c4c1d008cd36df48909de89d00a40592d03c57e19a2b"
+  },
+  "fixed_elden_inputs": {
+    "drivers/EldenPmicGlink/AdspProbe.cpp": "b7982488455d6c2528a0a9d9db88a99cc4327c6136f8f945641e46bb4638912e",
+    "drivers/EldenPmicGlink/ShengAdsp.h": "cd8ace83a55e99503c24691b6ddef294d9dbf2d416e18f85a51e8f4a30440dfe",
+    "drivers/EldenPmicGlink/QcomGlink.h": "7e617c764e11ba7ca08e9976e39c35710515a16613ea66f3e845da538ad2df07",
+    "profiles/v91/native-build/extra/3d7e18c2cae2/QcomGlink.c": "3d7e18c2cae2c6136b1b7bf43f8d69e49c99ed8e60d3ee7cd98c37891df9b1ba"
+  },
+  "qualified_GLlNK_donor": {
+    "repository": "https://github.com/rui12366B/UniXNU-Pagani-Drivers",
+    "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+    "scope": "board-free GLINK protocol only, original host qualification; no firmware/memory/power defaults",
+    "hardware": false,
+    "files": [
+      {
+        "path": "drivers/PaganiAdsp/QcomGlink.c",
+        "file": "PaganiQcomGlink.c",
+        "sha256": "4e7536e915982a1ab5f431b8b57a14f0c7de4c58b23e18a04f8d2cbb0f093365",
+        "bytes": 22380
+      },
+      {
+        "path": "drivers/PaganiAdsp/QcomGlink.h",
+        "file": "PaganiQcomGlink.h",
+        "sha256": "e38f079b9095820e82beb7f4b141112f82ae51ec8f6b8a49b9fa1e149e69064b",
+        "bytes": 6414
+      }
+    ]
+  },
+  "native_objects": {
+    "AdspProbe.o": {
+      "sha256": "a1a9bc3707155722af50774c52e4ac29dbb0fdbc47704a575f52980e7295302b",
+      "imports": [
+        "_IODelay",
+        "_IOFreeData",
+        "_IOLockAlloc",
+        "_IOMalloc_internal",
+        "_IOSleep",
+        "_KHEAP_DATA_BUFFERS",
+        "_PE_parse_boot_argn",
+        "__ZN14IODeviceMemory9withRangeEyy",
+        "__ZN24IOBufferMemoryDescriptor22inTaskWithPhysicalMaskEP4taskjyy",
+        "___stack_chk_fail",
+        "___stack_chk_guard",
+        "___ubsan_handle_add_overflow_minimal",
+        "___ubsan_handle_sub_overflow_minimal",
+        "_absolutetime_to_nanoseconds",
+        "_armcpu_spi_attach",
+        "_assert_wait_timeout",
+        "_bzero",
+        "_clear_wait",
+        "_clock_interval_to_deadline",
+        "_current_thread",
+        "_elden_glink_close_request",
+        "_elden_glink_close_status",
+        "_elden_init_exec_accepted",
+        "_elden_recovery_armed",
+        "_kernel_task",
+        "_kernel_thread_start",
+        "_lck_mtx_lock",
+        "_lck_mtx_unlock",
+        "_mach_absolute_time",
+        "_memcpy",
+        "_memmove",
+        "_native_owner_data_status",
+        "_qcom_cmd_db_find",
+        "_qcom_glink_channel",
+        "_qcom_glink_init",
+        "_qcom_glink_poll",
+        "_qcom_glink_send",
+        "_qcom_glink_set_rx",
+        "_qcom_glink_stop",
+        "_qcom_mdt_metadata",
+        "_qcom_mdt_metadata_size",
+        "_qcom_mdt_parse",
+        "_qcom_mdt_place",
+        "_qcom_mdt_span",
+        "_qcom_qmp_abandon",
+        "_qcom_qmp_init",
+        "_qcom_qmp_send",
+        "_qcom_qmp_step",
+        "_qcom_rpmh_active_request",
+        "_qcom_rpmh_finish",
+        "_qcom_rpmh_level_index",
+        "_qcom_rsc_layout",
+        "_qcom_smem_alloc",
+        "_qcom_smem_find",
+        "_qcom_smem_partition",
+        "_qcom_smp2p_add_entry",
+        "_qcom_smp2p_check_in",
+        "_qcom_smp2p_find_in",
+        "_qcom_smp2p_in_value",
+        "_qcom_smp2p_init_out",
+        "_qcom_smp2p_service",
+        "_sheng_fw_close",
+        "_sheng_fw_open",
+        "_sheng_fw_read",
+        "_sheng_qrtr_start",
+        "_snprintf",
+        "_strcmp",
+        "_strlcpy",
+        "_strncmp",
+        "_thread_block",
+        "_thread_deallocate",
+        "_thread_set_thread_name",
+        "_thread_terminate",
+        "_thread_wakeup_prim"
+      ]
+    },
+    "QcomGlink.o": {
+      "sha256": "1d21e9e9f1dc4a0783330aee5bb220f293c39db0e9bd3dfc84794ecdae4e0c02",
+      "imports": []
+    },
+    "AdspEndpoint.o": {
+      "sha256": "bfa5e35ba7c9248d0b362d2011dd702b68e3ea67c05c0650f7501af89dd0424e",
+      "imports": [
+        "_IOMalloc_internal",
+        "_IOSimpleLockAlloc",
+        "_KHEAP_DATA_BUFFERS",
+        "_absolutetime_to_nanoseconds",
+        "_assert_wait_timeout",
+        "_clear_wait",
+        "_current_thread",
+        "_elden_adsp_channel_close",
+        "_elden_adsp_channel_epoch",
+        "_elden_adsp_channel_status",
+        "_elden_sensor_memory_binding_channel",
+        "_elden_sensor_memory_binding_receive",
+        "_lck_spin_lock",
+        "_lck_spin_unlock",
+        "_mach_absolute_time",
+        "_ml_at_interrupt_context",
+        "_sheng_adsp_send_epoch",
+        "_thread_block",
+        "_thread_wakeup_prim"
+      ]
+    }
+  },
+  "registry_scenarios": 17,
+  "registry_checks": 1554,
+  "endpoint_scenarios": 9,
+  "endpoint_checks": 143,
+  "final_source6_combined_scenarios": 18,
+  "final_source6_combined_checks": 1823,
+  "actual_archive_and_function_audit_checks": 14,
+  "final_source6_stack_record_sha256": "3ef92ee70936905a060ee6793b4a1311f63939d05aefaea5595d0fdf363a9f1f",
+  "source5_to_source6_changed_files": [
+    "AdspProbe.cpp"
+  ],
+  "native_channel_warnings": 0,
+  "native_endpoint_warnings": 1,
+  "native_endpoint_warning": "bounded uint32_t connected latch passed to int parameter; signedness",
+  "no_SIMD_or_automatic_initializers": true,
+  "SMEM_locks_scheduling_doorbells_OS_physical_owner_peers_modeled": true,
+  "full_component_link": true,
+  "original_Apple_regions": 30,
+  "only_two_actual_layout_consumers_replaced": true,
+  "changed_transport_archives": {
+    "libEldenAdspRuntime.a": {
+      "AdspProbe.o": {
+        "before": "052687c04cc83c22548188d21df6abbebb1d0cab044b9d727bd203672cbdea86",
+        "after": "a1a9bc3707155722af50774c52e4ac29dbb0fdbc47704a575f52980e7295302b"
+      },
+      "AdspFirmware.o": {
+        "before": "077c2eddbcfd2a91ded75dae955c83b5ed346e672bbc15f5e573dd262e28d91e",
+        "after": "077c2eddbcfd2a91ded75dae955c83b5ed346e672bbc15f5e573dd262e28d91e"
+      },
+      "FatVolume.o": {
+        "before": "2d58ec26f6ace0f801c098b69a575af7b0cafd2096b41a2a7388d28ecf98b4a3",
+        "after": "2d58ec26f6ace0f801c098b69a575af7b0cafd2096b41a2a7388d28ecf98b4a3"
+      },
+      "ShengQrtr.o": {
+        "before": "c7080317976db8118b374f5bd8d633dad4c9e2e6c54851c8aabc96de999f3b5e",
+        "after": "c7080317976db8118b374f5bd8d633dad4c9e2e6c54851c8aabc96de999f3b5e"
+      },
+      "QcomQrtr.o": {
+        "before": "093d5af3f30031e6c7302beb54c1125690cd1f793755ce5b42160a9517ed2f37",
+        "after": "093d5af3f30031e6c7302beb54c1125690cd1f793755ce5b42160a9517ed2f37"
+      }
+    },
+    "libEldenPmicTransport.a": {
+      "QcomMdt.o": {
+        "before": "8f3a20364adc1d9812098f05e87792a929998b9853910d46612f1e7bb99d02bd",
+        "after": "8f3a20364adc1d9812098f05e87792a929998b9853910d46612f1e7bb99d02bd"
+      },
+      "QcomSmem.o": {
+        "before": "b9871db67b4a29e7346f96a88c160d60416302496bb1e299ee2a68753872693c",
+        "after": "b9871db67b4a29e7346f96a88c160d60416302496bb1e299ee2a68753872693c"
+      },
+      "QcomSmp2p.o": {
+        "before": "b4912111d3b95e72685c5fe2a0120590e24183972d93888ec4b0d57261ea92e6",
+        "after": "b4912111d3b95e72685c5fe2a0120590e24183972d93888ec4b0d57261ea92e6"
+      },
+      "QcomGlink.o": {
+        "before": "9d4110cccb41d468b8d2af5f8fb8381c250fbd459f1109a5d69b451ad1638677",
+        "after": "1d21e9e9f1dc4a0783330aee5bb220f293c39db0e9bd3dfc84794ecdae4e0c02"
+      },
+      "QcomQmp.o": {
+        "before": "d7b84a0cbc1c886d6709593e7c70ff031c7bc19cf7c31d6723633d9e9790236e",
+        "after": "d7b84a0cbc1c886d6709593e7c70ff031c7bc19cf7c31d6723633d9e9790236e"
+      },
+      "QcomRpmh.o": {
+        "before": "266bd2cf8b992545fa88e742d4ac37ce3cc4d8c509cde9adeda316fa963f2de5",
+        "after": "266bd2cf8b992545fa88e742d4ac37ce3cc4d8c509cde9adeda316fa963f2de5"
+      }
+    }
+  },
+  "original_ADSP_firmware_power_IRQ_paths_retained": true,
+  "direct_original_IOBuffer_peripheral_and_recovery_audits_pass": true,
+  "global_flags": {
+    "abi_qualified": false,
+    "loadable": false,
+    "runtime_qualified": false,
+    "instruction_relocation_complete": false
+  },
+  "source_record_sha256": {
+    "source6": "b2f670a5dca38e0e587d50d90f6b25bb5e299eddb6b9d809882ac63fa7d4adc9",
+    "endpoint-source3": "8e395ec3b6cfb8ce9b3a1fd401bf3664bb5b54929dd5d51ca460033ab0c9deb3"
+  },
+  "report_sha256": {
+    "endpoint-native4\\result.json": "5e4e1e7886d60f05bf41717169a5cea2f030f75e1cdbc6898fed3cc2f55ebbc6",
+    "endpoint-source3\\source.json": "8e395ec3b6cfb8ce9b3a1fd401bf3664bb5b54929dd5d51ca460033ab0c9deb3",
+    "kernel2\\adsp-audit.json": "ef03aa97058d1aa0f6575aad2b09115602e84f46a2a8912c47085c1f0507a318",
+    "kernel2\\camera-audit.json": "ebf63866ee71136adc8492720d1acf66e131922a184404f82d6d77f6616b679c",
+    "kernel2\\haptics-abi.json": "9c538a01fdb14d65d96f25952b3472eb3dabd56537492459d3c576cb491ac2bd",
+    "kernel2\\memory-audit.json": "22d853d07585f1ca77062c099119c8a72b366ce2aef7715a66a37aec5edbdfa1",
+    "kernel2\\motion-audit.json": "ed83672181b363c4d09099763f9390e57e13af0a556245986d9451041c01319d",
+    "kernel2\\pack-audit.json": "3ca681c74cedafce973cac68e2788d5b4a63be862195b838d907ad3fbe71d77c",
+    "kernel2\\pen-abi.json": "a45cc0b243121f28e8be816f4573ce1b23085a289f20be2d90368b4df33b643c",
+    "kernel2\\result.json": "335ccdc01fe5879899f6d72ea8ac028a4fa284acbc4ac79328a44763169f0e12",
+    "kernel2\\rpc-audit.json": "54deef5d79a26381cc1291bba9fefd9010ecd065a7600faed6f967276a7459e6",
+    "kernel2\\rtc-abi.json": "baabc0d0352b37e45f246ae51e354a563c3b396874d5e5d41ddeb16d0ea66b97",
+    "kernel2\\sleep-audit.json": "5b9809b38445df8c3fe679269a11ad4f25abc3d9fc148268a5048b7374c11721",
+    "kernel2\\ssc-audit.json": "42d0239de79d7b268c39186794625c40a92647f93fc312b77e1c066188e17a78",
+    "native10\\result.json": "8d239b130d0e4f1b1c5eccdc9a740483a7fe15f1c251cdad592f58501e2c8a15",
+    "source6\\source.json": "b2f670a5dca38e0e587d50d90f6b25bb5e299eddb6b9d809882ac63fa7d4adc9"
+  },
+  "actual_remote_retirement_shared_SMMU_or_Y700_capture_installed": false,
+  "shared_SSC_QRTR_client_installed": false,
+  "sensor_PD_samples_UI_rotation": false,
+  "no_sensor_endpoint_auto_start": true,
+  "hardware": false,
+  "boot_packaged": false,
+  "whole_goal_complete": false,
+  "jobs_terminal": true,
+  "archive": {
+    "file": "adsp-channels-offline.tar.gz",
+    "bytes": 20492186,
+    "sha256": "322c94206b6ad1f55e011464eee1f5f917be2cb60860a739ce15d4222a3ee13f",
+    "members": 218,
+    "members_verified": true,
+    "manifest_sha256": "db01553fb4b16378ce44f765107acf0a6d05a7619431f0c8f43568b5f5460028"
+  },
+  "archive_members_verified_Windows": 218,
+  "required_parent_delivery": "sensor-memory-20261119/e413af460758237b0f81b8e85ce2a2c1ea51f6342e1791432b6a0dff477df61e",
+  "workbench_receipt": "lab/records/adsp-channels-20261120/closure.json"
+}

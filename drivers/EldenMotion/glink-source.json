@@ -1,0 +1,20 @@
+{
+  "repository": "https://github.com/rui12366B/UniXNU-Pagani-Drivers",
+  "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+  "scope": "board-free GLINK protocol only, original host qualification; no firmware/memory/power defaults",
+  "hardware": false,
+  "files": [
+    {
+      "path": "drivers/PaganiAdsp/QcomGlink.c",
+      "file": "PaganiQcomGlink.c",
+      "sha256": "4e7536e915982a1ab5f431b8b57a14f0c7de4c58b23e18a04f8d2cbb0f093365",
+      "bytes": 22380
+    },
+    {
+      "path": "drivers/PaganiAdsp/QcomGlink.h",
+      "file": "PaganiQcomGlink.h",
+      "sha256": "e38f079b9095820e82beb7f4b141112f82ae51ec8f6b8a49b9fa1e149e69064b",
+      "bytes": 6414
+    }
+  ]
+}
