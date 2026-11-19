@@ -20,4 +20,6 @@ HAPTICS-BROKER.md 为后续最新衔接：原生v2客户端增加effect-id请求
 
 板级实现优先 ArmadaOS-Freedom 的 TB322FC/SM8750 文档、固定内核和适用补丁，其次 Linux mainline；iPadOS 接口参考成熟 UniXNU 与同版 OS17 实现。不要搬用三代/五代的寄存器或固件。真机前重新核准入、候选完整摘要、原有 floor1738713600@0/父链3 和自动回程。
 
+相机后续 CAMERA-CCI.md：精确6f97250e i2c-qcom-cci，CCI0/rear0xac7b000/INTID458与CCI1/front0xac7c000/459，两者internalmaster0；原queue0写/queue1读、v2 37.5MHz/400k时序已按Git核准，保留原read/write bodies。高字节int<<24的原版UBSan问题改为u32，命令bytes不变。实际native map/ownIRQmask/drain、sensorbinding把完整原sensorcore连到真实CCI，135CCI133603/11native160086checks通过；fullkernel5c952842/native5098cf84，Apple30/Actuator/pen/motion/RTC/recovery复核通过。没有自动启动、物理power/CAMCC/MCLK/pin或CSI/VFE/DMA/出图/iOSservice；ID38ee/08a8仍是source预期。后续主线接本机共享power provider+receiver，评审后重建，别用Pagani猜的voltages/address或假CMIO图当Y700camera。私有19514675B/ed194fb4、79members，workbench lab/records/camera-cci-20261119；全五项Goal继续。
+
 马达尤其需要机械/电气校准：Apple 效果强度不是硬件 gain，不能直接回放或线性放大后认为安全。仅启用有已验证增益/boost/频率/时长/双路预算和停止保护的效果；未校准连续RTP保持关闭。传感器方向和相机数据必须来自真实硬件；前后摄像头设备树节点存在不等于 ISP/出图完成。把接入这些分支作为后续衔接事项，继续当前 Wi-Fi 进度，不提前宣称五项已完成。

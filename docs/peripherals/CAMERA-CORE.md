@@ -2,7 +2,8 @@
 
 The front/rear sensor control core now compiles for ARM64/iOS17. It reuses the
 actual fixed TB322FC Linux6f97250e S5KJNS and GC08A8 tables, power/control/stream
-bodies. CCI, CAMSS/CSI/VFE/SMMU/DMA and the OS17 camera service remain to connect;
+bodies. Subsequent exact native CCI/control binding is now implemented/full-linked
+in [CAMERA-CCI.md](CAMERA-CCI.md). Actual power, CAMSS/CSI/VFE/SMMU/DMA and OS17 camera service remain to connect;
 no actual sensor response or camera frame has been captured here.
 
 ## Source scope
@@ -51,7 +52,8 @@ python3 tools/test_camera_core.py --source /new/source \
   --llvm /path/to/llvm/bin --output /new/host-native
 ```
 
-Next actual CCI ownership/controller, exact-board rails/pins/clocks, CSI/CSIPHY/
+CCI ownership/controller and actual core/native binding now have offline code
+and full-link evidence in CAMERA-CCI.md. Next exact-board rails/pins/clocks, CSI/CSIPHY/
 VFE/DMA/IRQ and immutable SMMU route, real buffers/RAW10/debayer/controls, then
 OS17 camera delivery. The T970 OS17 camera extension is a possible interface
 reference; its SM8250 camera registers are not Gen4 wiring and its README does

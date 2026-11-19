@@ -89,7 +89,7 @@ component rows include earlier independently accepted milestones:
 | RTC | Real PMK8550 read/carry via observer-only SPMI/shared gate; volatile system-learned offset; upstream board-clock registration/get/set added to existing platform; five scalar objects/full link; actual initializer/callback/recovery audit | Persistent offset/epoch identity, wake source/alarm and sleep lifecycle; current-mainline/hardware retention |
 | Wake | Exact OEM gesture/protocol plus owned GPIO162/PDC109/INTID652 native IRQ and serialized flow;50route/12nativeIRQ scenarios/1233flow checks;four scalar objects/full link | Actual current touch worker/HID pause/resume, real display/system power callbacks and PDC/gesture hardware; no polling or fake power readiness |
 | Motion | Strict integer QMI/SSC sample core plus same-OS17 real accel/gyro IOHIDDevice/driver/constructor adapter;95core-HID/five actual native scenarios/152checks,two scalar objects and207/10/full link | Exact Gen4 transport/attributes/SUIDs/real samples and mount/time qualification; actual CoreMotion/UI and complete J317 orientation/SPU contract |
-| Cameras | Actual fixed Gen4 sensor325+438 register entries/eight power-control-stream bodies, owned CCI/power/receiver adapter;820 scenarios/882646 checks and scalar native | Actual CCI/CAMSS/CSI/VFE/DMA/SMMU/IRQ/buffers/OS17 service, sensor identities/calibration/frames |
+| Cameras | Exact Gen4 sensor/core plus CCIv2 read/write bodies, actual native CCI0/CCI1 mapping/owned IRQ drain and sensor binding;135CCI/11native scenarios with full sensor path,three new scalarobjects/full link | Actual shared power/CAMCC/GDSC/MCLK/pin provider, CAMSS/CSI/VFE/DMA/SMMU/IRQ/buffers/OS17 service, sensor identity/calibration/frames |
 
 Earlier haptics-native combined haptics+RTC+pen kernel SHA256 is
 `4889eee6af10d10d816f9f8e79704385d264a05c0590cc54cfccec080c21c72c`;
@@ -134,6 +134,10 @@ also has [MOTION-HID.md](MOTION-HID.md), full linked kernelc89d6000 and actual
 original constructor/dispatch/207-slot ABI checks. Neither has an actual Gen4
 native producer/pipeline or hardware acceptance yet. All current
 jobs are terminal; selected source inputs remain frozen after the68-root review.
+Camera now has [CAMERA-CCI.md](CAMERA-CCI.md): source-bound exact CCI controllers/
+queues/timing, signed-shift fix, native mapping/IRQ drain and core binding; full
+kernel5c952842 and existing component audits pass. Actual power/receiver/frames/
+OS17 camera and full five-part acceptance remain incomplete.
 Wake protocol is recorded in [WAKE-PROTOCOL.md](WAKE-PROTOCOL.md); its command
 delivery is separate from physical sleep. [WAKE-IRQ.md](WAKE-IRQ.md) now adds
 owned native IRQ/flow and full link63486fdf over Actuator. Actual original-worker

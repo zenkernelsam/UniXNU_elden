@@ -1,5 +1,23 @@
 # UniXNU elden — authoritative source repository
 
+CameraCCI20261119: exact6f97250e20396B/b5ed3d8e controller source/v2timing
+37.5MHz400k/writeQ0readQ1 qualified; controller0rear0xac7b000458+1front0xac7c000459,
+BOTHinternalmaster0. Actual originalread/write bodies onlyIOwrappers+threeu32
+packingpromotions; oldsignedhighestbyte shift UBSan reproduced/fixedbytesunchanged.
+Actual native map/ownArmCpuattachmaskGICRWP/inflightdrain, external realboardpower/
+clock/pin/wholeCCI provider mandatory. SensorBinding realcore→nativeCCI route,
+full originalfrontrear controlcomposed;135CCI133603/11native160086checks ASan/UBSan,
+OS/MMIO/power/receiver modeled. Source7/hostnative10/kernel1 5c952842/native5098cf84;
+three newscalarobjects0warnings/noinit+originalCameraCoreonce. Realcalls/tails/
+initcount/noautostart audit passes; inherited ADRP/data shifts bind exact strings/
+closestglobals, unchangedobjects. Apple30/Actuator168186directIOBuffer/pen/motion20710/
+RTC/recovery pass, globalflagsfalse. Source18files/archive79verified19514675B/
+ed194fb4. Read CAMERA-CCI.md/cci-validation.json. No actualsharedpower/CAMCC/GDSC/
+MCLK/pin/CSI/CSID/VFE/SMMU/DMA/frames orOS17camera;sourceIDs38ee/08a8 NOT observed.
+Alljobs terminal/no tablet/automerge/subagents. FivepartGoalactive; continue actual
+camera power/pipeline plus wakePM/realSSC/UI and calibrated systemhaptics. Mainline
+owns hardware/Wi-Fi/PCIe/WCN/QRTR, GPU separate; preserve floor/recovery/peerwork.
+
 MotionHID20261119: exact sameOS17c888efd3 accel/gyro60Bdescriptors +real native
 IOHIDDevice/eventdriver/originalconstructor dispatch now full-linked offline.
 95HID/fiveactualnative scenarios152checks ASan/UBSan (OS peers). Source5/native9/

@@ -1,0 +1,39 @@
+{
+  "repository": "https://github.com/h0cheung/tb322fc-linux-kernel",
+  "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+  "path": "drivers/i2c/busses/i2c-qcom-cci.c",
+  "bytes": 20396,
+  "sha256": "b5ed3d8e0f8e078793616aaa5208d895ebc7af3c8efa19cf0c625ab100d8ce08",
+  "board_compatible": [
+    "qcom,sm8750-cci",
+    "qcom,msm8996-cci"
+  ],
+  "config": "cci_v2_data",
+  "write_queue": 0,
+  "read_queue": 1,
+  "internal_master": 0,
+  "controllers": [
+    {
+      "controller": 0,
+      "physical": 180858880,
+      "bytes": 4096,
+      "irq_SPI": 426,
+      "irq_INTID": 458,
+      "slave": 86,
+      "sensor": "S5KJNS"
+    },
+    {
+      "controller": 1,
+      "physical": 180862976,
+      "bytes": 4096,
+      "irq_SPI": 427,
+      "irq_INTID": 459,
+      "slave": 49,
+      "sensor": "GC08A8"
+    }
+  ],
+  "clock_hz": 37500000,
+  "bus_hz": 400000,
+  "full_controller_ownership_required": true,
+  "hardware": false
+}
