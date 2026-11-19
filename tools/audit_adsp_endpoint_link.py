@@ -40,14 +40,21 @@ def main():
         if not hits:raise ValueError('Actual shared-owner/endpoint edge absent: '+n)
         edges[n]={'target':hex(target),'calls_and_tails':hits}
     archive_changes={}
-    expected={'libEldenAdspRuntime.a':'AdspProbe.o','libEldenPmicTransport.a':'QcomGlink.o'}
-    for name,member in expected.items():
-        changed=[n for n,r in report['changed_transport_archives'][name].items() if r['before']!=r['after']]
-        if changed!=[member]:raise ValueError('Other original transport members changed')
+    qrtr=report.get('single_original_ADSP_IPCRTR_QRTR_owner') is True
+    expected={'libEldenAdspRuntime.a':{'AdspProbe.o','ShengQrtr.o','QcomQrtr.o'} if qrtr else {'AdspProbe.o'},'libEldenPmicTransport.a':{'QcomGlink.o'}}
+    declarations=report.get('cumulative_transport_archives') if qrtr else report['changed_transport_archives']
+    if not isinstance(declarations,dict):raise ValueError('Cumulative original transport proof absent')
+    for name,allowed in expected.items():
+        changed=[n for n,r in declarations[name].items() if r['before']!=r['after']]
+        if set(changed)!=allowed:raise ValueError('Other original transport members changed')
         archive_changes[name]=changed
     oldcommand=json.loads((a.parent/'link-command.json').read_text());command=json.loads((a.kernel_build/'link-command.json').read_text())
     for v in oldcommand:
         if v.startswith('-Wl,-force_load,') and not any(v.endswith('/'+name) for name in expected) and command.count(v)!=1:raise ValueError('Existing native peripheral archive lost')
+    from peripheral_archive_audit import retained_archive
+    actual_archive_checks={}
+    for v in oldcommand:
+        if v.startswith('-Wl,-force_load,'):actual_archive_checks[Path(v.split(',',2)[2]).name]=retained_archive(v,command,report)
     # The inherited ADSP authentication path uses actual OS17 IOBuffer prepare
     # slot27 and bytes slot41 (the separate prior Actuator slot43 was append).
     def u64(va):return struct.unpack_from('<Q',raw,backed_offset(im['segments'],va,8,len(raw)))[0]
@@ -61,5 +68,6 @@ def main():
             'actual_direct_call_edges':edges,'only_original_type_consumer_members_changed':archive_changes,'original_IOBuffer_slots':original_slots,
             'original_other_archive_inputs_and_init_count_retained':True,'no_sensor_endpoint_auto_start':True,
             'physical_DSP_DMA_retirement_or_capture_SMMU_provider':False,'hardware':False,'global_flags':flags}
+    result['actual_original_archive_member_checks']=actual_archive_checks
     a.output.write_text(json.dumps(result,indent=2)+'\n');print('PASS: actual original ADSP/GLINK close→sensor endpoint/RPC calls, two type consumers only, original IOBuffer ABI/other owners retained')
 if __name__=='__main__':main()

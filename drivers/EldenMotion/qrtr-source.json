@@ -1,0 +1,32 @@
+{
+  "repository": "https://github.com/rui12366B/UniXNU-Pagani-Drivers",
+  "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+  "scope": "QRTR protocol/watch/frame/client pattern only; existing Elden locator/board/ADSP power retained",
+  "hardware": false,
+  "files": [
+    {
+      "path": "drivers/PaganiAdsp/QcomQrtr.c",
+      "file": "PaganiQcomQrtr.c",
+      "bytes": 14342,
+      "sha256": "506e3361d0e7b13b448eeb9024ac375684562da384a4ede8761898d55be7ef03"
+    },
+    {
+      "path": "drivers/PaganiAdsp/QcomQrtr.h",
+      "file": "PaganiQcomQrtr.h",
+      "bytes": 7735,
+      "sha256": "e832ebcad6efc91f3e6bcc04d11bf6041aeec5f0879440e020c61bfc1a524fba"
+    },
+    {
+      "path": "drivers/PaganiAdsp/AdspQrtr.c",
+      "file": "PaganiAdspQrtr.c",
+      "bytes": 23720,
+      "sha256": "8eb5fa49d3051d3f6727c6d56d9b535d0703eb0bcb499efb83ec643abd4695b9"
+    },
+    {
+      "path": "drivers/PaganiAdsp/Test/qrtr.c",
+      "file": "PaganiTestQrtr.c",
+      "bytes": 13188,
+      "sha256": "6e569ae4d5cb599d8b438821d0112930f3cba8a3a5cb017d3aed299e505e8e91"
+    }
+  ]
+}

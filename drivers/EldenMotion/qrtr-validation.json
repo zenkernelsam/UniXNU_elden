@@ -1,0 +1,344 @@
+{
+  "schema": 1,
+  "branch": "offline-peripheral-fixes",
+  "parent_commit": "05b6a851ced87b8529ba2555ad2de0b11cd429c1",
+  "kernel_sha256": "73aa1a9d874475a6f2c994dd8df80575bfd92f50086a92e3c8cf5bb1c1d34c2e",
+  "native_sha256": "db828bb8ea0ee370aca584d0244a2c89918fcdc86179fb10ef107abc72d820bc",
+  "parent_kernel_sha256": "e05271d2d252e61d147cebe5708590742886e8b8ad7d3ae753b0186219d4fc7e",
+  "source_files": {
+    ".gitattributes": "4dee40403aaa87b6ea018cd1bf501f491ddc004ad9d97925efe5162b6dff0b52",
+    "AGENTS.md": "399927b742c2e69c69f441a9e4e720bb0af982c41f63cd86e9ad68e0b50ee996",
+    "docs/peripherals/MAINLINE-HANDOFF-PROMPT.md": "209bef805e75558ca5dd5caf2a8734eda586215bd6e06073b90888368adc5b30",
+    "docs/peripherals/MOTION-QRTR.md": "050811ea6f8396d5f1df22dbc055e6d282b146613d2d6074834c0c59061c6ae1",
+    "docs/peripherals/STATUS.md": "748b4b0cd851c246a929e4019182dc7417de3c763f9c609c6864ca72a4535ab1",
+    "drivers/EldenMotion/QrtrPorts.c": "642269949621cb02902e1e3f3716612eb450d54b771e8ce7e339a4b250fb4957",
+    "drivers/EldenMotion/QrtrPorts.h": "2a8c9dc41d8d9886acba31086b4c85310874ddaddc7e54057c9b135575154392",
+    "drivers/EldenMotion/QrtrSource.py": "e8cef3826f567d88a8d998f47b32e38808b3fa18035e091761ceb1a70ae99c78",
+    "drivers/EldenMotion/QrtrTransport.c": "cdbf9f713d3a8660735d9833eb673139bdbc50978320eff3f3ab40d5977027bc",
+    "drivers/EldenMotion/QrtrTransport.h": "9d3e576902234210742db7d5f6553013a066ee9554103f3f5ea55a426ad0b173",
+    "drivers/EldenMotion/TestAdspChannels.cpp": "147ccf6cee913525d4618d166326bb14b7d9936deff4990839f3805402b5a030",
+    "drivers/EldenMotion/TestQrtrPorts.cpp": "5707d758bffbfbe799656ba42cd9681e4a9015aab436e14b288fc198ba49f618",
+    "drivers/EldenMotion/qrtr-source.json": "e68b4ed1c6841efe09c220ad52c128f5e7ae9274a9ea5431b9a6875978f03719",
+    "drivers/EldenMotion/upstream/PaganiAdspQrtr.c": "8eb5fa49d3051d3f6727c6d56d9b535d0703eb0bcb499efb83ec643abd4695b9",
+    "drivers/EldenMotion/upstream/PaganiQcomQrtr.c": "506e3361d0e7b13b448eeb9024ac375684562da384a4ede8761898d55be7ef03",
+    "drivers/EldenMotion/upstream/PaganiQcomQrtr.h": "e832ebcad6efc91f3e6bcc04d11bf6041aeec5f0879440e020c61bfc1a524fba",
+    "drivers/EldenMotion/upstream/PaganiTestQrtr.c": "6e569ae4d5cb599d8b438821d0112930f3cba8a3a5cb017d3aed299e505e8e91",
+    "tools/audit_adsp_endpoint_link.py": "01888c11639ccbbfdb3d0e1ae7281f5ef5af9612fbe45e41ae34609b44765613",
+    "tools/audit_elden_rtc_link.py": "b94e8210dd1951682ebe06082c892e7dee8736073aac451c507300e1e6427629",
+    "tools/audit_motion_qrtr_link.py": "3bb3faa66143dd3bfa5b41415b9fc43e0471516da9eeefec49699ce65c748072",
+    "tools/link_motion_qrtr.py": "6b71dc2f4a1a000ce19c9ed2b923ec0ef6929f65986f66a8b4506a892ba656d0",
+    "tools/peripheral_archive_audit.py": "29d36dc3f09e5a68360cfacd1b3986c3f2e3cd6bbd195e25fe32b380ba400348",
+    "tools/prepare_motion_qrtr.py": "d7b2254919d0750a12181f88fef138e8dcc3a38732b4d791b106d0c2c5094305",
+    "tools/test_motion_qrtr.py": "4f76688288dfc52751e34f963b715b13cdeed53fff94465136cc81bbae8a2380",
+    "tools/test_motion_qrtr_stack.py": "6766cc46160f3e759429d377abdf4b523539f79ec2836f4c14b9e22a7caa350d",
+    "tools/test_peripheral_link_audit.py": "fb15c240bf3c38197d81674a000ffa8c6cbb5b78bc2e533ede7e6f7e158bb019"
+  },
+  "fixed_elden_QRTR_inputs": {
+    "drivers/EldenPmicGlink/ShengQrtr.c": "6584dd43500281ec3606665fda56b8b5394b2c559fcbcea4ebaea124fd6108e0",
+    "drivers/EldenPmicGlink/QcomQrtr.c": "d22ff8572b93424f1f03138204a44e10b444d0cb62b6be4f1c57b7d3b2ddbc74",
+    "drivers/EldenPmicGlink/QcomQrtr.h": "3ead40f5f996497224ebef92e2e67820aa8372bab0a21646c15df954baba84f1"
+  },
+  "qualified_QRTR_donor": {
+    "repository": "https://github.com/rui12366B/UniXNU-Pagani-Drivers",
+    "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+    "scope": "QRTR protocol/watch/frame/client pattern only; existing Elden locator/board/ADSP power retained",
+    "hardware": false,
+    "files": [
+      {
+        "path": "drivers/PaganiAdsp/QcomQrtr.c",
+        "file": "PaganiQcomQrtr.c",
+        "bytes": 14342,
+        "sha256": "506e3361d0e7b13b448eeb9024ac375684562da384a4ede8761898d55be7ef03"
+      },
+      {
+        "path": "drivers/PaganiAdsp/QcomQrtr.h",
+        "file": "PaganiQcomQrtr.h",
+        "bytes": 7735,
+        "sha256": "e832ebcad6efc91f3e6bcc04d11bf6041aeec5f0879440e020c61bfc1a524fba"
+      },
+      {
+        "path": "drivers/PaganiAdsp/AdspQrtr.c",
+        "file": "PaganiAdspQrtr.c",
+        "bytes": 23720,
+        "sha256": "8eb5fa49d3051d3f6727c6d56d9b535d0703eb0bcb499efb83ec643abd4695b9"
+      },
+      {
+        "path": "drivers/PaganiAdsp/Test/qrtr.c",
+        "file": "PaganiTestQrtr.c",
+        "bytes": 13188,
+        "sha256": "6e569ae4d5cb599d8b438821d0112930f3cba8a3a5cb017d3aed299e505e8e91"
+      }
+    ]
+  },
+  "native_objects": {
+    "AdspProbe.o": {
+      "sha256": "050b6a3c6a8f7ad442f0f62d4855247ed91250aaf6876d1f9b30870d144a0783",
+      "imports": [
+        "_IODelay",
+        "_IOFreeData",
+        "_IOLockAlloc",
+        "_IOMalloc_internal",
+        "_IOSleep",
+        "_KHEAP_DATA_BUFFERS",
+        "_PE_parse_boot_argn",
+        "__ZN14IODeviceMemory9withRangeEyy",
+        "__ZN24IOBufferMemoryDescriptor22inTaskWithPhysicalMaskEP4taskjyy",
+        "___stack_chk_fail",
+        "___stack_chk_guard",
+        "___ubsan_handle_add_overflow_minimal",
+        "___ubsan_handle_sub_overflow_minimal",
+        "_absolutetime_to_nanoseconds",
+        "_armcpu_spi_attach",
+        "_assert_wait_timeout",
+        "_bzero",
+        "_clear_wait",
+        "_clock_interval_to_deadline",
+        "_current_thread",
+        "_elden_glink_close_request",
+        "_elden_glink_close_status",
+        "_elden_init_exec_accepted",
+        "_elden_qrtr_original_service",
+        "_elden_recovery_armed",
+        "_kernel_task",
+        "_kernel_thread_start",
+        "_lck_mtx_lock",
+        "_lck_mtx_unlock",
+        "_mach_absolute_time",
+        "_memcpy",
+        "_memmove",
+        "_native_owner_data_status",
+        "_qcom_cmd_db_find",
+        "_qcom_glink_channel",
+        "_qcom_glink_init",
+        "_qcom_glink_poll",
+        "_qcom_glink_send",
+        "_qcom_glink_set_rx",
+        "_qcom_glink_stop",
+        "_qcom_mdt_metadata",
+        "_qcom_mdt_metadata_size",
+        "_qcom_mdt_parse",
+        "_qcom_mdt_place",
+        "_qcom_mdt_span",
+        "_qcom_qmp_abandon",
+        "_qcom_qmp_init",
+        "_qcom_qmp_send",
+        "_qcom_qmp_step",
+        "_qcom_rpmh_active_request",
+        "_qcom_rpmh_finish",
+        "_qcom_rpmh_level_index",
+        "_qcom_rsc_layout",
+        "_qcom_smem_alloc",
+        "_qcom_smem_find",
+        "_qcom_smem_partition",
+        "_qcom_smp2p_add_entry",
+        "_qcom_smp2p_check_in",
+        "_qcom_smp2p_find_in",
+        "_qcom_smp2p_in_value",
+        "_qcom_smp2p_init_out",
+        "_qcom_smp2p_service",
+        "_sheng_fw_close",
+        "_sheng_fw_open",
+        "_sheng_fw_read",
+        "_sheng_qrtr_start",
+        "_snprintf",
+        "_strcmp",
+        "_strlcpy",
+        "_strncmp",
+        "_thread_block",
+        "_thread_deallocate",
+        "_thread_set_thread_name",
+        "_thread_terminate",
+        "_thread_wakeup_prim"
+      ]
+    },
+    "ShengQrtr.o": {
+      "sha256": "8974b8e4bd5d61c0893e2948265b0c00822cddd5b21b6df1e81edfe483f5a70b",
+      "imports": [
+        "_elden_adsp_channel_epoch",
+        "_elden_qrtr_ports_bind",
+        "_elden_qrtr_ports_fault",
+        "_elden_qrtr_ports_link",
+        "_elden_qrtr_ports_receive",
+        "_elden_qrtr_ports_rx_config",
+        "_elden_qrtr_ports_snapshot",
+        "_elden_qrtr_service",
+        "_qcom_qmi_parse",
+        "_qcom_qmi_tlv",
+        "_qcom_qrtr_add_service",
+        "_qcom_qrtr_forget_remote",
+        "_qcom_qrtr_init",
+        "_qcom_qrtr_receive",
+        "_qcom_qrtr_send_data",
+        "_qcom_qrtr_start",
+        "_qcom_qrtr_watch",
+        "_qcom_servloc_answer",
+        "_sheng_adsp_send_epoch"
+      ]
+    },
+    "QcomQrtr.o": {
+      "sha256": "41562b162536e7cfe0c52fab1c1cdf0f56cdb6bf9ce7ecaf962af36b3a68c174",
+      "imports": [
+        "_bzero"
+      ]
+    },
+    "QrtrPorts.o": {
+      "sha256": "f1effbec918b4334e6ad1ed83e837e882d524bc8fed581a0e9018dfd63ccca17",
+      "imports": [
+        "_elden_adsp_channel_status",
+        "_qcom_qrtr_control_frame",
+        "_qcom_qrtr_frame",
+        "_sheng_adsp_send_epoch"
+      ]
+    },
+    "QrtrTransport.o": {
+      "sha256": "aea2b7977570d1538457a5ff9f819666811fb31d9773f36994fbe28de71bc425",
+      "imports": [
+        "_elden_qrtr_port_level",
+        "_elden_qrtr_port_open",
+        "_elden_qrtr_port_send",
+        "_elden_qrtr_port_withdraw",
+        "_elden_qrtr_ports_admit",
+        "_elden_qrtr_ports_owner"
+      ]
+    }
+  },
+  "client_scenarios": 16,
+  "client_checks": 528,
+  "actual_ADSP_GLlNK_QRTR_SSC_stack_scenarios": 18,
+  "actual_stack_checks": 1954,
+  "actual_archive_function_negative_checks": 18,
+  "native_compile_warnings": 0,
+  "linker_legacy_warnings_retained": true,
+  "full_component_link": true,
+  "original_Apple_regions": 30,
+  "changed_transport_archives": {
+    "libEldenAdspRuntime.a": {
+      "AdspProbe.o": {
+        "before": "a1a9bc3707155722af50774c52e4ac29dbb0fdbc47704a575f52980e7295302b",
+        "after": "050b6a3c6a8f7ad442f0f62d4855247ed91250aaf6876d1f9b30870d144a0783"
+      },
+      "AdspFirmware.o": {
+        "before": "077c2eddbcfd2a91ded75dae955c83b5ed346e672bbc15f5e573dd262e28d91e",
+        "after": "077c2eddbcfd2a91ded75dae955c83b5ed346e672bbc15f5e573dd262e28d91e"
+      },
+      "FatVolume.o": {
+        "before": "2d58ec26f6ace0f801c098b69a575af7b0cafd2096b41a2a7388d28ecf98b4a3",
+        "after": "2d58ec26f6ace0f801c098b69a575af7b0cafd2096b41a2a7388d28ecf98b4a3"
+      },
+      "ShengQrtr.o": {
+        "before": "c7080317976db8118b374f5bd8d633dad4c9e2e6c54851c8aabc96de999f3b5e",
+        "after": "8974b8e4bd5d61c0893e2948265b0c00822cddd5b21b6df1e81edfe483f5a70b"
+      },
+      "QcomQrtr.o": {
+        "before": "093d5af3f30031e6c7302beb54c1125690cd1f793755ce5b42160a9517ed2f37",
+        "after": "41562b162536e7cfe0c52fab1c1cdf0f56cdb6bf9ce7ecaf962af36b3a68c174"
+      }
+    }
+  },
+  "cumulative_transport_archives": {
+    "libEldenAdspRuntime.a": {
+      "AdspProbe.o": {
+        "before": "052687c04cc83c22548188d21df6abbebb1d0cab044b9d727bd203672cbdea86",
+        "after": "050b6a3c6a8f7ad442f0f62d4855247ed91250aaf6876d1f9b30870d144a0783"
+      },
+      "AdspFirmware.o": {
+        "before": "077c2eddbcfd2a91ded75dae955c83b5ed346e672bbc15f5e573dd262e28d91e",
+        "after": "077c2eddbcfd2a91ded75dae955c83b5ed346e672bbc15f5e573dd262e28d91e"
+      },
+      "FatVolume.o": {
+        "before": "2d58ec26f6ace0f801c098b69a575af7b0cafd2096b41a2a7388d28ecf98b4a3",
+        "after": "2d58ec26f6ace0f801c098b69a575af7b0cafd2096b41a2a7388d28ecf98b4a3"
+      },
+      "ShengQrtr.o": {
+        "before": "c7080317976db8118b374f5bd8d633dad4c9e2e6c54851c8aabc96de999f3b5e",
+        "after": "8974b8e4bd5d61c0893e2948265b0c00822cddd5b21b6df1e81edfe483f5a70b"
+      },
+      "QcomQrtr.o": {
+        "before": "093d5af3f30031e6c7302beb54c1125690cd1f793755ce5b42160a9517ed2f37",
+        "after": "41562b162536e7cfe0c52fab1c1cdf0f56cdb6bf9ce7ecaf962af36b3a68c174"
+      }
+    },
+    "libEldenPmicTransport.a": {
+      "QcomMdt.o": {
+        "before": "8f3a20364adc1d9812098f05e87792a929998b9853910d46612f1e7bb99d02bd",
+        "after": "8f3a20364adc1d9812098f05e87792a929998b9853910d46612f1e7bb99d02bd"
+      },
+      "QcomSmem.o": {
+        "before": "b9871db67b4a29e7346f96a88c160d60416302496bb1e299ee2a68753872693c",
+        "after": "b9871db67b4a29e7346f96a88c160d60416302496bb1e299ee2a68753872693c"
+      },
+      "QcomSmp2p.o": {
+        "before": "b4912111d3b95e72685c5fe2a0120590e24183972d93888ec4b0d57261ea92e6",
+        "after": "b4912111d3b95e72685c5fe2a0120590e24183972d93888ec4b0d57261ea92e6"
+      },
+      "QcomGlink.o": {
+        "before": "9d4110cccb41d468b8d2af5f8fb8381c250fbd459f1109a5d69b451ad1638677",
+        "after": "1d21e9e9f1dc4a0783330aee5bb220f293c39db0e9bd3dfc84794ecdae4e0c02"
+      },
+      "QcomQmp.o": {
+        "before": "d7b84a0cbc1c886d6709593e7c70ff031c7bc19cf7c31d6723633d9e9790236e",
+        "after": "d7b84a0cbc1c886d6709593e7c70ff031c7bc19cf7c31d6723633d9e9790236e"
+      },
+      "QcomRpmh.o": {
+        "before": "266bd2cf8b992545fa88e742d4ac37ce3cc4d8c509cde9adeda316fa963f2de5",
+        "after": "266bd2cf8b992545fa88e742d4ac37ce3cc4d8c509cde9adeda316fa963f2de5"
+      }
+    }
+  },
+  "original_firmware_power_IRQ_locator_domains_retained": true,
+  "original_IOBuffer_and_all_peripheral_recovery_audits_pass": true,
+  "sleepable_independent_registry_mutex_required": "thread-context only; QRTR registry -> original ADSP queue; original callback lock dropped",
+  "actual_owner_receive_intents_retirement_SMMU_capture_installed": false,
+  "shared_SSC_transport_implemented": true,
+  "actual_gen4_PD_calibration_mount_clock_samples_UI_rotation": false,
+  "no_owner_transport_SSC_auto_start": true,
+  "global_flags": {
+    "abi_qualified": false,
+    "loadable": false,
+    "runtime_qualified": false,
+    "instruction_relocation_complete": false
+  },
+  "hardware": false,
+  "boot_packaged": false,
+  "whole_goal_complete": false,
+  "jobs_terminal": true,
+  "archive": {
+    "file": "motion-qrtr-offline.tar.gz",
+    "bytes": 20408171,
+    "sha256": "0e9f27bcd2744ca384db871833dcdec5ac9bb380f7e3e003561a2cc1694f07be",
+    "members": 242,
+    "members_verified": true,
+    "manifest_sha256": "de97605c2928dd6cea18b31495715a070956073b5455f90121a44a9d8c71635a"
+  },
+  "archive_members_verified_Windows": 242,
+  "required_parent_delivery": "adsp-channels-20261120/322c94206b6ad1f55e011464eee1f5f917be2cb60860a739ce15d4222a3ee13f",
+  "source_record_sha256": "088101548297ebf289568fd13af6ef95466f7fd3d36267a96346e7c3517e6075",
+  "report_sha256": {
+    "accepted/source5/source.json": "088101548297ebf289568fd13af6ef95466f7fd3d36267a96346e7c3517e6075",
+    "accepted/native5/result.json": "0e9001338eaf4c00bfa8773e9e7472bcee393d2f3b9c75527cb35746c15b8782",
+    "accepted/kernel2/adsp-audit.json": "1babb7164bd6695beeac67da07c5c976347673ec3126624c0ec5df356e19c7bd",
+    "accepted/kernel2/audit-jobs.json": "cdf71866b4089c6f7487a0de6d023be4df6b3442f1fbf807b2abb5f34799ac65",
+    "accepted/kernel2/audit-jobs2.json": "c87883a85af0ac3d5223cebde5c1a6bb56b245b16dbcc60ebd651fc7e1afdf6f",
+    "accepted/kernel2/camera-audit.json": "af9b4e5c82e9f497b64a856ae3bc842cbac04d74c9c8da8639461427a4d12f66",
+    "accepted/kernel2/final-tool-regression.json": "3e20660e562c531eb930c3d3529b449d771744a9ee13ec6d4feefad0ffbda47f",
+    "accepted/kernel2/haptics-audit.json": "20f6756291f0329d11b0492bc5e729a33c2cd6c9b0ea749092a2057e28fd4cdf",
+    "accepted/kernel2/kernel.json": "af610542b87a120f66ebd8f855c076cc6a7f2c0fcaf0fe8ff4c4aa63545e7dea",
+    "accepted/kernel2/link-command.json": "698d21680f7c38f7b9fba097dda1eb961ad4140a2f072c4a5f6a69f0b98f43d4",
+    "accepted/kernel2/memory-audit.json": "830149dd69c0327372891a776ba676011f1b0a7b399221dd4a440f7979bcce8a",
+    "accepted/kernel2/motion-audit.json": "c8d656e43dda4c381ff150758dc7a08247361c0b8aec23858eefa17e0e95b6ba",
+    "accepted/kernel2/pack-audit.json": "3bcf6c38f1ed7f5445759283670f830a91ef39247a44421123beadba2790c3cf",
+    "accepted/kernel2/pen-audit.json": "e9d0ed7705212d974d84dedd6c675cf9fb386c3b8150e0cf032c9b8c07e0297e",
+    "accepted/kernel2/qrtr-audit.json": "df379251df8ca7029741f822d32d54faa9739f4e371c6f32c0216737b57f4d5a",
+    "accepted/kernel2/result.json": "cda44d1a8db1d8b02444cf2401f56b8277d28cfcdc0f5a512b464d358286c1e9",
+    "accepted/kernel2/rpc-audit.json": "7fc38a42ac270c3dcc980986bf61d01884bf9ee7d0d13792c617d807cd5c471d",
+    "accepted/kernel2/rtc-audit.json": "fd4639b46bd46f83aa41a48f4ee079b13fac1f041ee0bd136cabc7335ef3325b",
+    "accepted/kernel2/rtc-final-audit.json": "fd4639b46bd46f83aa41a48f4ee079b13fac1f041ee0bd136cabc7335ef3325b",
+    "accepted/kernel2/rtc-original-mode-audit.json": "16f02cfbae695912fc65d4d260ff5e3fb2bca08d52e9ca331cf195e6368e9b4e",
+    "accepted/kernel2/sleep-audit.json": "b54726b8f916e1fcb11885150d73503c058df0c7defd9e3f6ed85972e24929fa",
+    "accepted/kernel2/ssc-audit.json": "8a5e3984b60a8be3bbc0c786734b526e1a58e7871ddd85f62e7f1c7d834ad129",
+    "accepted/stack1/result.json": "7941e4ff96f3612e77cb93da5a4b820fc1fd79c42e2330daa881e622f94ab934",
+    "accepted/audit-tests1/result.json": "a5432d1443b1183489675da66117aec6c8e5077ebfd7f672c12863fae5579e2c",
+    "accepted/audit-tests2/result.json": "b3f05903cf80c171a61002580a782ff4cd20b02b9d0e478986b824fb5e436400"
+  },
+  "workbench_receipt": "lab/records/motion-qrtr-20261120/closure.json"
+}

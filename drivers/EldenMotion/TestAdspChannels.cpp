@@ -3,6 +3,11 @@
  * SMEM FIFO/doorbells are modeled. No physical DSP/DMA stop acceptance. */
 #include "AdspChannel.h"
 #include "QcomGlink.h"
+#if ELDEN_TEST_MOTION_QRTR
+#include "QrtrTransport.h"
+#include "QcomQrtr.h"
+extern "C" void sheng_qrtr_start(void);
+#endif
 #if ELDEN_TEST_SENSOR_ENDPOINT
 #include "AdspEndpoint.h"
 #endif
@@ -66,6 +71,16 @@ static int ep_complete(void *,uint64_t owner,uint64_t epoch,uint64_t cookie){CHE
 static int ep_retire(void *,uint64_t owner,uint64_t epoch,uint32_t e,int pending){CHECK(owner==7&&epoch==9&&e==1&&(pending==0||pending==1));endpoint_retired++;return 0;}
 #endif
 static const EldenAdspEpochClient owned={epoch_state,epoch_receive};static const ShengAdspClient legacy={old_state,old_receive};
+#if ELDEN_TEST_MOTION_QRTR
+static std::mutex qrtr_lock;static unsigned qrtr_received,qrtr_retired;static EldenSscServer qrtr_server{};
+static void qr_lock(void *){qrtr_lock.lock();}static void qr_unlock(void *){qrtr_lock.unlock();}
+static int qr_admit(void *,uint64_t owner,uint64_t epoch,int cleanup){CHECK(owner==7&&epoch==9&&(cleanup==0||cleanup==1));return 0;}
+static int qr_retire(void *,const EldenQrtrPortStatus *s){CHECK(s&&s->closing&&!s->callbacks&&!s->inflight&&s->del_client_queued);qrtr_retired++;return 0;}
+static void qr_server(void *,uint64_t owner,uint64_t epoch,const EldenSscServer *s,int up){CHECK(owner==7&&epoch==9&&s&&(up==0||up==1));qrtr_server=*s;}
+static void qr_receive(void *,uint64_t owner,uint64_t epoch,const EldenSscServer *s,const uint8_t *data,uint32_t size){CHECK(owner==7&&epoch==9&&s&&data&&size==8);qrtr_received++;qrtr_server=*s;}
+static uint32_t qr_u32(const uint8_t *p){return (uint32_t)p[0]|(uint32_t)p[1]<<8|(uint32_t)p[2]<<16|(uint32_t)p[3]<<24;}
+static void qr_put32(uint8_t *p,uint32_t v){for(unsigned i=0;i<4;i++)p[i]=(uint8_t)(v>>(8*i));}
+#endif
 static const QcomGlinkClient remoter={remote_state,remote_receive};
 static void reset(){
 #if ELDEN_TEST_SENSOR_ENDPOINT
@@ -159,6 +174,29 @@ int main(){
     uint8_t response[16]={0};for(unsigned i=0;i<8;i++)response[i]=(uint8_t)(cookie>>(i*8));CHECK(!qcom_glink_send(&remote,actual,response,16));settle();CHECK(endpoint_received==1);
     CHECK(!ops.complete_cookie(ops.context,7,9,cookie)&&endpoint_completed==1);CHECK(ops.withdraw(ops.context,7,9)==-11);settle();CHECK(!ops.withdraw(ops.context,7,9)&&endpoint_retired==1);
     CHECK(!ops.withdraw(ops.context,7,9)&&endpoint_retired==1);
+#endif
+#if ELDEN_TEST_MOTION_QRTR
+    // Actual original ADSP registry/queue/GLINK paired with the real sole
+    // QRTR producer and SSC adapter. Physical DSP/retirement are modeled.
+    reset();Seen qr_peer;EldenQrtrPortOps qr_ops{nullptr,7,9,2048,8,qr_lock,qr_unlock,qr_admit,qr_retire};
+    CHECK(!elden_qrtr_ports_prepare(&qr_ops));sheng_qrtr_start();CHECK(gClientCount==1&&!std::strcmp(gClients[0].name,"IPCRTR"));
+    auto *qr_channel=&gClients[0];auto *qr_remote=connect(qr_channel,&qr_peer);uint8_t qr_body[20]={0},qr_packet[128];
+    qr_put32(qr_body,QCOM_QRTR_HELLO);uint32_t qr_size=qcom_qrtr_frame(qr_packet,sizeof qr_packet,QCOM_QRTR_HELLO,5,QCOM_QRTR_PORT_CTRL,1,QCOM_QRTR_PORT_CTRL,qr_body,sizeof qr_body);
+    CHECK(qr_size&&!qcom_glink_send(&remote,qr_remote,qr_packet,qr_size));settle();
+    qr_put32(qr_body,QCOM_QRTR_NEW_SERVER);qr_put32(qr_body+4,400);qr_put32(qr_body+8,0x100);qr_put32(qr_body+12,5);qr_put32(qr_body+16,0x9000);
+    qr_size=qcom_qrtr_frame(qr_packet,sizeof qr_packet,QCOM_QRTR_NEW_SERVER,5,QCOM_QRTR_PORT_CTRL,1,QCOM_QRTR_PORT_CTRL,qr_body,sizeof qr_body);
+    CHECK(!qcom_glink_send(&remote,qr_remote,qr_packet,qr_size));settle();EldenMotionTransport qr_transport{};
+    CHECK(!elden_motion_qrtr_transport(&qr_transport));const EldenMotionTransportClient qr_client={qr_server,qr_receive};void *qr_handles[3];EldenSscServer qr_servers[3];
+    for(unsigned i=0;i<3;i++){qr_handles[i]=qr_transport.open(qr_transport.context,7,9,400,i,&qr_client,nullptr);CHECK(qr_handles[i]&&qr_transport.level(qr_transport.context,qr_handles[i],7,9,&qr_servers[i])==1);}
+    CHECK(qr_servers[0].generation==qr_servers[1].generation&&qr_servers[1].generation==qr_servers[2].generation);
+    uint8_t qr_data[8]={1,2,3};CHECK(!qr_transport.send_epoch(qr_transport.context,qr_handles[0],7,9,&qr_servers[0],qr_data,sizeof qr_data));settle();
+    CHECK(qr_peer.last.size()==40&&qr_u32(qr_peer.last.data()+4)==QCOM_QRTR_DATA);uint32_t qr_port=qr_u32(qr_peer.last.data()+12);
+    qr_size=qcom_qrtr_frame(qr_packet,sizeof qr_packet,QCOM_QRTR_DATA,5,0x9000,1,qr_port,qr_data,sizeof qr_data);qr_put32(qr_packet+16,1);
+    CHECK(!qcom_glink_send(&remote,qr_remote,qr_packet,qr_size));settle();CHECK(qrtr_received==1&&qrtr_server.generation==qr_servers[0].generation);
+    CHECK(qr_u32(qr_peer.last.data()+4)==QCOM_QRTR_RESUME_TX&&qr_u32(qr_peer.last.data()+36)==1&&qr_u32(qr_peer.last.data()+40)==qr_port);
+    CHECK(qr_transport.withdraw(qr_transport.context,qr_handles[0],7,9,&qr_servers[0])==-11);settle();
+    CHECK(!qr_transport.withdraw(qr_transport.context,qr_handles[0],7,9,&qr_servers[0])&&qrtr_retired==1);
+    CHECK(qr_u32(qr_peer.last.data()+4)==QCOM_QRTR_DEL_CLIENT&&qr_u32(qr_peer.last.data()+24)==5);
 #endif
     unsigned count=scenarios;reset();std::printf("PASS %u actual original ADSP/GLINK epoch/queue/callback/close/late-register scenarios, %u checks; SMEM/locks/doorbells modeled\n",count,checks.load());return 0;
 }

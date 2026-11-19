@@ -20,7 +20,10 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     for key in ('kernel-build', 'parent', 'rtc-build', 'prelink-tool', 'output'):
         p.add_argument('--' + key, type=Path, required=True)
+    p.add_argument('--retained-rtc', action='store_true', help='Require the existing RTC initializer/provider to be retained from parent')
     a = p.parse_args()
+    for key in ('kernel_build','parent','rtc_build','prelink_tool'):
+        setattr(a,key,getattr(a,key).resolve(strict=True))
     sys.path.insert(0, str(a.prelink_tool))
     from native_prelink import macho, backed_offset, exports
     report = json.loads((a.kernel_build / 'result.json').read_text())
@@ -30,6 +33,9 @@ def main():
         raise ValueError('Final RTC image identity differs')
     raw = kernel.read_bytes(); image = macho(raw)
     original = (a.parent / 'kernel.macho').read_bytes(); old = macho(original)
+    parent_report=json.loads((a.parent/'result.json').read_text())
+    if hashlib.sha256(original).hexdigest()!=parent_report['kernel_sha256'] or sha(a.parent/'native.macho')!=parent_report['native_sha256']:
+        raise ValueError('Actual RTC parent image identity differs')
     names = {n: v for v, group in exports(raw, image).items() for n in group}
     symbols = []
     for line in subprocess.check_output(['xcrun', 'nm', '-n', str(native)], text=True).splitlines():
@@ -60,8 +66,8 @@ def main():
     clock_read = unique('__ZN12_GLOBAL__N_19clockReadEPy')
     clock_set = unique('__ZN12_GLOBAL__N_18clockSetEy')
     constructors = initializers(raw, image)
-    if len(constructors) != len(initializers(original, old)) + 1:
-        raise ValueError('RTC must add exactly one registration initializer')
+    if len(constructors) != len(initializers(original, old)) + (0 if a.retained_rtc else 1):
+        raise ValueError('RTC initializer count differs from explicit new/retained mode')
     matched = []
     for addr in constructors:
         regs = {}; valid = True
@@ -83,6 +89,77 @@ def main():
                 break
             else: break
     if len(matched) != 1: raise ValueError('One register-only RTC initializer required')
+    if a.retained_rtc:
+        # Verify the actual parent's register-only constructor and callback
+        # pair as well. Count equality alone does not prove RTC was preserved.
+        oldnames={n:v for v,group in exports(original,old).items() for n in group}
+        oldsymbols={}
+        for line in subprocess.check_output(['xcrun','nm','-n',str(a.parent/'native.macho')],text=True).splitlines():
+            m=re.match(r'^([0-9a-fA-F]+)\s+[sStT]\s+(\S+)$',line)
+            if m:oldsymbols.setdefault(m[2],set()).add(int(m[1],16))
+        def oldunique(name):
+            values=oldsymbols.get(name,set()).copy()
+            if name in oldnames:values.add(oldnames[name])
+            if len(values)!=1:raise ValueError('Actual parent RTC symbol absent: '+name)
+            return values.pop()
+        def oldread(addr,count):
+            at=backed_offset(old['segments'],addr,count,len(original));return original[at:at+count]
+        oldregistration=oldunique('_armdt_platform_clock_register')
+        oldreadfn=oldunique('__ZN12_GLOBAL__N_19clockReadEPy');oldsetfn=oldunique('__ZN12_GLOBAL__N_18clockSetEy')
+        oldmatched=[]
+        for addr in initializers(original,old):
+            regs={}
+            for off in range(0,20,4):
+                insn=struct.unpack('<I',oldread(addr+off,4))[0];pc=addr+off
+                if insn&0x9f000000==0x90000000:
+                    imm=((insn>>5)&0x7ffff)<<2|((insn>>29)&3);regs[insn&31]=(pc&~4095)+(signed(imm,21)<<12)
+                elif insn&0xffc00000==0x91000000:
+                    src=(insn>>5)&31
+                    if src not in regs:break
+                    regs[insn&31]=regs[src]+((insn>>10)&4095)
+                elif insn&0xfc000000==0x14000000:
+                    target=pc+(signed(insn&0x3ffffff,26)<<2)
+                    if target==oldregistration:
+                        if off!=16 or regs.get(0)!=oldreadfn or regs.get(1)!=oldsetfn:raise ValueError('Parent RTC constructor is not register-only')
+                        oldmatched.append(addr)
+                    break
+                else:break
+        if len(oldmatched)!=1:raise ValueError('Parent must contain exactly one actual RTC registration constructor')
+        # The exact qualified RTC objects remain linked once with unchanged
+        # bytes. Existing archives are checked by their actual inventory/SHA.
+        oldcommand=json.loads((a.parent/'link-command.json').read_text());command=json.loads((a.kernel_build/'link-command.json').read_text())
+        actual=json.loads((a.rtc_build/'result.json').read_text())
+        for name,row in actual['objects'].items():
+            obj=a.rtc_build/(Path(name).stem+'.o')
+            if sha(obj)!=row['object_sha256']:raise ValueError('Qualified RTC source object changed: '+name)
+            def linked(command):
+                # ArmDTPlatform lives in its inherited force-loaded archive;
+                # the four RTC-only objects are direct command arguments.
+                if command.count(str(obj)):
+                    if command.count(str(obj))!=1:raise ValueError('Duplicate direct RTC object')
+                    return 1
+                count=0
+                for argument in command:
+                    if not argument.startswith('-Wl,-force_load,'):continue
+                    archive=Path(argument.split(',',2)[2]);members=subprocess.check_output(['ar','t',archive],text=True).splitlines()
+                    if obj.name not in members:continue
+                    body=subprocess.check_output(['ar','p',archive,obj.name])
+                    if hashlib.sha256(body).hexdigest()!=row['object_sha256']:
+                        # Same filename is also used by unrelated PMIC objects.
+                        # Their complete archives are already retained; only
+                        # libEldenRtc is this constructor's own RTC provider.
+                        if archive.name=='libEldenRtc.a':raise ValueError('Actual inherited RTC archive member changed: '+name)
+                        continue
+                    count+=1
+                return count
+            if linked(oldcommand)!=1 or linked(command)!=1:raise ValueError('Original qualified RTC object not retained exactly once: '+name)
+        spmi_before=[];spmi_after=[]
+        for command,target in ((oldcommand,spmi_before),(command,spmi_after)):
+            for argument in command:
+                if not argument.startswith('-Wl,-force_load,'):continue
+                archive=Path(argument.split(',',2)[2]);members=subprocess.check_output(['ar','t',archive],text=True).splitlines()
+                if 'Spmi.o' in members:target.append((archive.name,hashlib.sha256(subprocess.check_output(['ar','p',archive,'Spmi.o'])).hexdigest()))
+        if not spmi_before or sorted(spmi_before)!=sorted(spmi_after):raise ValueError('Actual RTC/PMIC SPMI members not retained')
 
     # Scan actual backed text sections; no disassembly/name inference for BL.
     calls = []
@@ -127,6 +204,7 @@ def main():
               'exports': edges, 'section_extents': extent, 'hardware': False,
               'legacy_flags_unchanged': {k: metadata.get(k) for k in
                 ('abi_qualified', 'loadable', 'runtime_qualified', 'instruction_relocation_complete')}}
+    result['retained_existing_RTC_mode']=a.retained_rtc
     a.output.write_text(json.dumps(result, indent=2) + '\n')
     print('PASS: one register-only RTC initializer, exact clock callbacks and RTC-before-UFS recovery call')
 

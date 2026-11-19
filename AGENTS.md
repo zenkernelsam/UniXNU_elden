@@ -1,5 +1,25 @@
 # UniXNU elden — authoritative source repository
 
+MotionQrtr20261120: sole originalIPCRTR clientports + actual NativeSsc transport
+fully linked; source5/native5/kernel2/stack1,16scenarios528checks+actualADSPqueue/
+GLINK/QRTR/SSCstack18/1954 ASan/UBSan,18actualar/function positivesnegatives.
+Five scalarobjects0compilewarnings/noSIMDinit; existinglinkwarnings retained.
+Fullkernel73aa1a9d/native db828bb8,Apple30/penmotion20710/Actuator168186/RTC/
+camera/sleep/SSC/memorypackRPC/ADSP/recovery pass. OnlyAdspProbe/ShengQrtr/
+QcomQrtr.o changed,othermembers+QcomGlink retained; originallocator/board/FW/
+powerIRQ intact. QualifiedPagani c888efd3 protocolclientpattern/Sheng08cde20e;
+rawCRLFpins preserved/generatedEOLnormalized. CorrectreceiverRESUME+bounded
+owedflow/oldDEL_SERVERguard/actualsharedgeneration/epoch/retainedcallbacks.
+Originalowner MUST supply actualbefore-startreceiveintents/admit/independent
+sleepable QRTRregistrymutex (registry→ADSPqueue)/realretire; legacy1024x8
+startupseal rejects late resize,host2048NOTproduction. DEL_CLIENTqueued!=
+remoteinactive; actualqueue/callbackfenceTHENrealretirement,refsretainreset.
+Noactualownerintents/retirement/SMMU/capture/PD/samples/UIorautotransportSSC
+start/tablet. Read MOTION-QRTR.md/qrtr-validation.json. NEXTsharedactualowners+
+Gen4PD/calibration/mounttime/samples/J317SPU;cameraactualpowerframes/wakepanel
+PM/hapticssystemcal/RTCpersistence remain. Goalactive/noautomerge/subagents;
+mainlineownsWiFiQRTR/hardware,preserveGPU/peer/floor/recovery.
+
 AdspChannels20261120: sole original registry/GLINK epoch/status/actual localACK+
 peerCLOSE/queuecallback fence and concrete FastRPC endpoint fully linked over
 sensor-memory. source6/native10,endpoint-source3/native4,finalstacksource6;

@@ -48,6 +48,25 @@ def main():
     bad=members(changed);declared=copy.deepcopy(record)
     for n in bad:declared['changed_transport_archives']['libEldenAdspRuntime.a'][n]['after']=bad[n]
     verify('declared_unrelated_peer_change',lambda:retained_archive(argument,['-Wl,-force_load,'+str(changed)],declared),True)
+    # Actual three-member QRTR layout replacement requires its exact profile;
+    # earlier ADSP-only records retain the original single-member boundary.
+    old3=out/'qrtr-old/libEldenAdspRuntime.a';new3=out/'qrtr-new/libEldenAdspRuntime.a'
+    old3.parent.mkdir();new3.parent.mkdir()
+    for folder,probe in ((old3.parent,out/'old.o'),(new3.parent,out/'new.o')):
+        (folder/'AdspProbe.o').write_bytes(probe.read_bytes())
+        (folder/'ShengQrtr.o').write_bytes((out/('peer.o' if folder==old3.parent else 'changed-peer.o')).read_bytes())
+        (folder/'QcomQrtr.o').write_bytes((out/('old.o' if folder==old3.parent else 'new.o')).read_bytes())
+        (folder/'peer.o').write_bytes((out/'peer.o').read_bytes())
+        run(['ar','rcs',folder/'libEldenAdspRuntime.a','AdspProbe.o','ShengQrtr.o','QcomQrtr.o','peer.o'],folder.name+'-archive',folder)
+    b3=members(old3);n3=members(new3);arg3='-Wl,-force_load,'+str(old3);cmd3=['-Wl,-force_load,'+str(new3)]
+    r3={'inherited_inputs':{str(old3):sha(old3)},'changed_transport_archives':{'libEldenAdspRuntime.a':{n:{'before':b3[n],'after':n3[n]} for n in b3}},'single_original_ADSP_IPCRTR_QRTR_owner':True}
+    verify('exact_three_QRTR_consumers',lambda:retained_archive(arg3,cmd3,r3))
+    negative=copy.deepcopy(r3);negative.pop('single_original_ADSP_IPCRTR_QRTR_owner')
+    verify('three_consumers_without_profile_refused',lambda:retained_archive(arg3,cmd3,negative),True)
+    chain=copy.deepcopy(r3);chain['cumulative_transport_archives']=copy.deepcopy(r3['changed_transport_archives']);chain['changed_transport_archives']['libEldenAdspRuntime.a']['AdspProbe.o']['before']='f'*64
+    verify('exact_cumulative_original_members',lambda:retained_archive(arg3,cmd3,chain))
+    chain['cumulative_transport_archives']['libEldenAdspRuntime.a']['QcomQrtr.o']['after']='f'*64
+    verify('counterfeit_cumulative_members_refused',lambda:retained_archive(arg3,cmd3,chain),True)
     sys.path.insert(0,str(a.prelink_tool));from native_prelink import macho,exports
     raw=(a.kernel_build/'kernel.macho').read_bytes();image=macho(raw);symbols={n:v for v,g in exports(raw,image).items() for n in g}
     def symbol(n):

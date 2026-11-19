@@ -21,3 +21,8 @@ archive/kshimc-wsl-20261111/** -text -whitespace
 archive/lilac-toolkit-20261101/** -text -whitespace
 docs/archive/** -whitespace
 drivers/EldenCpuPower/upstream/** -text -whitespace
+# Frozen QRTR donor inputs retain byte-addressed CRLF provenance.
+drivers/EldenMotion/upstream/PaganiQcomQrtr.c -text -whitespace
+drivers/EldenMotion/upstream/PaganiQcomQrtr.h -text -whitespace
+drivers/EldenMotion/upstream/PaganiAdspQrtr.c -text -whitespace
+drivers/EldenMotion/upstream/PaganiTestQrtr.c -text -whitespace

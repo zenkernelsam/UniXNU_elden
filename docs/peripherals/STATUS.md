@@ -71,6 +71,17 @@ Mainline prompt: [MAINLINE-HANDOFF-PROMPT.md](MAINLINE-HANDOFF-PROMPT.md).
 
 ## Current status
 
+Latest [MOTION-QRTR.md](MOTION-QRTR.md) adds concrete client ports to the one
+original IPCRTR/QRTR owner and the actual NativeSsc transport factory.16/528
+client tests and18/1954 actual ADSP/GLINK/QRTR/SSC stack checks plus18 archive/
+call negatives pass ASan/UBSan. Five zero-warning scalarobjects/fullkernel
+73aa1a9d/native db828bb8, original Apple/peripheral/ADSP/RTC/recovery audits pass.
+Only three actual QRTR layout consumers change; receive-intents remain an
+explicit original-owner input, legacy startup cannot accept later resizing.
+Real owner retirement/SMMU/same-device PD/calibration/samples and complete
+J317SPU/UI are still missing. No automatic transport/SSC start, device test or
+whole-Goal completion follows; mainline retains hardware and Wi-Fi ownership.
+
 Latest [ADSP-CHANNELS.md](ADSP-CHANNELS.md) extends the one original ADSP registry
 and GLINK worker with epoch/status/observed close, then connects a concrete
 FastRPC endpoint to memory/cache/RPC.17/1554 registry,9/143 endpoint and final
