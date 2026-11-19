@@ -1,0 +1,9 @@
+{
+  "repository": "https://github.com/rui12366B/UniXNU-Pagani-Drivers",
+  "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+  "path": "drivers/PaganiSensors/scripts/make-sensor-pack.py",
+  "sha256": "b42dbf530f45403ed199f11d0c0ec9e17d96ec9e7e332d38cd78cdcf76e21e2b",
+  "bytes": 7433,
+  "scope": "exact pack function and binary schema only; unsafe archive handling/defaults excluded",
+  "hardware": false
+}

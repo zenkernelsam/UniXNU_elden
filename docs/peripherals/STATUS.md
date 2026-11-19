@@ -71,6 +71,14 @@ Mainline prompt: [MAINLINE-HANDOFF-PROMPT.md](MAINLINE-HANDOFF-PROMPT.md).
 
 ## Current status
 
+Latest [SENSOR-PACK.md](SENSOR-PACK.md) adds actual native vnode/SHA256/sealed
+registry cache and FastRPC binding plus fixed original host pack serializer.
+18native1389 + external host-only fixture19native1449checks,17builder20checks,
+two scalarobjects and fullkerneld93b63ac/native445e81bd pass. Individual native9
+objects equal the linked native8 objects; full original component/Apple30/recovery
+audits pass. Real Android capture/identity/sharedGLINK/DMA providers remain absent;
+no physical sensorPD/samples/UI rotation or whole-Goal acceptance follows.
+
 Subsequent [SENSOR-RPC.md](SENSOR-RPC.md) adds source-derived FastRPC listener,
 read-only registry/pack service and actual owner/provider binding.14 scenarios/
 15625checks plus original pack tests, three scalarobjects and fullkernel9f694592/

@@ -1,5 +1,22 @@
 # UniXNU elden — authoritative source repository
 
+SensorPack20261119: actualnativevnode/SHA256/immutablecache+registrydigest/RPC
+binding andfixedoriginalserializer fullkerneld93b63ac/native445e81bd overRPC.
+Source7/native8 linked, native9hostfixture identical2objects (archivecontainer
+SHA differs; exactar membermatch);18native1389+19fixture1449/17builder20checks
+ASan/UBSan;VFS/owner/DMA/clock modeled.2scalarobjects0warnings/noinit;actualVFS/
+SHA/cache→RPC/Apple30/pen+motion20710/Actuator168186/RTC/camera/input-sleep/SSC/
+recovery pass/globalflagsfalse. MandatoryreviewedAndroidmanifest/build/device/
+FW/registryhash/actualcalibration+librarypath;hostfixtureproductionheaderrefused.
+Nativeonevnode/root0444/nosymlink/fullread/metadata/fullsums/registrycheck;
+failedreadretainsbuffers,immutablecacheforRPC. Finishserialized/stopwake/real
+buswithdraw/contextrefsretainedtoreset. NoactualsharedGLINK/DMA/captureprovider/
+sensorPD/samples/UI/hardwareyet. Read SENSOR-PACK.md/pack-validation. No tablet/
+automerge/subagents;fivepartGoalactive. NEXTactualsharedmemory/channel/capture+
+PD/SSCsamples+J317SPU/UI;cameraactualpowerframes/wakepanelPM/hapticssystem
+calibration/RTCpersistence remain. Preservepeer/mainlineWi-Fi/QRTR/GPU/floor/
+recovery. PreviousGoalturnprogress deliveredSSC b95d2b2/RPC a54eb51.
+
 SensorRPC20261119: source-derived FastRPC/listener/readonlyregistry+actual
 providerbinding fullkernel9f694592/native8fc04ebd overSSC1640a2d3. Source7/native6/
 kernel4;14actualscenarios15625checks+originalpacktests ASan/UBSan,transport/DMA/
