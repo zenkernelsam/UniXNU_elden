@@ -4,6 +4,9 @@
 #include "NativePack.h"
 #include "RpcPack.h"
 #include "PackBinding.h"
+#if ELDEN_TEST_MEMORY
+#include "MemoryBinding.h"
+#endif
 #include <CommonCrypto/CommonDigest.h>
 #include <atomic>
 #include <condition_variable>
@@ -43,6 +46,9 @@ struct Peer {
     EldenSensorPackCache *cache=nullptr;
     EldenSensorPackBinding *binding=nullptr;uint64_t cookie=0,clock=1000;unsigned bus_sends=0,bus_withdraws=0,wakes=0,completed=0;
     bool bus_withdraw_fail=false;uint8_t *arena=nullptr;
+#if ELDEN_TEST_MEMORY
+    EldenSensorMemoryBinding *memory_binding=nullptr;
+#endif
 };
 static Peer *model;static int file_token,authority_token;
 static std::atomic<bool> block_read{false},entered{false},release_read{false};
@@ -73,6 +79,9 @@ static int vn_rdwr(int operation,vnode_t p,char *out,int n,off_t off,int seg,int
     if(model->corrupt)out[0]^=1;*resid=model->resid;return 0;
 }
 #include "NativePackMethods.inc"
+#if ELDEN_TEST_MEMORY
+#include "TestMemoryPlatform.inc"
+#endif
 static void put32(std::vector<uint8_t> &b,size_t at,uint32_t v){CHECK(at+4<=b.size());for(unsigned i=0;i<4;i++)b[at+i]=(uint8_t)(v>>(i*8));}
 static void put64(std::vector<uint8_t> &b,size_t at,uint64_t v){CHECK(at+8<=b.size());for(unsigned i=0;i<8;i++)b[at+i]=(uint8_t)(v>>(i*8));}
 static void hash(const std::vector<uint8_t> &b,size_t at,size_t length,uint8_t *out){CC_SHA256(b.data()+at,(CC_LONG)length,out);}
@@ -122,7 +131,12 @@ static int bus_send(void *p,uint64_t owner,uint64_t epoch,const uint8_t *data,ui
     CHECK(get64(data+8)==(model->cookie<<4|2));
     uint32_t handle=0,sc=0;std::memcpy(&handle,data+16,4);std::memcpy(&sc,data+20,4);
     if(handle==0&&(sc>>24&31)==0){uint32_t value=0x77;std::memcpy(model->arena+0x800,&value,4);value=0;std::memcpy(model->arena+0x804,&value,4);}
-    uint8_t response[16]={0};wr64(response,get64(data+8));CHECK(!elden_sensor_pack_binding_receive(model->binding,7,9,response,sizeof(response)));return 0;
+    uint8_t response[16]={0};wr64(response,get64(data+8));
+#if ELDEN_TEST_MEMORY
+    if(model->memory_binding)CHECK(!elden_sensor_memory_binding_receive(model->memory_binding,7,9,response,sizeof(response)));
+    else
+#endif
+    CHECK(!elden_sensor_pack_binding_receive(model->binding,7,9,response,sizeof(response)));return 0;
 }
 static int bus_withdraw(void *p,uint64_t owner,uint64_t epoch,const EldenSensorRpcMemory *m){CHECK(p==model&&owner==7&&epoch==9&&m->arena==model->arena);if(model->bus_withdraw_fail)return -16;model->bus_withdraws++;return 0;}
 static void bus_trace(void *p,const char *s){CHECK(p==model&&s);}
@@ -132,7 +146,41 @@ static void binding(Peer &p){
     EldenSensorRpcMemory memory{p.arena,0x20000000,0x800000,4,4242};EldenSensorPackAuthority a{&authority_token,7,9,authority};
     CHECK(!elden_sensor_pack_binding_open(&bus,&memory,&p.seal,&a,&p.binding));CHECK(!elden_sensor_pack_binding_channel(p.binding,7,9,1));
 }
-static void reset(){for(auto *p:locks)delete p;locks.clear();for(void *p:allocated)std::free(p);allocated.clear();allocation_count=fail_alloc=0;native_owner_data_status=0;irq=false;block_read=false;entered=false;release_read=false;scenarios++;}
+static void reset(){
+#if ELDEN_TEST_MEMORY
+    memory_test_reset();
+#endif
+    for(auto *p:locks)delete p;locks.clear();for(void *p:allocated)std::free(p);allocated.clear();allocation_count=fail_alloc=0;native_owner_data_status=0;irq=false;block_read=false;entered=false;release_read=false;scenarios++;
+}
+#if ELDEN_TEST_MEMORY
+static int route_reserve(void *p,uint64_t owner,uint64_t epoch,const EldenSensorMemoryConfig *cfg,EldenSensorMemoryLease *out){
+    CHECK(p==model&&owner==7&&epoch==9&&cfg&&cfg->session==4&&cfg->iova==0x20000000&&cfg->bytes==0x800000);
+    memory_reserves++;*out={0x4c017e84,0x5111,11,9,71};return 0;
+}
+static int route_install(void *p,uint64_t owner,uint64_t epoch,const EldenSensorMemoryView *view){
+    CHECK(p==model&&owner==7&&epoch==9&&view->memory.arena&&view->memory.iova==0x20000000&&view->data_physical==UINT64_C(0x900000000));
+    CHECK(view->table_mapping&&view->tables.table_pages==6&&view->tables.leaf_pages==2048&&view->stream_ids[0]==0x1004&&view->stream_ids[3]==0x1084);
+    memory_installs++;model->arena=view->memory.arena;return 0;
+}
+static int route_observe(void *p,uint64_t owner,uint64_t epoch,const EldenSensorMemoryView *view,int cleanup){
+    CHECK(p==model&&owner==7&&epoch==9&&view->lease.route_epoch==71&&!cleanup);return memory_observe_error;
+}
+static int route_withdraw(void *p,uint64_t owner,uint64_t epoch,const EldenSensorMemoryView *view){
+    CHECK(p==model&&owner==7&&epoch==9&&view->memory.arena==model->arena&&model->bus_withdraws==1);
+    if(memory_withdraw_error)return memory_withdraw_error;memory_withdraws++;return 0;
+}
+static int endpoint_withdraw(void *p,uint64_t owner,uint64_t epoch){
+    CHECK(p==model&&owner==7&&epoch==9);if(model->bus_withdraw_fail)return -16;model->bus_withdraws++;return 0;
+}
+static void memory_binding(Peer &p){
+    model=&p;pack(p);EldenSensorMemoryConfig cfg{0x20000000,0x800000,4,4242};
+    EldenSensorMemoryOwner memory{&p,7,9,bus_gate,route_reserve,route_install,route_observe,route_withdraw};
+    EldenSensorEndpoint endpoint{&p,7,9,bus_gate,bus_now,bus_send,bus_wait,bus_reserve,bus_complete,bus_alloc,bus_trace,endpoint_withdraw,bus_wake};
+    EldenSensorPackAuthority a{&authority_token,7,9,authority};
+    CHECK(!elden_sensor_memory_binding_open(&cfg,&memory,&endpoint,&p.seal,&a,&p.memory_binding));
+    CHECK(!elden_sensor_memory_binding_channel(p.memory_binding,7,9,1));
+}
+#endif
 static EldenSensorPackStatus status(Peer &p){EldenSensorPackStatus s{};CHECK(!elden_sensor_pack_native_status(p.cache,&s));return s;}
 int main(int argc,char **argv){
     const bool imported=argc>1;std::vector<uint8_t> imported_pack;EldenSensorPackSeal imported_seal{};
@@ -167,6 +215,16 @@ int main(int argc,char **argv){
     composed.bus_withdraw_fail=false;CHECK(!elden_sensor_pack_binding_finish(composed.binding,7,9)&&composed.bus_withdraws==1&&composed.wakes>0);
     CHECK(!elden_sensor_pack_binding_status(composed.binding,&rpc,&cache_status)&&rpc.terminal&&cache_status.state==PackStopped);
     CHECK(!elden_sensor_pack_binding_finish(composed.binding,7,9)&&composed.bus_withdraws==1);
+#if ELDEN_TEST_MEMORY
+    reset();Peer routed;memory_binding(routed);CHECK(memory_reserves==1&&memory_installs==1);
+    for(unsigned i=0;i<7;i++)CHECK(elden_sensor_memory_binding_step(routed.memory_binding)==1);
+    CHECK(routed.bus_sends==5&&routed.completed==5&&routed.opens==1&&routed.reads==4);
+    routed.bus_withdraw_fail=true;CHECK(elden_sensor_memory_binding_finish(routed.memory_binding,7,9)==-16&&routed.bus_withdraws==0&&memory_withdraws==0);
+    routed.bus_withdraw_fail=false;memory_withdraw_error=-16;CHECK(elden_sensor_memory_binding_finish(routed.memory_binding,7,9)==-16&&routed.bus_withdraws==1&&memory_withdraws==0);
+    memory_withdraw_error=0;CHECK(!elden_sensor_memory_binding_finish(routed.memory_binding,7,9)&&routed.bus_withdraws==1&&memory_withdraws==1);
+    CHECK(!elden_sensor_memory_binding_finish(routed.memory_binding,7,9)&&memory_withdraws==1);
+    CHECK(memory_descriptors.size()==2&&memory_aliases.size()==1);
+#endif
     if(imported){reset();Peer own;model=&own;own.file=imported_pack;own.seal=imported_seal;EldenSensorPackAuthority auth{&authority_token,7,9,authority};CHECK(!elden_sensor_pack_native_bind(&own.seal,&auth,&own.cache));CHECK(!elden_sensor_pack_native_size(own.cache,7,9,&size)&&size==imported_pack.size());CHECK(own.opens==1&&own.closes==1);}
     unsigned completed=scenarios;reset();std::printf("PASS %u actual native vnode/SHA256/pack/cache/stop scenarios, %u checks; VFS/authority peers modeled\n",completed,checks.load());return 0;
 }

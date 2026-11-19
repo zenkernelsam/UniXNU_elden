@@ -1,5 +1,21 @@
 # UniXNU elden — authoritative source repository
 
+SensorMemory20261120: actualIOKit highPA→lowIOVA/4Ktables+memory→sealedcache→RPC
+fullkernel10a5d84d/nativea44297b9. Source4/native4/kernel1;18allocator75240/
+19stack9989checks ASan/UBSan,IOKit/cache/PAR/MMIO/GLINK/VFS/clockidentitymodeled.
+7scalarobjects0warnings/noinit;actualoriginalIOBufferbytes/prepare/segment/mapVA
+directcalls/PARcache/tablegraph/Apple30/pen+motion20710/Actuator168186/RTC/camera/
+input-sleep/SSC/recovery audits pass/globalflagsfalse.32bitIOVAownerchosen,
+PAper4Kverified/UniquePrefaultNC44/noWBdatareuse;exactElden100N104N106N108N/
+sessiontag!=hardwareCB. SharedrealownerreservesIOVA/bank/ASID/epoch;noneguessed.
+Live/waitchecksactuallease,prepare/publish/completefreshobserve+barrier. Stop
+endpointfenceTHENSMMUwithdraw;failure/successretainallrefs/tablesaliastoreset.
+No actualsharedSMMU/GLINK/captureprovider or late-route/touchseal bypass/new
+startup/tablet/PD/samples/UIproof. Read SENSOR-MEMORY.md/memory-validation.
+Goalactive/noautomerge/subagents. NEXT actualsharedprovider+Gen4PD/calibration/
+samples/mounttime+J317SPU;cameraactualpowerframes/wakepanelPM/hapticssystemcal/
+RTCpersistence remain. PreservemainlineWi-Fi/QRTR/GPU/peer/floor/recovery.
+
 SensorPack20261119: actualnativevnode/SHA256/immutablecache+registrydigest/RPC
 binding andfixedoriginalserializer fullkerneld93b63ac/native445e81bd overRPC.
 Source7/native8 linked, native9hostfixture identical2objects (archivecontainer

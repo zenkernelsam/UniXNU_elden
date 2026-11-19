@@ -71,6 +71,13 @@ Mainline prompt: [MAINLINE-HANDOFF-PROMPT.md](MAINLINE-HANDOFF-PROMPT.md).
 
 ## Current status
 
+Latest [SENSOR-MEMORY.md](SENSOR-MEMORY.md) adds actual native IOKit highRAM→low
+IOVA/4Ktable graph plus live memory→cache→RPC binding.18allocator75240 and19stack
+9989checks,7scalarobjects and fullkernel10a5d84d/nativea44297b9 pass. Direct
+originalIOKit/PAR/cache/actualtable/RPC/Apple30/all existing component recovery
+audits pass. Real sharedSMMU/GLINK and actual Y700 capture providers remain
+uninstalled; no device access/sensorPD/samples/UI rotation/Goal completion.
+
 Latest [SENSOR-PACK.md](SENSOR-PACK.md) adds actual native vnode/SHA256/sealed
 registry cache and FastRPC binding plus fixed original host pack serializer.
 18native1389 + external host-only fixture19native1449checks,17builder20checks,
