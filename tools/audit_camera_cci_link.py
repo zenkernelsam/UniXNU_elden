@@ -86,8 +86,24 @@ def main():
         changed=[];allowed_add=set()
         for offset in range(0,size,4):
             x=struct.unpack_from('<I',old,oldat+offset)[0];y=struct.unpack_from('<I',raw,at+offset)[0]
+            # An identical ADRP can still have a different ADD low12 when
+            # string pooling moves within its page. Qualify the whole pair.
+            if x==y and x&0x9f000000==0x90000000 and offset+4<size:
+                nx=struct.unpack('<I',read_at(prior,old,before+offset+4,4))[0]
+                ny=struct.unpack('<I',read_at(im,raw,after+offset+4,4))[0]
+                if nx!=ny and nx&0xffc00000==0x91000000 and ny&0xffc00000==0x91000000 and (nx&0x3ff)==(ny&0x3ff) and (nx>>5)&31==x&31:
+                    target_old=adrp_target(x,before+offset)+((nx>>10)&4095)
+                    target_new=adrp_target(y,after+offset)+((ny>>10)&4095)
+                    changed.append({'instruction_offset':offset,'target_before':hex(target_old),'target_after':hex(target_new),**same_target(target_old,target_new)})
+                    allowed_add.add(offset+4)
             if x==y or offset in allowed_add:continue
-            if x&0x9f000000==0x90000000 and y&0x9f000000==0x90000000 and x&31==y&31:
+            if x&0x7c000000==0x14000000 and x&0xfc000000==y&0xfc000000:
+                target_old=before+offset+(signed(x&0x3ffffff,26)<<2)
+                target_new=after+offset+(signed(y&0x3ffffff,26)<<2)
+                labels=[label for label,values in oldsymbols.items() if target_old in values and label in newsymbols and target_new in newsymbols[label]]
+                if not labels:raise ValueError('Inherited owner branch target differs: '+n)
+                changed.append({'instruction_offset':offset,'branch_target_before':hex(target_old),'branch_target_after':hex(target_new),'exact_target_symbols':sorted(labels)})
+            elif x&0x9f000000==0x90000000 and y&0x9f000000==0x90000000 and x&31==y&31:
                 next_old=struct.unpack('<I',read_at(prior,old,before+offset+4,4))[0]
                 next_new=struct.unpack('<I',read_at(im,raw,after+offset+4,4))[0]
                 rd=x&31;target_old=adrp_target(x,before+offset);target_new=adrp_target(y,after+offset)

@@ -1,0 +1,32 @@
+{
+  "repository": "https://github.com/rui12366B/UniXNU-Pagani-Drivers",
+  "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+  "files": [
+    {
+      "file": "PaganiSensorsSsc.c",
+      "path": "drivers/PaganiSensors/SensorsSsc.c",
+      "bytes": 17851,
+      "sha256": "0e7e2e60532463fcdfa9b37fa194f8e4ad76ca3964c0c2e38d726f82b7c8fd47"
+    },
+    {
+      "file": "PaganiSensorsSsc.h",
+      "path": "drivers/PaganiSensors/SensorsSsc.h",
+      "bytes": 8452,
+      "sha256": "7dc21d2824c2f0dcbb531133769dfe7d1b8d4301369a5ab9c5527b9c70abddef"
+    },
+    {
+      "file": "PaganiSensorsPb.c",
+      "path": "drivers/PaganiSensors/SensorsPb.c",
+      "bytes": 6993,
+      "sha256": "fb20086114de8fb2c48399c2082f2f1f3d65cc5640d9129baff15146490f7dda"
+    },
+    {
+      "file": "PaganiSensorsPb.h",
+      "path": "drivers/PaganiSensors/SensorsPb.h",
+      "bytes": 3707,
+      "sha256": "a3b60ae40dc924efad16e0b461809b61fd96f3b2beb07488b6918b44e0231a8e"
+    }
+  ],
+  "scope": "SSC service/request/attribute schema and scalar protobuf facts; no donor router/PD/heap/bank defaults",
+  "hardware": false
+}

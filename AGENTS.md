@@ -1,5 +1,23 @@
 # UniXNU elden — authoritative source repository
 
+MotionSSC20261119: real400client/per-sensor connection/strictattributes +native
+worker/providerboundary/actualOS17HIDdemand/time/delivery/stop full-linked over
+latestinput-sleep. Source6/native8/kernel6 1640a2d3/native1041abbe;26actualmanager
+18372/6actualnative614checks ASan/UBSan,OS/router/power/mount/clock/HIDmodeled.
+Five scalarobjects0warnings+originalMotionCoreonce;originalUFS26warnings retained.
+Actualcalls/Apple30/pen+motion20710/Actuator168186/directIOBuffer/RTC/input-sleep/
+camera+motion→haptics→RTC→UFSrecovery pass/globalflagsfalse. NoautoSSCstart/shared
+QRTRprovider/realboardorPDregistry/FastRPC/calibration/samples/UIrotationyet.
+physical_sensor0andnegativeHWID preserved;realqualifierrequired,missingattrsnever
+default. Stalegeneration/queueoverflow/clockrollback closesadmission;withdraw0
+requiresactualcallbacksendfence+remoteinactive,queuedDEL_CLIENTnotproof;retained
+handles/maps/contextstoresettoreset. Exact6f97250e EldenDTS ADSP/FastRPC/SIDs3..8
+100N104N106N108N checked,labelsnotfreehardwareCB. Read MOTION-SSC.md/ssc-validation.
+No tablet/automerge/subagents;Goalactive. NEXT realsharedprovider+Gen4sensorPD/
+registry/calibration/mountclock/samples andcompleteJ317SPU/UI;cameraactualpower/
+frames,wakepanelPM,hapticssystemcalibration,RTCpersistence stillremain. Mainline
+Wi-Fi/PCIe/WCN/QRTR/hardware+GPU/peer/floor/recovery gates preserved.
+
 InputSleep20261119: real nonterminal penpause/resume+exact originaltouchworker
 Flow/SPI/IRQ/firmware/powergate/wait/stop hooks now full-linked. Same HID/clock,
 failedliftpending/clockrollbackstoprefuse; source-derived worker only executor,

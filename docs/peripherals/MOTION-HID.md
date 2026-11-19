@@ -1,5 +1,11 @@
 # OS17 accelerometer/gyroscope HID — offline component
 
+Subsequent [MOTION-SSC.md](MOTION-SSC.md) adds the real native sensor worker,
+service400 discovery/strict attributes/demand and shared-provider boundary,
+full-linked over the newer input-sleep kernel. Real transport/board/PD providers,
+samples and UI rotation remain missing; this older independent HID evidence
+continues to qualify the unchanged HID library.
+
 The real native IOHIDDevice/event-driver adapter now compiles and fully links
 with exact OS17 constructor/driver qualification. It requires an admitted Gen4
 producer and emits no synthetic samples or static capability nodes. No actual

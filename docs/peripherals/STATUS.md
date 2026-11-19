@@ -71,6 +71,14 @@ Mainline prompt: [MAINLINE-HANDOFF-PROMPT.md](MAINLINE-HANDOFF-PROMPT.md).
 
 ## Current status
 
+Latest SSC native milestone on2026-11-19 is [MOTION-SSC.md](MOTION-SSC.md):
+service400 discovery/strict attributes/per-sensor demand and a real native
+worker connect to the existing OS17 HID.26manager18372 +6native614 checks,
+five scalar objects and full kernel1640a2d3/native1041abbe pass. Real shared
+QRTR/board/PD registry providers remain absent; no samples or UI rotation/hardware
+acceptance. Recovery now stops motion before haptics/RTC/UFS. The latest
+combined kernel retains input-sleep/camera/pen/Actuator/RTC and Apple30.
+
 Latest Actuator milestone on2026-11-19 is in
 [HAPTICS-ACTUATOR.md](HAPTICS-ACTUATOR.md): signed OS17 HAL and real type1
 client/ring/original-worker connection, full offline kernel6c644610/native4a674e31.
@@ -88,7 +96,7 @@ component rows include earlier independently accepted milestones:
 | Dual haptics | Exact Gen4 AW/GENI/queue/native worker; Apple compiler, RAM/RTP broker/shared budgets and signed48k HAL/type1 ring;16scalar objects/full link,168-service/186-client ABI, actual original IOBuffer calls;13native lifecycle scenarios/135HAL checks | Measured per-motor waveform/gain/thermal/bandwidth, product capabilities/tunings/VirtualAudio and actual iOS playback; current mainline/hardware/sleep acceptance |
 | RTC | Real PMK8550 read/carry via observer-only SPMI/shared gate; volatile system-learned offset; upstream board-clock registration/get/set added to existing platform; five scalar objects/full link; actual initializer/callback/recovery audit | Persistent offset/epoch identity, wake source/alarm and sleep lifecycle; current-mainline/hardware retention |
 | Wake | Exact OEM GPIO/PDC route and serialized flow now hooked into original worker;reversible pen/finger release,real Protocol restore/event wait/stop;12coordinator534checks and full link | Current-mainline port, actual display/system power provider and physical PDC/gesture/sleep/pen/finger cycles; no fake power readiness |
-| Motion | Strict integer QMI/SSC sample core plus same-OS17 real accel/gyro IOHIDDevice/driver/constructor adapter;95core-HID/five actual native scenarios/152checks,two scalar objects and207/10/full link | Exact Gen4 transport/attributes/SUIDs/real samples and mount/time qualification; actual CoreMotion/UI and complete J317 orientation/SPU contract |
+| Motion | Strict integer sample core/OS17 HID plus actual service400 discovery/strict attributes/session/demand/nativeworker;26manager18372+6native614checks/five new scalarobjects/full link,207/10 retained | Install real shared QRTR/Gen4 sensor-PD registry/calibration and board provider; qualify actual samples/mount/time; CoreMotion/UI and complete J317 orientation/SPU contract |
 | Cameras | Exact Gen4 sensor/core plus CCIv2 read/write bodies, actual native CCI0/CCI1 mapping/owned IRQ drain and sensor binding;135CCI/11native scenarios with full sensor path,three new scalarobjects/full link | Actual shared power/CAMCC/GDSC/MCLK/pin provider, CAMSS/CSI/VFE/DMA/SMMU/IRQ/buffers/OS17 service, sensor identity/calibration/frames |
 
 Earlier haptics-native combined haptics+RTC+pen kernel SHA256 is
