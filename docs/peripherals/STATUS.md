@@ -88,7 +88,7 @@ component rows include earlier independently accepted milestones:
 | Dual haptics | Exact Gen4 AW/GENI/queue/native worker; Apple compiler, RAM/RTP broker/shared budgets and signed48k HAL/type1 ring;16scalar objects/full link,168-service/186-client ABI, actual original IOBuffer calls;13native lifecycle scenarios/135HAL checks | Measured per-motor waveform/gain/thermal/bandwidth, product capabilities/tunings/VirtualAudio and actual iOS playback; current mainline/hardware/sleep acceptance |
 | RTC | Real PMK8550 read/carry via observer-only SPMI/shared gate; volatile system-learned offset; upstream board-clock registration/get/set added to existing platform; five scalar objects/full link; actual initializer/callback/recovery audit | Persistent offset/epoch identity, wake source/alarm and sleep lifecycle; current-mainline/hardware retention |
 | Wake | Exact OEM gesture/protocol plus owned GPIO162/PDC109/INTID652 native IRQ and serialized flow;50route/12nativeIRQ scenarios/1233flow checks;four scalar objects/full link | Actual current touch worker/HID pause/resume, real display/system power callbacks and PDC/gesture hardware; no polling or fake power readiness |
-| Motion | Source-bound integer QMI/SSC discovery/requests/client/sample parser, strict malformed data/mount/units/clock/gravity-axis hold;2622678 checks and scalar native | Exact Gen4 transport/attributes/SUIDs/real samples and mount/time qualification, actual IOHID/CoreMotion/UI |
+| Motion | Strict integer QMI/SSC sample core plus same-OS17 real accel/gyro IOHIDDevice/driver/constructor adapter;95core-HID/five actual native scenarios/152checks,two scalar objects and207/10/full link | Exact Gen4 transport/attributes/SUIDs/real samples and mount/time qualification; actual CoreMotion/UI and complete J317 orientation/SPU contract |
 | Cameras | Actual fixed Gen4 sensor325+438 register entries/eight power-control-stream bodies, owned CCI/power/receiver adapter;820 scenarios/882646 checks and scalar native | Actual CCI/CAMSS/CSI/VFE/DMA/SMMU/IRQ/buffers/OS17 service, sensor identities/calibration/frames |
 
 Earlier haptics-native combined haptics+RTC+pen kernel SHA256 is
@@ -129,8 +129,10 @@ budget/composed tests. Defaultcatalog0/no measured bank/outputdisabled. Subseque
 HAL/native Actuator source/full link now exists in HAPTICS-ACTUATOR.md; system
 capability/preset/VirtualAudio and calibrated hardware acceptance still remain.
 Motion and camera foundations now have code/native evidence in
-[MOTION-CORE.md](MOTION-CORE.md) and [CAMERA-CORE.md](CAMERA-CORE.md). Neither has
-an actual Gen4 native producer/pipeline or hardware acceptance yet. All current
+[MOTION-CORE.md](MOTION-CORE.md) and [CAMERA-CORE.md](CAMERA-CORE.md). Motion now
+also has [MOTION-HID.md](MOTION-HID.md), full linked kernelc89d6000 and actual
+original constructor/dispatch/207-slot ABI checks. Neither has an actual Gen4
+native producer/pipeline or hardware acceptance yet. All current
 jobs are terminal; selected source inputs remain frozen after the68-root review.
 Wake protocol is recorded in [WAKE-PROTOCOL.md](WAKE-PROTOCOL.md); its command
 delivery is separate from physical sleep. [WAKE-IRQ.md](WAKE-IRQ.md) now adds

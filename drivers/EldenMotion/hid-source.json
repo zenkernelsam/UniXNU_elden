@@ -1,0 +1,51 @@
+{
+  "repository": "https://github.com/IssacL04/UniXNU-Pagani-Drivers",
+  "commit": "c888efd3ce1b817d13f28783a77cf689cb2255c9",
+  "files": [
+    {
+      "path": "drivers/PaganiSensors/SensorsHid.c",
+      "bytes": 8128,
+      "sha256": "decaffb793ce54ae824fa1a3ff87077c06b2c50326048df066e2ac4db55dc7d7"
+    },
+    {
+      "path": "drivers/PaganiSensors/SensorsHid.h",
+      "bytes": 7343,
+      "sha256": "ab71b87c290b86cc48b1b928cc891a076bca2286af321131cbacdff8244e3cf8"
+    },
+    {
+      "path": "drivers/PaganiSensors/scripts/build-pagani-sensors.py",
+      "bytes": 28195,
+      "sha256": "45270a6421b5bf212dff57091095fe157d757ea647e51d1abcda26629e1d2ba8"
+    },
+    {
+      "path": "drivers/PaganiSensors/LICENSE",
+      "bytes": 2673,
+      "sha256": "5b1d3d911103cb0f41641ec0964c5ac1f7e229f57aa072b6ac38bae913a1307b"
+    }
+  ],
+  "bound_original_OS17": {
+    "accel": {
+      "va": "0xfffffff004afb970",
+      "bytes": 88,
+      "sha256": "03a15551994b16d0ecafe883ef70c073254d0dab1329a37c0307f2541d3f460e"
+    },
+    "gyro": {
+      "va": "0xfffffff004afb9c8",
+      "bytes": 88,
+      "sha256": "f192b0184de8a23631381dd5be2dd2334925fc39a87a4dcfd13efcad27bd7760"
+    },
+    "set_properties": {
+      "va": "0xfffffff004af5988",
+      "bytes": 32,
+      "sha256": "304544659c4eb872ec05c86065a22b106bfbf86fc6a9defdf4e3df6e947f05d1"
+    },
+    "copy_event": {
+      "va": "0xfffffff004af6314",
+      "bytes": 64,
+      "sha256": "6251a8d99d9478acd9203da0936d8c0a5b640262d49c288067ba97d0e0840067"
+    }
+  },
+  "original_HID_text_sha256": "7e4c5104814f2e773d5be13d092dec53ee44ba5a61a81264b229780406e86b72",
+  "scope": "Same OS17 accel/gyro descriptor/constants/constructor and event-driver ABI only; no donor hardware/RPC/QRTR/imaginary orientation or fake samples",
+  "hardware": false
+}

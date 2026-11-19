@@ -1,5 +1,22 @@
 # UniXNU elden — authoritative source repository
 
+MotionHID20261119: exact sameOS17c888efd3 accel/gyro60Bdescriptors +real native
+IOHIDDevice/eventdriver/originalconstructor dispatch now full-linked offline.
+95HID/fiveactualnative scenarios152checks ASan/UBSan (OS peers). Source5/native9/
+kernel2 c89d6000/nativee286e4fa; two scalar objects0warnings/noauto-init,207slots/
+10exact overrides, originalconstructor wholebytes +actualmaterialized indirect
+accelb970/gyrob9c8/dispatchace8 targets checked. Apple30/ActuatorABI original
+IOBuffer/pen/RTC/recovery preserved. Real producer gate/SUID/range/g-radQ16/mount
+sign/clock age/monotonic samples; device workloop demand+rollback/stop. bind before
+sample avoids circular firstsample/interval hook wait. No Gen4SSC producer,
+staticMG/fakegravity/clockfallback or orientationSPU service. HistoricalJ317
+rotationneeds complete consumer/SPU contract; donor warns nullopencrash. Actual
+transport/attrs/samples/clock/mount/CoreMotion/UI remain. Source15files +57regular
+members verified19450151B/019ac72f. Read MOTION-HID.md/hid-validation.json.
+Alljobs terminal/Goalactive/no tablet/automerge/subagents; next actual wakePM
+reversibleinputpause, sensorGen4transport and cameraCCI/CAMSS/pipeline. Default
+Actuatorprofile/catalog/calibration NULL/off. Mainline/GPU/QRTR/peer work preserved.
+
 WakeIRQ20261119: exact frozen6f97250e rawGit map162→109→SPI620/INTID652,
 TLMMtarget8 and PDCtype2/version3.2 checked; native exclusive attach/readback/
 own mask/RWP/active+handler drain/own pending clear, no summary240/peer652 mask.

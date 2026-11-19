@@ -1,9 +1,10 @@
 # Motion protocol and rotation math — offline core
 
 The integer QMI/SSC decoder, discovery/request encoder and gravity-axis classifier
-compile for ARM64/iOS17. Actual Gen4 transport, firmware attributes/calibration,
-timestamp synchronization, IOHID/CoreMotion/UI and hardware samples remain to
-connect. This core has no device access or synthetic producer.
+compile for ARM64/iOS17. The subsequent actual OS17 accel/gyro HID/native
+component is in [MOTION-HID.md](MOTION-HID.md). Actual Gen4 transport, firmware
+attributes/calibration, timestamp synchronization, CoreMotion/UI and hardware
+samples remain to connect. This core has no device access or synthetic producer.
 
 ## Reference and implemented path
 
@@ -59,5 +60,6 @@ python3 tools/test_motion_core.py --source /new/source \
 Next establish the exact Gen4 SSC/GLINK/FastRPC path and retained mainline owner,
 observe firmware SUID/attributes/sample status and timestamps, qualify physical
 axes and units, then bind actual IOHID/CoreMotion/rotation. No APPS IMU identity
-or SM8250 SLPI hardware is guessed. No native transport/HID/full kernel/boot or
-tablet test occurs in this delivery; full five-part Goal remains active.
+or SM8250 SLPI hardware is guessed. Subsequent native HID/full component link
+exists in MOTION-HID.md; native transport/UI/hardware still remain absent.
+No tablet test occurs; full five-part Goal remains active.

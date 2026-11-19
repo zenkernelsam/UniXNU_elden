@@ -16,6 +16,8 @@ HAPTICS-BROKER.md 为后续最新衔接：原生v2客户端增加effect-id请求
 
 随后新增 WAKE-IRQ.md：精确Gen4 GPIO162→PDC109→GIC SPI620/INTID652，TLMM target位8，PDC新旧版启用语义已按原Git核准。真实原生IRQ和序列化pause/release/50:13/读包/请求唤醒/power-ready/restore流程已离线构建并链接kernel63486fdf/nativebbd93bc8；50route/12nativeIRQ场景及1233flow检查通过，Apple30/Actuator/pen/RTC/回程仍通过。它还没有hook当前touch worker或display/system PM；GOP的逻辑PM不是panel上电证据，terminal pen/touch stop也不能当可逆pause。主线后续接真实非terminal释放/排空/面板电源/原固件恢复，实测PDC版本/中断/手势后验收亮屏。原生<3.2缺统一bank provider时明确拒绝，不接管共享summary240或peer652。私有19273807B/08e9be2d、53members已核，workbench lab/records/wake-irq-20261119；五项Goal继续。
 
+再后续 MOTION-HID.md：同版OS17 Pagani限定抽取Accel0xff00/3、Gyro0xff00/9描述和原事件构造/dispatch，真实IOHIDDevice、绑定/ReportInterval钩子/原方法转发/采样/关闭已离线构建。95HID转换+五实际原生场景/152检查和207slots/10overrides/完整原constructors、实际间接调用targets通过；full kernelc89d6000/nativee286e4fa，Apple30/Actuator/pen/RTC/回程仍通过。它要求你提供真实Gen4 owner/epoch/SUID/mount/单位/19.2MHz时钟/transport-demand；没有静态MG节点、假数据或原生SSC输送。先调用bind再开采样，防止互等；方向0x20/8a缺SPU接口会触发CoreMotion空指针，因此未伪造方向服务。历史J317需要自己的完整rotation合同。私有19450151B/019ac72f、57members，workbench lab/records/motion-hid-20261119。主线继续Wi-Fi任务，后续评审移植；相机CCI/CAMSS/frames、实际wakePM、马达系统调音/校准继续，五项Goal不得清掉。
+
 板级实现优先 ArmadaOS-Freedom 的 TB322FC/SM8750 文档、固定内核和适用补丁，其次 Linux mainline；iPadOS 接口参考成熟 UniXNU 与同版 OS17 实现。不要搬用三代/五代的寄存器或固件。真机前重新核准入、候选完整摘要、原有 floor1738713600@0/父链3 和自动回程。
 
 马达尤其需要机械/电气校准：Apple 效果强度不是硬件 gain，不能直接回放或线性放大后认为安全。仅启用有已验证增益/boost/频率/时长/双路预算和停止保护的效果；未校准连续RTP保持关闭。传感器方向和相机数据必须来自真实硬件；前后摄像头设备树节点存在不等于 ISP/出图完成。把接入这些分支作为后续衔接事项，继续当前 Wi-Fi 进度，不提前宣称五项已完成。
