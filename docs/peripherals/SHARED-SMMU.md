@@ -12,6 +12,19 @@ boot package, hardware acceptance or mainline merge occurred. The real
 boot/power/security/memory authority remains a mandatory input and has not
 been installed. The five-part peripheral goal stays active.
 
+Follow-up over source8d39028 re-audits every real context/root/table after
+route writes and before batch publication. Injected post-route TTBR/table
+corruption is now explicitly refused/poisoned. Accepted source12/host12/
+stack13/native12/kernel12:173actual core scenarios1400032checks and11native
+compositions2395232checks; all11final audits pass. Kerneld054975d/nativeb70f270e
+supersedes the earlier component candidate below. Hardware/Goal status is
+unchanged; original camera-DMA parent/native/recovery inputs are retained.
+
+Current kernel:
+`d054975d87c1c1aca07db77f6f2bac2884db48d03af8b7ada533ca10cadc2359`.
+Current native:
+`b70f270e75562fe2bd3d4d7aa3404f26f1ebd43cfef458a9d08d836cce6aa30d`.
+
 ## Source and immutable transaction
 
 The source audit reads Armada's frozen TB322FC/SM8750 Linux
@@ -49,6 +62,9 @@ update expected state. Applied-error uncertainty never authorizes guessed
 rollback. Original context validation/readback and documented read-only
 ASIDPNE clearing are retained. Partial failure poisons the transaction and
 closes normal admission while retaining cleanup/resources toreset.
+Every selected context/root/physical-table graph is also re-observed after
+the actual SMR/S2CR writes, before the actual observed batch is published.
+Prior observations alone cannot qualify a later changed table image.
 
 ## Real native provider and startup order
 

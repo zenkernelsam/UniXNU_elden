@@ -11,7 +11,7 @@
 #include "BootRoute.c"
 static unsigned checks,cases;
 #define CHECK(x) do{checks++;if(!(x)){fprintf(stderr,"shared line%u %s\n",__LINE__,#x);exit(1);}}while(0)
-typedef struct {uint32_t regs[0x100000/4];uint64_t clock;unsigned read_fail,write_fail,reads,writes,applied_error,early_closed;
+typedef struct {uint32_t regs[0x100000/4];uint64_t clock;unsigned read_fail,write_fail,reads,writes,applied_error,early_closed,route_corrupt;
     uint32_t irq[3],quiesced[3],memory[3],touch_held;EldenSmmuShared shared;EldenSmmuSharedConfig cfg;
     uint64_t pool[3][4096];EldenSmmuSharedMemory frames[3];} Model;
 static Model m;
@@ -33,6 +33,10 @@ static int rd64(void *p,size_t off,uint64_t *out){CHECK(p==&m&&off<sizeof(m.regs
 static int wr32(void *p,size_t off,uint32_t value){CHECK(p==&m&&off<sizeof(m.regs)&&!(off&3));m.writes++;m.clock++;
     if(m.write_fail==m.writes&&!m.applied_error)return -5;
     if(off>=0x80000&&off%4096==0x58)m.regs[off/4]&=~value;else m.regs[off/4]=value;
+    if(off==0x820&&value==0x80001c00){
+        if(m.route_corrupt==1)m.regs[(0x87000+0x20)/4]^=0x1000;
+        if(m.route_corrupt==2)m.pool[1][0]^=0x1000;
+    }
     return m.write_fail==m.writes?-5:0;}
 static int wr64(void *p,size_t off,uint64_t value){CHECK(p==&m&&off<sizeof(m.regs)-4&&!(off&7));m.writes++;m.clock++;
     if(m.write_fail==m.writes&&!m.applied_error)return -5;
@@ -142,5 +146,10 @@ static void fresh_tests(void){
     unsigned before=m.writes;CHECK(elden_smmu_shared_install(&m.shared,7,9,1,&m.frames[1])==-22&&m.writes==before);
     reset(2);CHECK(!open());install_all();CHECK(!elden_smmu_shared_commit(&m.shared,7,9));CHECK(!elden_smmu_boot_route_seal());
     EldenSmmuSharedLease lease;CHECK(elden_smmu_shared_lease(&m.shared,7,9,1,&lease)==-16);CHECK(elden_smmu_shared_early(&m.shared,7,9)==-16);
+    for(unsigned corrupt=1;corrupt<=2;corrupt++){
+        reset(2);CHECK(!open());install_all();m.route_corrupt=corrupt;
+        CHECK(elden_smmu_shared_commit(&m.shared,7,9)<0&&elden_smmu_boot_route_state()==EldenSmmuBootPoisoned);
+        CHECK(elden_smmu_shared_admit(&m.shared,7,9,1,0)<0);
+    }
 }
 int main(void){normal();refusals();failures();batch_tests();fresh_tests();printf("PASS sharedSMMU: %u scenarios/%u checks; actual batch/4K/touch, physical/MMIO/IRQ peers modeled\n",cases,checks);return 0;}

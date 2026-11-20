@@ -1,5 +1,15 @@
 # UniXNU elden — authoritative source repository
 
+SharedPostroute20261120: source8d39028 followup reauditsactualcontext/TTBR/
+physicaltablegraph AFTERSMR-S2CRwrites BEFOREbatchpublish;injectedpostwrite
+TTBR/tablecorruptionpoisons.173core1400032/11composed2395232,source12/host12/
+stack13/native12/kernel12+all11finalaudits pass,8scalarobjects0warnings.
+Currentkerneld054975d/nativeb70f270e;old2d078d21historical. Sameonly2archive/
+2directscope/original4Konce/recovery5500ms/Apple30/peripheralheld. Read
+SHARED-SMMU.md/shared-validation.json. Realoriginalphysicalauthority/startup/
+DMA/Gen4samplescalmounttimeUI/RAW10ISPcameraOSservice stillmissing. No
+tablet/merge;fivepartGoalactive;Pencil/wakePM/hapticcal/RTCpersist remain.
+
 SharedSmmu20261120: actualearlybatch/nativeMMIO-GIC/stagedcameraADSPmemory/
 originaltouchroute+preparedmemorySSCadopt fullylinked.171core1272415+
 11composed2375292,8scalarOS17objects0warnings/kernel2d078d21/nativea568b418;

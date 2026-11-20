@@ -265,6 +265,14 @@ int elden_smmu_shared_commit(EldenSmmuShared *storage,uint64_t owner,uint64_t ep
         if((rc=equal(s,0x800+4*r->slot,0))||(rc=equal(s,0xc00+4*r->slot,InvalidS2cr))||
            (rc=put(s,0xc00+4*r->slot,r->s2cr))||(rc=put(s,0x800+4*r->slot,r->smr))){s->write_mode=0;return leave(s,failed(s,rc));}}
     s->write_mode=0;
+    /* Routes are now installed, but publication is still closed. Re-audit
+     * every actual context/root/table after the route writes; a prior table
+     * observation cannot prove that a post-write image stayed unchanged. */
+    rc=layout_observe(s,0);if(rc)return leave(s,failed(s,rc));
+    for(unsigned group=0;group<3;group++)if(enabled_group(s,group)){
+        rc=result(s->ops.quiesced(s->ops.context,owner,epoch,group));
+        if(!rc)rc=prepared_observe(s,group);if(rc)return leave(s,failed(s,rc));
+    }
     EldenSmmuBootRoute observed[6];for(unsigned i=0;i<s->status.route_count;i++){observed[i]=s->routes[i];EldenSmmuBootRoute *r=&observed[i];
         if((rc=rd(s,0x800+4*r->slot,&r->smr))||(rc=rd(s,0xc00+4*r->slot,&r->s2cr))||
            (rc=rd(s,0x1000+4*r->bank,&r->cbar))||(rc=rd(s,0x1800+4*r->bank,&r->cba2r)))return leave(s,failed(s,rc));}

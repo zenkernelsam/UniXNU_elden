@@ -71,6 +71,14 @@ Mainline prompt: [MAINLINE-HANDOFF-PROMPT.md](MAINLINE-HANDOFF-PROMPT.md).
 
 ## Current status
 
+SharedSMMU post-route follow-up:source8d39028/173core1400032+
+11composed2395232/source12-host12-stack13-native12-kernel12 andall11audits
+pass. Exactcontext/TTBR/graph checked AFTERactualroutewrites BEFOREpublication;
+postwritecorruptionpoisons instead of publishingready. Currentkernel d054975d/
+nativeb70f270e;see[SHARED-SMMU.md](SHARED-SMMU.md). Sameoriginalowners/recovery/
+Apple30/peripheral paths retained;actualphysicalstartup/DMA notaccepted,
+five-partGoalactive. Earlier sharedcandidate remains historical evidence.
+
 Latest [SHARED-SMMU.md](SHARED-SMMU.md) connects real early batch/nativeMMIO/
 GIC and staged camera/ADSP retained memory, replaces the actual touch route
 consumer and adopts existing memory in SSC.171core1272415/11composed2375292,
