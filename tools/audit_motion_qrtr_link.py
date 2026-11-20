@@ -34,9 +34,11 @@ def main():
                         if word&0x7c000000==0x14000000:
                             pc=sec['va']+offset;calls.append((pc,pc+(signed(word&0x3ffffff,26)<<2)))
     if len(init)!=len(previous):raise ValueError('New automatic QRTR/sensor initializer')
-    no_outer_sensor_start(calls,symbol)
-    for name in ('_elden_qrtr_ports_prepare','_elden_motion_qrtr_transport','_elden_motion_native_ssc_start'):
-        if any(target==symbol(name) for pc,target in calls):raise ValueError('Unqualified owner/SSC auto-start: '+name)
+    runtime=r.get('actual_sensor_runtime_composition') is True
+    no_outer_sensor_start(calls,symbol,runtime,a.kernel_build/'native.macho')
+    if not runtime:
+        for name in ('_elden_qrtr_ports_prepare','_elden_motion_qrtr_transport','_elden_motion_native_ssc_start'):
+            if any(target==symbol(name) for pc,target in calls):raise ValueError('Unqualified owner/SSC auto-start: '+name)
     edges={}
     for name in ('_elden_qrtr_ports_rx_config','_elden_qrtr_ports_bind','_elden_qrtr_ports_link','_elden_qrtr_ports_snapshot',
                  '_elden_qrtr_ports_receive','_elden_qrtr_original_service','_elden_qrtr_service','_elden_qrtr_port_open',

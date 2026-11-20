@@ -3,6 +3,7 @@ from pathlib import Path
 import argparse,hashlib,json,re,struct,subprocess,sys
 from replay_xnu_objects import sections
 from peripheral_archive_audit import retained_archive
+from peripheral_startup_audit import no_outer_sensor_start
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def signed(v,b):return v-(1<<b) if v&(1<<(b-1)) else v
 def main():
@@ -36,7 +37,9 @@ def main():
                             pc=sec['va']+off;calls.append((pc,pc+(signed(word&0x3ffffff,26)<<2),word&0xfc000000==0x94000000))
     if len(initial)!=len(oldinitial):raise ValueError('Automatic SSC initialization added')
     start=symbol('_elden_motion_native_ssc_start')
-    if any(target==start for pc,target,link in calls):raise ValueError('Unqualified SSC auto-start caller')
+    runtime=report.get('actual_sensor_runtime_composition') is True
+    if runtime:no_outer_sensor_start([(pc,target) for pc,target,link in calls],symbol,True,a.kernel_build/'native.macho')
+    elif any(target==start for pc,target,link in calls):raise ValueError('Unqualified SSC auto-start caller')
     edges={}
     for n in ('_elden_ssc_init','_elden_ssc_server','_elden_ssc_step','_elden_ssc_receive','_elden_ssc_stop','_elden_ssc_demand',
               '_elden_ssc_attribute_report','_elden_ssc_report_error','_elden_ssc_spec_valid','_elden_ssc_pick_rate',
@@ -50,7 +53,7 @@ def main():
         # addresses are relocated separately and remain bound by exports.
         if n.startswith('_elden_') and read(native,ni,target,32)!=read(raw,im,target,32):raise ValueError('Prelink changed actual native method: '+n)
         edges[n]={'target':hex(target),'calls_and_tails':hits}
-    recovery=symbol('_elden_motion_native_ssc_recovery_stop');recovery_hits=[pc for pc,t,link in calls if t==recovery and link]
+    recovery=symbol('_elden_sensor_runtime_recovery_stop' if runtime else '_elden_motion_native_ssc_recovery_stop');recovery_hits=[pc for pc,t,link in calls if t==recovery and link]
     if len(recovery_hits)!=1:raise ValueError('One actual SSC recovery call required')
     sequence=[recovery_hits[0]]
     for n in ('_elden_haptics_stop_for_reboot','_elden_rtc_stop_for_reboot','_elden_ufs_wait_shutdown'):

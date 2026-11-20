@@ -46,6 +46,12 @@ int elden_motion_native_ssc_stop(uint64_t owner,uint64_t epoch);
 int elden_motion_native_ssc_status(EldenMotionNativeStatus *);
 /* Recovery-compatible:1when absent or actually terminal-success,0otherwise. */
 int elden_motion_native_ssc_recovery_stop(void);
+/* One original-owner, nonblocking status observer installed before start.
+ * Calls happen after status lock release on the owning SSC worker; retained
+ * until reset. Enables listener/recovery to see a motion fault while next2
+ * is waiting, without another polling thread or a fabricated IRQ event. */
+int elden_motion_native_ssc_observe(void *context,uint64_t owner,uint64_t epoch,
+    void (*status)(void *,const EldenMotionNativeStatus *));
 #ifdef __cplusplus
 }
 #endif

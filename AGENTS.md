@@ -1,5 +1,24 @@
 # UniXNU elden — authoritative source repository
 
+SensorRuntime20261120: actual earlyretainedmemory→sealedcache/RPClistener→SSC
+worker lifecycle +singleoriginalrecoverywrapper fullylinked;source4/native4/
+components5/kernel3.16runtime410/20memorycacheRPC18580/7SSCobserver795 checks;
+actualcomposednormal9252/retirefailure9220+32ar/function positivesnegatives
+ASan/UBSan. IOKit/PAR/VFS/DSP/transport/clock/HID/physicalpeers modeled.
+Three scalarobjects0compilewarnings/noinitSIMD;UFS26/linkwarnings retained.
+OriginalMemoryBinding/NativeSsc bodiesonly replaced+RuntimeNative added;
+ShengUfsrecoverywrapperonly rebuilt,ADSP/GLINK/QRTR/others exact/Apple30/pen
+motion20710/Actuator168186/RTC/camera/sleep/SSC/memorypackRPC/recoverypass.
+Earlyownerpreparebeforetouchseal,actualpreparedmemoryopensonce/laterRPCno
+secondroute;real init2+packchecked thenSSC. Singlelock-droppedSSCobserver
+wakes next2;listeneralive throughactualSSCcleanup,thenendpoint/remote/SMMU
+withdraw. Aggregateold5500ms,fail retainsreset. Noouterpreparestartcaller/
+actualphysicalprovider/intents/capture/calibration/samples/UI/tablet orauto
+merge. Read SENSOR-RUNTIME.md/runtime-validation.json. NEXTrealsharedowners+
+Gen4PD/capture/mounttime/samples/J317SPU;cameraactualpowerframes/wakepanelPM/
+hapticssystemcal/RTCpersistence remain. FivepartGoalactive/no subagents;
+preservemainlineWifiQRTR/GPU/peer/floor/recovery.
+
 MotionQrtr20261120: sole originalIPCRTR clientports + actual NativeSsc transport
 fully linked; source5/native5/kernel2/stack1,16scenarios528checks+actualADSPqueue/
 GLINK/QRTR/SSCstack18/1954 ASan/UBSan,18actualar/function positivesnegatives.

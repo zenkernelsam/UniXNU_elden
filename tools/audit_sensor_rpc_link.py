@@ -38,8 +38,9 @@ def main():
     for n in entries:
         explicit[n]=explicit_binding_calls(n,calls,symbol,a.kernel_build/'native.macho')
     if any(explicit.values()):
-        memory_calls=explicit_binding_calls('_elden_sensor_pack_binding_open',calls,symbol,a.kernel_build/'native.macho')
-        if memory_calls:no_outer_sensor_start(calls,symbol)
+        runtime=r.get('actual_sensor_runtime_composition') is True
+        memory_calls=explicit_binding_calls('_elden_sensor_pack_binding_open',calls,symbol,a.kernel_build/'native.macho',runtime)
+        if memory_calls:no_outer_sensor_start(calls,symbol,runtime,a.kernel_build/'native.macho')
         else:
             pack=symbol('_elden_sensor_pack_binding_open')
             if any(t==pack for pc,t in calls):raise ValueError('Unqualified actual pack startup caller')

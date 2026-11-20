@@ -8,6 +8,10 @@
 #include "MemoryBinding.h"
 #endif
 #include <CommonCrypto/CommonDigest.h>
+#if ELDEN_TEST_SENSOR_RUNTIME
+#include "SensorRuntime.h"
+#include "QcomQrtr.h"
+#endif
 #include <atomic>
 #include <condition_variable>
 #include <cstdint>
@@ -34,7 +38,14 @@ struct vnode_attr {uint64_t va_data_size,va_fileid;uint32_t va_uid,va_gid,va_mod
 #define VATTR_IS_SUPPORTED(v,n) ((v)->supported)
 static std::vector<void *> allocated;static std::vector<IOLock *> locks;
 static unsigned allocation_count,fail_alloc;
-static void *IOMallocData(size_t n){if(++allocation_count==fail_alloc)return nullptr;void *p=std::malloc(n);if(p)allocated.push_back(p);return p;}
+#if ELDEN_TEST_SENSOR_RUNTIME
+static std::mutex allocation_lock;
+#endif
+static void *IOMallocData(size_t n){
+#if ELDEN_TEST_SENSOR_RUNTIME
+    std::lock_guard<std::mutex> guard(allocation_lock);
+#endif
+    if(++allocation_count==fail_alloc)return nullptr;void *p=std::malloc(n);if(p)allocated.push_back(p);return p;}
 static void IOFreeData(void *p,size_t){for(void *&v:allocated)if(v==p)v=nullptr;std::free(p);}
 static IOLock *IOLockAlloc(){if(++allocation_count==fail_alloc)return nullptr;auto *p=new IOLock;locks.push_back(p);return p;}
 static void IOLockLock(IOLock *p){p->lock();}static void IOLockUnlock(IOLock *p){p->unlock();}static bool IOLockTryLock(IOLock *p){return p->try_lock();}
@@ -169,20 +180,26 @@ static int route_withdraw(void *p,uint64_t owner,uint64_t epoch,const EldenSenso
     CHECK(p==model&&owner==7&&epoch==9&&view->memory.arena==model->arena&&model->bus_withdraws==1);
     if(memory_withdraw_error)return memory_withdraw_error;memory_withdraws++;return 0;
 }
-static int endpoint_withdraw(void *p,uint64_t owner,uint64_t epoch){
+static int test_endpoint_withdraw(void *p,uint64_t owner,uint64_t epoch){
     CHECK(p==model&&owner==7&&epoch==9);if(model->bus_withdraw_fail)return -16;model->bus_withdraws++;return 0;
 }
 static void memory_binding(Peer &p){
     model=&p;pack(p);EldenSensorMemoryConfig cfg{0x20000000,0x800000,4,4242};
     EldenSensorMemoryOwner memory{&p,7,9,bus_gate,route_reserve,route_install,route_observe,route_withdraw};
-    EldenSensorEndpoint endpoint{&p,7,9,bus_gate,bus_now,bus_send,bus_wait,bus_reserve,bus_complete,bus_alloc,bus_trace,endpoint_withdraw,bus_wake};
+    EldenSensorEndpoint endpoint{&p,7,9,bus_gate,bus_now,bus_send,bus_wait,bus_reserve,bus_complete,bus_alloc,bus_trace,test_endpoint_withdraw,bus_wake};
     EldenSensorPackAuthority a{&authority_token,7,9,authority};
     CHECK(!elden_sensor_memory_binding_open(&cfg,&memory,&endpoint,&p.seal,&a,&p.memory_binding));
     CHECK(!elden_sensor_memory_binding_channel(p.memory_binding,7,9,1));
 }
 #endif
+#if ELDEN_TEST_SENSOR_RUNTIME
+#include "TestSensorStackPlatform.inc"
+#endif
 static EldenSensorPackStatus status(Peer &p){EldenSensorPackStatus s{};CHECK(!elden_sensor_pack_native_status(p.cache,&s));return s;}
 int main(int argc,char **argv){
+#if ELDEN_TEST_SENSOR_RUNTIME
+    if(argc>1&&!std::strcmp(argv[1],"runtime"))return stack_runtime_test(argc,argv);
+#endif
     const bool imported=argc>1;std::vector<uint8_t> imported_pack;EldenSensorPackSeal imported_seal{};
     if(imported){CHECK(argc==3);FILE *f=std::fopen(argv[1],"rb");CHECK(f);CHECK(!std::fseek(f,0,SEEK_END));long n=std::ftell(f);CHECK(n>0);imported_pack.resize((size_t)n);std::rewind(f);CHECK(std::fread(imported_pack.data(),1,imported_pack.size(),f)==imported_pack.size());std::fclose(f);
         f=std::fopen(argv[2],"rb");CHECK(f);CHECK(std::fread(&imported_seal,1,sizeof(imported_seal),f)==sizeof(imported_seal));std::fclose(f);}
@@ -224,6 +241,18 @@ int main(int argc,char **argv){
     memory_withdraw_error=0;CHECK(!elden_sensor_memory_binding_finish(routed.memory_binding,7,9)&&routed.bus_withdraws==1&&memory_withdraws==1);
     CHECK(!elden_sensor_memory_binding_finish(routed.memory_binding,7,9)&&memory_withdraws==1);
     CHECK(memory_descriptors.size()==2&&memory_aliases.size()==1);
+    reset();Peer prepared;model=&prepared;pack(prepared);EldenSensorMemoryConfig config{0x20000000,0x800000,4,4242};
+    EldenSensorMemoryOwner owner{&prepared,7,9,bus_gate,route_reserve,route_install,route_observe,route_withdraw};
+    EldenSensorNativeMemory *actual_memory=nullptr;CHECK(!elden_sensor_memory_native_open(&config,&owner,&actual_memory));
+    EldenSensorEndpoint actual_endpoint{&prepared,7,9,bus_gate,bus_now,bus_send,bus_wait,bus_reserve,bus_complete,bus_alloc,bus_trace,test_endpoint_withdraw,bus_wake};
+    EldenSensorPackAuthority pack_authority{&authority_token,7,9,authority};
+    CHECK(!elden_sensor_memory_binding_open_prepared(actual_memory,&actual_endpoint,&prepared.seal,&pack_authority,&prepared.memory_binding));
+    CHECK(memory_reserves==1&&memory_installs==1&&memory_descriptors.size()==2&&memory_aliases.size()==1);
+    CHECK(!elden_sensor_memory_binding_channel(prepared.memory_binding,7,9,1));
+    for(unsigned i=0;i<7;i++)CHECK(elden_sensor_memory_binding_step(prepared.memory_binding)==1);
+    CHECK(!elden_sensor_memory_binding_status(prepared.memory_binding,&rpc,&cache_status)&&rpc.stage==6&&cache_status.state==PackReady);
+    CHECK(!elden_sensor_memory_binding_finish(prepared.memory_binding,7,9)&&memory_withdraws==1);
+    CHECK(!elden_sensor_memory_binding_finish(prepared.memory_binding,7,9)&&memory_withdraws==1);
 #endif
     if(imported){reset();Peer own;model=&own;own.file=imported_pack;own.seal=imported_seal;EldenSensorPackAuthority auth{&authority_token,7,9,authority};CHECK(!elden_sensor_pack_native_bind(&own.seal,&auth,&own.cache));CHECK(!elden_sensor_pack_native_size(own.cache,7,9,&size)&&size==imported_pack.size());CHECK(own.opens==1&&own.closes==1);}
     unsigned completed=scenarios;reset();std::printf("PASS %u actual native vnode/SHA256/pack/cache/stop scenarios, %u checks; VFS/authority peers modeled\n",completed,checks.load());return 0;

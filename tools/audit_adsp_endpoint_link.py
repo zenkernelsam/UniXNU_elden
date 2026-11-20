@@ -31,7 +31,9 @@ def main():
                         if word&0x7c000000==0x14000000:
                             pc=sec['va']+offset;calls.append((pc,pc+(signed(word&0x3ffffff,26)<<2)))
     if len(init)!=len(oldinit):raise ValueError('Automatic endpoint initializer added')
-    if any(target==symbol('_elden_sensor_adsp_endpoint_open') for pc,target in calls):raise ValueError('Unqualified sensor endpoint auto-start caller')
+    runtime=report.get('actual_sensor_runtime_composition') is True
+    from peripheral_startup_audit import no_outer_sensor_start
+    no_outer_sensor_start(calls,symbol,runtime,a.kernel_build/'native.macho')
     edges={}
     for n in ('_elden_adsp_channel_epoch','_elden_adsp_channel_status','_elden_adsp_channel_close','_sheng_adsp_send_epoch',
               '_elden_glink_close_request','_elden_glink_close_status','_qcom_glink_send','_qcom_glink_stop',
@@ -49,8 +51,6 @@ def main():
         if set(changed)!=allowed:raise ValueError('Other original transport members changed')
         archive_changes[name]=changed
     oldcommand=json.loads((a.parent/'link-command.json').read_text());command=json.loads((a.kernel_build/'link-command.json').read_text())
-    for v in oldcommand:
-        if v.startswith('-Wl,-force_load,') and not any(v.endswith('/'+name) for name in expected) and command.count(v)!=1:raise ValueError('Existing native peripheral archive lost')
     from peripheral_archive_audit import retained_archive
     actual_archive_checks={}
     for v in oldcommand:

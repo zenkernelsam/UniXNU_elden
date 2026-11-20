@@ -57,3 +57,20 @@ int elden_sensor_memory_binding_finish(EldenSensorMemoryBinding *c,uint64_t owne
     rc=c->pack?elden_sensor_pack_binding_finish(c->pack,owner,epoch):withdraw(c,owner,epoch,&c->view.memory);
     __atomic_store_n(&c->finishing,0u,__ATOMIC_RELEASE);return rc;
 }
+int elden_sensor_memory_binding_open_prepared(EldenSensorNativeMemory *memory,const EldenSensorEndpoint *endpoint,
+    const EldenSensorPackSeal *seal,const EldenSensorPackAuthority *authority,EldenSensorMemoryBinding **out){
+    if(!memory||!endpoint||!seal||!authority||!out||*out||!endpoint->owner||!endpoint->epoch||
+       authority->owner!=endpoint->owner||authority->epoch!=endpoint->epoch||!endpoint->admit||!endpoint->now_ms||
+       !endpoint->send_epoch||!endpoint->wait||!endpoint->reserve_cookie||!endpoint->complete_cookie||
+       !endpoint->allocate||!endpoint->withdraw||!endpoint->wake)return -22;
+    int rc=endpoint->admit(endpoint->context,endpoint->owner,endpoint->epoch,0);if(rc)return rc<0?rc:-13;
+    EldenSensorMemoryView view;rc=elden_sensor_memory_native_view(memory,endpoint->owner,endpoint->epoch,&view);if(rc)return rc;
+    EldenSensorMemoryBinding *c=endpoint->allocate(endpoint->context,sizeof(*c));if(!c)return -12;
+    uint8_t *bytes=(uint8_t *)c;for(unsigned i=0;i<sizeof(*c);i++)bytes[i]=0;
+    c->endpoint=*endpoint;c->memory=memory;c->view=view;*out=c;
+    c->bus=(EldenSensorRpcBus){c,endpoint->owner,endpoint->epoch,admit,now,send,wait,publish,prepare,reserve,complete,allocate,trace,withdraw,wake};
+    rc=elden_sensor_pack_binding_open(&c->bus,&view.memory,seal,authority,&c->pack);if(rc)c->error=rc;return rc;
+}
+int elden_sensor_memory_binding_status(EldenSensorMemoryBinding *c,EldenSensorRpcStatus *rpc,EldenSensorPackStatus *pack){
+    if(!c||!rpc||!pack)return -22;return c->pack?elden_sensor_pack_binding_status(c->pack,rpc,pack):c->error?c->error:-19;
+}

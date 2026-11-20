@@ -115,7 +115,14 @@ static void start(RouterPeer &p){peer=&p;now_ticks.store(19200000);wakes.store(0
     EldenMotionTransport t{&p,7,9,1024,physical,open_port,level,send,withdraw};EldenMotionBoard b{&p,physical,qualify,map,100000,0,{0,0}};
     CHECK(!elden_motion_native_ssc_start(&t,&b));}
 template<class F>static void wait_for(F predicate){for(unsigned i=0;i<500&&!predicate();i++){now_ticks.fetch_add(19200);std::this_thread::sleep_for(std::chrono::milliseconds(1));}CHECK(predicate());}
-static void cleanup(){if(worker_thread.joinable())worker_thread.join();motion_context=nullptr;motion_attempted=0;for(auto *p:allocated_locks)delete p;allocated_locks.clear();for(void *p:allocations)std::free(p);allocations.clear();}
+static std::atomic<unsigned> observer_calls{0},observer_terminal{0};static bool observer_stop=false;
+static void status_observer(void *context,const EldenMotionNativeStatus *s){
+    CHECK(context==&observer_calls&&s&&s->owner==7&&s->epoch==9);observer_calls.fetch_add(1);
+    EldenMotionNativeStatus actual{};CHECK(!elden_motion_native_ssc_status(&actual)); // proves original status lock dropped
+    if(s->terminal)observer_terminal.fetch_add(1);
+    if(observer_stop&&s->samples)CHECK(!elden_motion_native_ssc_request_stop(7,9));
+}
+static void cleanup(){if(worker_thread.joinable())worker_thread.join();motion_context=nullptr;motion_attempted=0;motion_observer={};motion_observer_ready=0;for(auto *p:allocated_locks)delete p;allocated_locks.clear();for(void *p:allocations)std::free(p);allocations.clear();}
 int main(){
     {
         scenarios++;RouterPeer p;start(p);wait_for([&]{return p.samples.load()==1;});CHECK(p.hid_starts==1&&p.configs==1);
@@ -150,6 +157,13 @@ int main(){
         // the injected event is the only operation allowed after assert_wait.
         CHECK(!elden_motion_native_ssc_stop(7,9));if(worker_thread.joinable())worker_thread.join();
         __atomic_store_n(&c->pending,0u,__ATOMIC_RELEASE);inject_wait_event=true;CHECK(wait_events(c,1)==32);cleanup();
+    }
+    {
+        scenarios++;RouterPeer p;observer_calls=0;observer_terminal=0;observer_stop=true;
+        CHECK(!elden_motion_native_ssc_observe(&observer_calls,7,9,status_observer));
+        CHECK(elden_motion_native_ssc_observe(&observer_calls,7,9,status_observer)==-16);start(p);
+        wait_for([&]{return observer_terminal.load()==1;});CHECK(observer_calls.load()>2&&p.closed==3&&p.samples==1);
+        CHECK(elden_motion_native_ssc_recovery_stop());observer_stop=false;cleanup();
     }
     std::printf("PASS %u actual native worker/manager/router/HID/stop scenarios, %u checks; OS/shared QRTR/MMIO/clock/HID peers modeled\n",scenarios,checks.load());return 0;
 }

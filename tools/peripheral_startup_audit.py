@@ -18,10 +18,12 @@ ALLOWED_RPC={
  '_elden_sensor_rpc_finish':[('_elden_sensor_pack_binding_finish','_elden_sensor_pack_binding_status')],
  '_elden_sensor_rpc_status':[('_elden_sensor_pack_binding_status','_elden_sensor_memory_native_open')],
 }
-def explicit_binding_calls(name,calls,symbol,native_path=None):
+def explicit_binding_calls(name,calls,symbol,native_path=None,runtime=False):
     target=symbol(name);hits=[pc for pc,t in calls if t==target]
     if not hits:return []
-    if name=='_elden_sensor_pack_binding_open':bounds=[('_elden_sensor_memory_binding_open','_elden_sensor_memory_binding_channel')]
+    if name=='_elden_sensor_pack_binding_open':
+        bounds=[('_elden_sensor_memory_binding_open','_elden_sensor_memory_binding_channel')]
+        if runtime:bounds.append(('_elden_sensor_memory_binding_open_prepared','_elden_sensor_memory_binding_status'))
     else:bounds=ALLOWED_RPC.get(name)
     if bounds is None:raise ValueError('No qualified binding caller for '+name)
     ranges=[]
@@ -47,7 +49,26 @@ def explicit_binding_calls(name,calls,symbol,native_path=None):
         if len(matched)!=1:raise ValueError('Unqualified incoming call outside exact binding function: '+name)
         start,end,n=matched[0];result.append({'pc':hex(pc),'explicit_source_function':n,'function_start':hex(start),'next_function':hex(end)})
     return result
-def no_outer_sensor_start(calls,symbol):
-    for name in ('_elden_sensor_memory_binding_open','_elden_sensor_adsp_endpoint_open'):
+def no_outer_sensor_start(calls,symbol,runtime=False,native_path=None):
+    for name in ('_elden_sensor_memory_binding_open',):
         target=symbol(name)
         if any(t==target for pc,t in calls):raise ValueError('Outer actual sensor startup has an unqualified caller: '+name)
+    if not runtime:
+        target=symbol('_elden_sensor_adsp_endpoint_open')
+        if any(t==target for pc,t in calls):raise ValueError('Outer actual sensor startup has an unqualified caller: _elden_sensor_adsp_endpoint_open')
+        return
+    for name in ('_elden_sensor_runtime_prepare','_elden_sensor_runtime_start'):
+        if any(t==symbol(name) for pc,t in calls):raise ValueError('Actual outer runtime has an unqualified startup caller: '+name)
+    if native_path is None:raise ValueError('Actual native function bounds required for runtime')
+    starts=[]
+    for line in subprocess.check_output(['xcrun','nm','-n',str(native_path)],text=True).splitlines():
+        m=re.match(r'^([0-9a-fA-F]+)\s+[sStT]\s+(\S+)$',line)
+        if m:starts.append((int(m[1],16),m[2]))
+    for name in ('_elden_sensor_adsp_endpoint_open','_elden_sensor_memory_binding_open_prepared','_elden_motion_qrtr_transport','_elden_motion_native_ssc_start'):
+        target=symbol(name);start=symbol('_elden_sensor_runtime_worker');end=min((pc for pc,_ in starts if pc>start),default=None)
+        if end is None:raise ValueError('Actual runtime worker boundary missing')
+        hits=[pc for pc,t in calls if t==target]
+        if not hits or any(not start<=pc<end for pc in hits):raise ValueError('Incoming startup outside actual runtime worker: '+name)
+    target=symbol('_elden_qrtr_ports_prepare');start=symbol('_elden_sensor_runtime_prepare');end=min((pc for pc,_ in starts if pc>start),default=None)
+    hits=[pc for pc,t in calls if t==target]
+    if end is None or not hits or any(not start<=pc<end for pc in hits):raise ValueError('QRTR provider setup outside actual runtime prepare')

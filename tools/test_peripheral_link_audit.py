@@ -67,6 +67,24 @@ def main():
     verify('exact_cumulative_original_members',lambda:retained_archive(arg3,cmd3,chain))
     chain['cumulative_transport_archives']['libEldenAdspRuntime.a']['QcomQrtr.o']['after']='f'*64
     verify('counterfeit_cumulative_members_refused',lambda:retained_archive(arg3,cmd3,chain),True)
+    runtime_report=json.loads((a.kernel_build/'result.json').read_text())
+    if runtime_report.get('actual_sensor_runtime_composition') is True:
+        for archive_name,member,field in (('libEldenSensorMemory.a','MemoryBinding.o','changed_memory_binding_archive'),
+                                         ('libEldenMotionSsc.a','NativeSsc.o','changed_SSC_archive'),
+                                         ('libShengUfs.a','ShengUfs.o','changed_runtime_UFS_archive')):
+            oldr=out/('runtime-old-'+member)/archive_name;newr=out/('runtime-new-'+member)/archive_name
+            oldr.parent.mkdir();newr.parent.mkdir()
+            for folder,obj in ((oldr.parent,out/'old.o'),(newr.parent,out/'new.o')):
+                (folder/member).write_bytes(obj.read_bytes());(folder/'peer.o').write_bytes((out/'peer.o').read_bytes())
+                run(['ar','rcs',folder/archive_name,member,'peer.o'],folder.name+'-archive',folder)
+            old_members=members(oldr);new_members=members(newr);argumentr='-Wl,-force_load,'+str(oldr);cmdr=['-Wl,-force_load,'+str(newr)]
+            proof={'inherited_inputs':{str(oldr):sha(oldr)},'actual_sensor_runtime_composition':True,
+                   field:{n:{'before':old_members[n],'after':new_members[n]} for n in old_members}}
+            verify('exact_runtime_member_'+member,lambda:retained_archive(argumentr,cmdr,proof))
+            wrong=copy.deepcopy(proof);wrong.pop('actual_sensor_runtime_composition')
+            verify('runtime_member_without_profile_'+member,lambda:retained_archive(argumentr,cmdr,wrong),True)
+            wrong=copy.deepcopy(proof);wrong[field][member]['after']='f'*64
+            verify('counterfeit_runtime_member_'+member,lambda:retained_archive(argumentr,cmdr,wrong),True)
     sys.path.insert(0,str(a.prelink_tool));from native_prelink import macho,exports
     raw=(a.kernel_build/'kernel.macho').read_bytes();image=macho(raw);symbols={n:v for v,g in exports(raw,image).items() for n in g}
     def symbol(n):
@@ -80,6 +98,16 @@ def main():
     stop=symbol('_elden_sensor_rpc_request_stop');finish=symbol('_elden_sensor_pack_binding_finish')
     verify('actual_finish_stop_allowed',lambda:explicit_binding_calls('_elden_sensor_rpc_request_stop',[(finish+4,stop)],symbol,native))
     verify('unrelated_actual_endpoint_stop_rejected',lambda:explicit_binding_calls('_elden_sensor_rpc_request_stop',[(symbol('_elden_sensor_adsp_endpoint_open')+4,stop)],symbol,native),True)
+    if runtime_report.get('actual_sensor_runtime_composition') is True:
+        worker=symbol('_elden_sensor_runtime_worker');setup=symbol('_elden_sensor_runtime_prepare')
+        runtime_calls=[(worker+4,symbol(n)) for n in ('_elden_sensor_adsp_endpoint_open','_elden_sensor_memory_binding_open_prepared','_elden_motion_qrtr_transport','_elden_motion_native_ssc_start')]
+        runtime_calls.append((setup+4,symbol('_elden_qrtr_ports_prepare')))
+        verify('exact_runtime_worker_and_setup_calls',lambda:no_outer_sensor_start(runtime_calls,symbol,True,native))
+        verify('runtime_outer_startup_refused',lambda:no_outer_sensor_start(runtime_calls+[(worker+4,symbol('_elden_sensor_runtime_start'))],symbol,True,native),True)
+        verify('unrelated_runtime_worker_call_refused',lambda:no_outer_sensor_start(runtime_calls+[(symbol('_elden_sensor_runtime_status')+4,symbol('_elden_sensor_adsp_endpoint_open'))],symbol,True,native),True)
+        prepared=symbol('_elden_sensor_memory_binding_open_prepared')
+        verify('actual_prepared_memory_binding_calls',lambda:explicit_binding_calls('_elden_sensor_pack_binding_open',[(prepared+4,target)],symbol,native,True))
+        verify('prepared_binding_without_profile_refused',lambda:explicit_binding_calls('_elden_sensor_pack_binding_open',[(prepared+4,target)],symbol,native),True)
     result={'passed':True,'checks':checks,'actual_compiled_ar_members':True,'actual_native_function_symbols':True,'negative_calls_and_declarations_injected':True,
             'kernel_sha256':sha(a.kernel_build/'kernel.macho'),'native_sha256':sha(native),'tests':tests,'hardware':False}
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({'passed':True,'checks':checks,'negative_gates':True}))

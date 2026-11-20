@@ -16,6 +16,8 @@ struct MotionContext {
     EldenMotionNativeStatus status;
 };
 static MotionContext *motion_context;static uint32_t motion_attempted;
+static struct {void *context;uint64_t owner,epoch;void (*status)(void *,const EldenMotionNativeStatus *);} motion_observer;
+static uint32_t motion_observer_ready;
 static void signal(MotionContext *c,uint32_t event){__atomic_fetch_or(&c->pending,event,__ATOMIC_RELEASE);thread_wakeup((event_t)&c->pending);}
 static void fault(MotionContext *c,int error){
     __atomic_store_n(&c->phase_ready,0u,__ATOMIC_RELEASE);uint32_t none=0;
@@ -103,6 +105,8 @@ static void snapshot(MotionContext *c,uint32_t stage,int error){
     s.packets=c->packets;s.dropped=__atomic_load_n(&c->dropped,__ATOMIC_RELAXED);s.stale=__atomic_load_n(&c->stale,__ATOMIC_RELAXED);
     s.samples=c->manager.samples;s.terminal=__atomic_load_n(&c->terminal,__ATOMIC_ACQUIRE);
     IOSimpleLockLock(c->lock);c->status=s;IOSimpleLockUnlock(c->lock);
+    if(__atomic_load_n(&motion_observer_ready,__ATOMIC_ACQUIRE)==2&&s.owner==motion_observer.owner&&s.epoch==motion_observer.epoch)
+        motion_observer.status(motion_observer.context,&s);
 }
 static int update_server(MotionContext *c,uint64_t now){
     EldenSscServer current[3]={};int rc=physical(c,0);if(rc)return rc;
@@ -210,6 +214,11 @@ extern "C" int elden_motion_native_ssc_start(const EldenMotionTransport *transpo
     rc=board->admit(board->context,transport->owner,transport->epoch,0);if(rc)return rc;
     mach_timebase_info_data_t timebase;clock_timebase_info(&timebase);
     if(!timebase.numer||!timebase.denom||(uint64_t)timebase.numer*19200000!=UINT64_C(1000000000)*timebase.denom)return -95;
+    uint32_t unobserved=0;
+    if(!__atomic_compare_exchange_n(&motion_observer_ready,&unobserved,3u,false,__ATOMIC_ACQ_REL,__ATOMIC_ACQUIRE)){
+        if(unobserved==1)return -16; // observer configuration still in progress
+        if(unobserved==2&&(motion_observer.owner!=transport->owner||motion_observer.epoch!=transport->epoch))return -116;
+    }
     uint32_t none=0;if(!__atomic_compare_exchange_n(&motion_attempted,&none,1u,false,__ATOMIC_ACQ_REL,__ATOMIC_ACQUIRE))return EldenSscBusy;
     auto *c=(MotionContext *)IOMallocData(sizeof(MotionContext));if(!c)return EldenSscAbsent;
     bzero(c,sizeof(*c));c->transport=*transport;c->board=*board;c->lock=IOSimpleLockAlloc();
@@ -237,4 +246,10 @@ extern "C" int elden_motion_native_ssc_status(EldenMotionNativeStatus *out){
 }
 extern "C" int elden_motion_native_ssc_recovery_stop(void){
     auto *c=__atomic_load_n(&motion_context,__ATOMIC_ACQUIRE);return !c||elden_motion_native_ssc_stop(c->transport.owner,c->transport.epoch)==0;
+}
+extern "C" int elden_motion_native_ssc_observe(void *context,uint64_t owner,uint64_t epoch,void (*status)(void *,const EldenMotionNativeStatus *)){
+    if(!context||!owner||!epoch||!status||ml_at_interrupt_context())return -22;
+    if(__atomic_load_n(&motion_attempted,__ATOMIC_ACQUIRE)||__atomic_load_n(&motion_context,__ATOMIC_ACQUIRE))return -16;
+    uint32_t none=0;if(!__atomic_compare_exchange_n(&motion_observer_ready,&none,1u,false,__ATOMIC_ACQ_REL,__ATOMIC_ACQUIRE))return -16;
+    motion_observer={context,owner,epoch,status};__atomic_store_n(&motion_observer_ready,2u,__ATOMIC_RELEASE);return 0;
 }

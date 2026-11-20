@@ -32,6 +32,12 @@ int elden_sensor_memory_binding_receive(EldenSensorMemoryBinding *,uint64_t owne
 int elden_sensor_memory_binding_step(EldenSensorMemoryBinding *);
 int elden_sensor_memory_binding_request_stop(EldenSensorMemoryBinding *,uint64_t owner,uint64_t epoch);
 int elden_sensor_memory_binding_finish(EldenSensorMemoryBinding *,uint64_t owner,uint64_t epoch);
+/* Early shared owner has already installed/verified this actual memory route
+ * before touch seals it. Later listener startup attaches the retained memory,
+ * never installs another route or guesses a bank. Existing open stays valid. */
+int elden_sensor_memory_binding_open_prepared(EldenSensorNativeMemory *,const EldenSensorEndpoint *,
+    const EldenSensorPackSeal *,const EldenSensorPackAuthority *,EldenSensorMemoryBinding **);
+int elden_sensor_memory_binding_status(EldenSensorMemoryBinding *,EldenSensorRpcStatus *,EldenSensorPackStatus *);
 #ifdef __cplusplus
 }
 #endif

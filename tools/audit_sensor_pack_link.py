@@ -32,8 +32,9 @@ def main():
                         if w&0x7c000000==0x14000000:
                             pc=sec['va']+off;calls.append((pc,pc+(signed(w&0x3ffffff,26)<<2)))
     if len(initial)!=len(previous):raise ValueError('Automatic file/pack initializer added')
-    explicit=explicit_binding_calls('_elden_sensor_pack_binding_open',calls,symbol,a.kernel_build/'native.macho')
-    if explicit:no_outer_sensor_start(calls,symbol)
+    runtime=r.get('actual_sensor_runtime_composition') is True
+    explicit=explicit_binding_calls('_elden_sensor_pack_binding_open',calls,symbol,a.kernel_build/'native.macho',runtime)
+    if explicit:no_outer_sensor_start(calls,symbol,runtime,a.kernel_build/'native.macho')
     edges={}
     for n in ('_elden_sensor_pack_native_bind','_elden_sensor_pack_native_size','_elden_sensor_pack_native_read','_elden_sensor_pack_native_stop',
               '_elden_sensor_rpc_open','_elden_sensor_rpc_step','_elden_sensor_rpc_request_stop','_elden_sensor_rpc_finish',

@@ -71,6 +71,16 @@ Mainline prompt: [MAINLINE-HANDOFF-PROMPT.md](MAINLINE-HANDOFF-PROMPT.md).
 
 ## Current status
 
+Latest [SENSOR-RUNTIME.md](SENSOR-RUNTIME.md) adds the actual early retained
+memory→native cache/FastRPC listener→SSC worker lifecycle and single bounded
+recovery wrapper.16runtime410,20prepared-memory/cache/RPC18580,7SSCobserver795,
+composed normal9252/refusedretirement9220 and32 actual link-guard checks pass.
+Three zero-warning scalarobjects/full link and all inherited component/Apple30/
+recovery audits pass; original UFS26/link warnings retained. Listener stays live
+through SSC cleanup, its actual status observer wakes next2, then real endpoint/
+remote/SMMU withdrawal is required. No outer prepare/start caller or actual
+physical provider/capture/calibration/sample/UI exists. Five-part Goal remains active.
+
 Latest [MOTION-QRTR.md](MOTION-QRTR.md) adds concrete client ports to the one
 original IPCRTR/QRTR owner and the actual NativeSsc transport factory.16/528
 client tests and18/1954 actual ADSP/GLINK/QRTR/SSC stack checks plus18 archive/
