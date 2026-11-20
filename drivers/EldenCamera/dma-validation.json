@@ -1,0 +1,416 @@
+{
+  "schema": 1,
+  "branch": "offline-peripheral-fixes",
+  "parent_commit": "09087b8efde2c2d0b0e608346b8e8df312fa34c3",
+  "kernel_sha256": "a37eaa4b375ab091031009ad9a766620cbbae923be9c64ac9e2091cd92c2eba6",
+  "native_sha256": "322edf032717d007b4d855bd7dff5d26758723a6ee11ee2ff45708f741ba9f2c",
+  "parent_kernel_sha256": "3f59efa02586b309b13518312e0445d81f472560d0bcd466dd9269a138b983eb",
+  "source_files": {
+    "AGENTS.md": "19f66f7ee663e61013289182f6395dc8f16afc59d9fbade60de8f09c055dd25b",
+    "docs/peripherals/CAMERA-DMA.md": "732bab80890c4549536ef561fd103e9d6174b200a7cead8122a6d9879524defa",
+    "docs/peripherals/MAINLINE-HANDOFF-PROMPT.md": "2f0d713a5e2e01017a543c1ac672b65601c2e2fb642528bb5cf9dc4a38d56456",
+    "docs/peripherals/STATUS.md": "7998ff2b643f5874ca65e5675ac6b83691462fe05d66e5c5bbe067d2fe3705fd",
+    "drivers/EldenCamera/DmaBinding.c": "cc86e618a4ae1af65a964ab9bcca76c069774388a6a661e5161007f3701f8799",
+    "drivers/EldenCamera/DmaBinding.h": "38da90ca7367cc1d3dc3ce642dfe7edb74b67f665c3878e1b627896269ddcafa",
+    "drivers/EldenCamera/DmaSource.py": "b6812ff0c9aa9e1f5160b05adb36be271d31b02bc457fbf9292de01055efca85",
+    "drivers/EldenCamera/DmaStackSource.py": "4d49baa4af64801baa2bbc3bc797be3ea7e218870b60ed86a9d3c2580315cbc4",
+    "drivers/EldenCamera/NativeDma.cpp": "cf5e66a6d27cef9b044a65a7d4e7c129fa82d2bf4db21061b0cae36838f68085",
+    "drivers/EldenCamera/NativeDma.h": "92ddc006313490aaa1e02515fb1d54e5a92a2fec12b24f887f5df06c7deaafc7",
+    "drivers/EldenCamera/NativeDmaMethods.inc": "b3bd75b6e88715116498fb8f6642ddbcf643986067bdc47a1aa71a2deb3e37c8",
+    "drivers/EldenCamera/TestNativeDma.cpp": "e70fa49be0bf7d7da57d5317cccb92428b34bfc7a4300e5dfb5525e747029e90",
+    "drivers/EldenCamera/dma-source.json": "f2ae281c6e3aa030db440c72b8dc7a1dae9d44b9e183cb758113a59452b482c6",
+    "tools/audit_camera_cci_link.py": "bb5c5204bdcda924df5af09995f76c92c581c989511fb60f9cb5a360bb3a0390",
+    "tools/audit_camera_clocks_link.py": "47e2ca15912ad758295a36ca55778fb4a7434ba9654cd23d48219bfe06017cf9",
+    "tools/audit_camera_dma_link.py": "d02b1de86b9d91ae46453e443aa73a6628b699a1939a3640f6679ecabe72b0f5",
+    "tools/audit_camera_dma_source.py": "4a173777bc570e2f68b496a11b20d7ef1fe1fa95c5956a4bfd70ceeb621ef639",
+    "tools/audit_camera_pipeline_link.py": "e9d2e991ef811f674d42be1d44447d9de047607d90f2aa99e89c9136d8052ca1",
+    "tools/audit_camera_power_link.py": "c30a759e49d1bb49ad659944b92f0aa41c995219e04d78341082259995ea9a51",
+    "tools/build_camera_dma.py": "ce880730016c334abe21a795460f22186483d79b326572080fa0d9d8c616e610",
+    "tools/camera_startup_audit.py": "ad6a7514d5765f10f00263402a0918d68a3a93aaa7589fedb257f20d78798937",
+    "tools/link_camera_dma.py": "4495a3615f38220e82703f785bf184124cbfe1e89849d75e0c3c48cc6dce47da",
+    "tools/prepare_camera_dma.py": "9ad0769933e012e9ced4e5633b778b6ba29b232148ac0011b5443570c708182c",
+    "tools/test_camera_dma.py": "33542f29ccfa87531f703950263ef325f956ae357b304055fdc86a1e862af375",
+    "tools/test_camera_dma_audit.py": "667b24f47bef1e7608bb4392d6673981bc38299ba86264e4fb95f33542c2b6c4",
+    "tools/test_camera_dma_stack.py": "8bd4dbfe32903ff45eafed5fab789576c5b518449b711e78a6fe67c506a81317"
+  },
+  "source_manifest": {
+    "board": "TB322FC/SM8750",
+    "linux_commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+    "CAMSS_stream_id": 7168,
+    "qualified_native_memory": {
+      "drivers/EldenMotion/NativeMemory.cpp": "60565d3e9e7f8bf4c5f56d563d2094df359e6a8e0d43847a5d78ff0fac1ca617",
+      "drivers/EldenMotion/NativeMemoryMethods.inc": "248a353d11b73a14cbbd8bb2b2192e9ac136da264fa9986dd0ce1b593a065708"
+    },
+    "table_source_manifest": "drivers/EldenSmmu/upstream/source.json",
+    "hardware": false,
+    "table_manifest_sha256": "37c36c6a187a15621e61043791c30162eccaf3862550a5fc7e13b0de0322f971",
+    "ArmSmmu4K_revision": "83969cd874503e65997ff7639f7dcf3d0a92cd17"
+  },
+  "accepted_mac_outputs": "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-dma-20261120/{source8,host8,stack5,native3,kernel2}",
+  "native_objects": {
+    "NativeCameraDma.o": {
+      "sha256": "b85917f95e892cb35ee9fd0c932ccfe2f98fdabd8f1424f3d0597d59066f6e7a",
+      "imports": [
+        "_EldenWifiSmmu4KAuditTables",
+        "_EldenWifiSmmu4KBindTableMemory",
+        "_EldenWifiSmmu4KBuild",
+        "_EldenWifiSmmu4KEncodeContext",
+        "_IOLockAlloc",
+        "_IOMalloc_internal",
+        "_KHEAP_DATA_BUFFERS",
+        "__ZN11IOMemoryMap17getVirtualAddressEv",
+        "__ZN18IOMemoryDescriptor19createMappingInTaskEP4taskyjyy",
+        "__ZN24IOBufferMemoryDescriptor14getBytesNoCopyEv",
+        "__ZN24IOBufferMemoryDescriptor17inTaskWithOptionsEP4taskjmm",
+        "__ZN25IOGeneralMemoryDescriptor18getPhysicalSegmentEyPyj",
+        "__ZN25IOGeneralMemoryDescriptor7prepareEj",
+        "___stack_chk_fail",
+        "___stack_chk_guard",
+        "_bzero",
+        "_kernel_task",
+        "_lck_mtx_lock",
+        "_lck_mtx_try_lock",
+        "_lck_mtx_unlock",
+        "_memcpy",
+        "_ml_at_interrupt_context"
+      ]
+    },
+    "CameraDmaBinding.o": {
+      "sha256": "13e16c9cfd52ef4c299bd4bbb3d8bfdc03aed05ed13e22a51d2225a1850300c1",
+      "imports": [
+        "_elden_camera_board_bind",
+        "_elden_camera_board_prepare",
+        "_elden_camera_board_probe",
+        "_elden_camera_board_shutdown",
+        "_elden_camera_board_start",
+        "_elden_camera_board_stop",
+        "_elden_camera_dma_admit",
+        "_elden_camera_dma_buffer",
+        "_elden_camera_dma_claim_frame",
+        "_elden_camera_dma_release_frame",
+        "_elden_camera_dma_stop",
+        "_elden_camera_dma_view",
+        "_elden_camera_native_pipeline_frame",
+        "_elden_camera_native_pipeline_queue",
+        "_elden_camera_native_pipeline_service"
+      ]
+    }
+  },
+  "compile_warnings": {
+    "NativeCameraDma.o": 0,
+    "CameraDmaBinding.o": 0
+  },
+  "allocator_host": {
+    "passed": true,
+    "host_output": "PASS camera native DMA: 51 scenarios/1408708 checks; original4K/native methods, IOKit/cache/PAR/route/physicalDMA peers modeled\n",
+    "prepared_source_sha256": "593f4b219a112d8e6454dd73346f00cf4e7983d6b8501fd03372c83d30bf1f46",
+    "actual_original4K_guarded_camera_native_methods": true,
+    "physical_IOKit_cache_PAR_early_SMMU_peers_modeled": true,
+    "hardware": false
+  },
+  "actual_guarded_DMA_capture_stack": {
+    "passed": true,
+    "outputs": {
+      "normal": "PASS actual guarded-DMA board Gen4 front/rear capture normal: 30206 checks; actual sensor/CCI/native PHY-CSID-VFE binding; power/MMIO/GIC/DMA peers modeled\n",
+      "drain-fail": "PASS actual guarded-DMA board Gen4 front/rear capture drain-fail: 30372 checks; actual sensor/CCI/native PHY-CSID-VFE binding; power/MMIO/GIC/DMA peers modeled\n",
+      "visibility-fail": "PASS actual guarded-DMA board Gen4 front/rear capture visibility-fail: 30023 checks; actual sensor/CCI/native PHY-CSID-VFE binding; power/MMIO/GIC/DMA peers modeled\n"
+    },
+    "actual_dma_nativeboard_CCI_CAMSS_completion": true,
+    "derivation": {
+      "prior_board_test_sha256": "46750d48104728ee2716db5ccfdc60615925baaade637a4e20e616d5890d007b",
+      "prior": {
+        "parent_test_sha256": "56137c015154e5e68d51fecbfaf66a5b874cd1a28beff6865f4e560d7e83a7dc",
+        "original_power_stack": {
+          "original_test_sha256": "b5a210f13facc3169587d3cd73771a4f288108fc3702639c1507d266522da6e7",
+          "transformations": [
+            "original capture test adds actual powered binding",
+            "actual original GENI shared peer",
+            "same original power owner and real front/rear states",
+            "inactive proof samples actual CCI sensor and real pipeline state; physical inputs modeled",
+            "board stub supplies only physical reset/MCLK; rail stub forbidden",
+            "real retained shared bus/WL session replaces fake supply callbacks",
+            "actual original sensor probe restores real WL refs/selectors",
+            "same retained sensor core",
+            "actual WL rails enabled before physical sensor",
+            "failed real receiver drain retains shared WL power",
+            "actual sensor receiver drain before last real WL ref withdrawal",
+            "idempotent capture cleanup",
+            "actual CCI final stop ledger",
+            "complete WL restoration and original deferred backlight release",
+            "execute actual shared methods with distinct original CCI/SE2 internal types",
+            "test-only type spelling avoids independent CCI/SE2 Context collision",
+            "use sole SE2 shared Context",
+            "actual brightness read/write shares engine with powered capture",
+            "actual observed no WL channel",
+            "accurate result label"
+          ],
+          "physical_clock_pins_MMIO_GIC_DMA_modeled": true,
+          "hardware": false
+        },
+        "transformations": [
+          "actual board/native clocks",
+          "independent clock HW peer with actual original methods",
+          "one clock progression for actual core and CSI peers",
+          "actual native clock methods alongside original CCI/receiver",
+          "WL inactivity samples actual clock/reset peer, not fake sensor state",
+          "no fake physical reset/MCLK callback remains",
+          "board admission uses actual original entry provider",
+          "board carries real delay",
+          "actual Board owns CCI/receiver provider",
+          "board holds real powered captures",
+          "real native graph then actual camera board binding",
+          "real board prepare owns CCI opening",
+          "source-supported explicit HOSTONLY rate plan, actual board/CCI/receiver",
+          "no duplicate capture binding",
+          "real board capture storage",
+          "actual board start wrapper",
+          "real board cleanup wrapper",
+          "real board cleanup wrapper",
+          "real board cleanup wrapper",
+          "actual capture/CCI stop ledger",
+          "real both-camera/clock/pin/WL shutdown",
+          "HOSTONLY teardown of retained test allocations",
+          "both targets prepare before either stream/error closes admission",
+          "both real streams run before fault/peer-safe stop and shared shutdown",
+          "own DVDD/AVDD off while peer/LDO7 supply stays live",
+          "precise result label"
+        ],
+        "physical_PLL_RPMh_MMIO_IRQ_DMA_peers_modeled": true,
+        "hardware": false
+      },
+      "changes": [
+        "actual retained DMA→camera board",
+        "actual native allocator methods and original4K table peers",
+        "actual highPA→lowIOVA guarded frame memory",
+        "real wrapper supplies actual arena visibility",
+        "real queued buffers replace synthetic mapping handles",
+        "actual SOF/done→visibility→borrow/explicitrelease→requeue chain",
+        "failed actual route retirement retains all refs then one verified retry",
+        "HOSTONLY native memory peers finally retired",
+        "precise completion test label",
+        "real visibility refusal closes normal work but preserves cleanup",
+        "actual SOF completion visibility error delivered by original pipeline",
+        "start BOTH physical sensors before visibility fault closes new startup"
+      ],
+      "actual_native_guarded_DMA_board_CCI_CAMSS_methods": true,
+      "physical_MMIO_DMA_IOKit_PAR_PMIC_GIC_models": true,
+      "hardware": false
+    },
+    "hardware": false
+  },
+  "source_audit": {
+    "passed": true,
+    "checks": [
+      "original4K table manifest SHA",
+      "original4K pinned revision",
+      "unchanged original4K source EldenWifiSmmu4K.c",
+      "unchanged original4K source EldenWifiSmmu4K.h",
+      "unchanged original4K source EldenWifiSmmu4KContext.c",
+      "unchanged original4K source EldenWifiSmmu4KContext.h",
+      "unchanged original4K source EldenWifiSmmu4KProgram.c",
+      "unchanged original4K source EldenWifiSmmu4KProgram.h",
+      "unchanged original4K source EldenWifiSmmu4KAudit.c",
+      "unchanged original4K source EldenWifiSmmu4KAudit.h",
+      "unchanged original4K source EldenWifiSmmu4KTableMemory.c",
+      "unchanged original4K source EldenWifiSmmu4KTableMemory.h",
+      "unchanged original4K source LICENSE",
+      "exact Gen4 sm8750.dtsi",
+      "exact Gen4 camss.c",
+      "exact shared CAMSS SID1c00",
+      "exact original32bit streaming/coherent DMA",
+      "six exact original native allocator/PAR/cache helper bodies",
+      "original routes0..7/banks0..6 cannot be repurposed",
+      "exact observed Gen4 IDs; original provider still mandatory",
+      "early route preflight before actual install",
+      "guardpages remain outside each frame mapping",
+      "actual fresh prefaultNC alias",
+      "actual all4K primaryWB/NC PAR validation",
+      "actual original4K physical graph build/audit",
+      "actual queue/completion/borrow ownership states",
+      "retained exact frame-return identity",
+      "actual boardstop before DMA retirement",
+      "no descriptors/aliases/table release before full reset"
+    ],
+    "check_count": 29,
+    "helpers": [
+      {
+        "signature": "static uint32_t sensor_output_bits(",
+        "original_sha256": "97759740b182b34eeb56196df9e0dc0f12777e88833479dda08dae95740c727c",
+        "derived_sha256": "ffb187f4a6cab48b22352e7f6e519f687dc2ad1799795f7421a69d9c5dcc99d2",
+        "type_and_symbol_prefix_only": true
+      },
+      {
+        "signature": "static int sensor_memory_verify(",
+        "original_sha256": "b444d9edd4c6906e64c3c508cdf2c20866a21d146b45053b1a5e35b0398df93c",
+        "derived_sha256": "2ab9cc1deadee6076e9ca8d72d21cd98205398254971c9fcb628c642dbaa1f87",
+        "type_and_symbol_prefix_only": true
+      },
+      {
+        "signature": "static uint64_t sensor_memory_translate(",
+        "original_sha256": "b40227d2654b3a70a3c81e6e5d7be0b8e306be054062074a6257ebfe153fb62c",
+        "derived_sha256": "22a8fca8dcd4923de4d7c80e85dd8052959a887f314b060112153eeec37c1a46",
+        "symbol_prefix_only": true
+      },
+      {
+        "signature": "static uint32_t sensor_memory_cache_line(",
+        "original_sha256": "e74b6b73acef02958358a4277d631ea7f2d5b48fd22407b2cd2cb310dd97b325",
+        "derived_sha256": "f2e8aced0688afdfbe8dfec631584492d7c82a220d552e5605fd318e5a2b7ba1",
+        "symbol_prefix_only": true
+      },
+      {
+        "signature": "static void sensor_memory_clean(",
+        "original_sha256": "4f42c87135897bd17783d6021c844e96ca8b86d184e67efb550f3cb029f9bb9f",
+        "derived_sha256": "167c287ef7dd68a3a05c891917635c389af36ba1b4e608c0d70090c84b47d9ad",
+        "symbol_prefix_only": true
+      },
+      {
+        "signature": "static void sensor_memory_barrier(",
+        "original_sha256": "c5dc9ec9631901fe91c7e4333ee24f2c508e9b8729f1e5bfc962a5c80f0874a3",
+        "derived_sha256": "556ea1d581a1dcbdc11407f7e7be5768d883110fe20f9f1aa604e888c2467558",
+        "symbol_prefix_only": true
+      }
+    ],
+    "generated_sha256": {
+      "DmaOriginalChecks.inc": "14fd93e40ff6e77d3dfc7c7c9bda22b616fa3f76b5d2eca617b40e455d5d1982",
+      "DmaArchitecture.inc": "d177f8ea74c8dc8bec1ca4bdd955a84e57a5d6d6ede2b8d6f891467ceaf07365"
+    },
+    "table_revision": "83969cd874503e65997ff7639f7dcf3d0a92cd17",
+    "Linux_commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+    "stream_id": 7168,
+    "hardware": false
+  },
+  "source_record_sha256": "593f4b219a112d8e6454dd73346f00cf4e7983d6b8501fd03372c83d30bf1f46",
+  "audit_jobs": [
+    {
+      "name": "runtime",
+      "exit": 0,
+      "output": "PASS actual native sensor runtime prepare/listener/SSC/observer/recovery link; old deadline/other owners retained\n"
+    },
+    {
+      "name": "pen",
+      "exit": 0,
+      "output": "PASS: linked pen HID inheritance,207slots/10overrides,late initialization and interfaces\n"
+    },
+    {
+      "name": "motion",
+      "exit": 0,
+      "output": "PASS: motion IOHIDDevice207slots/10overrides, original constructors/driver and late initialization\n"
+    },
+    {
+      "name": "haptics",
+      "exit": 0,
+      "output": "PASS: actual haptics service/client inheritance, late initializer, startup and stop→RTC→UFS calls\n"
+    },
+    {
+      "name": "sleep",
+      "exit": 0,
+      "output": "PASS: actual original-worker nonterminal pen/pause/IRQ/SPI/firmware/event-wait call edges; no fake power provider\n"
+    },
+    {
+      "name": "camera",
+      "exit": 0,
+      "output": "PASS: actual source sensor/native CCI call chain, unchanged owners/initializers and no automatic camera startup\n"
+    },
+    {
+      "name": "rtc",
+      "exit": 0,
+      "output": "PASS: one register-only RTC initializer, exact clock callbacks and RTC-before-UFS recovery call\n"
+    },
+    {
+      "name": "qrtr",
+      "exit": 0,
+      "output": "PASS actual sole QRTR/SSC provider/queue/flow edges, exact3members, original ABI/other components retained\n"
+    },
+    {
+      "name": "adsp",
+      "exit": 0,
+      "output": "PASS: actual original ADSP/GLINK close→sensor endpoint/RPC calls, two type consumers only, original IOBuffer ABI/other owners retained\n"
+    },
+    {
+      "name": "ssc",
+      "exit": 0,
+      "output": "PASS: actual SSC worker/strict parser/HID calls, no auto-start, motion→haptics→RTC→UFS recovery and existing archives retained\n"
+    },
+    {
+      "name": "memory",
+      "exit": 0,
+      "output": "PASS: actual original IOKit/PAR/cache/4K table→pack→RPC paths, unchanged owners/initializers; no new startup\n"
+    },
+    {
+      "name": "pack",
+      "exit": 0,
+      "output": "PASS: actual VFS/SHA256/cache→RPC calls, original owners/initializers retained, no unqualified startup\n"
+    },
+    {
+      "name": "rpc",
+      "exit": 0,
+      "output": "PASS: actual RPC-provider/core/file-service edges, no owner auto-start, original peripheral archives/initializer count retained\n"
+    },
+    {
+      "name": "pipeline",
+      "exit": 0,
+      "output": "PASS actual Gen4 native pipeline/CCI capture calls, original owners/Apple code, no auto camera start\n"
+    },
+    {
+      "name": "power",
+      "exit": 0,
+      "output": "PASS actual shared I2C10/WL/capture call bounds, genuine169slot backlight, original archives/recovery and absent automatic startup\n"
+    },
+    {
+      "name": "clocks",
+      "exit": 0,
+      "output": "PASS actual native camera39clock graph/board/MMIO edges, exact startup scopes, all original inputs/recovery and no auto-start\n"
+    },
+    {
+      "name": "dma",
+      "exit": 0,
+      "output": "PASS actual native DMA→cameraBoard/CCI/CAMSS edges, original directIOKit/PAR/cache/4K, all prior archives/recovery and no auto-start\n"
+    },
+    {
+      "name": "source",
+      "exit": 0,
+      "output": "PASS exact Gen4 camera DMA/allocator source provenance: 29 checks\n"
+    },
+    {
+      "name": "new-gates",
+      "exit": 0,
+      "output": "PASS actual native camera DMA/board startup refusal gates: 24 checks\n"
+    },
+    {
+      "name": "prior-gates",
+      "exit": 0,
+      "output": "{\"passed\": true, \"checks\": 32, \"negative_gates\": true}\n"
+    },
+    {
+      "name": "prior-camera-gates",
+      "exit": 0,
+      "output": "PASS actual camera clock/board startup rejection gates: 17 checks\n"
+    }
+  ],
+  "guards": {
+    "actual_DMA_board_startup": 24,
+    "prior_peripheral": 32,
+    "prior_camera": 17
+  },
+  "private_archive": {
+    "file": "camera-dma-offline.tar.gz",
+    "bytes": 21950531,
+    "sha256": "43d965712b23561609dc8e81ebea0217ee6d39ffe38762465e284daf109affdd",
+    "members": 402,
+    "members_verified": true,
+    "manifest_sha256": "2f6236d7c89184581492b61cd66a042f30ced301c375ff496cd791a1f0d35b2e"
+  },
+  "actual_highPA_32bitIOVA_guarded_dma_capture_linked": true,
+  "original4K_imported_once": true,
+  "actual_shared_earlySMMU_physical_DMA_RPMh_owner_installed": false,
+  "hardware_tested": false,
+  "real_camera_pixels_OSservice_accepted": false,
+  "automatic_startup_added": false,
+  "overall_five_part_goal_complete": false,
+  "legacy_flags": {
+    "abi_qualified": false,
+    "loadable": false,
+    "runtime_qualified": false,
+    "instruction_relocation_complete": false
+  }
+}

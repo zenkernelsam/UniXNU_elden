@@ -1,5 +1,30 @@
 # UniXNU elden — authoritative source repository
 
+CameraDma20261120: actual originalIOKit/PAR/WB→UniquePrefaultNC/guardedframe
+arena→32bitIOVA/exactSID1c00/old4Kbuildauditcontext→Board/CCI/CAMSS queue/
+complete/borrow/explicitreturn/requeue fullylinked.51allocator1408708checks,
+actualcomposednormal30206/drainfailure30372/visibilityfailure30023,29source/
+24newstartup+32old+17camera guards pass. PhysicalIOKit/PAR/cache/earlySMMU/
+regmap/PLL/RPMh/GIC/DMA modeled.2scalarOS17objects0warnings,noinit;
+kernela37eaa4b/native322edf03,all originalarchives/recovery/Apple30/pen/
+motion/Actuator/RTC/wake/SSC/memorypackRPC/ADSPQRTR audits pass. Read
+CAMERA-DMA.md/dma-validation.json. Mac source8/host8/stack5/native3/kernel2.
+HighPAdata/table descriptors retained,all4Ksegment+PARr/w checked,guardIOVA
+unmapped,noWBdatareuse/fixedPA;original4K83969cd8 linkedONCE. Actualowner
+must proveEARLYbeforetouchseal/realids/freebank>=7/slot>=8/asid/IOVAlease;
+currentoneWiFi BootRoute NOTcamera proof,nolate/bypassguessedroute. Both
+sensorsshare1c00/onearena2..4buffers each. Attemptledger beforecallbacks;
+normalcontext/route/fault/devicevisibility required,nofakepixels/ATOS.
+Queue/completed/borrowed/returned/retired distinct;borrow preventsreuse,
+failedvisibility closesnormal butoriginalBoard.stop permitsactualSTOP/
+draincleanup. Fullboardshutdown BEFORErealDMA/TLB/IRQ/context retire;
+immutableearlySMR/S2CR/memorymaps heldtoreset. CPUborrowedframe stillheld
+untilactualreturn,notfakedretirement. NoouterDMA/capturestartup/actual
+sharedSMMU/parentRPMh/CSIrails/physicalDMA/RAW10/ISP/OS17service/tablet.
+NEXT actualsharedphysicalproviders+earlycameraDMA route/frames;other
+Pencil/wakePM/motioncalUI/hapticcal/RTCpersistence remain. FivepartGoal
+active/noauto merge/subagents/device,preservepeer/mainlineWifiQRTR/GPU/floor/recovery.
+
 CameraClocks20261120: exact6f97250e39DTclocks/21RCGs/37branches/4domains+
 23originalhelperbodies+realnativeMMIO/Board→sharedWL→sensorCCI/CAMSS linked.
 1815core1828185checks/3nativecases/composedbothcamera30170+drainfailure30336/

@@ -59,7 +59,7 @@ def main():
             if any(target==symbol(n) for pc,target in branches):raise ValueError('Unqualified outer camera startup')
         if r.get('actual_camera_WL_power_session') is True:
             from camera_startup_audit import check_camera_startup
-            check_camera_startup(branches,symbol,a.kernel_build/'native.macho',True,board)
+            check_camera_startup(branches,symbol,a.kernel_build/'native.macho',True,board,r.get('actual_native_camera_dma_capture') is True)
     # Public source control methods actually call native CCI; no binding stub.
     groups=[('_elden_camera_sensor_probe','_elden_camera_probe'),('_elden_camera_sensor_start','_elden_camera_start'),
         ('_elden_camera_sensor_control','_elden_camera_control'),('_elden_camera_sensor_shutdown','_elden_camera_stop')]

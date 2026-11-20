@@ -41,7 +41,7 @@ def main():
                             pc=sec['va']+off;calls.append((pc,pc+(signed(word&0x3ffffff,26)<<2)))
     if len(initial)!=len(before):raise ValueError('Automatic camera/backlight initializer added')
     board=report.get('actual_native_camera_clock_board') is True
-    startup=check_camera_startup(calls,symbol,a.kernel_build/'native.macho',True,board)
+    startup=check_camera_startup(calls,symbol,a.kernel_build/'native.macho',True,board,report.get('actual_native_camera_dma_capture') is True)
     def edge(caller,callee,empty=False):
         lo=symbol(caller);hi=min((v for v,n in starts if v>lo),default=None)
         hits=[pc for pc,target in calls if target==symbol(callee)]

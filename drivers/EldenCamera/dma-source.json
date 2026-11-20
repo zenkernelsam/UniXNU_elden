@@ -1,0 +1,13 @@
+{
+  "board": "TB322FC/SM8750",
+  "linux_commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+  "CAMSS_stream_id": 7168,
+  "qualified_native_memory": {
+    "drivers/EldenMotion/NativeMemory.cpp": "60565d3e9e7f8bf4c5f56d563d2094df359e6a8e0d43847a5d78ff0fac1ca617",
+    "drivers/EldenMotion/NativeMemoryMethods.inc": "248a353d11b73a14cbbd8bb2b2192e9ac136da264fa9986dd0ce1b593a065708"
+  },
+  "table_source_manifest": "drivers/EldenSmmu/upstream/source.json",
+  "hardware": false,
+  "table_manifest_sha256": "37c36c6a187a15621e61043791c30162eccaf3862550a5fc7e13b0de0322f971",
+  "ArmSmmu4K_revision": "83969cd874503e65997ff7639f7dcf3d0a92cd17"
+}

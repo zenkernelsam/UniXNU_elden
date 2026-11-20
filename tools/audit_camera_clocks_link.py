@@ -35,7 +35,7 @@ def main():
                         if word&0x7c000000==0x14000000:
                             pc=sec['va']+offset;calls.append((pc,pc+(signed(word&0x3ffffff,26)<<2)))
     if len(initial)!=len(previous):raise ValueError('Automatic camera clock initializer added')
-    startup=check_camera_startup(calls,symbol,a.kernel_build/'native.macho',True,True);edges={}
+    startup=check_camera_startup(calls,symbol,a.kernel_build/'native.macho',True,True,report.get('actual_native_camera_dma_capture') is True);edges={}
     for n in ('_elden_camera_clocks_open','_elden_camera_clock_resource','_elden_camera_domain_resource','_elden_camera_pins_prepare',
         '_elden_camera_sensor_reset','_elden_camera_clock_observe','_elden_camera_clock_observe_cleanup','_elden_camera_clocks_stop',
         '_elden_camera_native_clock','_elden_camera_native_domain','_elden_camera_native_sensor_reset','_elden_camera_native_clock_observe_cleanup',

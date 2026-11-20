@@ -1,6 +1,6 @@
 """Exact actual compiled camera wrapper boundaries; no implicit startup allow."""
 import re,subprocess
-def check_camera_startup(calls,symbol,native,powered=False,board=False):
+def check_camera_startup(calls,symbol,native,powered=False,board=False,dma=False):
     starts=[]
     for line in subprocess.check_output(['xcrun','nm','-n',str(native)],text=True).splitlines():
         m=re.match(r'^([0-9a-fA-F]+)\s+[sStT]\s+(\S+)$',line)
@@ -16,9 +16,15 @@ def check_camera_startup(calls,symbol,native,powered=False,board=False):
         for callee,caller in (('_elden_camera_native_cci_open','_elden_camera_board_prepare'),('_elden_camera_native_pipeline_open','_elden_camera_board_prepare'),
             ('_elden_camera_powered_capture_bind','_elden_camera_board_prepare'),('_elden_camera_powered_capture_probe','_elden_camera_board_probe'),
             ('_elden_camera_powered_capture_start','_elden_camera_board_start')):bounded(callee,caller)
-        for name in ('_elden_camera_board_bind','_elden_camera_board_prepare','_elden_camera_board_probe','_elden_camera_board_start','_elden_camera_native_clocks_open'):
+        if dma:
+            for suffix in ('bind','prepare','probe','start'):bounded('_elden_camera_board_'+suffix,'_elden_camera_dma_capture_'+suffix)
+            for name in ('_elden_camera_dma_capture_bind','_elden_camera_dma_capture_prepare','_elden_camera_dma_capture_probe',
+                         '_elden_camera_dma_capture_queue_initial','_elden_camera_dma_capture_start','_elden_camera_dma_open'):
+                if any(t==symbol(name) for pc,t in calls):raise ValueError('Unqualified outer camera DMA startup: '+name)
+        for name in ('_elden_camera_native_clocks_open',) if dma else ('_elden_camera_board_bind','_elden_camera_board_prepare','_elden_camera_board_probe','_elden_camera_board_start','_elden_camera_native_clocks_open'):
             if any(t==symbol(name) for pc,t in calls):raise ValueError('Unqualified outer camera board/clock startup: '+name)
     else:
+        if dma:raise ValueError('Camera DMA requires actual native Board composition')
         for name in ('_elden_camera_native_cci_open','_elden_camera_native_pipeline_open'):
             if any(t==symbol(name) for pc,t in calls):raise ValueError('Unqualified outer camera startup caller: '+name)
     captures=('_elden_camera_capture_bind','_elden_camera_capture_probe','_elden_camera_capture_start')
