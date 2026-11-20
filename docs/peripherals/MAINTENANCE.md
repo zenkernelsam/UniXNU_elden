@@ -4,6 +4,12 @@
 完整旧字节、原 SHA 与大小保存在 docs/archive/peripherals-20261121/manifest.json。
 组件技术文档仍在原位置供旧 build/audit 引用，INDEX.md 按链路排序。
 
+已核完成：独立 Mac 外设工作树的348项过时输出（allocated3,504,148,480B，
+约3.26GiB）和16份一次性传输／辅助文件已进入原生垃圾桶，完整摘要搬后核对。
+当前实验 lab 从约6.2GiB整理到2.9GiB；不是释放3.26GiB。最新相机内核摘要与
+1066项实际传递构建输入仍全部匹配。主线自身另有137项21.25GiB回收记录，
+本次只引用它的凭据，没有重复处理主线/GPU/Lilac或更改任何设备状态。
+
 macOS 产物只使用 NSFileManager `trashItemAtURL` 移到用户垃圾桶，不执行 unlink、
 递归永久删除或清空垃圾桶。原项目目录到垃圾桶的路径、文件数、完整指纹
 与移前/后验证存入工作台 maintenance/peripheral-cleanup-20261121。
