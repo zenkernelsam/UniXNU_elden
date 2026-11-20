@@ -12,7 +12,8 @@ def main():
     spec=importlib.util.spec_from_file_location('touch_smmu',d/'TouchSource.py');mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
     (out/'DmaRoute.c').write_bytes(mod.route());(out/'EldenSmmuBootRoute.h').write_bytes((d/'BootRoute.h').read_bytes())
     registry={'_elden_smmu_boot_route_'+n for n in ['state','reserve','commit','poison','seal','expected']}
-    touch={'_elden_touch_route_'+n for n in ['attach','observe','detach']};records={};objects=[]
+    registry|={'_elden_smmu_boot_routes_'+n for n in ['reserve','commit','peek','poison','early']}
+    touch={'_elden_touch_route_'+n for n in ['attach','observe','detach','expected']};records={};objects=[]
     for name,source in [('BootRoute',d/'BootRoute.c'),('DmaRoute',out/'DmaRoute.c')]:
         obj=out/(name+'.o');objects.append(obj)
         cmd=['xcrun','--sdk','iphoneos','clang','-target','arm64-apple-ios17.0','-std=c11','-O2','-Wall','-Wextra','-Werror',

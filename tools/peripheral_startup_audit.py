@@ -59,6 +59,10 @@ def no_outer_sensor_start(calls,symbol,runtime=False,native_path=None):
         return
     for name in ('_elden_sensor_runtime_prepare','_elden_sensor_runtime_start'):
         if any(t==symbol(name) for pc,t in calls):raise ValueError('Actual outer runtime has an unqualified startup caller: '+name)
+    adopt=None
+    try:adopt=symbol('_elden_sensor_runtime_adopt')
+    except (KeyError,ValueError):pass
+    if adopt is not None and any(t==adopt for pc,t in calls):raise ValueError('Actual shared-memory runtime adopt has an unqualified startup caller')
     if native_path is None:raise ValueError('Actual native function bounds required for runtime')
     starts=[]
     for line in subprocess.check_output(['xcrun','nm','-n',str(native_path)],text=True).splitlines():
@@ -70,5 +74,7 @@ def no_outer_sensor_start(calls,symbol,runtime=False,native_path=None):
         hits=[pc for pc,t in calls if t==target]
         if not hits or any(not start<=pc<end for pc in hits):raise ValueError('Incoming startup outside actual runtime worker: '+name)
     target=symbol('_elden_qrtr_ports_prepare');start=symbol('_elden_sensor_runtime_prepare');end=min((pc for pc,_ in starts if pc>start),default=None)
+    ranges=[(start,end)]
+    if adopt is not None:ranges.append((adopt,min((pc for pc,_ in starts if pc>adopt),default=None)))
     hits=[pc for pc,t in calls if t==target]
-    if end is None or not hits or any(not start<=pc<end for pc in hits):raise ValueError('QRTR provider setup outside actual runtime prepare')
+    if any(end is None for start,end in ranges) or not hits or any(sum(start<=pc<end for start,end in ranges)!=1 for pc in hits):raise ValueError('QRTR provider setup outside actual runtime prepare/adopt')

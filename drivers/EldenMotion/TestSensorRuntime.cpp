@@ -48,6 +48,7 @@ static void *observer_context;static void (*observer)(void *,const EldenMotionNa
 static EldenMotionBoard installed_board{};
 extern "C" int elden_sensor_memory_native_open(const EldenSensorMemoryConfig *c,const EldenSensorMemoryOwner *o,EldenSensorNativeMemory **out){CHECK(c&&o&&o->owner==7&&o->epoch==9);memory.opens++;*out=(EldenSensorNativeMemory *)&memory;return memory_error;}
 extern "C" int elden_sensor_memory_native_admit(EldenSensorNativeMemory *,uint64_t owner,uint64_t epoch,int cleanup){CHECK(owner==7&&epoch==9&&(cleanup==0||cleanup==1));return 0;}
+extern "C" int elden_sensor_memory_native_view(EldenSensorNativeMemory *m,uint64_t owner,uint64_t epoch,EldenSensorMemoryView *out){CHECK(m==(EldenSensorNativeMemory *)&memory&&owner==7&&epoch==9&&out);*out={};out->memory={nullptr,0x20000000,0x800000,4,4242};return memory_error;}
 extern "C" int elden_sensor_memory_native_stop(EldenSensorNativeMemory *p,uint64_t owner,uint64_t epoch){CHECK(p==(EldenSensorNativeMemory *)&memory&&owner==7&&epoch==9);memory.stops++;return retire_error;}
 extern "C" int elden_qrtr_ports_prepare(const EldenQrtrPortOps *){return qrtr_error;}
 static void endpoint_wake(void *){rpc_release.store(true);wakes.fetch_add(1);}
@@ -101,7 +102,7 @@ static void noop(void *){}
 static int qr_retire(void *,const EldenQrtrPortStatus *){return 0;}
 static int board_qualify(void *,uint64_t,uint64_t,unsigned,const EldenSscAttrs *,EldenMotionSpec *){return 0;}
 static int board_time(void *,uint64_t,uint64_t,uint64_t ticks,uint64_t *out){*out=ticks;return 0;}
-static EldenSensorRuntimeConfig config(){EldenSensorRuntimeConfig c{};c.memory={0x20000000,0x800000,4,4242};c.memory_owner={nullptr,7,9,gate,reserve,install,observe,withdraw};
+static EldenSensorRuntimeConfig config(){EldenSensorRuntimeConfig c{};c.memory={0x20000000,0x800000,4,4242};c.memory_owner={nullptr,7,9,gate,reserve,install,observe,withdraw,nullptr};
     c.adsp={nullptr,7,9,gate,cookie,complete,retire,nullptr};c.rpc_intent_size=1024;c.rpc_intent_count=4;
     c.qrtr={nullptr,7,9,2048,8,noop,noop,gate,qr_retire};c.pack={nullptr,7,9,pack_gate};c.board={nullptr,gate,board_qualify,board_time,100000,0,{0,0}};
     c.seal.version=1;c.seal.bytes=4096;std::memset(c.seal.sha256,1,32);std::memset(c.seal.namespace_sha256,2,32);std::memset(&c.seal.identity,3,sizeof(c.seal.identity));return c;}
@@ -111,6 +112,13 @@ int main(int argc,char **argv){
     CHECK(argc==2);std::string test=argv[1];auto cfg=config();
     if(test=="reject-config"){cfg.seal.identity.adsp_sha256[0]=0;std::memset(cfg.seal.identity.adsp_sha256,0,32);CHECK(elden_sensor_runtime_prepare(&cfg)==-22&&memory.opens==0);}
     else if(test=="early-stop"){CHECK(!elden_sensor_runtime_prepare(&cfg));CHECK(status().stage==1&&memory.opens==1);CHECK(!elden_sensor_runtime_stop(7,9)&&memory.stops==1&&!endpoint.opens);CHECK(elden_sensor_runtime_start(7,9)==-16);}
+    else if(test=="adopt"||test=="adopt-mismatch"||test=="adopt-not-ready"){
+        memory.opens=1;auto *existing=(EldenSensorNativeMemory *)&memory;
+        if(test=="adopt-mismatch"){cfg.memory.iova+=4096;CHECK(elden_sensor_runtime_adopt(&cfg,existing)==-116&&memory.opens==1&&!sensor_runtime);}
+        else if(test=="adopt-not-ready"){memory_error=-19;CHECK(elden_sensor_runtime_adopt(&cfg,existing)==-19&&memory.opens==1&&!sensor_runtime);}
+        else {CHECK(!elden_sensor_runtime_adopt(&cfg,existing)&&memory.opens==1&&status().prepared);
+            CHECK(elden_sensor_runtime_prepare(&cfg)==-16);CHECK(!elden_sensor_runtime_stop(7,9)&&memory.stops==1);}
+    }
     else {
         if(test=="memory-fail")memory_error=-71;if(test=="qrtr-fail")qrtr_error=-16;
         int prepared=elden_sensor_runtime_prepare(&cfg);

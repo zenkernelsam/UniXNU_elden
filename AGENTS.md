@@ -1,5 +1,25 @@
 # UniXNU elden — authoritative source repository
 
+SharedSmmu20261120: actualearlybatch/nativeMMIO-GIC/stagedcameraADSPmemory/
+originaltouchroute+preparedmemorySSCadopt fullylinked.171core1272415+
+11composed2375292,8scalarOS17objects0warnings/kernel2d078d21/nativea568b418;
+all11finalshared/camera/runtime/sleep/motion/haptics/RTC/QRTRaudit+21new/
+32prior/24camera guards pass. Source11/host11/stack12/native11/kernel11;
+camera10/sensor10;readSHARED-SMMU.md/shared-validation.json. LegacyWiFi
+registrykept;oneatomicexact1401/1c00/all4ADSPsession3..8batch,nolatemask/
+append/unknownSID;DTmaskunionexpandedexactinclsession7. Original4K83969cd8
+linkedONCE/noATOS. WholebackinginclguardPA/freshallslotbankASID/physicalidle/
+memoryIRQ/ACTLRsecuritybeforeeverywrite;partialfailurepoisonretainreset.
+OneoriginalSMMUGICmapping/global97/contextIRQ;maskdrain+realCBdisableTLB,
+globaldrainonlyallactualCBoff+TLBidle/masteridle. Routes/memoryretainedtoreset.
+OnlyDmaRoute/NativeMemoryarchive+directcamera/runtimeobjectschange;
+others/recovery5500ms/Apple30held. Preparememory→allcommit→adapteractivate→
+memoryactivate→touchseal/Board;SSCadoptsameactualmemory,no2ndallocation.
+ActualoriginalbootpowerclockmappingACTLRsecuritytouchauthorityNOTinstalled,
+noautocaller/tablet/merge;nextrealsharedstartup/Gen4PDcapturecalmounttime/
+samplesUI/RAW10ISPcameraOSservice. FivepartGoalactive;Pencil/wakePM/
+hapticcal/RTCpersistmissing;mainlineWifiQRTR/GPU/peer/floor/recoverypreserved.
+
 CameraDma20261120: actual originalIOKit/PAR/WB→UniquePrefaultNC/guardedframe
 arena→32bitIOVA/exactSID1c00/old4Kbuildauditcontext→Board/CCI/CAMSS queue/
 complete/borrow/explicitreturn/requeue fullylinked.51allocator1408708checks,

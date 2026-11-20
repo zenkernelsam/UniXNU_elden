@@ -3,7 +3,7 @@
 struct EldenSensorNativeMemory {
     EldenSensorMemoryConfig config;EldenSensorMemoryOwner owner;EldenSensorMemoryView view;EldenSensorMemoryStatus status;
     IOLock *lock;IOBufferMemoryDescriptor *data_descriptor,*table_descriptor;IOMemoryMap *alias;
-    uint8_t *data,*tables;uint32_t cache_line,table_capacity,ready,stopping,withdrawn;
+    uint8_t *data,*tables;uint32_t cache_line,table_capacity,ready,stopping,withdrawn,prepared;
     EldenWifiSmmu4KRange range;EldenWifiSmmu4KTableMemory table_memory;EldenWifiSmmu4KTableIo io;
     unsigned char visited[36];
 };
@@ -39,7 +39,7 @@ static int sensor_memory_audit(EldenSensorNativeMemory *c){
     EldenWifiSmmu4KTableAuditResult report={};EldenWifiSmmu4KStatus rc=EldenWifiSmmu4KAuditTables(&c->io,&c->view.table_config,&c->view.tables,&region,c->view.table_physical,&report);
     return rc||!report.complete?sensor_memory_error(c,-71,5):0;
 }
-static int sensor_memory_initialize(EldenSensorNativeMemory *c){
+static int sensor_memory_initialize(EldenSensorNativeMemory *c,int staged){
     c->status.stage=2;int rc=sensor_memory_admit(c,0);if(rc)return sensor_memory_error(c,rc,2);
     c->view.memory={nullptr,c->config.iova,c->config.bytes,c->config.session,c->config.process};
     const uint16_t offsets[]={0x1000,0x1040,0x1060,0x1080};
@@ -89,23 +89,38 @@ static int sensor_memory_initialize(EldenSensorNativeMemory *c){
     c->status.stage=9;rc=sensor_memory_admit(c,0);if(rc)return sensor_memory_error(c,rc,2);
     rc=c->owner.install(c->owner.context,c->owner.owner,c->owner.epoch,&c->view);if(rc)return sensor_memory_error(c,rc,15);
     c->status.installed=1;c->status.stage=10;
+    if(staged){rc=c->owner.prepared(c->owner.context,c->owner.owner,c->owner.epoch,&c->view);
+        if(rc)return sensor_memory_error(c,rc,16);c->prepared=1;
+        c->status.data_physical=data_pa;c->status.table_physical=table_pa;c->status.bytes=c->config.bytes;c->status.table_pages=c->table_capacity;return 0;}
     rc=c->owner.observe(c->owner.context,c->owner.owner,c->owner.epoch,&c->view,0);if(rc)return sensor_memory_error(c,rc,16);
     rc=sensor_memory_admit(c,0);if(rc)return sensor_memory_error(c,rc,2);
     c->status.stage=11;c->status.data_physical=data_pa;c->status.table_physical=table_pa;c->status.bytes=c->config.bytes;c->status.table_pages=c->table_capacity;
     __atomic_store_n(&c->ready,1u,__ATOMIC_RELEASE);return 0;
 }
 }
-extern "C" int elden_sensor_memory_native_open(const EldenSensorMemoryConfig *cfg,const EldenSensorMemoryOwner *owner,EldenSensorNativeMemory **out){
+static int sensor_memory_create(const EldenSensorMemoryConfig *cfg,const EldenSensorMemoryOwner *owner,EldenSensorNativeMemory **out,int staged){
     if(!cfg||!owner||!out||*out||!owner->owner||!owner->epoch||!owner->admit||!owner->reserve||!owner->install||!owner->observe||!owner->withdraw||
        !cfg->iova||(cfg->iova&4095)||cfg->bytes<((2u<<20)+4096)||cfg->bytes>(64u<<20)||(cfg->bytes&4095)||cfg->iova>UINT64_C(0x100000000)-cfg->bytes||
-       cfg->session<3||cfg->session>8||!cfg->process||ml_at_interrupt_context())return -22;
+       cfg->session<3||cfg->session>8||!cfg->process||(staged&&!owner->prepared)||ml_at_interrupt_context())return -22;
     int rc=owner->admit(owner->context,owner->owner,owner->epoch,0);if(rc)return rc<0?rc:-13;
     auto *c=(EldenSensorNativeMemory *)IOMallocData(sizeof(EldenSensorNativeMemory));if(!c)return -12;bzero(c,sizeof(*c));c->config=*cfg;c->owner=*owner;*out=c;
-    c->lock=IOLockAlloc();if(!c->lock)return sensor_memory_error(c,-12,9);IOLockLock(c->lock);rc=sensor_memory_initialize(c);IOLockUnlock(c->lock);return rc;
+    c->lock=IOLockAlloc();if(!c->lock)return sensor_memory_error(c,-12,9);IOLockLock(c->lock);rc=sensor_memory_initialize(c,staged);IOLockUnlock(c->lock);return rc;
+}
+extern "C" int elden_sensor_memory_native_open(const EldenSensorMemoryConfig *cfg,const EldenSensorMemoryOwner *owner,EldenSensorNativeMemory **out){return sensor_memory_create(cfg,owner,out,0);}
+extern "C" int elden_sensor_memory_native_prepare(const EldenSensorMemoryConfig *cfg,const EldenSensorMemoryOwner *owner,EldenSensorNativeMemory **out){return sensor_memory_create(cfg,owner,out,1);}
+extern "C" int elden_sensor_memory_native_activate(EldenSensorNativeMemory *c,uint64_t owner,uint64_t epoch){
+    if(!sensor_memory_owner(c,owner,epoch))return -116;if(!c->lock||ml_at_interrupt_context())return -22;IOLockLock(c->lock);
+    int rc=c->status.error?c->status.error:__atomic_load_n(&c->stopping,__ATOMIC_ACQUIRE)?-125:!c->prepared||c->ready?-16:0;
+    if(!rc)rc=sensor_memory_admit(c,0);
+    if(!rc){rc=c->owner.observe(c->owner.context,owner,epoch,&c->view,0);if(rc&&rc!=-19&&rc!=-16&&rc!=-11)rc=sensor_memory_error(c,rc,16);}
+    if(!rc)rc=sensor_memory_admit(c,0);
+    if(!rc){c->status.stage=11;__atomic_store_n(&c->ready,1u,__ATOMIC_RELEASE);}
+    IOLockUnlock(c->lock);return rc;
 }
 extern "C" int elden_sensor_memory_native_view(EldenSensorNativeMemory *c,uint64_t owner,uint64_t epoch,EldenSensorMemoryView *out){
     if(!sensor_memory_owner(c,owner,epoch))return -116;if(!out||!c->lock||ml_at_interrupt_context())return -22;
-    IOLockLock(c->lock);int rc=__atomic_load_n(&c->ready,__ATOMIC_ACQUIRE)?sensor_memory_admit(c,0):c->status.error?c->status.error:-19;
+    IOLockLock(c->lock);int rc=__atomic_load_n(&c->ready,__ATOMIC_ACQUIRE)?0:c->status.error?c->status.error:-19;
+    if(rc){IOLockUnlock(c->lock);return rc;}rc=sensor_memory_admit(c,0);
     if(!rc)rc=c->owner.observe(c->owner.context,owner,epoch,&c->view,0);if(rc>0)rc=-13;if(!rc)rc=sensor_memory_admit(c,0);
     if(!rc)*out=c->view;else sensor_memory_error(c,rc,16);IOLockUnlock(c->lock);return rc;
 }
@@ -116,7 +131,8 @@ extern "C" int elden_sensor_memory_native_admit(EldenSensorNativeMemory *c,uint6
 }
 extern "C" int elden_sensor_memory_native_publish(EldenSensorNativeMemory *c,uint64_t owner,uint64_t epoch){
     if(!sensor_memory_owner(c,owner,epoch))return -116;if(!c->lock||ml_at_interrupt_context())return -22;
-    IOLockLock(c->lock);int rc=__atomic_load_n(&c->ready,__ATOMIC_ACQUIRE)?sensor_memory_admit(c,0):c->status.error?c->status.error:-19;
+    IOLockLock(c->lock);int rc=__atomic_load_n(&c->ready,__ATOMIC_ACQUIRE)?0:c->status.error?c->status.error:-19;
+    if(rc){IOLockUnlock(c->lock);return rc;}rc=sensor_memory_admit(c,0);
     if(!rc)rc=c->owner.observe(c->owner.context,owner,epoch,&c->view,0);if(rc>0)rc=-13;if(!rc)rc=sensor_memory_admit(c,0);
     if(!rc)sensor_memory_barrier();else sensor_memory_error(c,rc,16);IOLockUnlock(c->lock);return rc;
 }

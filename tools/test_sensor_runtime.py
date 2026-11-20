@@ -20,7 +20,7 @@ def main():
     host=['xcrun','clang++','-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-I',a.source]
     run([*host,DRIVER/'TestSensorRuntime.cpp','-o',out/'test'],'host-build')
     cases=('reject-config','early-stop','memory-fail','qrtr-fail','endpoint-fail','binding-fail','attach-fail','thread-fail',
-           'pack-not-ready','normal','stop-during-wait','observer-wake','motion-fail','retirement-fail','listener-cleanup','stop-during-motion-start')
+           'pack-not-ready','normal','stop-during-wait','observer-wake','motion-fail','retirement-fail','listener-cleanup','stop-during-motion-start','adopt','adopt-mismatch','adopt-not-ready')
     results={name:run([out/'test',name],name) for name in cases}
     checks=sum(int(re.search(r': (\d+) checks',value)[1]) for value in results.values())
     cap=json.loads((a.base_native/'capture.json').read_text());job=next(j for j in cap['jobs'] if j['file'].endswith('/NativeHidInput.cpp'))

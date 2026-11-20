@@ -2,7 +2,7 @@
 struct EldenCameraNativeDma {
     EldenCameraDmaConfig config;EldenCameraDmaOwner owner;EldenCameraDmaView view;EldenCameraDmaStatus status;
     IOLock *lock;IOBufferMemoryDescriptor *data_descriptor,*table_descriptor;IOMemoryMap *alias;
-    uint8_t *data,*tables;uint32_t cache_line,table_capacity,ready,stopping;
+    uint8_t *data,*tables;uint32_t cache_line,table_capacity,ready,stopping,prepared;
     EldenWifiSmmu4KRange ranges[8];EldenWifiSmmu4KTableMemory table_memory;EldenWifiSmmu4KTableIo io;
     unsigned char visited[68];uint32_t slot_state[8];EldenCameraFrame borrowed[8];
 };
@@ -46,7 +46,7 @@ static int camera_dma_slot(EldenCameraNativeDma *c,unsigned sensor,const EldenCa
            buffer->iova==b.iova&&buffer->bytes==b.bytes&&buffer->mapping==b.mapping)return (int)i;}
     return -116;
 }
-static int camera_dma_initialize(EldenCameraNativeDma *c){
+static int camera_dma_initialize(EldenCameraNativeDma *c,int staged){
     uint64_t offsets[8]={},mapped[8]={},bytes=0;uint32_t sensors[8]={};unsigned count=0;
     int rc=camera_dma_geometry(&c->config,offsets,mapped,sensors,&count,&bytes);if(rc)return camera_dma_error(c,rc,1);
     c->view.owner=c->owner.owner;c->view.epoch=c->owner.epoch;c->view.iova=c->config.iova;c->view.allocation_bytes=bytes;c->view.stream_id=0x1c00;c->view.count=count;
@@ -101,19 +101,37 @@ static int camera_dma_initialize(EldenCameraNativeDma *c){
     rc=camera_dma_admit(c,0);if(!rc)rc=camera_dma_normalize(c->owner.early(c->owner.context,c->owner.owner,c->owner.epoch));if(rc)return camera_dma_error(c,rc,2);
     c->status.stage=9;c->status.install_attempted=1;
     rc=camera_dma_normalize(c->owner.install(c->owner.context,c->owner.owner,c->owner.epoch,&c->view));if(rc)return camera_dma_error(c,rc,15);
-    c->status.installed=1;c->status.stage=10;rc=camera_dma_live(c,nullptr,0);if(rc)return rc;
+    c->status.installed=1;c->status.stage=10;
+    if(staged){rc=camera_dma_normalize(c->owner.prepared(c->owner.context,c->owner.owner,c->owner.epoch,&c->view));
+        if(rc)return camera_dma_error(c,rc,16);c->prepared=1;
+        c->status.table_pages=(uint32_t)c->view.tables.table_pages;c->status.leaf_pages=(uint32_t)c->view.tables.leaf_pages;return 0;}
+    rc=camera_dma_live(c,nullptr,0);if(rc)return rc;
     c->status.stage=11;c->status.table_pages=(uint32_t)c->view.tables.table_pages;c->status.leaf_pages=(uint32_t)c->view.tables.leaf_pages;
     __atomic_store_n(&c->ready,1u,__ATOMIC_RELEASE);return 0;
 }
 }
-extern "C" int elden_camera_dma_open(const EldenCameraDmaConfig *config,const EldenCameraDmaOwner *owner,EldenCameraNativeDma **out){
+static int camera_dma_create(const EldenCameraDmaConfig *config,const EldenCameraDmaOwner *owner,EldenCameraNativeDma **out,int staged){
     uint64_t offsets[8],mapped[8],bytes;uint32_t sensors[8];unsigned count;
     if(!config||!owner||!out||*out||!owner->owner||!owner->epoch||!owner->admit||!owner->early||!owner->reserve||!owner->install||!owner->observe||!owner->retire||
-       camera_dma_geometry(config,offsets,mapped,sensors,&count,&bytes)||ml_at_interrupt_context())return -22;
+       (staged&&!owner->prepared)||camera_dma_geometry(config,offsets,mapped,sensors,&count,&bytes)||ml_at_interrupt_context())return -22;
     int rc=camera_dma_normalize(owner->admit(owner->context,owner->owner,owner->epoch,0));if(!rc)rc=camera_dma_normalize(owner->early(owner->context,owner->owner,owner->epoch));if(rc)return rc;
     uint32_t none=0;if(!__atomic_compare_exchange_n(&camera_dma_attempted,&none,1u,false,__ATOMIC_ACQ_REL,__ATOMIC_ACQUIRE))return -16;
     auto *c=(EldenCameraNativeDma *)IOMallocData(sizeof(EldenCameraNativeDma));if(!c)return -12;bzero(c,sizeof(*c));c->config=*config;c->owner=*owner;*out=c;
-    c->lock=IOLockAlloc();if(!c->lock)return camera_dma_error(c,-12,9);IOLockLock(c->lock);rc=camera_dma_initialize(c);IOLockUnlock(c->lock);return rc;
+    c->lock=IOLockAlloc();if(!c->lock)return camera_dma_error(c,-12,9);IOLockLock(c->lock);rc=camera_dma_initialize(c,staged);IOLockUnlock(c->lock);return rc;
+}
+extern "C" int elden_camera_dma_open(const EldenCameraDmaConfig *config,const EldenCameraDmaOwner *owner,EldenCameraNativeDma **out){return camera_dma_create(config,owner,out,0);}
+extern "C" int elden_camera_dma_prepare_batch(const EldenCameraDmaConfig *config,const EldenCameraDmaOwner *owner,EldenCameraNativeDma **out){return camera_dma_create(config,owner,out,1);}
+extern "C" int elden_camera_dma_activate(EldenCameraNativeDma *c,uint64_t owner,uint64_t epoch){
+    if(!camera_dma_identity(c,owner,epoch))return -116;if(!c->lock||ml_at_interrupt_context())return -22;IOLockLock(c->lock);
+    int rc=c->status.error?c->status.error:__atomic_load_n(&c->stopping,__ATOMIC_ACQUIRE)?-125:!c->prepared||c->ready?-16:0;
+    /* A premature activate is a state refusal. It never poisons/revives a
+     * prepared object. Hardware errors from the real observer remain latched. */
+    if(!rc)rc=camera_dma_admit(c,0);
+    if(!rc)rc=camera_dma_normalize(c->owner.observe(c->owner.context,owner,epoch,&c->view,nullptr,0));
+    if(rc&&rc!=-19&&rc!=-16&&rc!=-11)camera_dma_error(c,rc,16);
+    if(!rc)rc=camera_dma_admit(c,0);
+    if(!rc){c->status.stage=11;__atomic_store_n(&c->ready,1u,__ATOMIC_RELEASE);}
+    IOLockUnlock(c->lock);return rc;
 }
 extern "C" int elden_camera_dma_view(EldenCameraNativeDma *c,uint64_t owner,uint64_t epoch,EldenCameraDmaView *out){
     if(!camera_dma_identity(c,owner,epoch))return -116;if(!out||!c->lock||ml_at_interrupt_context())return -22;IOLockLock(c->lock);

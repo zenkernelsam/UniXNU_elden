@@ -22,14 +22,14 @@ static void IOLockLock(IOLock *p){p->lock();}static void IOLockUnlock(IOLock *p)
 class IOBufferMemoryDescriptor;class IOMemoryMap {public:IOBufferMemoryDescriptor *memory;uintptr_t getVirtualAddress();};
 static unsigned allocated,fail_allocation,fail_prepare,cleans,translations,maps;
 static bool split_segment,bad_gap,bad_attr,stale_alias,lazy_alias,fail_map,overlap;
-static uint32_t line=64;
+static uint32_t line=64;static uint64_t peer_pa_bias;
 static std::vector<IOBufferMemoryDescriptor *> descriptors;static std::vector<IOMemoryMap *> aliases;
 class IOBufferMemoryDescriptor {public:
     uint8_t *cpu=nullptr;uint64_t pa=0;uint32_t bytes=0,index=0;bool prepared=false,nc=false,present=true;
     static IOBufferMemoryDescriptor *inTaskWithOptions(void *task,IOOptionBits flags,uint64_t n,uint64_t align){
         CHECK(task==kernel_task&&flags==(kIODirectionInOut|kIOMemoryPhysicallyContiguous|kIOMemoryMapperNone)&&align==4096&&n<=64u<<20);
         unsigned index=allocated++;if(index+1==fail_allocation)return nullptr;
-        auto *p=new IOBufferMemoryDescriptor;p->index=index;p->bytes=(uint32_t)n;p->pa=index? (overlap?UINT64_C(0x900001000):UINT64_C(0x980000000)):UINT64_C(0x900001000);
+        auto *p=new IOBufferMemoryDescriptor;p->index=index;p->bytes=(uint32_t)n;p->pa=(index? (overlap?UINT64_C(0x900001000):UINT64_C(0x980000000)):UINT64_C(0x900001000))+peer_pa_bias;
         CHECK(!posix_memalign((void **)&p->cpu,4096,(size_t)n));descriptors.push_back(p);return p;
     }
     IOMemoryMap *createMappingInTask(void *task,unsigned off,unsigned flags){
@@ -73,10 +73,30 @@ static int install(void *p,uint64_t owner,uint64_t epoch,const EldenSensorMemory
 }
 static int observe(void *p,uint64_t owner,uint64_t epoch,const EldenSensorMemoryView *view,int cleanup){CHECK(p==peer&&owner==7&&epoch==9&&view->lease.route_epoch==11&&!cleanup);peer->observed++;return peer->observe_error;}
 static int withdraw(void *p,uint64_t owner,uint64_t epoch,const EldenSensorMemoryView *){CHECK(p==peer&&owner==7&&epoch==9);if(peer->withdraw_error)return peer->withdraw_error;peer->withdrawn++;return 0;}
+static int prepared(void *p,uint64_t owner,uint64_t epoch,const EldenSensorMemoryView *view){return observe(p,owner,epoch,view,0);}
 static void reset(){for(auto *p:aliases)delete p;aliases.clear();for(auto *p:descriptors){std::free(p->cpu);delete p;}descriptors.clear();for(auto *p:locks)delete p;locks.clear();for(void *p:heaps)std::free(p);heaps.clear();
-    allocated=fail_allocation=fail_prepare=cleans=translations=maps=0;split_segment=bad_gap=bad_attr=stale_alias=lazy_alias=fail_map=overlap=irq=false;line=64;scenarios++;}
-static int open(OwnerPeer &p,EldenSensorNativeMemory **out){peer=&p;EldenSensorMemoryConfig cfg{0x20001000,8u<<20,4,4242};EldenSensorMemoryOwner own{&p,7,9,admission,reserve,install,observe,withdraw};return elden_sensor_memory_native_open(&cfg,&own,out);}
+    allocated=fail_allocation=fail_prepare=cleans=translations=maps=0;peer_pa_bias=0;split_segment=bad_gap=bad_attr=stale_alias=lazy_alias=fail_map=overlap=irq=false;line=64;scenarios++;}
+static int open(OwnerPeer &p,EldenSensorNativeMemory **out){peer=&p;EldenSensorMemoryConfig cfg{0x20001000,8u<<20,4,4242};EldenSensorMemoryOwner own{&p,7,9,admission,reserve,install,observe,withdraw,nullptr};return elden_sensor_memory_native_open(&cfg,&own,out);}
+#if defined(ELDEN_SENSOR_MEMORY_PEER_API)
+extern "C" int elden_sensor_memory_peer_prepare(const EldenSensorMemoryConfig *cfg,const EldenSensorMemoryOwner *owner,EldenSensorNativeMemory **out){reset();peer_pa_bias=0x40000000;return elden_sensor_memory_native_prepare(cfg,owner,out);}
+extern "C" void elden_sensor_memory_peer_reset(void){reset();}
+extern "C" int elden_sensor_memory_peer_backing(const EldenSensorMemoryView *view){
+    if(!view||descriptors.size()!=2||!descriptors[0]->prepared||!descriptors[1]->prepared||!descriptors[0]->nc||aliases.size()!=1)return -13;
+    if(view->data_physical!=descriptors[0]->pa||view->table_physical!=descriptors[1]->pa||view->table_mapping!=(const volatile uint64_t *)descriptors[1]->cpu||
+       view->memory.bytes!=descriptors[0]->bytes||view->table_bytes!=descriptors[1]->bytes||view->memory.arena!=descriptors[0]->cpu)return -116;return 0;
+}
+#endif
 int main(){
+    reset();OwnerPeer staged;peer=&staged;EldenSensorNativeMemory *staged_memory=nullptr;EldenSensorMemoryConfig staged_cfg{0x20001000,8u<<20,4,4242};
+    EldenSensorMemoryOwner staged_owner{peer,7,9,admission,reserve,install,observe,withdraw,prepared};
+    CHECK(!elden_sensor_memory_native_prepare(&staged_cfg,&staged_owner,&staged_memory)&&staged_memory&&!staged_memory->ready);
+    EldenSensorMemoryView premature{};CHECK(elden_sensor_memory_native_view(staged_memory,7,9,&premature)==-19);
+    CHECK(elden_sensor_memory_native_publish(staged_memory,7,9)==-19);CHECK(!staged_memory->status.error);
+    CHECK(elden_sensor_memory_native_admit(staged_memory,7,9,0)==-19);CHECK(!elden_sensor_memory_native_activate(staged_memory,7,9));
+    CHECK(elden_sensor_memory_native_activate(staged_memory,7,9)==-16);CHECK(!elden_sensor_memory_native_stop(staged_memory,7,9));CHECK(elden_sensor_memory_native_activate(staged_memory,7,9)==-125);
+    reset();OwnerPeer staged_fail;peer=&staged_fail;staged_memory=nullptr;staged_owner={peer,7,9,admission,reserve,install,observe,withdraw,prepared};
+    CHECK(!elden_sensor_memory_native_prepare(&staged_cfg,&staged_owner,&staged_memory));staged_fail.observe_error=-71;
+    CHECK(elden_sensor_memory_native_activate(staged_memory,7,9)==-71&&!staged_memory->ready);staged_fail.observe_error=0;CHECK(elden_sensor_memory_native_activate(staged_memory,7,9)==-71);
     reset();OwnerPeer p;EldenSensorNativeMemory *m=nullptr;CHECK(!open(p,&m)&&m&&p.installed==1&&p.observed==1);EldenSensorMemoryView view{};CHECK(!elden_sensor_memory_native_view(m,7,9,&view)&&view.memory.iova==0x20001000);
     CHECK(!elden_sensor_memory_native_publish(m,7,9));p.withdraw_error=-16;CHECK(elden_sensor_memory_native_stop(m,7,9)==-16&&m->data_descriptor&&m->table_descriptor&&m->alias);p.withdraw_error=0;CHECK(!elden_sensor_memory_native_stop(m,7,9)&&p.withdrawn==1);CHECK(!elden_sensor_memory_native_stop(m,7,9)&&p.withdrawn==1);CHECK(elden_sensor_memory_native_view(m,7,9,&view)<0);
     for(unsigned bad=0;bad<11;bad++){

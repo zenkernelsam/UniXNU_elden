@@ -41,6 +41,9 @@ typedef struct {
      * fault-handler retirement. Immutable early SMR/S2CR route and all memory
      * remain reserved to full reset (touch seal), never reusable/free here. */
     int (*retire)(void *,uint64_t,uint64_t,const EldenCameraDmaView *,unsigned reservation_attempted,unsigned install_attempted);
+    /* Staged shared transaction: observes an installed context/table before
+     * the complete batch has published any stream. Never DMA readiness. */
+    int (*prepared)(void *,uint64_t,uint64_t,const EldenCameraDmaView *);
 } EldenCameraDmaOwner;
 typedef struct EldenCameraNativeDma EldenCameraNativeDma;
 typedef struct {
@@ -53,6 +56,10 @@ typedef struct {
  * same original IOBuffer/PAR/UniquePrefaultNC methods as sensor memory.
  * No automatic start/second SMMU/guessed bank/fixed PA or device pixels. */
 int elden_camera_dma_open(const EldenCameraDmaConfig *,const EldenCameraDmaOwner *,EldenCameraNativeDma **);
+/* Same original retained allocator with separate early preparation and actual
+ * all-group commit observation. Normal view/admit/buffer refuse until activate. */
+int elden_camera_dma_prepare_batch(const EldenCameraDmaConfig *,const EldenCameraDmaOwner *,EldenCameraNativeDma **);
+int elden_camera_dma_activate(EldenCameraNativeDma *,uint64_t,uint64_t);
 int elden_camera_dma_view(EldenCameraNativeDma *,uint64_t,uint64_t,EldenCameraDmaView *);
 int elden_camera_dma_admit(EldenCameraNativeDma *,uint64_t,uint64_t,int cleanup);
 int elden_camera_dma_buffer(EldenCameraNativeDma *,uint64_t,uint64_t,unsigned sensor,const EldenCameraBuffer *,int completion);

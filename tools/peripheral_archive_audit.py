@@ -21,6 +21,24 @@ def retained_archive(argument,current_command,report):
     before=Path(argument.split(',',2)[2]);expected=report.get('inherited_inputs',{}).get(str(before))
     if expected is None or sha(before)!=expected:raise ValueError('Original inherited archive fingerprint missing/changed')
     if current_command.count(argument)==1:return {'unchanged_path':True,'sha256':expected}
+    shared=report.get('actual_shared_SMMU_native_staged_peripherals') is True
+    if shared:
+        declaration=report.get('shared_archive_deltas',{}).get(before.name)
+        if isinstance(declaration,dict) and declaration.get('before_path')==str(before):
+            allowed_shared={'libNativeLegacyDisplay.late.a':{'EldenNvtDmaRoute.o'},'libEldenSensorMemory.a':{'NativeMemory.o'}}
+            allowed=allowed_shared.get(before.name)
+            if allowed is None or declaration.get('original_sha256')!=expected:raise ValueError('Unqualified shared archive identity')
+            after=Path(declaration.get('after_path',''))
+            if after.name!=before.name or current_command.count('-Wl,-force_load,'+str(after))!=1 or sha(after)!=declaration.get('replacement_sha256'):
+                raise ValueError('Exact shared archive replacement missing/changed')
+            old,new=members(before),members(after);rows=declaration.get('members')
+            if not isinstance(rows,dict) or old.keys()!=new.keys() or old.keys()!=rows.keys():raise ValueError('Shared actual archive member list differs')
+            for name in old:
+                if rows[name].get('before')!=old[name] or rows[name].get('after')!=new[name]:raise ValueError('Shared member fingerprint mismatch')
+            changed={name for name in old if old[name]!=new[name]}
+            if changed!=allowed or set(declaration.get('changed',[]))!=allowed:raise ValueError('Shared archive changed an unrelated peer')
+            return {'unchanged_path':False,'actual_shared_exact_delta':True,'members':rows,'changed_members':sorted(changed),
+                    'original_sha256':expected,'replacement_sha256':sha(after)}
     name=before.name;allowed=ALLOWED.get(name);runtime=report.get('actual_sensor_runtime_composition') is True
     runtime_key=None
     if runtime and name in RUNTIME_MEMBERS:runtime_key,allowed=RUNTIME_MEMBERS[name]

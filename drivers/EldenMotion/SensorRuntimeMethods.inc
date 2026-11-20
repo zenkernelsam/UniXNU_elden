@@ -172,21 +172,29 @@ extern "C" void elden_sensor_runtime_worker(void *argument,wait_result_t){
     __atomic_store_n(&c->listener_ready,0u,__ATOMIC_RELEASE);__atomic_store_n(&c->terminal,1u,__ATOMIC_RELEASE);
     sensor_snapshot(c,c->cleanup_error?EldenSensorRuntimeRetained:EldenSensorRuntimeStopped);sensor_signal(c);thread_terminate(current_thread());
 }
-extern "C" int elden_sensor_runtime_prepare(const EldenSensorRuntimeConfig *cfg){
+static inline __attribute__((always_inline)) int sensor_runtime_prepare(const EldenSensorRuntimeConfig *cfg,EldenSensorNativeMemory *memory){
     if(!sensor_config(cfg)||ml_at_interrupt_context())return -22;
     int rc=cfg->adsp.admit(cfg->adsp.context,cfg->adsp.owner,cfg->adsp.epoch,0);if(rc)return rc<0?rc:-13;
+    if(memory){
+        EldenSensorMemoryView view={};rc=elden_sensor_memory_native_view(memory,cfg->adsp.owner,cfg->adsp.epoch,&view);if(rc)return rc;
+        if(view.memory.iova!=cfg->memory.iova||view.memory.bytes!=cfg->memory.bytes||view.memory.session!=cfg->memory.session||view.memory.process!=cfg->memory.process)return -116;
+        rc=elden_sensor_memory_native_admit(memory,cfg->adsp.owner,cfg->adsp.epoch,0);if(rc)return rc;
+    }
     uint32_t none=0;if(!__atomic_compare_exchange_n(&sensor_runtime_attempted,&none,1u,false,__ATOMIC_ACQ_REL,__ATOMIC_ACQUIRE))return -16;
     auto *c=(SensorRuntimeContext *)IOMallocData(sizeof(SensorRuntimeContext));if(!c)return -12;bzero(c,sizeof(*c));c->config=*cfg;
     c->status_lock=IOSimpleLockAlloc();if(!c->status_lock){IOFreeData(c,sizeof(*c));return -12;}
     __atomic_store_n(&c->prepare_state,1u,__ATOMIC_RELEASE);
     __atomic_store_n(&sensor_runtime,c,__ATOMIC_RELEASE);
-    rc=elden_sensor_memory_native_open(&cfg->memory,&cfg->memory_owner,&c->memory);
+    if(memory)c->memory=memory;
+    else rc=elden_sensor_memory_native_open(&cfg->memory,&cfg->memory_owner,&c->memory);
     if(!rc&&__atomic_load_n(&c->stopping,__ATOMIC_ACQUIRE))rc=-125;
     if(!rc)rc=elden_qrtr_ports_prepare(&cfg->qrtr);
     if(!rc)rc=elden_motion_native_ssc_observe(c,cfg->adsp.owner,cfg->adsp.epoch,sensor_motion_observer);
     if(rc){sensor_remember(c,rc);sensor_snapshot(c,EldenSensorRuntimeRetained);__atomic_store_n(&c->prepare_state,3u,__ATOMIC_RELEASE);return rc;}
     __atomic_store_n(&c->prepared,1u,__ATOMIC_RELEASE);sensor_snapshot(c,EldenSensorRuntimePrepared);__atomic_store_n(&c->prepare_state,2u,__ATOMIC_RELEASE);return 0;
 }
+extern "C" int elden_sensor_runtime_prepare(const EldenSensorRuntimeConfig *cfg){return sensor_runtime_prepare(cfg,nullptr);}
+extern "C" int elden_sensor_runtime_adopt(const EldenSensorRuntimeConfig *cfg,EldenSensorNativeMemory *memory){if(!memory)return -22;return sensor_runtime_prepare(cfg,memory);}
 extern "C" int elden_sensor_runtime_start(uint64_t owner,uint64_t epoch){
     auto *c=__atomic_load_n(&sensor_runtime,__ATOMIC_ACQUIRE);if(!sensor_same(c,owner,epoch))return -116;
     if(ml_at_interrupt_context()||__atomic_load_n(&c->prepare_state,__ATOMIC_ACQUIRE)!=2||!__atomic_load_n(&c->prepared,__ATOMIC_ACQUIRE)||__atomic_load_n(&c->stopping,__ATOMIC_ACQUIRE))return -16;

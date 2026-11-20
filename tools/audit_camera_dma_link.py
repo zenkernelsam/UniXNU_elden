@@ -59,9 +59,22 @@ def main():
         path=Path(value.split(',')[-1])
         if value.startswith('-Wl,-force_load,'):retained[str(path)]=retained_archive(value,cmd,r)
         elif path.is_file() and path.suffix in ('.a','.o'):
+            if r.get('actual_shared_SMMU_native_staged_peripherals') is True:
+                delta=r.get('shared_direct_deltas',{}).get(path.name)
+                if isinstance(delta,dict) and delta.get('before_path')==str(path):
+                    replacement=Path(delta['after_path'])
+                    if delta.get('before')!=sha(path) or delta.get('after')!=sha(replacement) or cmd.count(str(replacement))!=1:
+                        raise ValueError('Exact shared direct object mismatch')
+                    retained[str(path)]=delta;continue
             if cmd.count(value)!=1 or sha(path)!=r['inherited_inputs'].get(str(path)):raise ValueError('Original native input changed')
             retained[str(path)]=sha(path)
     for name,row in build['native_objects'].items():
+        if r.get('actual_shared_SMMU_native_staged_peripherals') is True:
+            delta=r.get('shared_direct_deltas',{}).get(name)
+            if isinstance(delta,dict) and delta.get('before_path')==str((a.dma_build/name).resolve()):
+                if row['sha256']!=delta['before'] or sha(a.dma_build/name)!=delta['before'] or sha(Path(delta['after_path']))!=delta['after'] or cmd.count(delta['after_path'])!=1:
+                    raise ValueError('Shared actual camera allocator mismatch')
+                continue
         if sha(a.dma_build/name)!=row['sha256'] or cmd.count(str((a.dma_build/name).resolve()))!=1:raise ValueError('Actual DMA object differs/duplicate')
     asm=(a.dma_build/'NativeCameraDma.o-asm.log').read_text().lower()
     for op in ('s1e1r','s1e1w','par_el1','daif','civac','dsb'):

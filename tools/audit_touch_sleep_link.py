@@ -42,6 +42,12 @@ def main():
     # Two actual inherited display objects replaced; every other member exact.
     changed=[n for n,r in spec['display_members'].items() if r['before']!=r['after']]
     if set(changed)!={'EldenNvtRuntime.o','EldenNvtProtocol.o'}:raise ValueError('Other display owner changed')
+    if spec.get('actual_shared_SMMU_native_staged_peripherals') is True:
+        from peripheral_archive_audit import retained_archive
+        row=spec.get('shared_archive_deltas',{}).get('libNativeLegacyDisplay.late.a')
+        if not row:raise ValueError('Actual touch route shared delta absent')
+        command=json.loads((a.kernel_build/'link-command.json').read_text())
+        retained_archive('-Wl,-force_load,'+row['before_path'],command,spec)
     result={'original_touch_sleep_worker_link_passed':True,'kernel_sha256':spec['kernel_sha256'],'native_sha256':spec['native_sha256'],
         'actual_calls':edges,'kernel_power_request_interfaces':{n:hex(symbol(n)) for n in hooks},'only_display_members_changed':changed,
         'real_power_provider_installed':False,'default_wake_disabled':True,'worker_serial_execution':True,'same_pen_HID_service_nonterminal':True,

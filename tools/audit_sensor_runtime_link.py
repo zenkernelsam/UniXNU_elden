@@ -61,6 +61,11 @@ def main():
         if arg.startswith('-Wl,-force_load,') and not arg.endswith('/libShengUfs.a'):retained[Path(arg.split(',',2)[2]).name]=retained_archive(arg,command,r)
     if [n for n,row in r['ufs_members'].items() if row['before']!=row['after']]!=['ShengUfs.o']:raise ValueError('Only original recovery UFS member may differ')
     for name,row in build['objects'].items():
+        if r.get('actual_shared_SMMU_native_staged_peripherals') is True:
+            delta=r.get('shared_direct_deltas',{}).get(name)
+            if isinstance(delta,dict) and delta.get('before_path')==str((a.runtime_build/name).resolve()):
+                if sha(a.runtime_build/name)!=row['sha256'] or row['sha256']!=delta['before'] or sha(Path(delta['after_path']))!=delta['after']:raise ValueError('Shared actual runtime layout delta mismatch')
+                continue
         if sha(a.runtime_build/name)!=row['sha256']:raise ValueError('Actual runtime object changed')
     flags=json.loads((a.kernel_build/'kernel.json').read_text());flags={n:flags.get(n) for n in ('abi_qualified','loadable','runtime_qualified','instruction_relocation_complete')}
     if any(v is not False for v in flags.values()):raise ValueError('Global experimental flags changed')

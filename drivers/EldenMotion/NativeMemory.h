@@ -32,6 +32,9 @@ typedef struct {
     /*0only after real remote/send/callback/DMA/fault IRQ drain, context/TLB
      * withdrawal and route release proof. All native allocations stay to reset. */
     int (*withdraw)(void *,uint64_t owner,uint64_t epoch,const EldenSensorMemoryView *);
+    /* Read-only installed-context/table proof before one shared early batch
+     * commit. This callback cannot publish normal DSP memory readiness. */
+    int (*prepared)(void *,uint64_t,uint64_t,const EldenSensorMemoryView *);
 } EldenSensorMemoryOwner;
 typedef struct EldenSensorNativeMemory EldenSensorNativeMemory;
 typedef struct {
@@ -43,6 +46,8 @@ typedef struct {
  * verified WB primary then fresh Unique+Prefault NC alias; table graph audited
  * before actual provider install/observe. No fixed PA/bank/ASID/MMIO owner. */
 int elden_sensor_memory_native_open(const EldenSensorMemoryConfig *,const EldenSensorMemoryOwner *,EldenSensorNativeMemory **);
+int elden_sensor_memory_native_prepare(const EldenSensorMemoryConfig *,const EldenSensorMemoryOwner *,EldenSensorNativeMemory **);
+int elden_sensor_memory_native_activate(EldenSensorNativeMemory *,uint64_t,uint64_t);
 int elden_sensor_memory_native_view(EldenSensorNativeMemory *,uint64_t owner,uint64_t epoch,EldenSensorMemoryView *);
 /* Nonsleeping provider admission for the original RPC live/wait boundary.
  * Fresh hardware/context checks run separately at prepare/publish/complete. */

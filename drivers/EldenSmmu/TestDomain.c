@@ -65,6 +65,8 @@ static void delay(void *p,unsigned us){CHECK(p==&m);m.clock+=us;}
 static void reset(void){
     cases++;uint64_t *pool=m.pool;memset(&m,0,sizeof(m));m.pool=pool;m.fail_read=UINT32_MAX;
     state=EldenSmmuBootOpen;owner=NULL;intended=(EldenSmmuBootRoute){0};published=(EldenSmmuBootRoute){0};
+    set_epoch=set_count=set_mode=reservation_ready=0;
+    memset(planned_set,0,sizeof(planned_set));memset(published_set,0,sizeof(published_set));
     m.regs[0]=0x230406;m.regs[0x20/4]=0x4c017e84;m.regs[0x24/4]=0x60000053;m.regs[0x28/4]=0x5111;m.regs[S2CR/4]=0x0300006e;
     m.selection=(EldenSmmuSelection){.route={8,7,0x80001401,7,0x1f300,1},.id0=0x4c017e84,.id1=0x60000053,.id2=0x5111,.cr0=0x230406,.asid=1,.ready=1};
     /* Most fault cases exercise the architectural ATOS-capable variant. The

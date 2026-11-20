@@ -1,5 +1,10 @@
 # Immutable boot SMMU route coexistence
 
+Current shared camera/ADSP implementation and full native/link evidence are in
+[SHARED-SMMU.md](../../docs/peripherals/SHARED-SMMU.md). Legacy single-Wi-Fi
+semantics below are retained; one atomic multi-consumer transaction replaces
+independent additions. Actual original physical authority is still required.
+
 The existing touch route validates the complete captured SMMU baseline: all132
 SMR/S2CR entries and all83 CBAR/CBA2R pairs. Creating a Wi-Fi translation in a
 previously unused slot/bank therefore makes that exact touch code refuse with

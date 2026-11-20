@@ -72,15 +72,26 @@ static int observe(void *v,uint64_t owner,uint64_t epoch,const EldenCameraDmaVie
     CHECK(owner==7&&epoch==9&&view->lease.route_epoch==p->route_epoch&&(completion==0||completion==1));CHECK(!completion||buffer);p->observed++;p->completion+=completion;return p->observe_error;}
 static int retire(void *v,uint64_t owner,uint64_t epoch,const EldenCameraDmaView *view,unsigned reservation,unsigned installation){auto *p=(Owner *)v;
     CHECK(owner==7&&epoch==9&&view&&reservation<=1&&installation<=1&&installation<=reservation);if(p->retire_error)return p->retire_error;p->retired++;return 0;}
+static int prepared(void *v,uint64_t owner,uint64_t epoch,const EldenCameraDmaView *view){return observe(v,owner,epoch,view,nullptr,0);}
 static void reset(){for(auto *p:aliases)delete p;aliases.clear();for(auto *p:descriptors){std::free(p->cpu);delete p;}descriptors.clear();for(auto *p:locks)delete p;locks.clear();for(auto *p:heaps)std::free(p);heaps.clear();
     allocated=fail_allocation=fail_prepare=cleans=translations=maps=camera_dma_attempted=0;
     split_segment=bad_gap=bad_attr=stale_alias=lazy_alias=fail_map=overlap=irq=read_fault=write_fault=false;line=64;scenarios++;}
 static int open(Owner &p,EldenCameraNativeDma **out,uint32_t rear=2,uint32_t front=2,uint64_t iova=0x20000000){
-    EldenCameraDmaConfig cfg{iova,{rear,front}};EldenCameraDmaOwner owner{&p,7,9,admit,early,reserve,install,observe,retire};return elden_camera_dma_open(&cfg,&owner,out);}
+    EldenCameraDmaConfig cfg{iova,{rear,front}};EldenCameraDmaOwner owner{&p,7,9,admit,early,reserve,install,observe,retire,nullptr};return elden_camera_dma_open(&cfg,&owner,out);}
 static uint64_t leaf(EldenCameraNativeDma *m,uint64_t iova){uint64_t table=m->view.table_physical;
     for(unsigned level=m->view.tables.start_level;level<4;level++){uint64_t desc=0;unsigned shift=12+9*(3-level);uint64_t addr=table+((iova>>shift)&511)*8;
         CHECK(!m->io.read_descriptor(m->io.cookie,addr,&desc));if(!desc)return 0;if(level==3)return desc;CHECK((desc&3)==3);table=desc&UINT64_C(0x0000fffffffff000);}
     CHECK(false);return 0;}
+static void staged(){reset();Owner o;EldenCameraNativeDma *m=nullptr;EldenCameraDmaConfig cfg{0x20000000,{2,2}};
+    EldenCameraDmaOwner owner{&o,7,9,admit,early,reserve,install,observe,retire,prepared};
+    CHECK(!elden_camera_dma_prepare_batch(&cfg,&owner,&m)&&m&&!m->ready&&m->prepared);
+    EldenCameraDmaView view{};CHECK(elden_camera_dma_view(m,7,9,&view)==-19&&elden_camera_dma_admit(m,7,9,0)==-19);
+    CHECK(!elden_camera_dma_activate(m,7,9)&&m->ready&&m->status.stage==11);CHECK(elden_camera_dma_activate(m,7,9)==-16);
+    CHECK(!elden_camera_dma_view(m,7,9,&view));CHECK(!elden_camera_dma_stop(m,7,9));CHECK(elden_camera_dma_activate(m,7,9)==-125);
+    reset();Owner fail;m=nullptr;owner={&fail,7,9,admit,early,reserve,install,observe,retire,prepared};
+    CHECK(!elden_camera_dma_prepare_batch(&cfg,&owner,&m));fail.observe_error=-71;
+    CHECK(elden_camera_dma_activate(m,7,9)==-71&&!m->ready);fail.observe_error=0;CHECK(elden_camera_dma_activate(m,7,9)==-71);
+}
 static void normal(){reset();Owner o;EldenCameraNativeDma *m=nullptr;CHECK(!open(o,&m)&&m&&o.installed==1&&o.early>=3);EldenCameraDmaView view{};CHECK(!elden_camera_dma_view(m,7,9,&view)&&view.count==4);
     CHECK(!leaf(m,view.iova));for(unsigned i=0;i<view.count;i++){const auto &s=view.slots[i];
         CHECK(s.buffer.iova<UINT64_C(0x100000000)&&s.physical>UINT64_C(0x800000000)&&s.mapped_bytes>=s.buffer.bytes);
@@ -138,5 +149,11 @@ extern "C" void elden_camera_dma_peer_fault(unsigned fault){
 }
 extern "C" unsigned elden_camera_dma_peer_completion_count(void){return capture_owner.completion;}
 extern "C" void elden_camera_dma_peer_reset(void){reset();}
+extern "C" int elden_camera_dma_peer_prepare(const EldenCameraDmaConfig *cfg,const EldenCameraDmaOwner *owner,EldenCameraNativeDma **out){reset();return elden_camera_dma_prepare_batch(cfg,owner,out);}
+extern "C" int elden_camera_dma_peer_backing(const EldenCameraDmaView *view){
+    if(!view||descriptors.size()!=2||!descriptors[0]->prepared||!descriptors[1]->prepared||!descriptors[0]->nc||aliases.size()!=1)return -13;
+    if(view->data_physical!=descriptors[0]->pa||view->table_physical!=descriptors[1]->pa||view->table_mapping!=(const volatile uint64_t *)descriptors[1]->cpu||
+       view->allocation_bytes!=descriptors[0]->bytes||view->table_bytes!=descriptors[1]->bytes)return -116;return 0;
+}
 #endif
-int main(){normal();refusal();geometry();unsigned count=scenarios;reset();std::printf("PASS camera native DMA: %u scenarios/%u checks; original4K/native methods, IOKit/cache/PAR/route/physicalDMA peers modeled\n",count,checks);return 0;}
+int main(){staged();normal();refusal();geometry();unsigned count=scenarios;reset();std::printf("PASS camera native DMA: %u scenarios/%u checks; original4K/native methods, IOKit/cache/PAR/route/physicalDMA peers modeled\n",count,checks);return 0;}

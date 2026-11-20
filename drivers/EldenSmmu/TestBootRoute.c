@@ -15,6 +15,8 @@ static Model m;
 static EldenSmmuBootRoute route={8,7,0x80001401,7,0x1f300,1};
 static void reset(void){
     cases++;state=EldenSmmuBootOpen;owner=NULL;intended=(EldenSmmuBootRoute){0};published=(EldenSmmuBootRoute){0};
+    set_epoch=set_count=set_mode=reservation_ready=0;
+    memset(planned_set,0,sizeof(planned_set));memset(published_set,0,sizeof(published_set));
     memset(&m,0,sizeof(m));m.cb0=0xe0;
     m.regs[0]=ELDEN_TOUCH_DMA_CR0;m.regs[0x20/4]=ELDEN_TOUCH_DMA_ID0;
     m.regs[0x24/4]=ELDEN_TOUCH_DMA_ID1;m.regs[0x28/4]=ELDEN_TOUCH_DMA_ID2;

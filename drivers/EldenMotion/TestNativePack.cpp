@@ -185,7 +185,7 @@ static int test_endpoint_withdraw(void *p,uint64_t owner,uint64_t epoch){
 }
 static void memory_binding(Peer &p){
     model=&p;pack(p);EldenSensorMemoryConfig cfg{0x20000000,0x800000,4,4242};
-    EldenSensorMemoryOwner memory{&p,7,9,bus_gate,route_reserve,route_install,route_observe,route_withdraw};
+    EldenSensorMemoryOwner memory{&p,7,9,bus_gate,route_reserve,route_install,route_observe,route_withdraw,nullptr};
     EldenSensorEndpoint endpoint{&p,7,9,bus_gate,bus_now,bus_send,bus_wait,bus_reserve,bus_complete,bus_alloc,bus_trace,test_endpoint_withdraw,bus_wake};
     EldenSensorPackAuthority a{&authority_token,7,9,authority};
     CHECK(!elden_sensor_memory_binding_open(&cfg,&memory,&endpoint,&p.seal,&a,&p.memory_binding));
@@ -242,7 +242,7 @@ int main(int argc,char **argv){
     CHECK(!elden_sensor_memory_binding_finish(routed.memory_binding,7,9)&&memory_withdraws==1);
     CHECK(memory_descriptors.size()==2&&memory_aliases.size()==1);
     reset();Peer prepared;model=&prepared;pack(prepared);EldenSensorMemoryConfig config{0x20000000,0x800000,4,4242};
-    EldenSensorMemoryOwner owner{&prepared,7,9,bus_gate,route_reserve,route_install,route_observe,route_withdraw};
+    EldenSensorMemoryOwner owner{&prepared,7,9,bus_gate,route_reserve,route_install,route_observe,route_withdraw,nullptr};
     EldenSensorNativeMemory *actual_memory=nullptr;CHECK(!elden_sensor_memory_native_open(&config,&owner,&actual_memory));
     EldenSensorEndpoint actual_endpoint{&prepared,7,9,bus_gate,bus_now,bus_send,bus_wait,bus_reserve,bus_complete,bus_alloc,bus_trace,test_endpoint_withdraw,bus_wake};
     EldenSensorPackAuthority pack_authority{&authority_token,7,9,authority};

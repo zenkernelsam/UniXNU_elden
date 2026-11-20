@@ -23,4 +23,15 @@ def route():
            expected_read(io,0x1800+4*i,i<7?1u:0))return -16;''')
     text=replace(text,'p->claimed=true;rc=snapshot(p,false);',
                  'p->claimed=true;rc=elden_smmu_boot_route_seal();\n    if(!rc)rc=snapshot(p,false);')
+    text+='''
+int elden_touch_route_expected(const EldenTouchDmaRouteOwner *p,uint64_t epoch,unsigned off,uint32_t baseline,uint32_t *out){
+    if(!p||!out||!epoch)return -22;
+    if(off!=SLOT_SMR&&off!=SLOT_S2CR){*out=baseline;return 0;}
+    if(!p->attempted){*out=baseline;return 0;}
+    if(p->epoch!=epoch||p->poisoned||p->error)return -16;
+    if(p->attached&&p->claimed){*out=off==SLOT_SMR?NEW_SMR:ELDEN_TOUCH_DMA_BANK;return 0;}
+    if(p->detached&&!p->claimed){*out=off==SLOT_SMR?0:ELDEN_TOUCH_DMA_BANK;return 0;}
+    return -16; /* in-progress/uncertain owner cannot fake idle expectation */
+}
+'''
     return text.encode()

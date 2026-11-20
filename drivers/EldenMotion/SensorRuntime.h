@@ -26,6 +26,10 @@ typedef struct {
  * once then qualifies receive intents on the same original QRTR owner.
  * No DSP power-on, MMIO controller, new router or default capture is added. */
 int elden_sensor_runtime_prepare(const EldenSensorRuntimeConfig *);
+/* A real shared EARLY owner already prepared/committed/activated this native
+ * memory. Validates its exact view; stores the original object, never allocates
+ * another arena, installs another route or changes the original QRTR owner. */
+int elden_sensor_runtime_adopt(const EldenSensorRuntimeConfig *,EldenSensorNativeMemory *);
 /* Explicit later owner call after original ADSP registry is available. One
  * listener executor uses prepared memory; existing SSC worker starts only
  * after actual listener-init2+verified pack status. Board qualifier/time remain

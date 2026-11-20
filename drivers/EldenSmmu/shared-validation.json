@@ -1,0 +1,551 @@
+{
+  "component": "shared early camera/ADSP SMMU, staged memory and original touch/SSC composition",
+  "source_parent_commit": "ba26ee40d0184d293240249f12c54d1ad4c3a979",
+  "source_sha256": {
+    "drivers/EldenSmmu/Shared.h": "359263debf2f62403eb5f8e16be2afddec4a1d340572edc7c411361a5679eabb",
+    "drivers/EldenSmmu/Shared.c": "b379010bca52c8d0d0fa53da4dcfc74716760523ade0f4f91700e053dd65b826",
+    "drivers/EldenSmmu/TestShared.c": "56520f6e5ab2a652e8acb0101cf0bc8fab060a5b40cbdb3936737af0129b7870",
+    "drivers/EldenSmmu/BootRoute.h": "11b4418fa2a3163137debe1f7a6a74f86e99f2dc46a749d12f76baa9234f79a2",
+    "drivers/EldenSmmu/BootRoute.c": "3e1a62707464e515a4a8f8b9dad296a467578a0af4b9b61e0085c7973953687c",
+    "drivers/EldenSmmu/TestBootRoute.c": "d42831bf1454ac17d26a67f3a1d9fadd05900e8868ba1a60ba01ee4acaee558a",
+    "drivers/EldenSmmu/TestDomain.c": "283ba4fed671b104f07c9adde906d76f82c4fd54bad9dff77192bb07a892c450",
+    "drivers/EldenSmmu/TouchSource.py": "c5e5206e122e00460463d8acc5bbe8066f4f424d347ec92b1cf8fdc097cd4bf6",
+    "tools/prepare_shared_smmu.py": "ea705348f7ce61045c518c245ff147f494548cbbb5f93367f8155ef10430f8ec",
+    "tools/test_shared_smmu.py": "7db83a910c71aedbe8387fb9e4b06d3b36a6195565176884ebedc9feecc64fd6",
+    "tools/build_smmu_boot_route.py": "f49c1a7ffa6e688f26910dea7262afac859111b6ef786e363826a9066661469b",
+    "drivers/EldenSmmu/Peripheral.h": "b62deb89f9befe3287445f008e43da86785e54d3947c940c96691d982378df5a",
+    "drivers/EldenSmmu/Peripheral.c": "df74a3348ee129453a32ce5c6a01718b6ed1bd50f1aced7520f63de100d018f7",
+    "drivers/EldenSmmu/SharedNative.h": "626eedf75e6117f980f5cb0f3618502f9d6d05641c2d444a431101373f4a4522",
+    "drivers/EldenSmmu/SharedNative.cpp": "a4c2f0614ee883a6c3ff862231accd83017a31387872c5beb054bf201589c3d7",
+    "drivers/EldenSmmu/SharedNativeMethods.inc": "d87b5c04b443e55f8e100e500417f534c538119a177ca29a7307a5f4eb4ebf21",
+    "drivers/EldenCamera/NativeDma.h": "a625ad773af08a37bfe56e7b56b3b89fc1ae7358ccb2546d62c8f3601651341d",
+    "drivers/EldenCamera/NativeDmaMethods.inc": "a19d3414af4cc5aad9362df98c037d15ec5e9a61f7f74f96ffd8af359e9bd915",
+    "drivers/EldenCamera/TestNativeDma.cpp": "8231588b6bd266bfa646dc7926168f1d054ad7326539f2df018ea90ecc85115b",
+    "drivers/EldenCamera/dma-source.json": "b2d6654b5bb85623f9e5cad3eb0265ea78df510b8a152ff1af7c9f66608660ea",
+    "drivers/EldenMotion/NativeMemory.h": "27e0237cb1cf7d9f7d0b7993f638621597d8eb4a4c2dfd7a2c023138b86c78cb",
+    "drivers/EldenMotion/NativeMemoryMethods.inc": "f2aa127ef340c9eda17889f288689190d2b652b2c78f6c75459ea220a2cf3667",
+    "drivers/EldenMotion/TestNativeMemory.cpp": "f2afee346006066262d720b3bef20ccb38d8c6ff92121fca48217a01f7d74e94",
+    "drivers/EldenMotion/TestNativePack.cpp": "d3ffd71974ed173c2796faa40a45b230fe0be8cf299afe858d4851166a6f9872",
+    "drivers/EldenSmmu/TestSharedNativeRegistry.c": "6216ac40ad3979a0a4e69655fb941f9e7afdc454809de0c68f401402404212cd",
+    "drivers/EldenSmmu/TestSharedNative.cpp": "e770e936285422fe7eae4fdebb2d7c77c99ad5030c7e92bd7a5b3294d1fd9b62",
+    "tools/test_shared_smmu_native.py": "68e2d90c9fadbbd2a54bc4c3a7b364fcfd3bd3a05cfe7793ebf61632ab079fd2",
+    "tools/build_shared_smmu.py": "d3f02cff722f12f2cf0e116e764c970d7b8143557ad5db8f36db63efa23b558d",
+    "tools/link_shared_smmu.py": "702d897dcfb73aff4c3b98b00c341d1bad2d2f8cb9f70b2627cb00dc9409a2d3",
+    "tools/audit_shared_smmu_link.py": "8c808b7ba195552d81b913cc540c9583254418895b3eae562e3c9d5dce759f5e",
+    "tools/peripheral_archive_audit.py": "fe93a091251c812972115055134991d511a71d4ad0b1d6f678b98eff6bdbfa1f",
+    "tools/audit_touch_sleep_link.py": "1e83595c0b855f5d81dc7970ccd0c79e109e0586fa7d92ea6500f0d578562116",
+    "tools/audit_camera_dma_link.py": "d3003d802cac63bd54559a836e2cf37627aa11d9b445f6df8d4aeed0a43cf09a",
+    "drivers/EldenMotion/SensorRuntime.h": "d10b504c1d646e9ee9b0e3b94c154ac7eccfa49839667b8764798a874baeb7ab",
+    "drivers/EldenMotion/SensorRuntimeMethods.inc": "c0dbac3effdbb57711053bee1a4542fd1cdafb65d0ad3ef4a10b2e63ee8f5bb1",
+    "drivers/EldenMotion/TestSensorRuntime.cpp": "7e5963d54bdeeb7df1a53102533dca96ab819188e8809d5164a0229f8666eb67",
+    "tools/test_sensor_runtime.py": "7cec4faf2d4d5921d88732fad9edfdf5c320078f6de96ed6b5a96230c22062d4",
+    "tools/peripheral_startup_audit.py": "6d97ad03ba4bcf78206dab035ee005bb0c2392ff81d65b13e12779bb5e547e84",
+    "tools/audit_sensor_runtime_link.py": "461c353ac6743fe06b2d47fbd9ed96df6ffdcbea45d5d302a072267fca3908fd",
+    "tools/audit_shared_smmu_source.py": "e2506d8b8ea409f816b3a33a689aa8347202f5a2437efbfe5eba895bd8f3cb64",
+    "tools/test_shared_smmu_audit.py": "2b866d822801c6d9427ba591a149d2f16d9aec8fdf93b83a3601a23ccbcca7fb",
+    "tools/audit_motion_qrtr_link.py": "25b709751d75215eecfc609ad17864df4a2f3fe31d40b6f95361cf1afceec22f",
+    "docs/peripherals/SHARED-SMMU.md": "4a7e9ad55a54286200e1da347c7b1b56d9cbda63e25f6813f0d276d8a23acff4",
+    "docs/peripherals/STATUS.md": "cb428b8a2555d93928ac42388f9ac9136eae874e4d60a514af0fc4255c9b754c",
+    "docs/peripherals/MAINLINE-HANDOFF-PROMPT.md": "f3dd0af120c566e1709f29be5b0749aee209cf0c487dd01968d7f4bde2502994",
+    "AGENTS.md": "54bda1e655cba833193f4a941d9acb0183b88a2ee0e9f5ad0ad57038b920a15a",
+    "drivers/EldenSmmu/README.md": "2f400a11b313f2abd8262e8ea565c78625e7090ecb3dd7628bc1f582718c883d"
+  },
+  "accepted_folders": [
+    "source11",
+    "camera10",
+    "sensor10",
+    "host11",
+    "stack12",
+    "native11",
+    "kernel11",
+    "final-audits11",
+    "camera-host10",
+    "camera-stack10",
+    "sensor-host10",
+    "runtime10",
+    "legacy-route10",
+    "legacy-domain10"
+  ],
+  "kernel_sha256": "2d078d215366d807162a7ac6c7c2d5c1e7094e9e4fde36df27360421b4f404dc",
+  "native_sha256": "a568b41862a4d06bad6398e65bb9232720517f9f9bbfefae91d02eceb28009e4",
+  "objects": {
+    "Shared.o": {
+      "sha256": "5a76be0e15d57e48b448681ff561645808dc0a3af1404dcd277571edcabc28e2",
+      "imports": [
+        "_EldenWifiSmmu4KAuditDeclaredContext",
+        "_EldenWifiSmmu4KDisableOwnedContext",
+        "_EldenWifiSmmu4KObserveAuditedContext",
+        "_EldenWifiSmmu4KObserveOwnedContext",
+        "_EldenWifiSmmu4KProgramDisabledContext",
+        "_bzero",
+        "_elden_smmu_boot_routes_commit",
+        "_elden_smmu_boot_routes_early",
+        "_elden_smmu_boot_routes_peek",
+        "_elden_smmu_boot_routes_poison",
+        "_elden_smmu_boot_routes_reserve",
+        "_memcpy"
+      ],
+      "exports": [
+        "_elden_smmu_shared_admit",
+        "_elden_smmu_shared_commit",
+        "_elden_smmu_shared_configuration",
+        "_elden_smmu_shared_early",
+        "_elden_smmu_shared_install",
+        "_elden_smmu_shared_lease",
+        "_elden_smmu_shared_observe",
+        "_elden_smmu_shared_observe_prepared",
+        "_elden_smmu_shared_open",
+        "_elden_smmu_shared_retire",
+        "_elden_smmu_shared_status"
+      ],
+      "warnings": 0
+    },
+    "SharedBootRoute.o": {
+      "sha256": "10927ead11134f5786f56f281d07fa8b5f9cdf62728b9d2edf4658f51a4b11b8",
+      "imports": [],
+      "exports": [
+        "_elden_smmu_boot_route_commit",
+        "_elden_smmu_boot_route_expected",
+        "_elden_smmu_boot_route_poison",
+        "_elden_smmu_boot_route_reserve",
+        "_elden_smmu_boot_route_seal",
+        "_elden_smmu_boot_route_state",
+        "_elden_smmu_boot_routes_commit",
+        "_elden_smmu_boot_routes_early",
+        "_elden_smmu_boot_routes_peek",
+        "_elden_smmu_boot_routes_poison",
+        "_elden_smmu_boot_routes_reserve"
+      ],
+      "warnings": 0
+    },
+    "SharedPeripheral.o": {
+      "sha256": "a9822caefd2c4bc7f6363a705a0afedd087e77d5765b03637870e48bd09f9db2",
+      "imports": [
+        "_EldenWifiSmmu4KBindTableMemory",
+        "_bzero",
+        "_elden_smmu_shared_admit",
+        "_elden_smmu_shared_configuration",
+        "_elden_smmu_shared_early",
+        "_elden_smmu_shared_install",
+        "_elden_smmu_shared_lease",
+        "_elden_smmu_shared_observe",
+        "_elden_smmu_shared_observe_prepared",
+        "_elden_smmu_shared_retire",
+        "_elden_smmu_shared_status",
+        "_memcpy"
+      ],
+      "exports": [
+        "_elden_smmu_camera_owner",
+        "_elden_smmu_peripheral_activate",
+        "_elden_smmu_peripheral_open",
+        "_elden_smmu_sensor_owner"
+      ],
+      "warnings": 0
+    },
+    "SharedTouchRoute.o": {
+      "sha256": "455d2eabb569bbad0ab2f2ace2f25c88de8437374aaf0f7baa9ff1722b1eb4b0",
+      "imports": [
+        "_elden_smmu_boot_route_expected",
+        "_elden_smmu_boot_route_seal"
+      ],
+      "exports": [
+        "_elden_touch_route_attach",
+        "_elden_touch_route_detach",
+        "_elden_touch_route_expected",
+        "_elden_touch_route_observe"
+      ],
+      "warnings": 0
+    },
+    "SharedNative.o": {
+      "sha256": "84a4ffe1f5ac7c3ce2f2678784212016ff60543e215a37d0d6cef3fd395a2d26",
+      "imports": [
+        "_IODelay",
+        "_IOMalloc_internal",
+        "_KHEAP_DATA_BUFFERS",
+        "_armcpu_gic_ready",
+        "_armcpu_spi_attach",
+        "_armcpu_spi_mask",
+        "_bzero",
+        "_elden_smmu_boot_route_state",
+        "_elden_smmu_shared_open",
+        "_elden_smmu_shared_status",
+        "_memcpy",
+        "_ml_at_interrupt_context"
+      ],
+      "exports": [
+        "_elden_smmu_native_open",
+        "_elden_smmu_native_shared",
+        "_elden_smmu_native_status"
+      ],
+      "warnings": 0
+    },
+    "NativeCameraDma.o": {
+      "sha256": "7c9ca1cdb1daf91084d721bd37691c16c6b525208dff8c3feec351c0114bef35",
+      "imports": [
+        "_EldenWifiSmmu4KAuditTables",
+        "_EldenWifiSmmu4KBindTableMemory",
+        "_EldenWifiSmmu4KBuild",
+        "_EldenWifiSmmu4KEncodeContext",
+        "_IOLockAlloc",
+        "_IOMalloc_internal",
+        "_KHEAP_DATA_BUFFERS",
+        "__ZN11IOMemoryMap17getVirtualAddressEv",
+        "__ZN18IOMemoryDescriptor19createMappingInTaskEP4taskyjyy",
+        "__ZN24IOBufferMemoryDescriptor14getBytesNoCopyEv",
+        "__ZN24IOBufferMemoryDescriptor17inTaskWithOptionsEP4taskjmm",
+        "__ZN25IOGeneralMemoryDescriptor18getPhysicalSegmentEyPyj",
+        "__ZN25IOGeneralMemoryDescriptor7prepareEj",
+        "___stack_chk_fail",
+        "___stack_chk_guard",
+        "_bzero",
+        "_kernel_task",
+        "_lck_mtx_lock",
+        "_lck_mtx_try_lock",
+        "_lck_mtx_unlock",
+        "_memcpy",
+        "_ml_at_interrupt_context"
+      ],
+      "exports": [
+        "_elden_camera_dma_activate",
+        "_elden_camera_dma_admit",
+        "_elden_camera_dma_buffer",
+        "_elden_camera_dma_claim_frame",
+        "_elden_camera_dma_open",
+        "_elden_camera_dma_prepare_batch",
+        "_elden_camera_dma_release_frame",
+        "_elden_camera_dma_status",
+        "_elden_camera_dma_stop",
+        "_elden_camera_dma_view"
+      ],
+      "warnings": 0
+    },
+    "NativeMemory.o": {
+      "sha256": "6828932ef82d289397ac2f06eb8d235353fa16d601be79b1692ed1610f36dfa1",
+      "imports": [
+        "_EldenWifiSmmu4KAuditTables",
+        "_EldenWifiSmmu4KBindTableMemory",
+        "_EldenWifiSmmu4KBuild",
+        "_EldenWifiSmmu4KEncodeContext",
+        "_IOLockAlloc",
+        "_IOMalloc_internal",
+        "_KHEAP_DATA_BUFFERS",
+        "__ZN11IOMemoryMap17getVirtualAddressEv",
+        "__ZN18IOMemoryDescriptor19createMappingInTaskEP4taskyjyy",
+        "__ZN24IOBufferMemoryDescriptor14getBytesNoCopyEv",
+        "__ZN24IOBufferMemoryDescriptor17inTaskWithOptionsEP4taskjmm",
+        "__ZN25IOGeneralMemoryDescriptor18getPhysicalSegmentEyPyj",
+        "__ZN25IOGeneralMemoryDescriptor7prepareEj",
+        "_bzero",
+        "_kernel_task",
+        "_lck_mtx_lock",
+        "_lck_mtx_try_lock",
+        "_lck_mtx_unlock",
+        "_memcpy",
+        "_ml_at_interrupt_context"
+      ],
+      "exports": [
+        "_elden_sensor_memory_native_activate",
+        "_elden_sensor_memory_native_admit",
+        "_elden_sensor_memory_native_open",
+        "_elden_sensor_memory_native_prepare",
+        "_elden_sensor_memory_native_publish",
+        "_elden_sensor_memory_native_status",
+        "_elden_sensor_memory_native_stop",
+        "_elden_sensor_memory_native_view"
+      ],
+      "warnings": 0
+    },
+    "SensorRuntimeNative.o": {
+      "sha256": "9871156fc32293bea9618a1d769f20d3d6320e725e1d7e398ce2416f9b543db3",
+      "imports": [
+        "_IOFreeData",
+        "_IOMalloc_internal",
+        "_IOSimpleLockAlloc",
+        "_IOSleep",
+        "_KHEAP_DATA_BUFFERS",
+        "_absolutetime_to_nanoseconds",
+        "_assert_wait_timeout",
+        "_bzero",
+        "_clear_wait",
+        "_current_thread",
+        "_elden_motion_native_ssc_observe",
+        "_elden_motion_native_ssc_recovery_stop",
+        "_elden_motion_native_ssc_request_stop",
+        "_elden_motion_native_ssc_start",
+        "_elden_motion_native_ssc_status",
+        "_elden_motion_qrtr_transport",
+        "_elden_qrtr_ports_prepare",
+        "_elden_sensor_adsp_endpoint_attach",
+        "_elden_sensor_adsp_endpoint_close",
+        "_elden_sensor_adsp_endpoint_open",
+        "_elden_sensor_memory_binding_finish",
+        "_elden_sensor_memory_binding_open_prepared",
+        "_elden_sensor_memory_binding_request_stop",
+        "_elden_sensor_memory_binding_status",
+        "_elden_sensor_memory_binding_step",
+        "_elden_sensor_memory_native_admit",
+        "_elden_sensor_memory_native_open",
+        "_elden_sensor_memory_native_stop",
+        "_elden_sensor_memory_native_view",
+        "_kernel_thread_start",
+        "_lck_spin_lock",
+        "_lck_spin_unlock",
+        "_mach_absolute_time",
+        "_memcpy",
+        "_ml_at_interrupt_context",
+        "_thread_block",
+        "_thread_deallocate",
+        "_thread_terminate",
+        "_thread_wakeup_prim"
+      ],
+      "exports": [
+        "_elden_sensor_runtime_adopt",
+        "_elden_sensor_runtime_prepare",
+        "_elden_sensor_runtime_recovery_stop",
+        "_elden_sensor_runtime_request_stop",
+        "_elden_sensor_runtime_start",
+        "_elden_sensor_runtime_status",
+        "_elden_sensor_runtime_stop",
+        "_elden_sensor_runtime_worker"
+      ],
+      "warnings": 0
+    }
+  },
+  "source_records": {
+    "source": "304ea548e1a41f2c90c641b4ab7cc9f4dbf349d6e569c95eb9a61e642fd6052f",
+    "camera_source": "3da914be6b2ca99bd533bc9a4ca39626f930c4ff75f76e1c96b652fe218ed280",
+    "sensor_source": "a6f84359f5bee0614b11ef27af401f1f7a2b1556d2d12f691ef9baf719573033",
+    "runtime_source": "8bac321e620295fbdba4990d0c501fae915287bd3709d777235589642e40882e"
+  },
+  "reports": {
+    "host11/result.json": {
+      "sha256": "5267c75f0fc75a8f4126111f8c97961aba70e9869297afe1af23ad463b762e1d",
+      "bytes": 361
+    },
+    "stack12/result.json": {
+      "sha256": "8b0bef0e4be744296ac30b580c2b6421ab779e9f1e40a9fa09044b71dcb130d8",
+      "bytes": 1849
+    },
+    "native11/result.json": {
+      "sha256": "fb67c6ab9825ad3489c6eadd52d13adfc5d84e363c9b6aa7bda1e8b0355adfba",
+      "bytes": 63749
+    },
+    "kernel11/result.json": {
+      "sha256": "8398bb39c479cff4e214b0351bad55fa46d0287da3f0db3530e17dd8e8efc577",
+      "bytes": 259507
+    },
+    "source-audit11.json": {
+      "sha256": "8981401d9c884844bca0896a6fe836471ed3d6ca227e83474da05cb875de8c35",
+      "bytes": 2864
+    },
+    "camera-host10/result.json": {
+      "sha256": "86d5670ebccdfd75ea9039885c7cb4eff14b28bbed8690cb9c85cc001acbdd1e",
+      "bytes": 408
+    },
+    "camera-stack10/result.json": {
+      "sha256": "a7d42fd9336a7a723fdc1d8125619be6ed287a72967356ceddf81d9c658e3d76",
+      "bytes": 4910
+    },
+    "sensor-host10/result.json": {
+      "sha256": "d7f4c3c11d91c894f6704d9c49414e7a5d8790b9e50f5a993d55ed141e99c315",
+      "bytes": 15097
+    },
+    "runtime10/result.json": {
+      "sha256": "161baa017fc6c6d8297cfc79adac9af4995a0d5147a7887aab583d09b5b56041",
+      "bytes": 33513
+    },
+    "legacy-route10/result.json": {
+      "sha256": "edd78e36fbfc510ec7b206394fc06dcf14d16e9f70ffabf94db88956fbb32936",
+      "bytes": 1183
+    },
+    "legacy-domain10/result.json": {
+      "sha256": "68ca50c53609d8c37a6da8e9513ea218afb61574d5d32e4d15b874486767c234",
+      "bytes": 1221
+    },
+    "final-audits11/result.json": {
+      "sha256": "82975046305fc183f1e4e2a8711450f8cb96f9d27e4ef3419cb8ef2e59a1633f",
+      "bytes": 9708
+    }
+  },
+  "shared_archive_deltas": {
+    "libNativeLegacyDisplay.late.a": {
+      "before_path": "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/input-sleep-20261119/kernel4/display/libNativeLegacyDisplay.late.a",
+      "after_path": "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/shared-smmu-20261120/kernel11/libNativeLegacyDisplay.late/libNativeLegacyDisplay.late.a",
+      "original_sha256": "4f5570ab30aefb59b3fcc7c87827efaeefaa3dd794045f22a7a3e98c40f71c01",
+      "replacement_sha256": "6bc7a63f189bbf4b5e762f28c0a56516840bf853e4c76c6d90b79f9fc0360c18",
+      "members": {
+        "NativeLegacyDisplay.late.o": {
+          "before": "e55bd52ffa15310c6e42a24c0f1a907b035e59ce6375accbc4515965dc1fa184",
+          "after": "e55bd52ffa15310c6e42a24c0f1a907b035e59ce6375accbc4515965dc1fa184"
+        },
+        "original-bindings.o": {
+          "before": "3650732909f83fc31951f9dfea24eae435e89004d7a5c391ee2888f11fad5773",
+          "after": "3650732909f83fc31951f9dfea24eae435e89004d7a5c391ee2888f11fad5773"
+        },
+        "EldenDisplayGlue.o": {
+          "before": "ea167d64b4ce71dcad40001dd92beefc7e5f526fde5ddb67eb4c02affc9c2c83",
+          "after": "ea167d64b4ce71dcad40001dd92beefc7e5f526fde5ddb67eb4c02affc9c2c83"
+        },
+        "EldenUserWaitProbe.o": {
+          "before": "afd19b2ba439e511b27bc2227b3dae27867263f5a0850bdea44c4a44f8ee4489",
+          "after": "afd19b2ba439e511b27bc2227b3dae27867263f5a0850bdea44c4a44f8ee4489"
+        },
+        "NativeKeyStoreEvents.late.o": {
+          "before": "fe9a1370119b59817c438d509916f7ffaaa691a9b586436adfd110f85912c6ac",
+          "after": "fe9a1370119b59817c438d509916f7ffaaa691a9b586436adfd110f85912c6ac"
+        },
+        "EldenKeyEventsGlue.o": {
+          "before": "a9d4fbf123870c1b322e68f3d8d4c63fb16c888469c4c243054e693f2de1edf5",
+          "after": "a9d4fbf123870c1b322e68f3d8d4c63fb16c888469c4c243054e693f2de1edf5"
+        },
+        "NativeHidInput.late.o": {
+          "before": "843cc1dffd7cc668a10dd16bfd25f2c418b60486bd76870aaf798201a8472cbb",
+          "after": "843cc1dffd7cc668a10dd16bfd25f2c418b60486bd76870aaf798201a8472cbb"
+        },
+        "hid-original-bindings.o": {
+          "before": "d6290d09b1830369a8b4f637ef73357a8c1272a8d7136a15fdc2c7f4a2be7d6b",
+          "after": "d6290d09b1830369a8b4f637ef73357a8c1272a8d7136a15fdc2c7f4a2be7d6b"
+        },
+        "EldenHidGlue.o": {
+          "before": "4b951d546eb2168241581aa88e812d0cb519cef914c2c440f516abefe9a596b0",
+          "after": "4b951d546eb2168241581aa88e812d0cb519cef914c2c440f516abefe9a596b0"
+        },
+        "EldenNvtProtocol.o": {
+          "before": "ba518d90c5748d4cdbb67538e3113473b91747818b34dc98607bb2f69f09d1c9",
+          "after": "ba518d90c5748d4cdbb67538e3113473b91747818b34dc98607bb2f69f09d1c9"
+        },
+        "EldenNvtPoints.o": {
+          "before": "52bea0b3f2be2cefe7eda04493c53386ce286e23dc264e540a7dd7ffe0b36579",
+          "after": "52bea0b3f2be2cefe7eda04493c53386ce286e23dc264e540a7dd7ffe0b36579"
+        },
+        "EldenNvtPlatform.o": {
+          "before": "7b7f0e367e350a36d2ddbc8f255fd3aef67cb379d33e91419cc68f6284dc0b2d",
+          "after": "7b7f0e367e350a36d2ddbc8f255fd3aef67cb379d33e91419cc68f6284dc0b2d"
+        },
+        "EldenNvtGeni.o": {
+          "before": "c8c00562907c91fdac0f98cef3b02cc5e55bab483e53241d0786c99473a33230",
+          "after": "c8c00562907c91fdac0f98cef3b02cc5e55bab483e53241d0786c99473a33230"
+        },
+        "EldenNvtDmaRoute.o": {
+          "before": "a3c28baf085839972db099a55ad9e2eec24ea163823dea3206f8325ba13ad6b6",
+          "after": "455d2eabb569bbad0ab2f2ace2f25c88de8437374aaf0f7baa9ff1722b1eb4b0"
+        },
+        "EldenNvtDmaTransfer.o": {
+          "before": "f1b923d26d177d69c5ada5b6d23867781daef0ffdb931772e47aaefc46b614ee",
+          "after": "f1b923d26d177d69c5ada5b6d23867781daef0ffdb931772e47aaefc46b614ee"
+        },
+        "EldenNvtDmaCache.o": {
+          "before": "5beeb4dc9e507c56f08163b7a319e6bd67b83b4f127935e456bcb472c7f55c6c",
+          "after": "5beeb4dc9e507c56f08163b7a319e6bd67b83b4f127935e456bcb472c7f55c6c"
+        },
+        "EldenNvtRuntime.o": {
+          "before": "8339e7be910255c9a7f24e2697c3acf5a335d20c840e8070ff5f44f509fc294d",
+          "after": "8339e7be910255c9a7f24e2697c3acf5a335d20c840e8070ff5f44f509fc294d"
+        },
+        "EldenNvtDmaBuffer.o": {
+          "before": "054f8a04935aea240b96fed9b07d52d3cbea647de2ace353b249411abb143a34",
+          "after": "054f8a04935aea240b96fed9b07d52d3cbea647de2ace353b249411abb143a34"
+        },
+        "EldenWifiModemFiles.o": {
+          "before": "fca1f6e9e7c793097a739e3ee6cf8d5eaeca08458a8a83a8c3df32de38f18c39",
+          "after": "fca1f6e9e7c793097a739e3ee6cf8d5eaeca08458a8a83a8c3df32de38f18c39"
+        },
+        "EldenWifiFirmwareCheck.o": {
+          "before": "bbe4b5b47a27ba6ef104cba6b374f98cb25a6ddcbe3c174983c8c5058daad8a1",
+          "after": "bbe4b5b47a27ba6ef104cba6b374f98cb25a6ddcbe3c174983c8c5058daad8a1"
+        },
+        "MappingCheck.o": {
+          "before": "9e8b03c6b1931357cbb357416826aff02c859a4e20d75278bd0d819af9e27358",
+          "after": "9e8b03c6b1931357cbb357416826aff02c859a4e20d75278bd0d819af9e27358"
+        }
+      },
+      "changed": [
+        "EldenNvtDmaRoute.o"
+      ]
+    },
+    "libEldenSensorMemory.a": {
+      "before_path": "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/sensor-runtime-20261120/kernel3/EldenSensorMemory/libEldenSensorMemory.a",
+      "after_path": "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/shared-smmu-20261120/kernel11/libEldenSensorMemory/libEldenSensorMemory.a",
+      "original_sha256": "7ca8f528d7227e543ff539a651a53c5a47cf49e4c25980864100ccbe059f7e50",
+      "replacement_sha256": "63e631222a3c1a7c60123b21c256309bd69c2d08e1d14f5b2406ff324e6f672f",
+      "members": {
+        "NativeMemory.o": {
+          "before": "b88f26fa27b0248b475f0abf0a88f430c0932483460d2eabe8ea8600d39d0d24",
+          "after": "6828932ef82d289397ac2f06eb8d235353fa16d601be79b1692ed1610f36dfa1"
+        },
+        "EldenWifiSmmu4KContext.o": {
+          "before": "13866b45baa42ab5df234078291acf4a6eca3edbcb88f9055e8b457fcfe462b5",
+          "after": "13866b45baa42ab5df234078291acf4a6eca3edbcb88f9055e8b457fcfe462b5"
+        },
+        "EldenWifiSmmu4KTableMemory.o": {
+          "before": "c08af820702a418e961d17fb6f01fd5e61fee9aea940924f0c3009ae3f4f8715",
+          "after": "c08af820702a418e961d17fb6f01fd5e61fee9aea940924f0c3009ae3f4f8715"
+        },
+        "MemoryBinding.o": {
+          "before": "c0df9003ac812e9f08faa7a26bb6d03aa22375e5f5d7df735992c6fdadbd32f0",
+          "after": "c0df9003ac812e9f08faa7a26bb6d03aa22375e5f5d7df735992c6fdadbd32f0"
+        },
+        "EldenWifiSmmu4KAudit.o": {
+          "before": "45935bb630a16a684016a782c2fdc095ea8a46119c3b9cfb2f9121d3ae6f1519",
+          "after": "45935bb630a16a684016a782c2fdc095ea8a46119c3b9cfb2f9121d3ae6f1519"
+        },
+        "EldenWifiSmmu4KProgram.o": {
+          "before": "db36c04caa73b8e18cdd15996e2677ffee7b7a22f6b34b3f4f996f8b54f0818c",
+          "after": "db36c04caa73b8e18cdd15996e2677ffee7b7a22f6b34b3f4f996f8b54f0818c"
+        },
+        "EldenWifiSmmu4K.o": {
+          "before": "83b35e97db906aead945240559af29ba7d06ea4772d20102c61670783ea1c2ca",
+          "after": "83b35e97db906aead945240559af29ba7d06ea4772d20102c61670783ea1c2ca"
+        }
+      },
+      "changed": [
+        "NativeMemory.o"
+      ]
+    }
+  },
+  "shared_direct_deltas": {
+    "NativeCameraDma.o": {
+      "before_path": "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-dma-20261120/native3/NativeCameraDma.o",
+      "after_path": "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/shared-smmu-20261120/native11/NativeCameraDma.o",
+      "before": "b85917f95e892cb35ee9fd0c932ccfe2f98fdabd8f1424f3d0597d59066f6e7a",
+      "after": "7c9ca1cdb1daf91084d721bd37691c16c6b525208dff8c3feec351c0114bef35"
+    },
+    "SensorRuntimeNative.o": {
+      "before_path": "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/sensor-runtime-20261120/native4/SensorRuntimeNative.o",
+      "after_path": "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/shared-smmu-20261120/native11/SensorRuntimeNative.o",
+      "before": "81a1caadb784417b1224ddc557b8b83e8400bbc89048d2584952e7511963aec4",
+      "after": "9871156fc32293bea9618a1d769f20d3d6320e725e1d7e398ce2416f9b543db3"
+    }
+  },
+  "whole_retained_backing_including_guards": true,
+  "original4K_linked_once": true,
+  "original_Apple_executable_regions": 30,
+  "original_recovery_bound_ms": 5500,
+  "legacy_flags": {
+    "abi_qualified": false,
+    "loadable": false,
+    "runtime_qualified": false,
+    "instruction_relocation_complete": false
+  },
+  "physical_authority_installed": false,
+  "automatic_startup": false,
+  "hardware": false,
+  "boot_packaged": false,
+  "merged_mainline": false,
+  "physical_IOKit_PAR_CACHE_MMIO_IRQ_ACTLR_security_peers_modeled": true,
+  "archive": {
+    "file": "shared-smmu-offline.tar.gz",
+    "bytes": 26929625,
+    "sha256": "880c4d0cac8e11a5e8eec84fa01fbd28889a5f607da775777f414839b7018e66",
+    "members": 587,
+    "members_verified": true,
+    "manifest_sha256": "d401d290139003e9243b0aafb437f2da6e2b218d612a0eb1e4f7770eb129dbb4"
+  },
+  "remaining": [
+    "actual original early/power/clock/mapping/ACTLR-security/touch authority and shared startup",
+    "real Gen4 PD/capture/calibration/mount/time/samples and complete rotation UI",
+    "camera PLL/RPMh/CSIrails/RAW10/calibration/ISP/OS17 service",
+    "Pencil/screen-systemPM wake/measured haptics system effects/RTC persistence-alarm"
+  ],
+  "five_part_goal": "active"
+}

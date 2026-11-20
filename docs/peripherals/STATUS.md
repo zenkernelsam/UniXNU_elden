@@ -71,6 +71,17 @@ Mainline prompt: [MAINLINE-HANDOFF-PROMPT.md](MAINLINE-HANDOFF-PROMPT.md).
 
 ## Current status
 
+Latest [SHARED-SMMU.md](SHARED-SMMU.md) connects real early batch/nativeMMIO/
+GIC and staged camera/ADSP retained memory, replaces the actual touch route
+consumer and adopts existing memory in SSC.171core1272415/11composed2375292,
+8scalarOS17objects0warnings/fullkernel2d078d21/nativea568b418 pass. Exact
+original archives/recovery/Apple30/peripheral audits retained;21new+32prior+
+24camera guards pass. Wholebacking includes guards;no lateappend/unknownSID/
+secondglobalIRQ/ATOS/fakeDMA. Real physicalpower/clock/mapping/ACTLRsecurity/
+serializedtouch owner remains required/not installed/noauto-start/tablet/merge.
+Next actual originalshared startup/Gen4capture/calibration/samples/UI and
+cameraRAW10/ISP/OS17service. Five-partGoal active.
+
 Latest [CAMERA-DMA.md](CAMERA-DMA.md) adds actual retained guardedIOKitframe
 memory/PAR/NC/32bitIOVA/original4Ktables and DMA→Board→CCI/CAMSS lifecycle.
 51allocator1408708checks,normal30206/drainfailure30372/visibilityfailure30023,

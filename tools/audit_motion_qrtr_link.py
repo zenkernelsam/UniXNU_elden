@@ -56,8 +56,17 @@ def main():
     retained={}
     for arg in oldcmd:
         if arg.startswith('-Wl,-force_load,'):retained[Path(arg.split(',',2)[2]).name]=retained_archive(arg,cmd,r)
-    changed=retained['libEldenAdspRuntime.a']['changed_members']
-    if set(changed)!={'AdspProbe.o','ShengQrtr.o','QcomQrtr.o'}:raise ValueError('Unexpected QRTR layout consumer')
+    adsp=retained['libEldenAdspRuntime.a']
+    if adsp.get('unchanged_path'):
+        # A later peripheral image can retain the already-qualified QRTR
+        # archive. Verify its actual cumulative member hashes rather than
+        # requiring the same type-layout replacement again.
+        original_arg=next(v for v in oldcmd if v.endswith('/libEldenAdspRuntime.a'))
+        actual=members(Path(original_arg.split(',',2)[2]));proof=r.get('cumulative_transport_archives',{}).get('libEldenAdspRuntime.a')
+        if not isinstance(proof,dict) or set(actual)!=set(proof) or any(actual[n]!=proof[n]['after'] for n in actual):raise ValueError('Qualified retained QRTR archive evidence differs')
+    else:
+        changed=adsp['changed_members']
+        if set(changed)!={'AdspProbe.o','ShengQrtr.o','QcomQrtr.o'}:raise ValueError('Unexpected QRTR layout consumer')
     # Keep the original ADSP metadata call targets, not captured guesses.
     base=symbol('__ZTV24IOBufferMemoryDescriptor')+16
     slots={27:'__ZN25IOGeneralMemoryDescriptor7prepareEj',41:'__ZN24IOBufferMemoryDescriptor14getBytesNoCopyEv',43:'__ZN24IOBufferMemoryDescriptor11appendBytesEPKvm'}
