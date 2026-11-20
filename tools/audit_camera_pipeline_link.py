@@ -2,6 +2,7 @@
 from pathlib import Path
 import argparse,hashlib,json,re,struct,subprocess,sys
 from camera_startup_audit import check_camera_startup
+from peripheral_archive_audit import retained_archive
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def signed(v,b):return v-(1<<b) if v&(1<<(b-1)) else v
 def main():
@@ -36,7 +37,7 @@ def main():
                         if w&0x7c000000==0x14000000:
                             pc=sec['va']+off;calls.append((pc,pc+(signed(w&0x3ffffff,26)<<2)))
     if len(initial)!=len(before):raise ValueError('Automatic camera initializer added')
-    startup=check_camera_startup(calls,symbol,a.kernel_build/'native.macho')
+    startup=check_camera_startup(calls,symbol,a.kernel_build/'native.macho',report.get('actual_camera_WL_power_session') is True)
     edges={}
     for n in ('_elden_camera_pipeline_resources','_elden_camera_pipeline_open','_elden_camera_pipeline_queue','_elden_camera_pipeline_start',
               '_elden_camera_pipeline_service','_elden_camera_pipeline_frame','_elden_camera_pipeline_ready','_elden_camera_pipeline_stop','_elden_camera_pipeline_status',
@@ -56,6 +57,8 @@ def main():
     for value in oldcmd:
         path=Path(value.split(',')[-1])
         if path.is_file() and path.suffix in ('.o','.a'):
+            if value.startswith('-Wl,-force_load,') and path.name=='libEldenBacklight.a' and report.get('one_original_I2c10_GENI_owner') is True:
+                inherited[str(path)]=retained_archive(value,cmd,report);continue
             expected=report['inherited_inputs'].get(str(path))
             if sha(path)!=expected or cmd.count(value)!=1:raise ValueError('Existing peripheral input changed')
             inherited[str(path)]=expected

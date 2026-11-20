@@ -71,6 +71,19 @@ Mainline prompt: [MAINLINE-HANDOFF-PROMPT.md](MAINLINE-HANDOFF-PROMPT.md).
 
 ## Current status
 
+Latest [CAMERA-POWER.md](CAMERA-POWER.md) connects actual WL2868C supply
+ledger/session to the original camera capture path over one shared I2C10/
+backlight GENI owner.1037/118783 supply,13shared cases,original16289backlight,
+poweredfrontrear52297/refuseddrain52406 and52exactsource topology checks pass.
+Five scalarOS17objects/fullkernelcbad4612/native91d9b5cf pass all original
+Apple30/peripheral/recovery audits,19new/32existing/10priorcamera guards.
+Only2backlightmembers change;169slots/10overrides/lateinit/original GENI/AW/
+bindings/PDobservation retained,2originalbacklightwarnings remain/other4zero.
+LDO7 also powers lens, so real rail-unused authority is mandatory; failed
+restore retains refs, original-enabled channels and shared engine to reset.
+No actual clock/RPMh/pin/SMMU/buffer/DMA owner/startup/tablet/RAW10/OSservice
+or whole-Goal acceptance. Current next step is those physical owners and frames.
+
 Latest [CAMERA-PIPELINE.md](CAMERA-PIPELINE.md) adds exact Gen4 CSIPHY2.4/CSID980/
 VFEgen4 queue/core, actual native MMIO/GIC and existing sensor capture binding.
 218core1202627checks,8native5077checks,composedfrontrear50667/refuseddrain50774,
@@ -160,7 +173,7 @@ component rows include earlier independently accepted milestones:
 | RTC | Real PMK8550 read/carry via observer-only SPMI/shared gate; volatile system-learned offset; upstream board-clock registration/get/set added to existing platform; five scalar objects/full link; actual initializer/callback/recovery audit | Persistent offset/epoch identity, wake source/alarm and sleep lifecycle; current-mainline/hardware retention |
 | Wake | Exact OEM GPIO/PDC route and serialized flow now hooked into original worker;reversible pen/finger release,real Protocol restore/event wait/stop;12coordinator534checks and full link | Current-mainline port, actual display/system power provider and physical PDC/gesture/sleep/pen/finger cycles; no fake power readiness |
 | Motion | Strict integer sample core/OS17 HID plus actual service400 discovery/strict attributes/session/demand/nativeworker;26manager18372+6native614checks/five new scalarobjects/full link,207/10 retained | Install real shared QRTR/Gen4 sensor-PD registry/calibration and board provider; qualify actual samples/mount/time; CoreMotion/UI and complete J317 orientation/SPU contract |
-| Cameras | Exact sensor/CCI control plus PHY2.4/CSID980/VFEgen4 receive queue and native capture binding;218core/8native/twofrontrearstack checks,three new scalarobjects/full link | Actual shared power/CAMCC/GDSC/MCLK/pin provider, earlySMMU/buffer/DMA/IRQ ownership, real RAW10/ISP/debayer/OS17 service, sensor identity/calibration/frames |
+| Cameras | Exact sensor/CCI/CAMSS queue plus actual shared I2C10/WL2868C ledger and powered-capture binding;1037power/13shared/poweredfrontrearstack/52board checks,five scalarobjects/full link | Actual physical shared rail/CAMCC/RPMh/GDSC/MCLK/pin authority, earlySMMU/buffer/DMA/IRQ ownership,realRAW10/ISP/OS17service,sensor identity/calibration/frames |
 
 Earlier haptics-native combined haptics+RTC+pen kernel SHA256 is
 `4889eee6af10d10d816f9f8e79704385d264a05c0590cc54cfccec080c21c72c`;

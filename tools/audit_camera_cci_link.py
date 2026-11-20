@@ -53,7 +53,11 @@ def main():
         start=symbol('_elden_camera_capture_bind');end=min((pc for pc,_ in symbols if pc>start),default=None)
         if end is None or any(not start<=int(pc,16)<end for pc in edges['_elden_camera_sensor_bind']):raise ValueError('Sensor bind call outside actual capture wrapper')
         for n in ('_elden_camera_capture_bind','_elden_camera_native_pipeline_open'):
+            if n=='_elden_camera_capture_bind' and r.get('actual_camera_WL_power_session') is True:continue
             if any(target==symbol(n) for pc,target in branches):raise ValueError('Unqualified outer camera startup')
+        if r.get('actual_camera_WL_power_session') is True:
+            from camera_startup_audit import check_camera_startup
+            check_camera_startup(branches,symbol,a.kernel_build/'native.macho',True)
     # Public source control methods actually call native CCI; no binding stub.
     groups=[('_elden_camera_sensor_probe','_elden_camera_probe'),('_elden_camera_sensor_start','_elden_camera_start'),
         ('_elden_camera_sensor_control','_elden_camera_control'),('_elden_camera_sensor_shutdown','_elden_camera_stop')]

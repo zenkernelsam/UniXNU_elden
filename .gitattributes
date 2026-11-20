@@ -29,3 +29,9 @@ drivers/EldenMotion/upstream/PaganiTestQrtr.c -text -whitespace
 # Exact Gen4 Linux camera/DTS inputs are byte-addressed by their manifest.
 drivers/EldenCamera/upstream/camss* -text -whitespace
 drivers/EldenCamera/upstream/sm8750* -text -whitespace
+drivers/EldenCamera/upstream/wl2868c-regulator.c -text -whitespace
+drivers/EldenCamera/upstream/helpers.c -text -whitespace
+drivers/EldenCamera/upstream/clk-* -text -whitespace
+drivers/EldenCamera/upstream/cambistmclkcc-sm8750.c -text -whitespace
+drivers/EldenCamera/upstream/camcc-sm8750.c -text -whitespace
+drivers/EldenCamera/upstream/pinctrl-sm8750.c -text -whitespace

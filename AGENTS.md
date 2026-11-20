@@ -1,5 +1,25 @@
 # UniXNU elden — authoritative source repository
 
+CameraPower20261120: actual sharedI2C10/WL2868C→poweredcapture→originalsensor/
+CCI/CAMSSfullylinked,1037power118783/13sharedcases/originalbacklight16289/
+poweredfrontrear52297/drainfailure52406/52sourcechecks/19new+32old+10camera
+guards pass. PhysicalMMIO/regulatorauthority/clockreset/GIC/DMAmodeled.
+Five scalarobjects,2oldbacklightwarnings/other4zero;kernelcbad4612/native91d9b5cf,
+Apple30/all originalperipheral/recoverychecks pass. OnlyPlatform+BacklightRuntime
+membersreplace;originalGENI/AW/bindings/169slots10overrides/lateinit/bootalias/
+PDobservation retained. Read CAMERA-POWER.md/power-validation.json.
+WL0x2f+backlight0x76 shareoneSE2/Context/sleepablemutex,includingdiagnostics;
+refsattemptedbeforewrite/activeobserved/realreadback/cleanupretry;originalenabled
+rails/SYS+unknownchangespreserved. LDO7 also powers lens,require realrail_unused
+beforelastowneddisable/selectorchange. CameraSTOP/realCSI/DMAinactive→restore
+WL→retiredproof→close,then deferredbacklightrelease exactlyonce;uncertainabort/
+idle/restoration retainsmapslease untilreset. NoPMICreset/secondbus/rawIOCTL.
+Noouterpower/capturestartup;realCAMCC/RPMh/GDSC/MCLK/pins/earlySMMU/buffers/
+physicalDMA/calibration/RAW10/ISP/OS17service stillmissing. NEXTactualowners+
+frames,thenOSservice. Otherpen/Pencil/wakePM/motioncalUI/hapticcal/RTCpersistence
+remain. FivepartGoalactive/noauto merge/subagents/tablet;preservepeers/mainline
+WifiQRTR/GPU/floor/recovery. Mac source3/host4/stack4/native4/kernel2 accepted.
+
 CameraPipeline20261120: exact6f97250e TB322FC PHY2.4/CSID980/VFEgen4register/
 two-bufferqueue + nativeMMIO/GIC/capture→originalsensorCCI fullylinked.218core
 1202627/8native5077/frontrearstack50667/drainfailure50774/10functionnegatives/

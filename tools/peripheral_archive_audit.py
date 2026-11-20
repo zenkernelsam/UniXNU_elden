@@ -24,6 +24,10 @@ def retained_archive(argument,current_command,report):
     name=before.name;allowed=ALLOWED.get(name);runtime=report.get('actual_sensor_runtime_composition') is True
     runtime_key=None
     if runtime and name in RUNTIME_MEMBERS:runtime_key,allowed=RUNTIME_MEMBERS[name]
+    shared_camera=report.get('one_original_I2c10_GENI_owner') is True
+    if shared_camera and name=='libEldenBacklight.a':
+        if str(before)!=report.get('backlight_original_path'):raise ValueError('Actual original I2C10 path differs')
+        runtime_key='changed_backlight_archive';allowed={'Platform.o','BacklightRuntime.late.o'}
     if allowed is None:raise ValueError('Existing archive lost or changed without a supported transport delta')
     # The QRTR profile declares its exact three actual type consumers. Older
     # profiles retain their original one-member gate; this is not a filename
@@ -37,6 +41,8 @@ def retained_archive(argument,current_command,report):
     matches=[v for v in current_command if v.startswith('-Wl,-force_load,') and Path(v.split(',',2)[2]).name==name]
     if len(matches)!=1:raise ValueError('One actual replacement archive required')
     after=Path(matches[0].split(',',2)[2]);old=members(before);new=members(after)
+    if shared_camera and name=='libEldenBacklight.a' and str(after)!=report.get('backlight_shared_path'):
+        raise ValueError('Actual shared I2C10 path differs')
     if qrtr:
         cumulative=report.get('cumulative_transport_archives',{}).get(name)
         # Pick the cumulative proof only when every actually read old/new

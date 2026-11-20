@@ -1,0 +1,56 @@
+{
+  "repository": "https://github.com/h0cheung/tb322fc-linux-kernel",
+  "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+  "board": "TB322FC/SM8750",
+  "files": [
+    {
+      "file": "wl2868c-regulator.c",
+      "path": "drivers/regulator/wl2868c-regulator.c",
+      "bytes": 3905,
+      "sha256": "26806c52fa5d4d5e56cf436a57a8fcc1d8b055ae4f65d3e2970d4cfbb1880136"
+    },
+    {
+      "file": "helpers.c",
+      "path": "drivers/regulator/helpers.c",
+      "bytes": 26780,
+      "sha256": "860f6e07370505cf909331d120390a3f622056af8d1c197dac795b1f5f9fa981"
+    },
+    {
+      "file": "clk-rcg2.c",
+      "path": "drivers/clk/qcom/clk-rcg2.c",
+      "bytes": 46477,
+      "sha256": "4a1c8f29e2d4a80ef14f5c58f14de7a3576ea591c84f091b59cf5257e303f947"
+    },
+    {
+      "file": "clk-branch.c",
+      "path": "drivers/clk/qcom/clk-branch.c",
+      "bytes": 4947,
+      "sha256": "d29259eb77a5d1d6a07adf4aa835588f8e04d1fa3c14be2b7d4162cce737abfa"
+    },
+    {
+      "file": "clk-branch.h",
+      "path": "drivers/clk/qcom/clk-branch.h",
+      "bytes": 3986,
+      "sha256": "bac7dcf51a0da5b27eaa0d4dc276f540fec80013bd4862cfbbc115a50161ef72"
+    },
+    {
+      "file": "camcc-sm8750.c",
+      "path": "drivers/clk/qcom/camcc-sm8750.c",
+      "bytes": 73195,
+      "sha256": "191c1754ca0f1408cdd9e2e1c9caaa290b5f707633f7bb84e443dfde08f29b93"
+    },
+    {
+      "file": "cambistmclkcc-sm8750.c",
+      "path": "drivers/clk/qcom/cambistmclkcc-sm8750.c",
+      "bytes": 13296,
+      "sha256": "b9368cf617af714f47273b24f674677213a2b6189cf51ff02b61b9e7b7568dfa"
+    },
+    {
+      "file": "pinctrl-sm8750.c",
+      "path": "drivers/pinctrl/qcom/pinctrl-sm8750.c",
+      "bytes": 55646,
+      "sha256": "9764b4a28ee8189dc3c48b1657ccf8ec8c000733403db381edcce17ce15e32fe"
+    }
+  ],
+  "hardware": false
+}

@@ -1,0 +1,725 @@
+{
+  "schema": 1,
+  "branch": "offline-peripheral-fixes",
+  "parent_commit": "dc7514ebc307beda2c6a02d8003329335af4bf7d",
+  "kernel_sha256": "cbad4612351729e17e991368d1ab2cbb79486836112593d1b4ce2a94430cb25a",
+  "native_sha256": "91d9b5cfb491346b5185974bcaffdba68a26c07f12194c285d45672caa94d66d",
+  "parent_kernel_sha256": "70a217137db6d6404d6c05c8412e314ff41b4fa6952faae89f999ca8a26a67e4",
+  "source_files": {
+    ".gitattributes": "54a4307b6ecee2ddb5062b98eb9b3459f9d317799866d4d204cec13b1f92f99a",
+    "AGENTS.md": "4640485d30af041e63baa958c85ebbbb5a9cc3bc06b703c91636f5c87accc11a",
+    "docs/peripherals/CAMERA-POWER.md": "61027df1ee41e4e46d6f000e675f72fbbedee7ea86a2772fbbb212f42e7631cf",
+    "docs/peripherals/MAINLINE-HANDOFF-PROMPT.md": "309df1bcf3f8b76c875f659e88152f931fd6ae3af796741ff583d0be4e71ef92",
+    "docs/peripherals/STATUS.md": "59a065f0e662dc11fd31252f21695782b6591bb3701eb535e49165bd4d17bccf",
+    "drivers/EldenCamera/Power.c": "543d20ac53573dd2e62f9ea718f8b91a0d68d09dc295d2f4547e4e792dddebce",
+    "drivers/EldenCamera/Power.h": "f92cc7f21a22efd8db2bb563e7b68220e3b0bbc1518e6c237db5607c54252032",
+    "drivers/EldenCamera/PowerBinding.c": "2c5e461de97448d43b3f07e085c924f5681edfcdbb96d155fb3969b8e56067a7",
+    "drivers/EldenCamera/PowerBinding.h": "9a9a30b1db627ce3734485619f6a51c2ce9d0974c94aa890d7955bacb7194902",
+    "drivers/EldenCamera/PowerBus.c": "92d82e109c5dea27fb9ec85addc1fdcb2381066adf1f6b9c2a798d51270343e9",
+    "drivers/EldenCamera/PowerSource.py": "4fb769d74151406cca5efcb31d7e2440ca913f8637cc2a4e02383c56c96741d7",
+    "drivers/EldenCamera/PowerStackSource.py": "3b2117eecdac3971695dd22a45ec28b9fcf7974639766f6616bc97c4535005ea",
+    "drivers/EldenCamera/SharedBusSource.py": "5726ded2f3f1de04a43d7b7982b28e777114fa971d67aa398ff92f672cf0a2cb",
+    "drivers/EldenCamera/SharedI2c10.h": "989ff44f1c7056966f4d939f3ee729b69b05b578e175946d72ebf019bcfb291b",
+    "drivers/EldenCamera/SharedI2c10Methods.inc": "28b433b55fec638ceedd6240684c1ff9f17dc63c2eb4ca0c8310b39533306732",
+    "drivers/EldenCamera/TestI2c10Peer.c": "7123dbd8ac0a47fca5227d50509bf0bc066af9be90793eb119efb7c887722c88",
+    "drivers/EldenCamera/TestPower.c": "48defefc817403eb1cc5fd0ad8b59b5b469f5b96b69c11c0bbef113d52a247e9",
+    "drivers/EldenCamera/TestSharedBus.cpp": "76c2a15d76cecdf90777cb6e0c449a31bc3c3658ffdf3e8b7221b59c8bd8c657",
+    "drivers/EldenCamera/power-source.json": "c5c42cead8d51e799f6e27f1d12c271b1eb7514c734d9dd42681c480d19c4ab3",
+    "drivers/EldenCamera/upstream/cambistmclkcc-sm8750.c": "b9368cf617af714f47273b24f674677213a2b6189cf51ff02b61b9e7b7568dfa",
+    "drivers/EldenCamera/upstream/camcc-sm8750.c": "191c1754ca0f1408cdd9e2e1c9caaa290b5f707633f7bb84e443dfde08f29b93",
+    "drivers/EldenCamera/upstream/clk-branch.c": "d29259eb77a5d1d6a07adf4aa835588f8e04d1fa3c14be2b7d4162cce737abfa",
+    "drivers/EldenCamera/upstream/clk-branch.h": "bac7dcf51a0da5b27eaa0d4dc276f540fec80013bd4862cfbbc115a50161ef72",
+    "drivers/EldenCamera/upstream/clk-rcg2.c": "4a1c8f29e2d4a80ef14f5c58f14de7a3576ea591c84f091b59cf5257e303f947",
+    "drivers/EldenCamera/upstream/helpers.c": "860f6e07370505cf909331d120390a3f622056af8d1c197dac795b1f5f9fa981",
+    "drivers/EldenCamera/upstream/pinctrl-sm8750.c": "9764b4a28ee8189dc3c48b1657ccf8ec8c000733403db381edcce17ce15e32fe",
+    "drivers/EldenCamera/upstream/wl2868c-regulator.c": "26806c52fa5d4d5e56cf436a57a8fcc1d8b055ae4f65d3e2970d4cfbb1880136",
+    "tools/audit_camera_cci_link.py": "d397afb460377c710b9ac82243174933c0bf50450ba334fb163c2b9fd817c089",
+    "tools/audit_camera_pipeline_link.py": "8b8c1ddc5c1dc21935d42f1d3e3fd5ed20dd61aa4deae66af7948378de0f03aa",
+    "tools/audit_camera_power_board.py": "12536e6a4a0ed2f1062b81c522f06904c827581a7e0feb78faaa7a9658fc18ef",
+    "tools/audit_camera_power_link.py": "4fdcda719017fef07eaed3fd41383fd02531adc7b6a0dfdf613f017cefa7fc70",
+    "tools/build_camera_power.py": "1e35f6571b9c3e6f3cd7b42ff53952e5174cb2afdaf40efccd63bfcc0d5f6c0a",
+    "tools/camera_startup_audit.py": "c574de8ea9dc0f46c125f10c442ea126550c25d8b2947acb3e98a973a7a75d08",
+    "tools/link_camera_power.py": "3796ff6a6333b33c9f661b2ef2fa77d1d4202484ec2005933717b16222843e1b",
+    "tools/peripheral_archive_audit.py": "3aae4fb2e106c536e3f0b8145d40d214bf9c9499a991e489cd91c14c72c45c1d",
+    "tools/prepare_camera_power.py": "a19d7307dd57886bb092397b52084197dd4ea90932db8fa6a9ee1fa9dfa8a4cc",
+    "tools/test_camera_power.py": "8e7613dbc1e6b53523c0741dc2953b1095e68f1c2afa371f11d39a85dcf28841",
+    "tools/test_camera_power_audit.py": "90a981a8693b75e1e1defb9f388773f80f20df71950a19eccebd84577633a238",
+    "tools/test_camera_power_stack.py": "422f6bf5162d596b62a3abc896e2083d40d47f99cc3977f9acfed3db7bdeb6a9"
+  },
+  "source_manifest": {
+    "repository": "https://github.com/h0cheung/tb322fc-linux-kernel",
+    "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+    "board": "TB322FC/SM8750",
+    "files": [
+      {
+        "file": "wl2868c-regulator.c",
+        "path": "drivers/regulator/wl2868c-regulator.c",
+        "bytes": 3905,
+        "sha256": "26806c52fa5d4d5e56cf436a57a8fcc1d8b055ae4f65d3e2970d4cfbb1880136"
+      },
+      {
+        "file": "helpers.c",
+        "path": "drivers/regulator/helpers.c",
+        "bytes": 26780,
+        "sha256": "860f6e07370505cf909331d120390a3f622056af8d1c197dac795b1f5f9fa981"
+      },
+      {
+        "file": "clk-rcg2.c",
+        "path": "drivers/clk/qcom/clk-rcg2.c",
+        "bytes": 46477,
+        "sha256": "4a1c8f29e2d4a80ef14f5c58f14de7a3576ea591c84f091b59cf5257e303f947"
+      },
+      {
+        "file": "clk-branch.c",
+        "path": "drivers/clk/qcom/clk-branch.c",
+        "bytes": 4947,
+        "sha256": "d29259eb77a5d1d6a07adf4aa835588f8e04d1fa3c14be2b7d4162cce737abfa"
+      },
+      {
+        "file": "clk-branch.h",
+        "path": "drivers/clk/qcom/clk-branch.h",
+        "bytes": 3986,
+        "sha256": "bac7dcf51a0da5b27eaa0d4dc276f540fec80013bd4862cfbbc115a50161ef72"
+      },
+      {
+        "file": "camcc-sm8750.c",
+        "path": "drivers/clk/qcom/camcc-sm8750.c",
+        "bytes": 73195,
+        "sha256": "191c1754ca0f1408cdd9e2e1c9caaa290b5f707633f7bb84e443dfde08f29b93"
+      },
+      {
+        "file": "cambistmclkcc-sm8750.c",
+        "path": "drivers/clk/qcom/cambistmclkcc-sm8750.c",
+        "bytes": 13296,
+        "sha256": "b9368cf617af714f47273b24f674677213a2b6189cf51ff02b61b9e7b7568dfa"
+      },
+      {
+        "file": "pinctrl-sm8750.c",
+        "path": "drivers/pinctrl/qcom/pinctrl-sm8750.c",
+        "bytes": 55646,
+        "sha256": "9764b4a28ee8189dc3c48b1657ccf8ec8c000733403db381edcce17ce15e32fe"
+      }
+    ],
+    "hardware": false
+  },
+  "accepted_mac_outputs": "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-power-20261120/{source3,host4,stack4,native4,kernel2,audit-tests1}",
+  "native_objects": {
+    "BacklightRuntime.late.o": {
+      "sha256": "b8efd1c7c07c0b545023378145f779252cb53744d521727eba8561702da3497d",
+      "imports": [
+        "_IODelay",
+        "_IOFree",
+        "_IOLockAlloc",
+        "_IOLockFree",
+        "_IOMalloc_internal",
+        "_IOSimpleLockAlloc",
+        "_IOSimpleLockFree",
+        "_IOSleep",
+        "_KHEAP_DEFAULT",
+        "_OSObject_typed_operator_delete",
+        "_OSObject_typed_operator_new",
+        "_PE_parse_boot_argn",
+        "__ZN10IOWorkLoop8workLoopEv",
+        "__ZN11OSMetaClass10preModLoadEPKc",
+        "__ZN11OSMetaClass11postModLoadEPv",
+        "__ZN11OSMetaClassC2EPKcPKS_j",
+        "__ZN11OSMetaClassD2Ev",
+        "__ZN12OSDictionary12withCapacityEj",
+        "__ZN12OSDictionary9metaClassE",
+        "__ZN14IODeviceMemory9withRangeEyy",
+        "__ZN15IORegistryEntry11detachAboveEPK15IORegistryPlane",
+        "__ZN15IORegistryEntry11setLocationEPK8OSSymbolPK15IORegistryPlane",
+        "__ZN15IORegistryEntry11setLocationEPKcPK15IORegistryPlane",
+        "__ZN15IORegistryEntry11setPropertyEPK8OSStringP8OSObject",
+        "__ZN15IORegistryEntry11setPropertyEPK8OSSymbolP8OSObject",
+        "__ZN15IORegistryEntry11setPropertyEPKcP8OSObject",
+        "__ZN15IORegistryEntry11setPropertyEPKcPvj",
+        "__ZN15IORegistryEntry11setPropertyEPKcS1_",
+        "__ZN15IORegistryEntry11setPropertyEPKcb",
+        "__ZN15IORegistryEntry11setPropertyEPKcyj",
+        "__ZN15IORegistryEntry13attachToChildEPS_PK15IORegistryPlane",
+        "__ZN15IORegistryEntry13childFromPathEPKcPK15IORegistryPlanePcPi",
+        "__ZN15IORegistryEntry14attachToParentEPS_PK15IORegistryPlane",
+        "__ZN15IORegistryEntry14removePropertyEPK8OSString",
+        "__ZN15IORegistryEntry14removePropertyEPK8OSSymbol",
+        "__ZN15IORegistryEntry14removePropertyEPKc",
+        "__ZN15IORegistryEntry15detachFromChildEPS_PK15IORegistryPlane",
+        "__ZN15IORegistryEntry16detachFromParentEPS_PK15IORegistryPlane",
+        "__ZN15IORegistryEntry16setPropertyTableEP12OSDictionary",
+        "__ZN15IORegistryEntry17runPropertyActionEPFiP8OSObjectPvS2_S2_S2_ES1_S2_S2_S2_S2_",
+        "__ZN15IORegistryEntry7setNameEPK8OSSymbolPK15IORegistryPlane",
+        "__ZN15IORegistryEntry7setNameEPKcPK15IORegistryPlane",
+        "__ZN15IORegistryEntry9detachAllEPK15IORegistryPlane",
+        "__ZN15OSMetaClassBase12safeMetaCastEPKS_PK11OSMetaClass",
+        "__ZN15OSMetaClassBase8DispatchE5IORPC",
+        "__ZN17AppleARMBacklight10gMetaClassE",
+        "__ZN17AppleARMBacklightC2EPK11OSMetaClass",
+        "__ZN17AppleARMBacklightD2Ev",
+        "__ZN18IOTimerEventSource16timerEventSourceEjP8OSObjectPFvS1_PS_E",
+        "__ZN8OSNumber10withNumberEyj",
+        "__ZN8OSNumber9metaClassE",
+        "__ZN8OSObject4initEv",
+        "__ZN9IOService10adjustBusyEi",
+        "__ZN9IOService10handleOpenEPS_jPv",
+        "__ZN9IOService10joinPMtreeEPS_",
+        "__ZN9IOService11getPlatformEv",
+        "__ZN9IOService11handleCloseEPS_j",
+        "__ZN9IOService12didTerminateEPS_jPb",
+        "__ZN9IOService12getBusyStateEv",
+        "__ZN9IOService12getResourcesEv",
+        "__ZN9IOService12requestProbeEj",
+        "__ZN9IOService12tellChangeUpEm",
+        "__ZN9IOService12updateReportEP19IOReportChannelListjPvS2_",
+        "__ZN9IOService13addPowerChildEPS_",
+        "__ZN9IOService13askChangeDownEm",
+        "__ZN9IOService13matchLocationEPS_",
+        "__ZN9IOService13messageClientEjP8OSObjectPvm",
+        "__ZN9IOService13newUserClientEP4taskPvjP12OSDictionaryPP12IOUserClient",
+        "__ZN9IOService13newUserClientEP4taskPvjPP12IOUserClient",
+        "__ZN9IOService13setPowerStateEmPS_",
+        "__ZN9IOService13willTerminateEPS_j",
+        "__ZN9IOService14activityTickleEmm",
+        "__ZN9IOService14applyToClientsEPFvPS_PvES1_",
+        "__ZN9IOService14causeInterruptEi",
+        "__ZN9IOService14messageClientsEjPvm",
+        "__ZN9IOService14tellChangeDownEm",
+        "__ZN9IOService15comparePropertyEP12OSDictionaryPK8OSString",
+        "__ZN9IOService15comparePropertyEP12OSDictionaryPKc",
+        "__ZN9IOService15configureReportEP19IOReportChannelListjPvS2_",
+        "__ZN9IOService15enableInterruptEi",
+        "__ZN9IOService15errnoFromReturnEi",
+        "__ZN9IOService15getDeviceMemoryEv",
+        "__ZN9IOService15nextIdleTimeoutEyyj",
+        "__ZN9IOService15powerChangeDoneEm",
+        "__ZN9IOService15registerServiceEj",
+        "__ZN9IOService15serviceMatchingEPKcP12OSDictionary",
+        "__ZN9IOService15setDeviceMemoryEP7OSArray",
+        "__ZN9IOService15terminateClientEPS_j",
+        "__ZN9IOService16allowPowerChangeEm",
+        "__ZN9IOService16applyToProvidersEPFvPS_PvES1_",
+        "__ZN9IOService16disableInterruptEi",
+        "__ZN9IOService16getInterruptTypeEiPi",
+        "__ZN9IOService16registerInterestEPK8OSSymbolPFiPvS3_jPS_S3_mES3_S3_",
+        "__ZN9IOService16removePowerChildEP17IOPowerConnection",
+        "__ZN9IOService16requestTerminateEPS_j",
+        "__ZN9IOService16stringFromReturnEi",
+        "__ZN9IOService16tellNoChangeDownEm",
+        "__ZN9IOService17addNeededResourceEPKc",
+        "__ZN9IOService17applyToInterestedEPK8OSSymbolPFvP8OSObjectPvES5_",
+        "__ZN9IOService17cancelPowerChangeEm",
+        "__ZN9IOService17comparePropertiesEP12OSDictionaryP12OSCollection",
+        "__ZN9IOService17getAggressivenessEmPm",
+        "__ZN9IOService17registerInterruptEiP8OSObjectPFvS1_PvPS_iES2_",
+        "__ZN9IOService17setAggressivenessEmm",
+        "__ZN9IOService18lockForArbitrationEb",
+        "__ZN9IOService18matchPropertyTableEP12OSDictionary",
+        "__ZN9IOService18matchPropertyTableEP12OSDictionaryPi",
+        "__ZN9IOService18setIdleTimerPeriodEm",
+        "__ZN9IOService18systemWillShutdownEj",
+        "__ZN9IOService19copyMatchingServiceEP12OSDictionary",
+        "__ZN9IOService19registerPowerDriverEPS_P14IOPMPowerStatem",
+        "__ZN9IOService19unregisterInterruptEi",
+        "__ZN9IOService20callPlatformFunctionEPK8OSSymbolbPvS3_S3_S3_",
+        "__ZN9IOService20callPlatformFunctionEPKcbPvS2_S2_S2_",
+        "__ZN9IOService20getDeviceMemoryCountEv",
+        "__ZN9IOService20unlockForArbitrationEv",
+        "__ZN9IOService21powerStateDidChangeToEmmPS_",
+        "__ZN9IOService22copyClientWithCategoryEPK8OSSymbol",
+        "__ZN9IOService22powerStateWillChangeToEmmPS_",
+        "__ZN9IOService23acknowledgeNotificationEPvj",
+        "__ZN9IOService23requestPowerDomainStateEmP17IOPowerConnectionm",
+        "__ZN9IOService24getDeviceMemoryWithIndexEj",
+        "__ZN9IOService24mapDeviceMemoryWithIndexEjj",
+        "__ZN9IOService24powerStateForDomainStateEm",
+        "__ZN9IOService27maxCapabilityForDomainStateEm",
+        "__ZN9IOService31initialPowerStateForDomainStateEm",
+        "__ZN9IOService4initEP15IORegistryEntryPK15IORegistryPlane",
+        "__ZN9IOService4openEPS_jPv",
+        "__ZN9IOService5closeEPS_j",
+        "__ZN9IOService5probeEPS_Pi",
+        "__ZN9IOService6PMinitEv",
+        "__ZN9IOService6PMstopEv",
+        "__ZN9IOService6attachEPS_",
+        "__ZN9IOService6detachEPS_",
+        "__ZN9IOService7messageEjPS_Pv",
+        "__ZN9IOService8DispatchE5IORPC",
+        "__ZN9IOService8finalizeEj",
+        "__ZN9IOService9terminateEj",
+        "__ZNK11OSMetaClass12getMetaClassEv",
+        "__ZNK11OSMetaClass12taggedRetainEPKv",
+        "__ZNK11OSMetaClass13taggedReleaseEPKv",
+        "__ZNK11OSMetaClass13taggedReleaseEPKvi",
+        "__ZNK11OSMetaClass14getRetainCountEv",
+        "__ZNK11OSMetaClass19instanceConstructedEv",
+        "__ZNK11OSMetaClass6retainEv",
+        "__ZNK11OSMetaClass7releaseEi",
+        "__ZNK11OSMetaClass7releaseEv",
+        "__ZNK11OSMetaClass9serializeEP11OSSerialize",
+        "__ZNK15IORegistryEntry11compareNameEP8OSStringPS1_",
+        "__ZNK15IORegistryEntry11getLocationEPK15IORegistryPlane",
+        "__ZNK15IORegistryEntry11getPropertyEPK8OSString",
+        "__ZNK15IORegistryEntry11getPropertyEPK8OSStringPK15IORegistryPlanej",
+        "__ZNK15IORegistryEntry11getPropertyEPK8OSSymbol",
+        "__ZNK15IORegistryEntry11getPropertyEPK8OSSymbolPK15IORegistryPlanej",
+        "__ZNK15IORegistryEntry11getPropertyEPKc",
+        "__ZNK15IORegistryEntry11getPropertyEPKcPK15IORegistryPlanej",
+        "__ZNK15IORegistryEntry12compareNamesEP8OSObjectPP8OSString",
+        "__ZNK15IORegistryEntry12copyLocationEPK15IORegistryPlane",
+        "__ZNK15IORegistryEntry12copyPropertyEPK8OSString",
+        "__ZNK15IORegistryEntry12copyPropertyEPK8OSStringPK15IORegistryPlanej",
+        "__ZNK15IORegistryEntry12copyPropertyEPK8OSSymbol",
+        "__ZNK15IORegistryEntry12copyPropertyEPK8OSSymbolPK15IORegistryPlanej",
+        "__ZNK15IORegistryEntry12copyPropertyEPKc",
+        "__ZNK15IORegistryEntry12copyPropertyEPKcPK15IORegistryPlanej",
+        "__ZNK15IORegistryEntry13getChildEntryEPK15IORegistryPlane",
+        "__ZNK15IORegistryEntry14applyToParentsEPFvPS_PvES1_PK15IORegistryPlane",
+        "__ZNK15IORegistryEntry14copyChildEntryEPK15IORegistryPlane",
+        "__ZNK15IORegistryEntry14getParentEntryEPK15IORegistryPlane",
+        "__ZNK15IORegistryEntry15applyToChildrenEPFvPS_PvES1_PK15IORegistryPlane",
+        "__ZNK15IORegistryEntry15copyParentEntryEPK15IORegistryPlane",
+        "__ZNK15IORegistryEntry16getChildIteratorEPK15IORegistryPlane",
+        "__ZNK15IORegistryEntry16getPathComponentEPcPiPK15IORegistryPlane",
+        "__ZNK15IORegistryEntry17getParentIteratorEPK15IORegistryPlane",
+        "__ZNK15IORegistryEntry24dictionaryWithPropertiesEv",
+        "__ZNK15IORegistryEntry7getNameEPK15IORegistryPlane",
+        "__ZNK15IORegistryEntry7getPathEPcPiPK15IORegistryPlane",
+        "__ZNK15IORegistryEntry7inPlaneEPK15IORegistryPlane",
+        "__ZNK15IORegistryEntry7isChildEPS_PK15IORegistryPlaneb",
+        "__ZNK15IORegistryEntry8copyNameEPK15IORegistryPlane",
+        "__ZNK15IORegistryEntry8getDepthEPK15IORegistryPlane",
+        "__ZNK15IORegistryEntry8isParentEPS_PK15IORegistryPlaneb",
+        "__ZNK15OSMetaClassBase8metaCastEPKc",
+        "__ZNK15OSMetaClassBase9isEqualToEPKS_",
+        "__ZNK8OSObject12taggedRetainEPKv",
+        "__ZNK8OSObject13taggedReleaseEPKv",
+        "__ZNK8OSObject13taggedReleaseEPKvi",
+        "__ZNK8OSObject14getRetainCountEv",
+        "__ZNK8OSObject6retainEv",
+        "__ZNK8OSObject7releaseEi",
+        "__ZNK8OSObject7releaseEv",
+        "__ZNK8OSObject9serializeEP11OSSerialize",
+        "__ZNK9IOService11getProviderEv",
+        "__ZNK9IOService12handleIsOpenEPKS_",
+        "__ZNK9IOService17getClientIteratorEv",
+        "__ZNK9IOService19getProviderIteratorEv",
+        "__ZNK9IOService19serializePropertiesEP11OSSerialize",
+        "__ZNK9IOService21getOpenClientIteratorEv",
+        "__ZNK9IOService23getOpenProviderIteratorEv",
+        "__ZNK9IOService6isOpenEPKS_",
+        "__ZNK9IOService8getStateEv",
+        "__ZNK9IOService9getClientEv",
+        "__ZTV9IOService",
+        "___stack_chk_fail",
+        "___stack_chk_guard",
+        "___ubsan_handle_add_overflow_minimal",
+        "___ubsan_handle_mul_overflow_minimal",
+        "_bzero",
+        "_current_thread",
+        "_elden_aw99706_check_health",
+        "_elden_aw99706_inspect",
+        "_elden_aw99706_set_level",
+        "_elden_bl_platform_acquire",
+        "_elden_bl_platform_i2c10_read",
+        "_elden_bl_platform_i2c10_write",
+        "_elden_bl_platform_read",
+        "_elden_bl_platform_release",
+        "_elden_bl_platform_write",
+        "_elden_pd_power_observation",
+        "_elden_recovery_deadline_remaining",
+        "_elden_usb_log_putc",
+        "_g_kernel_kmod_info",
+        "_kernel_thread_start",
+        "_lck_mtx_lock",
+        "_lck_mtx_unlock",
+        "_lck_spin_lock",
+        "_lck_spin_unlock",
+        "_memmove",
+        "_ml_at_interrupt_context",
+        "_panic",
+        "_thread_deallocate",
+        "_thread_terminate",
+        "_vsnprintf"
+      ]
+    },
+    "Platform.o": {
+      "sha256": "5b08a7aa224996417939824fd8e67a6dd6e5ba0122d179599a32794848ae2222",
+      "imports": [
+        "_geni_i2c_poll",
+        "_geni_i2c_prepare",
+        "_geni_i2c_start_read",
+        "_geni_i2c_start_write",
+        "_geni_i2c_timeout"
+      ]
+    },
+    "CameraPower.o": {
+      "sha256": "a1d85d04ada27cba899c9314746ea92b18a737a246044d0a63c76fe1f5196d90",
+      "imports": []
+    },
+    "CameraPowerBus.o": {
+      "sha256": "c65f922edd8d502f4a697d50623d2f60c6aa24276c0d3a1d82dd37856c4adeb6",
+      "imports": [
+        "_elden_camera_i2c10_close",
+        "_elden_camera_i2c10_open",
+        "_elden_camera_i2c10_read",
+        "_elden_camera_i2c10_write",
+        "_elden_camera_power_open",
+        "_elden_camera_power_resource",
+        "_elden_camera_power_status",
+        "_elden_camera_power_stop"
+      ]
+    },
+    "CameraPowerBinding.o": {
+      "sha256": "4b52ffb7ca7709d86fe8dad628dbc01e68537f6ce5f56068b313c24df2292d9d",
+      "imports": [
+        "_elden_camera_capture_bind",
+        "_elden_camera_capture_probe",
+        "_elden_camera_capture_start",
+        "_elden_camera_capture_stop",
+        "_elden_camera_power_session_resource",
+        "_elden_camera_power_status"
+      ]
+    }
+  },
+  "changed_backlight_members": {
+    "GeniI2c.o": {
+      "before": "4a1ded683348fb3f95df2b56a75f4a50b376098de03699533b249dcb2958645d",
+      "after": "4a1ded683348fb3f95df2b56a75f4a50b376098de03699533b249dcb2958645d"
+    },
+    "Aw99706.o": {
+      "before": "c804f936fe8d66a7c83deb0777bf63d1e386e3b4b8a7b747817e887bb2f25c38",
+      "after": "c804f936fe8d66a7c83deb0777bf63d1e386e3b4b8a7b747817e887bb2f25c38"
+    },
+    "Platform.o": {
+      "before": "f97b3ad8851dd6c5c1501c83111345df06d1cde650b59e5d691da9e43ae2fd5b",
+      "after": "5b08a7aa224996417939824fd8e67a6dd6e5ba0122d179599a32794848ae2222"
+    },
+    "BacklightRuntime.late.o": {
+      "before": "aa0e586874b88429958cd447aee2cadcc5e8be7a8a1b407a62f8677c3fd49022",
+      "after": "ec0b77c17cb02020ef5c35d50e500447b2a57e1b7b105551f15f8f94bcf047e8"
+    },
+    "original-bindings.o": {
+      "before": "6061780a8268350ee90e990258f79c5e2f51673364f6225009f4cba50fa2c9dd",
+      "after": "6061780a8268350ee90e990258f79c5e2f51673364f6225009f4cba50fa2c9dd"
+    }
+  },
+  "backlight_ABI": {
+    "actual_slots": 169,
+    "overrides": [
+      0,
+      1,
+      7,
+      14,
+      21,
+      44,
+      86,
+      87,
+      111,
+      168
+    ],
+    "all_original_slot_targets_equal": true
+  },
+  "compile_warnings": {
+    "BacklightRuntime.late.o": 2,
+    "Platform.o": 0,
+    "CameraPower.o": 0,
+    "CameraPowerBus.o": 0,
+    "CameraPowerBinding.o": 0
+  },
+  "source_record_sha256": "66908c1f2f9c2ff420ece201255c133734112bec13793cc0f7a97bcce21e0020",
+  "host": {
+    "passed": true,
+    "power_output": "PASS camera WL2868C: 1037 scenarios / 118783 checks; physical register/owner peers modeled\n",
+    "shared_cases": {
+      "normal": "PASS shared camera I2C10 normal: 17 method + 640 actual GENI peer checks; physical power/IOKit modeled\n",
+      "race": "PASS shared camera I2C10 race: 18 method + 249440 actual GENI peer checks; physical power/IOKit modeled\n",
+      "close-first": "PASS shared camera I2C10 close-first: 14 method + 594 actual GENI peer checks; physical power/IOKit modeled\n",
+      "retirement-fail": "PASS shared camera I2C10 retirement-fail: 18 method + 640 actual GENI peer checks; physical power/IOKit modeled\n",
+      "release-error": "PASS shared camera I2C10 release-error: 12 method + 590 actual GENI peer checks; physical power/IOKit modeled\n",
+      "nack": "PASS shared camera I2C10 nack: 18 method + 618 actual GENI peer checks; physical power/IOKit modeled\n",
+      "cancel": "PASS shared camera I2C10 cancel: 18 method + 1624 actual GENI peer checks; physical power/IOKit modeled\n",
+      "abort": "PASS shared camera I2C10 abort: 14 method + 4568 actual GENI peer checks; physical power/IOKit modeled\n",
+      "allocation-fail": "PASS shared camera I2C10 allocation-fail: 4 method + 134 actual GENI peer checks; physical power/IOKit modeled\n",
+      "deny": "PASS shared camera I2C10 deny: 4 method + 134 actual GENI peer checks; physical power/IOKit modeled\n",
+      "irq": "PASS shared camera I2C10 irq: 4 method + 134 actual GENI peer checks; physical power/IOKit modeled\n",
+      "power-session": "PASS shared camera I2C10 power-session: 22 method + 8331 actual GENI peer checks; physical power/IOKit modeled\n",
+      "power-id-fail": "PASS shared camera I2C10 power-id-fail: 6 method + 158 actual GENI peer checks; physical power/IOKit modeled\n"
+    },
+    "original_backlight_output": "Backlight GENI ownership/transactions: 16289 checks passed\n",
+    "prepared_source_sha256": "66908c1f2f9c2ff420ece201255c133734112bec13793cc0f7a97bcce21e0020",
+    "one_original_GENI_engine": true,
+    "actual_shared_methods_and_WL_session": true,
+    "registers_ownership_IOKit_modeled": true,
+    "hardware": false
+  },
+  "powered_capture_stack": {
+    "passed": true,
+    "outputs": {
+      "normal": "PASS powered Gen4 front/rear capture normal: 52297 checks; actual sensor/CCI/native PHY-CSID-VFE binding; power/MMIO/GIC/DMA peers modeled\n",
+      "drain-fail": "PASS powered Gen4 front/rear capture drain-fail: 52406 checks; actual sensor/CCI/native PHY-CSID-VFE binding; power/MMIO/GIC/DMA peers modeled\n"
+    },
+    "actual_shared_WL_power_sensor_CCI_CAMSS_stack": true,
+    "test_derivation": {
+      "original_test_sha256": "b5a210f13facc3169587d3cd73771a4f288108fc3702639c1507d266522da6e7",
+      "transformations": [
+        "original capture test adds actual powered binding",
+        "actual original GENI shared peer",
+        "same original power owner and real front/rear states",
+        "inactive proof samples actual CCI sensor and real pipeline state; physical inputs modeled",
+        "board stub supplies only physical reset/MCLK; rail stub forbidden",
+        "real retained shared bus/WL session replaces fake supply callbacks",
+        "actual original sensor probe restores real WL refs/selectors",
+        "same retained sensor core",
+        "actual WL rails enabled before physical sensor",
+        "failed real receiver drain retains shared WL power",
+        "actual sensor receiver drain before last real WL ref withdrawal",
+        "idempotent capture cleanup",
+        "actual CCI final stop ledger",
+        "complete WL restoration and original deferred backlight release",
+        "execute actual shared methods with distinct original CCI/SE2 internal types",
+        "test-only type spelling avoids independent CCI/SE2 Context collision",
+        "use sole SE2 shared Context",
+        "actual brightness read/write shares engine with powered capture",
+        "actual observed no WL channel",
+        "accurate result label"
+      ],
+      "physical_clock_pins_MMIO_GIC_DMA_modeled": true,
+      "hardware": false
+    },
+    "physical_owners_MMIO_GIC_DMA_modeled": true,
+    "hardware": false
+  },
+  "board": {
+    "passed": true,
+    "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+    "checks": [
+      "WL2868C address0x2f",
+      "AW99706 shares original I2C10",
+      "global PMIC reset126 active-low; not owned sensor reset",
+      "original backlight HWEN88",
+      "original I2C10 SE2 base888000",
+      "LDO1 actual min/max",
+      "LDO1 exact linear selector79",
+      "LDO2 actual min/max",
+      "LDO2 exact linear selector99",
+      "LDO3 actual min/max",
+      "LDO3 exact linear selector164",
+      "LDO4 actual min/max",
+      "LDO4 exact linear selector165",
+      "LDO5 actual min/max",
+      "LDO5 exact linear selector163",
+      "LDO7 actual min/max",
+      "LDO7 exact linear selector37",
+      "lens owns LDO5 and ALSO shares LDO7",
+      "rear_camera: camera@56 exact rails",
+      "front_camera: camera@31 exact rails",
+      "actual enable/SYS bits",
+      "original150us enable/8mV voltage step",
+      "real ID0x82",
+      "GPIO8 qup2_se2 actual mux1",
+      "GPIO9 qup2_se2 actual mux1",
+      "GPIO92 cam_mclk actual mux1",
+      "GPIO93 cam_aon_mclk4 actual mux1",
+      "GPIO113 cci_i2c_sda actual mux1",
+      "GPIO114 cci_i2c_scl actual mux1",
+      "GPIO117 cci_i2c_sda actual mux1",
+      "GPIO118 cci_i2c_scl actual mux1",
+      "cci0_0_default: actual2mA/pullup",
+      "cci1_0_default: actual2mA/pullup",
+      "camcc exact controller mapping",
+      "camcc requires actual RPMh power votes",
+      "cambistmclkcc exact controller mapping",
+      "cambistmclkcc requires actual RPMh power votes",
+      "cam_cc_cci_0_clk exact shared RCG",
+      "cam_cc_cci_0_clk exact CBCR",
+      "cam_cc_cci_1_clk exact shared RCG",
+      "cam_cc_cci_1_clk exact CBCR",
+      "cam_bist_mclk_cc_mclk3_clk exact shared RCG",
+      "cam_bist_mclk_cc_mclk3_clk exact CBCR",
+      "cam_bist_mclk_cc_mclk4_clk exact shared RCG",
+      "cam_bist_mclk_cc_mclk4_clk exact CBCR",
+      "CCI37.5MHz/actual PLL0even600MHz/div16",
+      "CCI original parent select2",
+      "MCLK19.2MHz/originalXO parent0/div1",
+      "TITAN_TOP uses actual CFG GDSC status/retention",
+      "originaltopAHB branch/slowAHB parent",
+      "original RCG update500us bound",
+      "original CBCR200us bound"
+    ],
+    "check_count": 52,
+    "rails": {
+      "1": [
+        1128000,
+        79
+      ],
+      "2": [
+        1288000,
+        99
+      ],
+      "3": [
+        2816000,
+        164
+      ],
+      "4": [
+        2824000,
+        165
+      ],
+      "5": [
+        2808000,
+        163
+      ],
+      "7": [
+        1800000,
+        37
+      ]
+    },
+    "clocks": {
+      "cam_cc_cci_0_clk": {
+        "root": 70252,
+        "branch": 70276
+      },
+      "cam_cc_cci_1_clk": {
+        "root": 70280,
+        "branch": 70304
+      },
+      "cam_bist_mclk_cc_mclk3_clk": {
+        "root": 16468,
+        "branch": 16492
+      },
+      "cam_bist_mclk_cc_mclk4_clk": {
+        "root": 16496,
+        "branch": 16520
+      }
+    },
+    "shared_LDO7_consumers": [
+      "rear_sensor",
+      "front_sensor",
+      "rear_lens"
+    ],
+    "physical_qualification": false,
+    "hardware": false
+  },
+  "audit_jobs": [
+    {
+      "name": "runtime",
+      "exit": 0,
+      "output": "PASS actual native sensor runtime prepare/listener/SSC/observer/recovery link; old deadline/other owners retained\n"
+    },
+    {
+      "name": "pen",
+      "exit": 0,
+      "output": "PASS: linked pen HID inheritance,207slots/10overrides,late initialization and interfaces\n"
+    },
+    {
+      "name": "motion",
+      "exit": 0,
+      "output": "PASS: motion IOHIDDevice207slots/10overrides, original constructors/driver and late initialization\n"
+    },
+    {
+      "name": "haptics",
+      "exit": 0,
+      "output": "PASS: actual haptics service/client inheritance, late initializer, startup and stop→RTC→UFS calls\n"
+    },
+    {
+      "name": "sleep",
+      "exit": 0,
+      "output": "PASS: actual original-worker nonterminal pen/pause/IRQ/SPI/firmware/event-wait call edges; no fake power provider\n"
+    },
+    {
+      "name": "camera",
+      "exit": 0,
+      "output": "PASS: actual source sensor/native CCI call chain, unchanged owners/initializers and no automatic camera startup\n"
+    },
+    {
+      "name": "rtc",
+      "exit": 0,
+      "output": "PASS: one register-only RTC initializer, exact clock callbacks and RTC-before-UFS recovery call\n"
+    },
+    {
+      "name": "qrtr",
+      "exit": 0,
+      "output": "PASS actual sole QRTR/SSC provider/queue/flow edges, exact3members, original ABI/other components retained\n"
+    },
+    {
+      "name": "adsp",
+      "exit": 0,
+      "output": "PASS: actual original ADSP/GLINK close→sensor endpoint/RPC calls, two type consumers only, original IOBuffer ABI/other owners retained\n"
+    },
+    {
+      "name": "ssc",
+      "exit": 0,
+      "output": "PASS: actual SSC worker/strict parser/HID calls, no auto-start, motion→haptics→RTC→UFS recovery and existing archives retained\n"
+    },
+    {
+      "name": "memory",
+      "exit": 0,
+      "output": "PASS: actual original IOKit/PAR/cache/4K table→pack→RPC paths, unchanged owners/initializers; no new startup\n"
+    },
+    {
+      "name": "pack",
+      "exit": 0,
+      "output": "PASS: actual VFS/SHA256/cache→RPC calls, original owners/initializers retained, no unqualified startup\n"
+    },
+    {
+      "name": "rpc",
+      "exit": 0,
+      "output": "PASS: actual RPC-provider/core/file-service edges, no owner auto-start, original peripheral archives/initializer count retained\n"
+    },
+    {
+      "name": "pipeline",
+      "exit": 0,
+      "output": "PASS actual Gen4 native pipeline/CCI capture calls, original owners/Apple code, no auto camera start\n"
+    },
+    {
+      "name": "power",
+      "exit": 0,
+      "output": "PASS actual shared I2C10/WL/capture call bounds, genuine169slot backlight, original archives/recovery and absent automatic startup\n"
+    },
+    {
+      "name": "board",
+      "exit": 0,
+      "output": "PASS exact Gen4 shared PMIC/rail/lens/pins/clock topology: 52 checks\n"
+    },
+    {
+      "name": "power-tests",
+      "exit": 0,
+      "output": "PASS actual shared camera archive/function rejection tests: 19 checks\n"
+    },
+    {
+      "name": "prior-gates",
+      "exit": 0,
+      "output": "{\"passed\": true, \"checks\": 32, \"negative_gates\": true}\n"
+    },
+    {
+      "name": "prior-camera-gates",
+      "exit": 0,
+      "output": "PASS camera actual-function startup guards: 10 checks\n"
+    }
+  ],
+  "guard_checks": {
+    "power": 19,
+    "existing_peripheral": 32,
+    "previous_camera": 10
+  },
+  "private_archive": {
+    "file": "camera-power-offline.tar.gz",
+    "bytes": 22285036,
+    "sha256": "090e3cc3f64ab7928d2b2fc6547fde7c5ced39129c13f0c2a66e474324ba48b7",
+    "members": 362,
+    "members_verified": true,
+    "manifest_sha256": "21207fe859529203430f846032b224efb0623918a4014a7fd4f753b249747d9d"
+  },
+  "one_original_shared_GENI_owner": true,
+  "actual_powered_capture_binding": true,
+  "only_two_backlight_members_changed": true,
+  "real_clock_RPMh_pin_SMMU_DMA_owner_installed": false,
+  "real_camera_frames_OSservice_accepted": false,
+  "hardware_tested": false,
+  "automatic_startup_added": false,
+  "overall_five_part_goal_complete": false,
+  "legacy_flags": {
+    "abi_qualified": false,
+    "loadable": false,
+    "runtime_qualified": false,
+    "instruction_relocation_complete": false
+  }
+}
