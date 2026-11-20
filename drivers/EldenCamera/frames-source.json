@@ -1,0 +1,28 @@
+{
+  "repository": "https://github.com/rui12366B/UniXNU-gts7xlwifi",
+  "revision": "88b34f97100a01aab4ea6b86dc9c748b2114c382",
+  "OS": "iPadOS17.7.11/21H461",
+  "scope": "CMIO daemon shape and read-only IOKit service methodology; no SM8250 registers or firmware",
+  "files": {
+    "tools/t970camerad/t970camerad.m": {
+      "sha256": "fcd0ffc0e63e1ccc5b51182e9e8ad05f44f1b9065c7935eedc4ccb5eb3ae9e3b",
+      "bytes": 29589
+    },
+    "package/T970CameraService.cpp": {
+      "sha256": "e0c3615de0d59fec1ecb19f0593bb3831bf37fed8f04f7a9c43df06f5fe744bf",
+      "bytes": 4210
+    },
+    "package/T970CameraAbi.h": {
+      "sha256": "d5f06aa030576b3b497e174dcf4ac17110d53cd7afd838b3f51dc1fe3869a6c3",
+      "bytes": 3163
+    },
+    "scripts/build-t970camerad.py": {
+      "sha256": "d120093f7cef596ad88f95ae63e46e5deaff3a48cd445e8a79176d8f47e8b90a",
+      "bytes": 11864
+    },
+    "LICENSE": {
+      "sha256": "62706200ebfd0da6d8d8c94dd7e977f5b13df9b95eb12184f79e3d79c065e8cc",
+      "bytes": 3299
+    }
+  }
+}
