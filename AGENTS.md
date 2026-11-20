@@ -1,5 +1,29 @@
 # UniXNU elden — authoritative source repository
 
+CameraClocks20261120: exact6f97250e39DTclocks/21RCGs/37branches/4domains+
+23originalhelperbodies+realnativeMMIO/Board→sharedWL→sensorCCI/CAMSS linked.
+1815core1828185checks/3nativecases/composedbothcamera30170+drainfailure30336/
+133source+17startup+32priorguards pass;physicalPLL/RPMh/MMIO/GIC/DMA modeled.
+Three scalarOS17objects0compilewarnings/noinit;all originalarchives/recovery+
+Apple30/peripheral/ADSPQRTR/RTC/motion/Actuator/input-sleep audits retained.
+Read CAMERA-CLOCKS.md/clock-validation.json. Parentdbb7115/powercbad4612;
+Mac source17/host17/stack7/native6/kernel5 accepted. Sourcegraph all original
+CAMSS full/lite lists; explicit complete rateplan must matchsource BEFORE
+power/config/decode/RDI/peer check;no guessed PLL/default/FW/GCC source.
+Sameowner/epoch/sharedsleepable lock;actualcurrent/safeparents/RPMh/interface
+observed eachaccess,latchedreaderror/voidbranchhalt actualproof/RCG500us/
+branch200us/GDSC CFG2000us. Originalenabledstates/unknownchanges retained;
+failedrestore retainsrefs/mapsreset. TLMMonly7/11/92/93/113/114/117/118,
+GPIOoutlatchbeforeOE/eGPIO11/12/lastinputOEbeforelatchrestore. NoPMIC126/
+I2C8/9/HWEN88/IRQwrite. Actualboard sensorSTOP+physicalCSI/DMA→WLrestore/
+CCIstop→localclockwithdraw;BOTHretire beforeTFEdomains→top→receiverowner/
+WLsession→pins/controllers. Faultclosesstarts;onlyserializedboard_stop
+usesretainedcleanupCCIclock/STOPwrites,never revivesnormalready. Noouter
+board/nativeclockstart/tablet/actualPLL-RPMh/CSIrailowner/earlySMMUDMA/
+frames/ISP/OS17service;NEXT realsharedowners+cameraDMA/RAW10. OtherPencil/
+wakePM/motioncalUI/hapticcal/RTCpersistence missing. FivepartGoalactive;
+noauto merge/subagents/device,preservepeer/mainlineWifiQRTR/GPU/floor/recovery.
+
 CameraPower20261120: actual sharedI2C10/WL2868C→poweredcapture→originalsensor/
 CCI/CAMSSfullylinked,1037power118783/13sharedcases/originalbacklight16289/
 poweredfrontrear52297/drainfailure52406/52sourcechecks/19new+32old+10camera

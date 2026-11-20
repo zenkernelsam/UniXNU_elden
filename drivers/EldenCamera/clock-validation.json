@@ -1,0 +1,3895 @@
+{
+  "schema": 1,
+  "branch": "offline-peripheral-fixes",
+  "parent_commit": "dbb71153fe9afdc33afb31effcc995794bf3b678",
+  "kernel_sha256": "3f59efa02586b309b13518312e0445d81f472560d0bcd466dd9269a138b983eb",
+  "native_sha256": "12b7da547d86efb83b04610d7b105e5bb5afb5c235955bc4c9f84939e117ec41",
+  "parent_kernel_sha256": "cbad4612351729e17e991368d1ab2cbb79486836112593d1b4ce2a94430cb25a",
+  "source_files": {
+    ".gitattributes": "a0f4281866f0275dbd0e49facc7744626c95dfd3049febe9af73453bd1f04240",
+    "AGENTS.md": "a859a368347b808ec59c0887e61f34136fa9d010af7b2395fe52dfb369f71bdb",
+    "docs/peripherals/CAMERA-CLOCKS.md": "fd47ed42246fb24c59d043f72888bbea785c4320a5ed760a477eabc800e6b37f",
+    "docs/peripherals/MAINLINE-HANDOFF-PROMPT.md": "a97a50dcb2b5cb17c587729fc1405b324057f95b288fc5831e5471f72dd3fc4a",
+    "docs/peripherals/STATUS.md": "db18aa244c7e0a9cd3a9b83af7bd64c241128a5ab027ad6eee673b7bf0d9366f",
+    "drivers/EldenCamera/Board.c": "69771fc9b6d6693e5f92b023d487c862eec7d69bd6301f2848d2ecc98454d2b7",
+    "drivers/EldenCamera/Board.h": "d74ddcccafef80d2a9d969a9b7627fca22ad316b2eb59b1d217b5afd26e6767d",
+    "drivers/EldenCamera/BoardStackSource.py": "66263596065fb462cee5b03674a7960dc717c5160062b2321215ebcdb9975655",
+    "drivers/EldenCamera/Clock.c": "4b1abb5af5c72af803589fd858e042896f989f4a11afea0fc00397f8defda827",
+    "drivers/EldenCamera/Clock.h": "9f10c024fbee26073960fe23948029dfdc4b1b6df7f80ebe8fa07e01b639c371",
+    "drivers/EldenCamera/ClockSource.py": "8af60ceb30d5b100fc96356901d4de5b3e59171e2282fb3290e227ddbdca09e3",
+    "drivers/EldenCamera/NativeClockMethods.inc": "7762a23fecd52b98bccf9e00da9a86741982c3808c0ac3a64308fb0d37eb9251",
+    "drivers/EldenCamera/NativeClocks.cpp": "d266edd7c3ffcc6f1dca8229f8fb0bc1d9bdbf8165a156f8a775bbf8c066f53e",
+    "drivers/EldenCamera/NativeClocks.h": "07c2a96abed448f0afcd99de29bd18cc17fcca5c0cd20838afe06a891a572ee5",
+    "drivers/EldenCamera/TestClocks.c": "42739ccffb1f0395e2d0155c19d5b3cb5f5860caa6bfc1480b379bb2ea58a8aa",
+    "drivers/EldenCamera/TestNativeClocks.cpp": "acd35a59f7cba50657646acafa0da202178b2a9791aa593cab61a6c4f4882a3e",
+    "drivers/EldenCamera/clock-source.json": "c3c1649a49d0bff48facf590089c3cbfa3133262769da664075133168aefca83",
+    "drivers/EldenCamera/upstream/clk-rcg.h": "128e149a3f94d356a16e294e0ba406452e2a47af0443396cc2ff078da7731e1d",
+    "drivers/EldenCamera/upstream/clk-regmap.c": "2438f057d67c3cd0229e710494dcf0a381bc69021591fe9cb89219734b8e633d",
+    "drivers/EldenCamera/upstream/clk-regmap.h": "3c8dab9af916ecc46ed515533eb2535222a2ecd172cb9f0abfcbe16ca726735a",
+    "drivers/EldenCamera/upstream/common.c": "ea4541695d6567d8a7e3b3ff450c50353c278a44777fc6565f98616a28f30949",
+    "drivers/EldenCamera/upstream/common.h": "9a2f6db86a796403b600f7e0f3a5b3b6a8cfc8f84feccf2d1ec7eeee68f9bc4a",
+    "drivers/EldenCamera/upstream/gdsc.c": "a7ba3aad9fe83609a9562eb8f4153ee9b91d9108130e7a4d1439437b5501b791",
+    "drivers/EldenCamera/upstream/gdsc.h": "c33696adccfcd38a78baf39dbcea179e1f7d3b13c5d3095e822065477e30c888",
+    "drivers/EldenCamera/upstream/pinctrl-msm.c": "d6638c03c09f5c0b24d9e343e19fb04ad7d483ec4f1c5fdabde4efc3570d59f8",
+    "drivers/EldenCamera/upstream/pinctrl-msm.h": "68e7845e7f785a84c476b03b347b09fbf6789de991f4d0684b81d2af6354d814",
+    "tools/audit_camera_cci_link.py": "2474ac0faa79f19ed1ef9a1d614a9c6c8183b59855cd349360088eedb18b05d1",
+    "tools/audit_camera_clock_sources.py": "300a9542a03dae486c4636d093a88dbb077bee29809947fbe06d2a62b542fee3",
+    "tools/audit_camera_clocks_link.py": "4f09c6282fffdc2706166324bbad48e420e73eef5646d090f84386033b2ba837",
+    "tools/audit_camera_pipeline_link.py": "cd963f39641c7f891c457f4b89d39a34bdd959b357b47cf42cf8d64e080b0fb4",
+    "tools/audit_camera_power_link.py": "034d11ca355ab507f909b42c941ddacb6b020013c4fad70eb83260052a4d21cb",
+    "tools/build_camera_clocks.py": "0fc4ae6453f5fc114b6b6d9c512b0421566d44fb2b13231501fec00801a26c6a",
+    "tools/camera_startup_audit.py": "67f0d0907aeda2b5b512e005944793e00434ab403347220fdec0e7b6322f1b4d",
+    "tools/link_camera_clocks.py": "ea7d7a063c9ab0a38240be92279ea95017cf014a9643180485c394507e371aa4",
+    "tools/prepare_camera_clocks.py": "294ee8ef4be61fd80e90b657826e37e10b712696065b2aa4b4ee41fef3929e72",
+    "tools/test_camera_board_stack.py": "e74166b871b14334da34644623c6befc766b49ac98b35050d28f00e6eea033d2",
+    "tools/test_camera_clocks.py": "e415c31ef391ac4375f4a0a88ce08d423eaf1cd107d5c14c081ef657befe58f8",
+    "tools/test_camera_clocks_audit.py": "bada2a21584f60c63862ae00d15be21c5dd77172708001846e57fe6ed6f6de82"
+  },
+  "source_manifest": {
+    "repository": "https://github.com/h0cheung/tb322fc-linux-kernel",
+    "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+    "board": "TB322FC/SM8750",
+    "files": [
+      {
+        "file": "wl2868c-regulator.c",
+        "path": "drivers/regulator/wl2868c-regulator.c",
+        "bytes": 3905,
+        "sha256": "26806c52fa5d4d5e56cf436a57a8fcc1d8b055ae4f65d3e2970d4cfbb1880136"
+      },
+      {
+        "file": "helpers.c",
+        "path": "drivers/regulator/helpers.c",
+        "bytes": 26780,
+        "sha256": "860f6e07370505cf909331d120390a3f622056af8d1c197dac795b1f5f9fa981"
+      },
+      {
+        "file": "clk-rcg2.c",
+        "path": "drivers/clk/qcom/clk-rcg2.c",
+        "bytes": 46477,
+        "sha256": "4a1c8f29e2d4a80ef14f5c58f14de7a3576ea591c84f091b59cf5257e303f947"
+      },
+      {
+        "file": "clk-branch.c",
+        "path": "drivers/clk/qcom/clk-branch.c",
+        "bytes": 4947,
+        "sha256": "d29259eb77a5d1d6a07adf4aa835588f8e04d1fa3c14be2b7d4162cce737abfa"
+      },
+      {
+        "file": "clk-branch.h",
+        "path": "drivers/clk/qcom/clk-branch.h",
+        "bytes": 3986,
+        "sha256": "bac7dcf51a0da5b27eaa0d4dc276f540fec80013bd4862cfbbc115a50161ef72"
+      },
+      {
+        "file": "camcc-sm8750.c",
+        "path": "drivers/clk/qcom/camcc-sm8750.c",
+        "bytes": 73195,
+        "sha256": "191c1754ca0f1408cdd9e2e1c9caaa290b5f707633f7bb84e443dfde08f29b93"
+      },
+      {
+        "file": "cambistmclkcc-sm8750.c",
+        "path": "drivers/clk/qcom/cambistmclkcc-sm8750.c",
+        "bytes": 13296,
+        "sha256": "b9368cf617af714f47273b24f674677213a2b6189cf51ff02b61b9e7b7568dfa"
+      },
+      {
+        "file": "pinctrl-sm8750.c",
+        "path": "drivers/pinctrl/qcom/pinctrl-sm8750.c",
+        "bytes": 55646,
+        "sha256": "9764b4a28ee8189dc3c48b1657ccf8ec8c000733403db381edcce17ce15e32fe"
+      },
+      {
+        "file": "gdsc.c",
+        "path": "drivers/clk/qcom/gdsc.c",
+        "bytes": 18545,
+        "sha256": "a7ba3aad9fe83609a9562eb8f4153ee9b91d9108130e7a4d1439437b5501b791"
+      },
+      {
+        "file": "gdsc.h",
+        "path": "drivers/clk/qcom/gdsc.h",
+        "bytes": 3161,
+        "sha256": "c33696adccfcd38a78baf39dbcea179e1f7d3b13c5d3095e822065477e30c888"
+      },
+      {
+        "file": "clk-regmap.c",
+        "path": "drivers/clk/qcom/clk-regmap.c",
+        "bytes": 2828,
+        "sha256": "2438f057d67c3cd0229e710494dcf0a381bc69021591fe9cb89219734b8e633d"
+      },
+      {
+        "file": "clk-regmap.h",
+        "path": "drivers/clk/qcom/clk-regmap.h",
+        "bytes": 1151,
+        "sha256": "3c8dab9af916ecc46ed515533eb2535222a2ecd172cb9f0abfcbe16ca726735a"
+      },
+      {
+        "file": "clk-rcg.h",
+        "path": "drivers/clk/qcom/clk-rcg.h",
+        "bytes": 5525,
+        "sha256": "128e149a3f94d356a16e294e0ba406452e2a47af0443396cc2ff078da7731e1d"
+      },
+      {
+        "file": "common.c",
+        "path": "drivers/clk/qcom/common.c",
+        "bytes": 10838,
+        "sha256": "ea4541695d6567d8a7e3b3ff450c50353c278a44777fc6565f98616a28f30949"
+      },
+      {
+        "file": "common.h",
+        "path": "drivers/clk/qcom/common.h",
+        "bytes": 2674,
+        "sha256": "9a2f6db86a796403b600f7e0f3a5b3b6a8cfc8f84feccf2d1ec7eeee68f9bc4a"
+      },
+      {
+        "file": "pinctrl-msm.c",
+        "path": "drivers/pinctrl/qcom/pinctrl-msm.c",
+        "bytes": 43920,
+        "sha256": "d6638c03c09f5c0b24d9e343e19fb04ad7d483ec4f1c5fdabde4efc3570d59f8"
+      },
+      {
+        "file": "pinctrl-msm.h",
+        "path": "drivers/pinctrl/qcom/pinctrl-msm.h",
+        "bytes": 7670,
+        "sha256": "68e7845e7f785a84c476b03b347b09fbf6789de991f4d0684b81d2af6354d814"
+      },
+      {
+        "file": "sm8750.dtsi",
+        "path": "arch/arm64/boot/dts/qcom/sm8750.dtsi",
+        "bytes": 191275,
+        "sha256": "cbf8bad5006ec6d2c3d654aeec94bb0f08be235e03804164a2252e5b65a4e175"
+      },
+      {
+        "file": "sm8750-lenovo-elden.dts",
+        "path": "arch/arm64/boot/dts/qcom/sm8750-lenovo-elden.dts",
+        "bytes": 54331,
+        "sha256": "0a4361f3f2225befd954dd5420216f357bfa8a68294c28c895ec2478ebea3ba3"
+      },
+      {
+        "file": "camss.c",
+        "path": "drivers/media/platform/qcom/camss/camss.c",
+        "bytes": 147035,
+        "sha256": "62f3bbc5c393a26ef6488e8c0b2eed19bdcb61db1dd7ac61982b21260554704f"
+      }
+    ],
+    "hardware": false
+  },
+  "accepted_mac_outputs": "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-clocks-20261120/{source17,host17,stack7,native6,kernel5}",
+  "native_objects": {
+    "CameraClocks.o": {
+      "sha256": "0284c27ad052f4f45165df1fa2adaac144c5e57725c4d4d6663d12c9b4a916b8",
+      "imports": [
+        "_bzero",
+        "_memcpy"
+      ]
+    },
+    "CameraBoard.o": {
+      "sha256": "016130d5cb9207f21d08e23c902b3a2add939e490a8e301e132b8e5ebcfb5585",
+      "imports": [
+        "_elden_camera_clock_rate_supported",
+        "_elden_camera_native_cci_open",
+        "_elden_camera_native_cci_stop",
+        "_elden_camera_native_clock",
+        "_elden_camera_native_clock_observe_cleanup",
+        "_elden_camera_native_clocks_status",
+        "_elden_camera_native_clocks_stop",
+        "_elden_camera_native_domain",
+        "_elden_camera_native_pipeline_open",
+        "_elden_camera_native_pipeline_stop",
+        "_elden_camera_native_sensor_reset",
+        "_elden_camera_pipeline_resources",
+        "_elden_camera_power_session_stop",
+        "_elden_camera_powered_capture_bind",
+        "_elden_camera_powered_capture_probe",
+        "_elden_camera_powered_capture_start",
+        "_elden_camera_powered_capture_stop"
+      ]
+    },
+    "NativeClocks.o": {
+      "sha256": "236b3013fd92a7439b2285e01559e874b90a0ea01d74ffbc07a876b019e82b95",
+      "imports": [
+        "_IODelay",
+        "_IOLockAlloc",
+        "_IOMalloc_internal",
+        "_KHEAP_DEFAULT",
+        "__ZN14IODeviceMemory9withRangeEyy",
+        "_elden_camera_clock_observe",
+        "_elden_camera_clock_observe_cleanup",
+        "_elden_camera_clock_register_allowed",
+        "_elden_camera_clock_resource",
+        "_elden_camera_clocks_open",
+        "_elden_camera_clocks_status",
+        "_elden_camera_clocks_stop",
+        "_elden_camera_domain_resource",
+        "_elden_camera_pins_prepare",
+        "_elden_camera_sensor_reset",
+        "_lck_mtx_lock",
+        "_lck_mtx_unlock",
+        "_ml_at_interrupt_context"
+      ]
+    }
+  },
+  "compile_warnings": {
+    "CameraClocks.o": 0,
+    "CameraBoard.o": 0,
+    "NativeClocks.o": 0
+  },
+  "host": {
+    "passed": true,
+    "host_output": "PASS actual Gen4 camera clock/domain/pin core: 1815 scenarios/1828185 checks; physical provider/MMIO peers modeled\n",
+    "object_sha256": "0284c27ad052f4f45165df1fa2adaac144c5e57725c4d4d6663d12c9b4a916b8",
+    "imports": [
+      "_bzero",
+      "_memcpy"
+    ],
+    "actual_native_method_cases": {
+      "normal": "PASS native camera clocks normal: 18 checks; original core/adapter, MMIO/IOKit/physicalowners modeled\n",
+      "map-fail": "PASS native camera clocks map-fail: 4 checks; original core/adapter, MMIO/IOKit/physicalowners modeled\n",
+      "irq": "PASS native camera clocks irq: 2 checks; original core/adapter, MMIO/IOKit/physicalowners modeled\n"
+    },
+    "prepared_sha256": "56ef17edd64184642247cfc9c2ad8e9e3c09598509ec6d63e8da2568f71fab13",
+    "actual_original_regmap_RCG_branch_GDSC_pin_methods": true,
+    "physical_parents_RPMh_regmap_owner_modeled": true,
+    "hardware": false
+  },
+  "actual_board_clock_stack": {
+    "passed": true,
+    "outputs": {
+      "normal": "PASS actual board-clock Gen4 front/rear capture normal: 30170 checks; actual sensor/CCI/native PHY-CSID-VFE binding; power/MMIO/GIC/DMA peers modeled\n",
+      "drain-fail": "PASS actual board-clock Gen4 front/rear capture drain-fail: 30336 checks; actual sensor/CCI/native PHY-CSID-VFE binding; power/MMIO/GIC/DMA peers modeled\n"
+    },
+    "derivation": {
+      "parent_test_sha256": "56137c015154e5e68d51fecbfaf66a5b874cd1a28beff6865f4e560d7e83a7dc",
+      "original_power_stack": {
+        "original_test_sha256": "b5a210f13facc3169587d3cd73771a4f288108fc3702639c1507d266522da6e7",
+        "transformations": [
+          "original capture test adds actual powered binding",
+          "actual original GENI shared peer",
+          "same original power owner and real front/rear states",
+          "inactive proof samples actual CCI sensor and real pipeline state; physical inputs modeled",
+          "board stub supplies only physical reset/MCLK; rail stub forbidden",
+          "real retained shared bus/WL session replaces fake supply callbacks",
+          "actual original sensor probe restores real WL refs/selectors",
+          "same retained sensor core",
+          "actual WL rails enabled before physical sensor",
+          "failed real receiver drain retains shared WL power",
+          "actual sensor receiver drain before last real WL ref withdrawal",
+          "idempotent capture cleanup",
+          "actual CCI final stop ledger",
+          "complete WL restoration and original deferred backlight release",
+          "execute actual shared methods with distinct original CCI/SE2 internal types",
+          "test-only type spelling avoids independent CCI/SE2 Context collision",
+          "use sole SE2 shared Context",
+          "actual brightness read/write shares engine with powered capture",
+          "actual observed no WL channel",
+          "accurate result label"
+        ],
+        "physical_clock_pins_MMIO_GIC_DMA_modeled": true,
+        "hardware": false
+      },
+      "transformations": [
+        "actual board/native clocks",
+        "independent clock HW peer with actual original methods",
+        "one clock progression for actual core and CSI peers",
+        "actual native clock methods alongside original CCI/receiver",
+        "WL inactivity samples actual clock/reset peer, not fake sensor state",
+        "no fake physical reset/MCLK callback remains",
+        "board admission uses actual original entry provider",
+        "board carries real delay",
+        "actual Board owns CCI/receiver provider",
+        "board holds real powered captures",
+        "real native graph then actual camera board binding",
+        "real board prepare owns CCI opening",
+        "source-supported explicit HOSTONLY rate plan, actual board/CCI/receiver",
+        "no duplicate capture binding",
+        "real board capture storage",
+        "actual board start wrapper",
+        "real board cleanup wrapper",
+        "real board cleanup wrapper",
+        "real board cleanup wrapper",
+        "actual capture/CCI stop ledger",
+        "real both-camera/clock/pin/WL shutdown",
+        "HOSTONLY teardown of retained test allocations",
+        "both targets prepare before either stream/error closes admission",
+        "both real streams run before fault/peer-safe stop and shared shutdown",
+        "own DVDD/AVDD off while peer/LDO7 supply stays live",
+        "precise result label"
+      ],
+      "physical_PLL_RPMh_MMIO_IRQ_DMA_peers_modeled": true,
+      "hardware": false
+    },
+    "actual_native_clocks_board_WL_sensor_CCI_CAMSS": true,
+    "physical_PLL_RPMh_MMIO_IRQ_DMA_peers_modeled": true,
+    "hardware": false
+  },
+  "source_audit": {
+    "passed": true,
+    "checks": [
+      "exact Gen4/SM8750 commit",
+      "complete source graph counts",
+      "original DT branch/root camnoc_nrt_axi",
+      "original DT branch/root camnoc_rt_axi",
+      "original DT branch/root cpas_ahb",
+      "original DT branch/root cpas_fast_ahb",
+      "original DT branch/root cpas_vfe0",
+      "original DT branch/root cpas_vfe1",
+      "original DT branch/root cpas_vfe2",
+      "original DT branch/root cpas_vfe_lite",
+      "original DT branch/root csid",
+      "original DT branch/root csid_csiphy_rx",
+      "original DT branch/root csiphy0",
+      "original DT branch/root csiphy0_timer",
+      "original DT branch/root csiphy1",
+      "original DT branch/root csiphy1_timer",
+      "original DT branch/root csiphy2",
+      "original DT branch/root csiphy2_timer",
+      "original DT branch/root csiphy3",
+      "original DT branch/root csiphy3_timer",
+      "original DT branch/root csiphy4",
+      "original DT branch/root csiphy4_timer",
+      "original DT branch/root csiphy5",
+      "original DT branch/root csiphy5_timer",
+      "original DT branch/root vfe0",
+      "original DT branch/root vfe0_fast_ahb",
+      "original DT branch/root vfe1",
+      "original DT branch/root vfe1_fast_ahb",
+      "original DT branch/root vfe2",
+      "original DT branch/root vfe2_fast_ahb",
+      "original DT branch/root vfe_lite",
+      "original DT branch/root vfe_lite_ahb",
+      "original DT branch/root vfe_lite_cphy_rx",
+      "original DT branch/root vfe_lite_csid",
+      "original DT branch/root qdss_debug_xo",
+      "original DT branch/root cci0",
+      "original DT branch/root cci1",
+      "original DT branch/root mclk3",
+      "original DT branch/root mclk4",
+      "cam_cc_camnoc_rt_axi_clk_src/19200000 exact F encoding",
+      "cam_cc_camnoc_rt_axi_clk_src/200000000 exact F encoding",
+      "cam_cc_camnoc_rt_axi_clk_src/300000000 exact F encoding",
+      "cam_cc_camnoc_rt_axi_clk_src/400000000 exact F encoding",
+      "cam_cc_slow_ahb_clk_src/56470588 exact F encoding",
+      "cam_cc_slow_ahb_clk_src/80000000 exact F encoding",
+      "cam_cc_fast_ahb_clk_src/213333333 exact F encoding",
+      "cam_cc_fast_ahb_clk_src/300000000 exact F encoding",
+      "cam_cc_fast_ahb_clk_src/400000000 exact F encoding",
+      "cam_cc_tfe_0_clk_src/360280000 exact F encoding",
+      "cam_cc_tfe_0_clk_src/480000000 exact F encoding",
+      "cam_cc_tfe_0_clk_src/630000000 exact F encoding",
+      "cam_cc_tfe_0_clk_src/716000000 exact F encoding",
+      "cam_cc_tfe_0_clk_src/833000000 exact F encoding",
+      "cam_cc_tfe_1_clk_src/360280000 exact F encoding",
+      "cam_cc_tfe_1_clk_src/480000000 exact F encoding",
+      "cam_cc_tfe_1_clk_src/630000000 exact F encoding",
+      "cam_cc_tfe_1_clk_src/716000000 exact F encoding",
+      "cam_cc_tfe_1_clk_src/833000000 exact F encoding",
+      "cam_cc_tfe_2_clk_src/360280000 exact F encoding",
+      "cam_cc_tfe_2_clk_src/480000000 exact F encoding",
+      "cam_cc_tfe_2_clk_src/630000000 exact F encoding",
+      "cam_cc_tfe_2_clk_src/716000000 exact F encoding",
+      "cam_cc_tfe_2_clk_src/833000000 exact F encoding",
+      "cam_cc_ife_lite_clk_src/266666667 exact F encoding",
+      "cam_cc_ife_lite_clk_src/400000000 exact F encoding",
+      "cam_cc_ife_lite_clk_src/480000000 exact F encoding",
+      "cam_cc_csid_clk_src/266666667 exact F encoding",
+      "cam_cc_csid_clk_src/400000000 exact F encoding",
+      "cam_cc_csid_clk_src/480000000 exact F encoding",
+      "cam_cc_cphy_rx_clk_src/266666667 exact F encoding",
+      "cam_cc_cphy_rx_clk_src/400000000 exact F encoding",
+      "cam_cc_cphy_rx_clk_src/480000000 exact F encoding",
+      "cam_cc_csi0phytimer_clk_src/400000000 exact F encoding",
+      "cam_cc_csi1phytimer_clk_src/400000000 exact F encoding",
+      "cam_cc_csi2phytimer_clk_src/400000000 exact F encoding",
+      "cam_cc_csi3phytimer_clk_src/400000000 exact F encoding",
+      "cam_cc_csi4phytimer_clk_src/400000000 exact F encoding",
+      "cam_cc_csi5phytimer_clk_src/400000000 exact F encoding",
+      "cam_cc_ife_lite_csid_clk_src/266666667 exact F encoding",
+      "cam_cc_ife_lite_csid_clk_src/400000000 exact F encoding",
+      "cam_cc_ife_lite_csid_clk_src/480000000 exact F encoding",
+      "cam_cc_xo_clk_src/19200000 exact F encoding",
+      "cam_cc_cci_0_clk_src/37500000 exact F encoding",
+      "cam_cc_cci_1_clk_src/37500000 exact F encoding",
+      "cam_bist_mclk_cc_mclk3_clk_src/12000000 exact F encoding",
+      "cam_bist_mclk_cc_mclk3_clk_src/19200000 exact F encoding",
+      "cam_bist_mclk_cc_mclk3_clk_src/24000000 exact F encoding",
+      "cam_bist_mclk_cc_mclk3_clk_src/68571429 exact F encoding",
+      "cam_bist_mclk_cc_mclk4_clk_src/12000000 exact F encoding",
+      "cam_bist_mclk_cc_mclk4_clk_src/19200000 exact F encoding",
+      "cam_bist_mclk_cc_mclk4_clk_src/24000000 exact F encoding",
+      "cam_bist_mclk_cc_mclk4_clk_src/68571429 exact F encoding",
+      "actual TLMM mapping",
+      "actual eGPIO readback/claim fields",
+      "actual pin config layout",
+      "original AP eGPIO ownership",
+      "actual2mA/pullup encoding",
+      "actual GPIO latch-before-OE ordering",
+      "actual CFG domain power bits",
+      "domain status uses CFG rather than genericbit31",
+      "actual23 original helper bodies",
+      "actual function body hash static int clk_rcg2_is_enabled(",
+      "actual function body hash static int update_config(",
+      "actual function body hash static int __clk_rcg2_configure_parent(",
+      "actual function body hash static int __clk_rcg2_configure_mnd(",
+      "actual function body hash static int __clk_rcg2_configure(",
+      "actual function body hash static int clk_rcg2_set_force_enable(",
+      "actual function body hash static int clk_rcg2_clear_force_enable(",
+      "actual function body hash static int clk_rcg2_shared_enable(",
+      "actual function body hash static void clk_rcg2_shared_disable(",
+      "actual function body hash int qcom_find_src_index(",
+      "actual function body hash int clk_enable_regmap(",
+      "actual function body hash void clk_disable_regmap(",
+      "actual function body hash static bool clk_branch_in_hwcg_mode(",
+      "actual function body hash static bool clk_branch2_check_halt(",
+      "actual function body hash static int clk_branch_wait(",
+      "actual function body hash static int clk_branch_toggle(",
+      "actual function body hash static int clk_branch2_enable(",
+      "actual function body hash static void clk_branch2_disable(",
+      "actual function body hash static int gdsc_check_status(",
+      "actual function body hash static int gdsc_update_collapse_bit(",
+      "actual function body hash static void gdsc_retain_ff_on(",
+      "actual function body hash static int msm_gpio_direction_output(",
+      "actual function body hash static int msm_gpio_set(",
+      "phy exact per-instance clock/rate plans",
+      "csid exact per-instance clock/rate plans",
+      "vfe exact per-instance clock/rate plans",
+      "actual board requires explicit complete rates",
+      "source-supported complete rate plan before physical acquire",
+      "actual full mode/RDI preflight before power",
+      "only original serialized STOP uses cleanup clocks",
+      "actual attempted ownership and settled domain snapshots",
+      "actual halt proof after original void disable"
+    ],
+    "check_count": 133,
+    "source_commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+    "graph": {
+      "clock_ids": [
+        {
+          "name": "camnoc_nrt_axi",
+          "constant": "CAM_CC_CAMNOC_NRT_AXI_CLK",
+          "controller": "camcc",
+          "branch": 0,
+          "root": 0
+        },
+        {
+          "name": "camnoc_rt_axi",
+          "constant": "CAM_CC_CAMNOC_RT_AXI_CLK",
+          "controller": "camcc",
+          "branch": 1,
+          "root": 0
+        },
+        {
+          "name": "cpas_ahb",
+          "constant": "CAM_CC_CAM_TOP_AHB_CLK",
+          "controller": "camcc",
+          "branch": 2,
+          "root": 1
+        },
+        {
+          "name": "cpas_fast_ahb",
+          "constant": "CAM_CC_CAM_TOP_FAST_AHB_CLK",
+          "controller": "camcc",
+          "branch": 3,
+          "root": 2
+        },
+        {
+          "name": "cpas_vfe0",
+          "constant": "CAM_CC_CAMNOC_RT_TFE_0_MAIN_CLK",
+          "controller": "camcc",
+          "branch": 4,
+          "root": 3
+        },
+        {
+          "name": "cpas_vfe1",
+          "constant": "CAM_CC_CAMNOC_RT_TFE_1_MAIN_CLK",
+          "controller": "camcc",
+          "branch": 5,
+          "root": 4
+        },
+        {
+          "name": "cpas_vfe2",
+          "constant": "CAM_CC_CAMNOC_RT_TFE_2_MAIN_CLK",
+          "controller": "camcc",
+          "branch": 6,
+          "root": 5
+        },
+        {
+          "name": "cpas_vfe_lite",
+          "constant": "CAM_CC_CAMNOC_RT_IFE_LITE_CLK",
+          "controller": "camcc",
+          "branch": 7,
+          "root": 6
+        },
+        {
+          "name": "csid",
+          "constant": "CAM_CC_CSID_CLK",
+          "controller": "camcc",
+          "branch": 8,
+          "root": 7
+        },
+        {
+          "name": "csid_csiphy_rx",
+          "constant": "CAM_CC_CSID_CSIPHY_RX_CLK",
+          "controller": "camcc",
+          "branch": 9,
+          "root": 8
+        },
+        {
+          "name": "csiphy0",
+          "constant": "CAM_CC_CSIPHY0_CLK",
+          "controller": "camcc",
+          "branch": 10,
+          "root": 8
+        },
+        {
+          "name": "csiphy0_timer",
+          "constant": "CAM_CC_CSI0PHYTIMER_CLK",
+          "controller": "camcc",
+          "branch": 11,
+          "root": 9
+        },
+        {
+          "name": "csiphy1",
+          "constant": "CAM_CC_CSIPHY1_CLK",
+          "controller": "camcc",
+          "branch": 12,
+          "root": 8
+        },
+        {
+          "name": "csiphy1_timer",
+          "constant": "CAM_CC_CSI1PHYTIMER_CLK",
+          "controller": "camcc",
+          "branch": 13,
+          "root": 10
+        },
+        {
+          "name": "csiphy2",
+          "constant": "CAM_CC_CSIPHY2_CLK",
+          "controller": "camcc",
+          "branch": 14,
+          "root": 8
+        },
+        {
+          "name": "csiphy2_timer",
+          "constant": "CAM_CC_CSI2PHYTIMER_CLK",
+          "controller": "camcc",
+          "branch": 15,
+          "root": 11
+        },
+        {
+          "name": "csiphy3",
+          "constant": "CAM_CC_CSIPHY3_CLK",
+          "controller": "camcc",
+          "branch": 16,
+          "root": 8
+        },
+        {
+          "name": "csiphy3_timer",
+          "constant": "CAM_CC_CSI3PHYTIMER_CLK",
+          "controller": "camcc",
+          "branch": 17,
+          "root": 12
+        },
+        {
+          "name": "csiphy4",
+          "constant": "CAM_CC_CSIPHY4_CLK",
+          "controller": "camcc",
+          "branch": 18,
+          "root": 8
+        },
+        {
+          "name": "csiphy4_timer",
+          "constant": "CAM_CC_CSI4PHYTIMER_CLK",
+          "controller": "camcc",
+          "branch": 19,
+          "root": 13
+        },
+        {
+          "name": "csiphy5",
+          "constant": "CAM_CC_CSIPHY5_CLK",
+          "controller": "camcc",
+          "branch": 20,
+          "root": 8
+        },
+        {
+          "name": "csiphy5_timer",
+          "constant": "CAM_CC_CSI5PHYTIMER_CLK",
+          "controller": "camcc",
+          "branch": 21,
+          "root": 14
+        },
+        {
+          "name": "gcc_axi_hf",
+          "constant": "GCC_CAMERA_HF_AXI_CLK",
+          "controller": "gcc",
+          "branch": null,
+          "root": null
+        },
+        {
+          "name": "gcc_axi_sf",
+          "constant": "GCC_CAMERA_SF_AXI_CLK",
+          "controller": "gcc",
+          "branch": null,
+          "root": null
+        },
+        {
+          "name": "vfe0",
+          "constant": "CAM_CC_TFE_0_MAIN_CLK",
+          "controller": "camcc",
+          "branch": 22,
+          "root": 3
+        },
+        {
+          "name": "vfe0_fast_ahb",
+          "constant": "CAM_CC_TFE_0_MAIN_FAST_AHB_CLK",
+          "controller": "camcc",
+          "branch": 23,
+          "root": 2
+        },
+        {
+          "name": "vfe1",
+          "constant": "CAM_CC_TFE_1_MAIN_CLK",
+          "controller": "camcc",
+          "branch": 24,
+          "root": 4
+        },
+        {
+          "name": "vfe1_fast_ahb",
+          "constant": "CAM_CC_TFE_1_MAIN_FAST_AHB_CLK",
+          "controller": "camcc",
+          "branch": 25,
+          "root": 2
+        },
+        {
+          "name": "vfe2",
+          "constant": "CAM_CC_TFE_2_MAIN_CLK",
+          "controller": "camcc",
+          "branch": 26,
+          "root": 5
+        },
+        {
+          "name": "vfe2_fast_ahb",
+          "constant": "CAM_CC_TFE_2_MAIN_FAST_AHB_CLK",
+          "controller": "camcc",
+          "branch": 27,
+          "root": 2
+        },
+        {
+          "name": "vfe_lite",
+          "constant": "CAM_CC_IFE_LITE_CLK",
+          "controller": "camcc",
+          "branch": 28,
+          "root": 6
+        },
+        {
+          "name": "vfe_lite_ahb",
+          "constant": "CAM_CC_IFE_LITE_AHB_CLK",
+          "controller": "camcc",
+          "branch": 29,
+          "root": 1
+        },
+        {
+          "name": "vfe_lite_cphy_rx",
+          "constant": "CAM_CC_IFE_LITE_CPHY_RX_CLK",
+          "controller": "camcc",
+          "branch": 30,
+          "root": 8
+        },
+        {
+          "name": "vfe_lite_csid",
+          "constant": "CAM_CC_IFE_LITE_CSID_CLK",
+          "controller": "camcc",
+          "branch": 31,
+          "root": 15
+        },
+        {
+          "name": "qdss_debug_xo",
+          "constant": "CAM_CC_QDSS_DEBUG_XO_CLK",
+          "controller": "camcc",
+          "branch": 32,
+          "root": 16
+        },
+        {
+          "name": "cci0",
+          "constant": "CAM_CC_CCI_0_CLK",
+          "controller": "camcc",
+          "branch": 33,
+          "root": 17
+        },
+        {
+          "name": "cci1",
+          "constant": "CAM_CC_CCI_1_CLK",
+          "controller": "camcc",
+          "branch": 34,
+          "root": 18
+        },
+        {
+          "name": "mclk3",
+          "constant": "CAM_BIST_MCLK_CC_MCLK3_CLK",
+          "controller": "cambistmclkcc",
+          "branch": 35,
+          "root": 19
+        },
+        {
+          "name": "mclk4",
+          "constant": "CAM_BIST_MCLK_CC_MCLK4_CLK",
+          "controller": "cambistmclkcc",
+          "branch": 36,
+          "root": 20
+        }
+      ],
+      "roots": [
+        {
+          "name": "cam_cc_camnoc_rt_axi_clk_src",
+          "controller": "camcc",
+          "reg": 70376,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_MAIN",
+              1
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_EVEN",
+              2
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_ODD",
+              3
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_ODD",
+              4
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_EVEN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 19200000,
+              "selector": 0,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_BI_TCXO"
+            },
+            {
+              "hz": 200000000,
+              "selector": 2,
+              "hid": 5,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_EVEN"
+            },
+            {
+              "hz": 300000000,
+              "selector": 2,
+              "hid": 3,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_EVEN"
+            },
+            {
+              "hz": 400000000,
+              "selector": 2,
+              "hid": 2,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_EVEN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_camnoc_nrt_axi_clk",
+              "root_name": "cam_cc_camnoc_rt_axi_clk_src",
+              "reg": 70416,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_camnoc_rt_axi_clk",
+              "root_name": "cam_cc_camnoc_rt_axi_clk_src",
+              "reg": 70400,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_slow_ahb_clk_src",
+          "controller": "camcc",
+          "reg": 65792,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_MAIN",
+              1
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_EVEN",
+              2
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_ODD",
+              3
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_ODD",
+              4
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_EVEN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 56470588,
+              "selector": 5,
+              "hid": 16,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL6_OUT_EVEN"
+            },
+            {
+              "hz": 80000000,
+              "selector": 2,
+              "hid": 14,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_EVEN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_cam_top_ahb_clk",
+              "root_name": "cam_cc_slow_ahb_clk_src",
+              "reg": 70572,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_core_ahb_clk",
+              "root_name": "cam_cc_slow_ahb_clk_src",
+              "reg": 70496,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_cre_ahb_clk",
+              "root_name": "cam_cc_slow_ahb_clk_src",
+              "reg": 70092,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_icp_0_ahb_clk",
+              "root_name": "cam_cc_slow_ahb_clk_src",
+              "reg": 70244,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_icp_1_ahb_clk",
+              "root_name": "cam_cc_slow_ahb_clk_src",
+              "reg": 70248,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_ife_lite_ahb_clk",
+              "root_name": "cam_cc_slow_ahb_clk_src",
+              "reg": 70056,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_ipe_nps_ahb_clk",
+              "root_name": "cam_cc_slow_ahb_clk_src",
+              "reg": 66004,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_ofe_ahb_clk",
+              "root_name": "cam_cc_slow_ahb_clk_src",
+              "reg": 65816,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_fast_ahb_clk_src",
+          "controller": "camcc",
+          "reg": 65756,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_MAIN",
+              1
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_EVEN",
+              2
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_ODD",
+              3
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_ODD",
+              4
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_EVEN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 213333333,
+              "selector": 4,
+              "hid": 2,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL6_OUT_ODD"
+            },
+            {
+              "hz": 300000000,
+              "selector": 2,
+              "hid": 3,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_EVEN"
+            },
+            {
+              "hz": 400000000,
+              "selector": 1,
+              "hid": 5,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_cam_top_fast_ahb_clk",
+              "root_name": "cam_cc_fast_ahb_clk_src",
+              "reg": 70556,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_ipe_nps_fast_ahb_clk",
+              "root_name": "cam_cc_fast_ahb_clk_src",
+              "reg": 66008,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_ipe_pps_fast_ahb_clk",
+              "root_name": "cam_cc_fast_ahb_clk_src",
+              "reg": 66012,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_ofe_anchor_fast_ahb_clk",
+              "root_name": "cam_cc_fast_ahb_clk_src",
+              "reg": 65784,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_ofe_hdr_fast_ahb_clk",
+              "root_name": "cam_cc_fast_ahb_clk_src",
+              "reg": 65788,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_ofe_main_fast_ahb_clk",
+              "root_name": "cam_cc_fast_ahb_clk_src",
+              "reg": 65780,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_tfe_0_bayer_fast_ahb_clk",
+              "root_name": "cam_cc_fast_ahb_clk_src",
+              "reg": 69732,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_tfe_0_main_fast_ahb_clk",
+              "root_name": "cam_cc_fast_ahb_clk_src",
+              "reg": 69728,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_tfe_1_bayer_fast_ahb_clk",
+              "root_name": "cam_cc_fast_ahb_clk_src",
+              "reg": 69860,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_tfe_1_main_fast_ahb_clk",
+              "root_name": "cam_cc_fast_ahb_clk_src",
+              "reg": 69856,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_tfe_2_bayer_fast_ahb_clk",
+              "root_name": "cam_cc_fast_ahb_clk_src",
+              "reg": 69964,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_tfe_2_main_fast_ahb_clk",
+              "root_name": "cam_cc_fast_ahb_clk_src",
+              "reg": 69960,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_tfe_0_clk_src",
+          "controller": "camcc",
+          "reg": 69656,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL3_OUT_EVEN",
+              6
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 360280000,
+              "selector": 6,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL3_OUT_EVEN"
+            },
+            {
+              "hz": 480000000,
+              "selector": 6,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL3_OUT_EVEN"
+            },
+            {
+              "hz": 630000000,
+              "selector": 6,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL3_OUT_EVEN"
+            },
+            {
+              "hz": 716000000,
+              "selector": 6,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL3_OUT_EVEN"
+            },
+            {
+              "hz": 833000000,
+              "selector": 6,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL3_OUT_EVEN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_camnoc_rt_tfe_0_bayer_clk",
+              "root_name": "cam_cc_tfe_0_clk_src",
+              "reg": 69716,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_camnoc_rt_tfe_0_main_clk",
+              "root_name": "cam_cc_tfe_0_clk_src",
+              "reg": 69696,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_tfe_0_bayer_clk",
+              "root_name": "cam_cc_tfe_0_clk_src",
+              "reg": 69700,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_tfe_0_main_clk",
+              "root_name": "cam_cc_tfe_0_clk_src",
+              "reg": 69680,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_tfe_1_clk_src",
+          "controller": "camcc",
+          "reg": 69784,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL4_OUT_EVEN",
+              6
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 360280000,
+              "selector": 6,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL4_OUT_EVEN"
+            },
+            {
+              "hz": 480000000,
+              "selector": 6,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL4_OUT_EVEN"
+            },
+            {
+              "hz": 630000000,
+              "selector": 6,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL4_OUT_EVEN"
+            },
+            {
+              "hz": 716000000,
+              "selector": 6,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL4_OUT_EVEN"
+            },
+            {
+              "hz": 833000000,
+              "selector": 6,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL4_OUT_EVEN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_camnoc_rt_tfe_1_bayer_clk",
+              "root_name": "cam_cc_tfe_1_clk_src",
+              "reg": 69844,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_camnoc_rt_tfe_1_main_clk",
+              "root_name": "cam_cc_tfe_1_clk_src",
+              "reg": 69824,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_tfe_1_bayer_clk",
+              "root_name": "cam_cc_tfe_1_clk_src",
+              "reg": 69828,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_tfe_1_main_clk",
+              "root_name": "cam_cc_tfe_1_clk_src",
+              "reg": 69808,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_tfe_2_clk_src",
+          "controller": "camcc",
+          "reg": 69888,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL5_OUT_EVEN",
+              6
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 360280000,
+              "selector": 6,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL5_OUT_EVEN"
+            },
+            {
+              "hz": 480000000,
+              "selector": 6,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL5_OUT_EVEN"
+            },
+            {
+              "hz": 630000000,
+              "selector": 6,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL5_OUT_EVEN"
+            },
+            {
+              "hz": 716000000,
+              "selector": 6,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL5_OUT_EVEN"
+            },
+            {
+              "hz": 833000000,
+              "selector": 6,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL5_OUT_EVEN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_camnoc_rt_tfe_2_bayer_clk",
+              "root_name": "cam_cc_tfe_2_clk_src",
+              "reg": 69948,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_camnoc_rt_tfe_2_main_clk",
+              "root_name": "cam_cc_tfe_2_clk_src",
+              "reg": 69928,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_tfe_2_bayer_clk",
+              "root_name": "cam_cc_tfe_2_clk_src",
+              "reg": 69932,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_tfe_2_main_clk",
+              "root_name": "cam_cc_tfe_2_clk_src",
+              "reg": 69912,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_ife_lite_clk_src",
+          "controller": "camcc",
+          "reg": 69968,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_MAIN",
+              1
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_EVEN",
+              2
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_ODD",
+              3
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_ODD",
+              4
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_EVEN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 266666667,
+              "selector": 1,
+              "hid": 8,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            },
+            {
+              "hz": 400000000,
+              "selector": 1,
+              "hid": 5,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            },
+            {
+              "hz": 480000000,
+              "selector": 1,
+              "hid": 4,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_camnoc_rt_ife_lite_clk",
+              "root_name": "cam_cc_ife_lite_clk_src",
+              "reg": 70008,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_ife_lite_clk",
+              "root_name": "cam_cc_ife_lite_clk_src",
+              "reg": 69992,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_csid_clk_src",
+          "controller": "camcc",
+          "reg": 70336,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_MAIN",
+              1
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_EVEN",
+              2
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_ODD",
+              3
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_ODD",
+              4
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_EVEN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 266666667,
+              "selector": 1,
+              "hid": 8,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            },
+            {
+              "hz": 400000000,
+              "selector": 1,
+              "hid": 5,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            },
+            {
+              "hz": 480000000,
+              "selector": 1,
+              "hid": 4,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_csid_clk",
+              "root_name": "cam_cc_csid_clk_src",
+              "reg": 70360,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_cphy_rx_clk_src",
+          "controller": "camcc",
+          "reg": 69736,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_MAIN",
+              1
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_EVEN",
+              2
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_ODD",
+              3
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_ODD",
+              4
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_EVEN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 266666667,
+              "selector": 1,
+              "hid": 8,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            },
+            {
+              "hz": 400000000,
+              "selector": 1,
+              "hid": 5,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            },
+            {
+              "hz": 480000000,
+              "selector": 1,
+              "hid": 4,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_csid_csiphy_rx_clk",
+              "root_name": "cam_cc_cphy_rx_clk_src",
+              "reg": 65568,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_csiphy0_clk",
+              "root_name": "cam_cc_cphy_rx_clk_src",
+              "reg": 65564,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_csiphy1_clk",
+              "root_name": "cam_cc_cphy_rx_clk_src",
+              "reg": 65600,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_csiphy2_clk",
+              "root_name": "cam_cc_cphy_rx_clk_src",
+              "reg": 65632,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_csiphy3_clk",
+              "root_name": "cam_cc_cphy_rx_clk_src",
+              "reg": 65664,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_csiphy4_clk",
+              "root_name": "cam_cc_cphy_rx_clk_src",
+              "reg": 65696,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_csiphy5_clk",
+              "root_name": "cam_cc_cphy_rx_clk_src",
+              "reg": 65728,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_ife_lite_cphy_rx_clk",
+              "root_name": "cam_cc_cphy_rx_clk_src",
+              "reg": 70052,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_csi0phytimer_clk_src",
+          "controller": "camcc",
+          "reg": 65536,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_MAIN",
+              1
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_EVEN",
+              2
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_ODD",
+              3
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_ODD",
+              4
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_EVEN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 400000000,
+              "selector": 1,
+              "hid": 5,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_csi0phytimer_clk",
+              "root_name": "cam_cc_csi0phytimer_clk_src",
+              "reg": 65560,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_csi1phytimer_clk_src",
+          "controller": "camcc",
+          "reg": 65572,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_MAIN",
+              1
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_EVEN",
+              2
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_ODD",
+              3
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_ODD",
+              4
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_EVEN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 400000000,
+              "selector": 1,
+              "hid": 5,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_csi1phytimer_clk",
+              "root_name": "cam_cc_csi1phytimer_clk_src",
+              "reg": 65596,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_csi2phytimer_clk_src",
+          "controller": "camcc",
+          "reg": 65604,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_MAIN",
+              1
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_EVEN",
+              2
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_ODD",
+              3
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_ODD",
+              4
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_EVEN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 400000000,
+              "selector": 1,
+              "hid": 5,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_csi2phytimer_clk",
+              "root_name": "cam_cc_csi2phytimer_clk_src",
+              "reg": 65628,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_csi3phytimer_clk_src",
+          "controller": "camcc",
+          "reg": 65636,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_MAIN",
+              1
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_EVEN",
+              2
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_ODD",
+              3
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_ODD",
+              4
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_EVEN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 400000000,
+              "selector": 1,
+              "hid": 5,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_csi3phytimer_clk",
+              "root_name": "cam_cc_csi3phytimer_clk_src",
+              "reg": 65660,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_csi4phytimer_clk_src",
+          "controller": "camcc",
+          "reg": 65668,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_MAIN",
+              1
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_EVEN",
+              2
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_ODD",
+              3
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_ODD",
+              4
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_EVEN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 400000000,
+              "selector": 1,
+              "hid": 5,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_csi4phytimer_clk",
+              "root_name": "cam_cc_csi4phytimer_clk_src",
+              "reg": 65692,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_csi5phytimer_clk_src",
+          "controller": "camcc",
+          "reg": 65700,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_MAIN",
+              1
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_EVEN",
+              2
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_ODD",
+              3
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_ODD",
+              4
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_EVEN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 400000000,
+              "selector": 1,
+              "hid": 5,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_csi5phytimer_clk",
+              "root_name": "cam_cc_csi5phytimer_clk_src",
+              "reg": 65724,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_ife_lite_csid_clk_src",
+          "controller": "camcc",
+          "reg": 70012,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_MAIN",
+              1
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_EVEN",
+              2
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_ODD",
+              3
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_ODD",
+              4
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_EVEN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 266666667,
+              "selector": 1,
+              "hid": 8,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            },
+            {
+              "hz": 400000000,
+              "selector": 1,
+              "hid": 5,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            },
+            {
+              "hz": 480000000,
+              "selector": 1,
+              "hid": 4,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_MAIN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_ife_lite_csid_clk",
+              "root_name": "cam_cc_ife_lite_csid_clk_src",
+              "reg": 70036,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_xo_clk_src",
+          "controller": "camcc",
+          "reg": 70500,
+          "mnd_width": 0,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO_AO",
+              0
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 19200000,
+              "selector": 0,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_BI_TCXO_AO"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_camnoc_dcd_xo_clk",
+              "root_name": "cam_cc_xo_clk_src",
+              "reg": 70432,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_camnoc_xo_clk",
+              "root_name": "cam_cc_xo_clk_src",
+              "reg": 70436,
+              "mask": 1
+            },
+            {
+              "controller": "camcc",
+              "name": "cam_cc_qdss_debug_xo_clk",
+              "root_name": "cam_cc_xo_clk_src",
+              "reg": 70472,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_cci_0_clk_src",
+          "controller": "camcc",
+          "reg": 70252,
+          "mnd_width": 8,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_MAIN",
+              1
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_EVEN",
+              2
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_ODD",
+              3
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_ODD",
+              4
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_EVEN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 37500000,
+              "selector": 2,
+              "hid": 31,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_EVEN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_cci_0_clk",
+              "root_name": "cam_cc_cci_0_clk_src",
+              "reg": 70276,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_cc_cci_1_clk_src",
+          "controller": "camcc",
+          "reg": 70280,
+          "mnd_width": 8,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_MAIN",
+              1
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_EVEN",
+              2
+            ],
+            [
+              "P_CAM_CC_PLL0_OUT_ODD",
+              3
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_ODD",
+              4
+            ],
+            [
+              "P_CAM_CC_PLL6_OUT_EVEN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 37500000,
+              "selector": 2,
+              "hid": 31,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_CC_PLL0_OUT_EVEN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "camcc",
+              "name": "cam_cc_cci_1_clk",
+              "root_name": "cam_cc_cci_1_clk_src",
+              "reg": 70304,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_bist_mclk_cc_mclk3_clk_src",
+          "controller": "cambistmclkcc",
+          "reg": 16468,
+          "mnd_width": 8,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_BIST_MCLK_CC_PLL0_OUT_EVEN",
+              3
+            ],
+            [
+              "P_CAM_BIST_MCLK_CC_PLL0_OUT_MAIN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 12000000,
+              "selector": 3,
+              "hid": 19,
+              "m": 1,
+              "n": 8,
+              "source": "P_CAM_BIST_MCLK_CC_PLL0_OUT_EVEN"
+            },
+            {
+              "hz": 19200000,
+              "selector": 0,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_BI_TCXO"
+            },
+            {
+              "hz": 24000000,
+              "selector": 3,
+              "hid": 19,
+              "m": 1,
+              "n": 4,
+              "source": "P_CAM_BIST_MCLK_CC_PLL0_OUT_EVEN"
+            },
+            {
+              "hz": 68571429,
+              "selector": 5,
+              "hid": 27,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_BIST_MCLK_CC_PLL0_OUT_MAIN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "cambistmclkcc",
+              "name": "cam_bist_mclk_cc_mclk3_clk",
+              "root_name": "cam_bist_mclk_cc_mclk3_clk_src",
+              "reg": 16492,
+              "mask": 1
+            }
+          ]
+        },
+        {
+          "name": "cam_bist_mclk_cc_mclk4_clk_src",
+          "controller": "cambistmclkcc",
+          "reg": 16496,
+          "mnd_width": 8,
+          "hid_width": 5,
+          "safe_selector": 0,
+          "parents": [
+            [
+              "P_BI_TCXO",
+              0
+            ],
+            [
+              "P_CAM_BIST_MCLK_CC_PLL0_OUT_EVEN",
+              3
+            ],
+            [
+              "P_CAM_BIST_MCLK_CC_PLL0_OUT_MAIN",
+              5
+            ]
+          ],
+          "frequencies": [
+            {
+              "hz": 12000000,
+              "selector": 3,
+              "hid": 19,
+              "m": 1,
+              "n": 8,
+              "source": "P_CAM_BIST_MCLK_CC_PLL0_OUT_EVEN"
+            },
+            {
+              "hz": 19200000,
+              "selector": 0,
+              "hid": 1,
+              "m": 0,
+              "n": 0,
+              "source": "P_BI_TCXO"
+            },
+            {
+              "hz": 24000000,
+              "selector": 3,
+              "hid": 19,
+              "m": 1,
+              "n": 4,
+              "source": "P_CAM_BIST_MCLK_CC_PLL0_OUT_EVEN"
+            },
+            {
+              "hz": 68571429,
+              "selector": 5,
+              "hid": 27,
+              "m": 0,
+              "n": 0,
+              "source": "P_CAM_BIST_MCLK_CC_PLL0_OUT_MAIN"
+            }
+          ],
+          "siblings": [
+            {
+              "controller": "cambistmclkcc",
+              "name": "cam_bist_mclk_cc_mclk4_clk",
+              "root_name": "cam_bist_mclk_cc_mclk4_clk_src",
+              "reg": 16520,
+              "mask": 1
+            }
+          ]
+        }
+      ],
+      "branches": [
+        {
+          "name": "cam_cc_camnoc_nrt_axi_clk",
+          "controller": "camcc",
+          "reg": 70416,
+          "halt": 70416,
+          "root": 0,
+          "hwcg_reg": 70416,
+          "hwcg_bit": 1
+        },
+        {
+          "name": "cam_cc_camnoc_rt_axi_clk",
+          "controller": "camcc",
+          "reg": 70400,
+          "halt": 70400,
+          "root": 0,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_cam_top_ahb_clk",
+          "controller": "camcc",
+          "reg": 70572,
+          "halt": 70572,
+          "root": 1,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_cam_top_fast_ahb_clk",
+          "controller": "camcc",
+          "reg": 70556,
+          "halt": 70556,
+          "root": 2,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_camnoc_rt_tfe_0_main_clk",
+          "controller": "camcc",
+          "reg": 69696,
+          "halt": 69696,
+          "root": 3,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_camnoc_rt_tfe_1_main_clk",
+          "controller": "camcc",
+          "reg": 69824,
+          "halt": 69824,
+          "root": 4,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_camnoc_rt_tfe_2_main_clk",
+          "controller": "camcc",
+          "reg": 69928,
+          "halt": 69928,
+          "root": 5,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_camnoc_rt_ife_lite_clk",
+          "controller": "camcc",
+          "reg": 70008,
+          "halt": 70008,
+          "root": 6,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_csid_clk",
+          "controller": "camcc",
+          "reg": 70360,
+          "halt": 70360,
+          "root": 7,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_csid_csiphy_rx_clk",
+          "controller": "camcc",
+          "reg": 65568,
+          "halt": 65568,
+          "root": 8,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_csiphy0_clk",
+          "controller": "camcc",
+          "reg": 65564,
+          "halt": 65564,
+          "root": 8,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_csi0phytimer_clk",
+          "controller": "camcc",
+          "reg": 65560,
+          "halt": 65560,
+          "root": 9,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_csiphy1_clk",
+          "controller": "camcc",
+          "reg": 65600,
+          "halt": 65600,
+          "root": 8,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_csi1phytimer_clk",
+          "controller": "camcc",
+          "reg": 65596,
+          "halt": 65596,
+          "root": 10,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_csiphy2_clk",
+          "controller": "camcc",
+          "reg": 65632,
+          "halt": 65632,
+          "root": 8,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_csi2phytimer_clk",
+          "controller": "camcc",
+          "reg": 65628,
+          "halt": 65628,
+          "root": 11,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_csiphy3_clk",
+          "controller": "camcc",
+          "reg": 65664,
+          "halt": 65664,
+          "root": 8,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_csi3phytimer_clk",
+          "controller": "camcc",
+          "reg": 65660,
+          "halt": 65660,
+          "root": 12,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_csiphy4_clk",
+          "controller": "camcc",
+          "reg": 65696,
+          "halt": 65696,
+          "root": 8,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_csi4phytimer_clk",
+          "controller": "camcc",
+          "reg": 65692,
+          "halt": 65692,
+          "root": 13,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_csiphy5_clk",
+          "controller": "camcc",
+          "reg": 65728,
+          "halt": 65728,
+          "root": 8,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_csi5phytimer_clk",
+          "controller": "camcc",
+          "reg": 65724,
+          "halt": 65724,
+          "root": 14,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_tfe_0_main_clk",
+          "controller": "camcc",
+          "reg": 69680,
+          "halt": 69680,
+          "root": 3,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_tfe_0_main_fast_ahb_clk",
+          "controller": "camcc",
+          "reg": 69728,
+          "halt": 69728,
+          "root": 2,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_tfe_1_main_clk",
+          "controller": "camcc",
+          "reg": 69808,
+          "halt": 69808,
+          "root": 4,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_tfe_1_main_fast_ahb_clk",
+          "controller": "camcc",
+          "reg": 69856,
+          "halt": 69856,
+          "root": 2,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_tfe_2_main_clk",
+          "controller": "camcc",
+          "reg": 69912,
+          "halt": 69912,
+          "root": 5,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_tfe_2_main_fast_ahb_clk",
+          "controller": "camcc",
+          "reg": 69960,
+          "halt": 69960,
+          "root": 2,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_ife_lite_clk",
+          "controller": "camcc",
+          "reg": 69992,
+          "halt": 69992,
+          "root": 6,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_ife_lite_ahb_clk",
+          "controller": "camcc",
+          "reg": 70056,
+          "halt": 70056,
+          "root": 1,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_ife_lite_cphy_rx_clk",
+          "controller": "camcc",
+          "reg": 70052,
+          "halt": 70052,
+          "root": 8,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_ife_lite_csid_clk",
+          "controller": "camcc",
+          "reg": 70036,
+          "halt": 70036,
+          "root": 15,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_qdss_debug_xo_clk",
+          "controller": "camcc",
+          "reg": 70472,
+          "halt": 70472,
+          "root": 16,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_cci_0_clk",
+          "controller": "camcc",
+          "reg": 70276,
+          "halt": 70276,
+          "root": 17,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_cc_cci_1_clk",
+          "controller": "camcc",
+          "reg": 70304,
+          "halt": 70304,
+          "root": 18,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_bist_mclk_cc_mclk3_clk",
+          "controller": "cambistmclkcc",
+          "reg": 16492,
+          "halt": 16492,
+          "root": 19,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        },
+        {
+          "name": "cam_bist_mclk_cc_mclk4_clk",
+          "controller": "cambistmclkcc",
+          "reg": 16520,
+          "halt": 16520,
+          "root": 20,
+          "hwcg_reg": 0,
+          "hwcg_bit": 0
+        }
+      ],
+      "domains": [
+        {
+          "name": "cam_cc_titan_top_gdsc",
+          "reg": 70476,
+          "wait_value": 2289664
+        },
+        {
+          "name": "cam_cc_tfe_0_gdsc",
+          "reg": 69636,
+          "wait_value": 2289664
+        },
+        {
+          "name": "cam_cc_tfe_1_gdsc",
+          "reg": 69764,
+          "wait_value": 2289664
+        },
+        {
+          "name": "cam_cc_tfe_2_gdsc",
+          "reg": 69868,
+          "wait_value": 2289664
+        }
+      ],
+      "CAMSS_clock_plans": {
+        "phy": [
+          [
+            {
+              "clock": 10,
+              "name": "csiphy0",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 11,
+              "name": "csiphy0_timer",
+              "allowed_hz": [
+                400000000
+              ]
+            },
+            {
+              "clock": 2,
+              "name": "cpas_ahb",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 3,
+              "name": "cpas_fast_ahb",
+              "allowed_hz": [
+                0
+              ]
+            }
+          ],
+          [
+            {
+              "clock": 12,
+              "name": "csiphy1",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 13,
+              "name": "csiphy1_timer",
+              "allowed_hz": [
+                400000000
+              ]
+            },
+            {
+              "clock": 2,
+              "name": "cpas_ahb",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 3,
+              "name": "cpas_fast_ahb",
+              "allowed_hz": [
+                0
+              ]
+            }
+          ],
+          [
+            {
+              "clock": 14,
+              "name": "csiphy2",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 15,
+              "name": "csiphy2_timer",
+              "allowed_hz": [
+                400000000
+              ]
+            },
+            {
+              "clock": 2,
+              "name": "cpas_ahb",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 3,
+              "name": "cpas_fast_ahb",
+              "allowed_hz": [
+                0
+              ]
+            }
+          ],
+          [
+            {
+              "clock": 16,
+              "name": "csiphy3",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 17,
+              "name": "csiphy3_timer",
+              "allowed_hz": [
+                400000000
+              ]
+            },
+            {
+              "clock": 2,
+              "name": "cpas_ahb",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 3,
+              "name": "cpas_fast_ahb",
+              "allowed_hz": [
+                0
+              ]
+            }
+          ],
+          [
+            {
+              "clock": 18,
+              "name": "csiphy4",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 19,
+              "name": "csiphy4_timer",
+              "allowed_hz": [
+                400000000
+              ]
+            },
+            {
+              "clock": 2,
+              "name": "cpas_ahb",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 3,
+              "name": "cpas_fast_ahb",
+              "allowed_hz": [
+                0
+              ]
+            }
+          ],
+          [
+            {
+              "clock": 20,
+              "name": "csiphy5",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 21,
+              "name": "csiphy5_timer",
+              "allowed_hz": [
+                400000000
+              ]
+            },
+            {
+              "clock": 2,
+              "name": "cpas_ahb",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 3,
+              "name": "cpas_fast_ahb",
+              "allowed_hz": [
+                0
+              ]
+            }
+          ]
+        ],
+        "csid": [
+          [
+            {
+              "clock": 8,
+              "name": "csid",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 9,
+              "name": "csid_csiphy_rx",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            }
+          ],
+          [
+            {
+              "clock": 8,
+              "name": "csid",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 9,
+              "name": "csid_csiphy_rx",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            }
+          ],
+          [
+            {
+              "clock": 8,
+              "name": "csid",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 9,
+              "name": "csid_csiphy_rx",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            }
+          ],
+          [
+            {
+              "clock": 33,
+              "name": "vfe_lite_csid",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 32,
+              "name": "vfe_lite_cphy_rx",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            }
+          ],
+          [
+            {
+              "clock": 33,
+              "name": "vfe_lite_csid",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 32,
+              "name": "vfe_lite_cphy_rx",
+              "allowed_hz": [
+                400000000,
+                480000000
+              ]
+            }
+          ]
+        ],
+        "vfe": [
+          [
+            {
+              "clock": 22,
+              "name": "gcc_axi_hf",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 25,
+              "name": "vfe0_fast_ahb",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 24,
+              "name": "vfe0",
+              "allowed_hz": [
+                360280000,
+                480000000,
+                630000000,
+                716000000,
+                833000000
+              ]
+            },
+            {
+              "clock": 4,
+              "name": "cpas_vfe0",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 5,
+              "name": "cpas_vfe1",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 6,
+              "name": "cpas_vfe2",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 1,
+              "name": "camnoc_rt_axi",
+              "allowed_hz": [
+                200000000,
+                300000000,
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 0,
+              "name": "camnoc_nrt_axi",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 34,
+              "name": "qdss_debug_xo",
+              "allowed_hz": [
+                0
+              ]
+            }
+          ],
+          [
+            {
+              "clock": 22,
+              "name": "gcc_axi_hf",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 27,
+              "name": "vfe1_fast_ahb",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 26,
+              "name": "vfe1",
+              "allowed_hz": [
+                360280000,
+                480000000,
+                630000000,
+                716000000,
+                833000000
+              ]
+            },
+            {
+              "clock": 4,
+              "name": "cpas_vfe0",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 5,
+              "name": "cpas_vfe1",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 6,
+              "name": "cpas_vfe2",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 1,
+              "name": "camnoc_rt_axi",
+              "allowed_hz": [
+                200000000,
+                300000000,
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 0,
+              "name": "camnoc_nrt_axi",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 34,
+              "name": "qdss_debug_xo",
+              "allowed_hz": [
+                0
+              ]
+            }
+          ],
+          [
+            {
+              "clock": 22,
+              "name": "gcc_axi_hf",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 29,
+              "name": "vfe2_fast_ahb",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 28,
+              "name": "vfe2",
+              "allowed_hz": [
+                360280000,
+                480000000,
+                630000000,
+                716000000,
+                833000000
+              ]
+            },
+            {
+              "clock": 4,
+              "name": "cpas_vfe0",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 5,
+              "name": "cpas_vfe1",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 6,
+              "name": "cpas_vfe2",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 1,
+              "name": "camnoc_rt_axi",
+              "allowed_hz": [
+                200000000,
+                300000000,
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 0,
+              "name": "camnoc_nrt_axi",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 34,
+              "name": "qdss_debug_xo",
+              "allowed_hz": [
+                0
+              ]
+            }
+          ],
+          [
+            {
+              "clock": 22,
+              "name": "gcc_axi_hf",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 31,
+              "name": "vfe_lite_ahb",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 30,
+              "name": "vfe_lite",
+              "allowed_hz": [
+                266666667,
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 7,
+              "name": "cpas_vfe_lite",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 1,
+              "name": "camnoc_rt_axi",
+              "allowed_hz": [
+                200000000,
+                300000000,
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 0,
+              "name": "camnoc_nrt_axi",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 34,
+              "name": "qdss_debug_xo",
+              "allowed_hz": [
+                0
+              ]
+            }
+          ],
+          [
+            {
+              "clock": 22,
+              "name": "gcc_axi_hf",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 31,
+              "name": "vfe_lite_ahb",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 30,
+              "name": "vfe_lite",
+              "allowed_hz": [
+                266666667,
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 7,
+              "name": "cpas_vfe_lite",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 1,
+              "name": "camnoc_rt_axi",
+              "allowed_hz": [
+                200000000,
+                300000000,
+                400000000,
+                480000000
+              ]
+            },
+            {
+              "clock": 0,
+              "name": "camnoc_nrt_axi",
+              "allowed_hz": [
+                0
+              ]
+            },
+            {
+              "clock": 34,
+              "name": "qdss_debug_xo",
+              "allowed_hz": [
+                0
+              ]
+            }
+          ]
+        ]
+      },
+      "hardware": false
+    },
+    "actual_helper_body_hashes": [
+      {
+        "file": "clk-rcg2.c",
+        "signature": "static int clk_rcg2_is_enabled(",
+        "original_sha256": "927bdf9245d1285753c76811d5c3aa2e60c7076f28a0e6c7df8ffb67c444ef18",
+        "derived_sha256": "927bdf9245d1285753c76811d5c3aa2e60c7076f28a0e6c7df8ffb67c444ef18",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "clk-rcg2.c",
+        "signature": "static int update_config(",
+        "original_sha256": "95b14a1f30377674598c3c1e344bf3185dd3908412d3da2a87606a1659a13207",
+        "derived_sha256": "67b8e3a1ae63bef3325d82c1251df172ea890b1dd6dc0bf6c21734eebaac49d3",
+        "visibility_or_context_bound_delay_only": true
+      },
+      {
+        "file": "clk-rcg2.c",
+        "signature": "static int __clk_rcg2_configure_parent(",
+        "original_sha256": "735dc73a0659c3300702c26d2a8b535491b97fc24324f743977ae2afffb3da94",
+        "derived_sha256": "735dc73a0659c3300702c26d2a8b535491b97fc24324f743977ae2afffb3da94",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "clk-rcg2.c",
+        "signature": "static int __clk_rcg2_configure_mnd(",
+        "original_sha256": "22e996ea62d883ec9446dd03ab9f5c3dabb6cc36b415d9736d986a23d022c4c4",
+        "derived_sha256": "22e996ea62d883ec9446dd03ab9f5c3dabb6cc36b415d9736d986a23d022c4c4",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "clk-rcg2.c",
+        "signature": "static int __clk_rcg2_configure(",
+        "original_sha256": "b9d22888d6d668ee87e0ec64492c4924117e4a177d76fa5358b3881ea852ae95",
+        "derived_sha256": "b9d22888d6d668ee87e0ec64492c4924117e4a177d76fa5358b3881ea852ae95",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "clk-rcg2.c",
+        "signature": "static int clk_rcg2_set_force_enable(",
+        "original_sha256": "260cb447fdcff7679d30f69c10f8e956b4b88b3a01073936af8e9aa694b235e5",
+        "derived_sha256": "815d89b1e9aac6ce10e73d53cf4eb6de03739fb492e175895e111038e483b5f4",
+        "visibility_or_context_bound_delay_only": true
+      },
+      {
+        "file": "clk-rcg2.c",
+        "signature": "static int clk_rcg2_clear_force_enable(",
+        "original_sha256": "31135f3b24937337b625861d7ddb6a8f1354899dba60298c2d0d134aab998bf0",
+        "derived_sha256": "31135f3b24937337b625861d7ddb6a8f1354899dba60298c2d0d134aab998bf0",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "clk-rcg2.c",
+        "signature": "static int clk_rcg2_shared_enable(",
+        "original_sha256": "e1c9e20ca31ee5540bdd42634e6cb06c0c2855fd7ad1dd869f8538efe43d4c02",
+        "derived_sha256": "e1c9e20ca31ee5540bdd42634e6cb06c0c2855fd7ad1dd869f8538efe43d4c02",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "clk-rcg2.c",
+        "signature": "static void clk_rcg2_shared_disable(",
+        "original_sha256": "0195f724861506b5cd42f73330ac09e618b86dcf6248f3fe8a89842191057d17",
+        "derived_sha256": "0195f724861506b5cd42f73330ac09e618b86dcf6248f3fe8a89842191057d17",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "common.c",
+        "signature": "int qcom_find_src_index(",
+        "original_sha256": "c5e751597914088195a77fba55ebdf06707bdf7b7b1972a634705c424570cbc8",
+        "derived_sha256": "49373e734b0c9acc1ad7d53d803dc1892db82044ebc51ee8657b4cad27463972",
+        "visibility_or_context_bound_delay_only": true
+      },
+      {
+        "file": "clk-regmap.c",
+        "signature": "int clk_enable_regmap(",
+        "original_sha256": "0e854eec71a6efeb1c35d1a38128369fc5596bd6c0eb5ba9c454eacf3580e232",
+        "derived_sha256": "f070a9fa99590e9217484a0e259d17828e4903ec77abf0a3f0bec0d9ea95040b",
+        "visibility_or_context_bound_delay_only": true
+      },
+      {
+        "file": "clk-regmap.c",
+        "signature": "void clk_disable_regmap(",
+        "original_sha256": "6f3767101cbd7691d0306860c177a8093f781bb1e90e49939006a6522c397bb8",
+        "derived_sha256": "971826ae836bc36a1ff4f055d7bfa4a11b2f9f35b32cb3076939ca65cc6320f7",
+        "visibility_or_context_bound_delay_only": true
+      },
+      {
+        "file": "clk-branch.c",
+        "signature": "static bool clk_branch_in_hwcg_mode(",
+        "original_sha256": "c72817e70a6bc3f4b3b69c5d702dc2e13347202a2903a802edc41ffb956148be",
+        "derived_sha256": "c72817e70a6bc3f4b3b69c5d702dc2e13347202a2903a802edc41ffb956148be",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "clk-branch.c",
+        "signature": "static bool clk_branch2_check_halt(",
+        "original_sha256": "70ebd5020e2b0860c4a13458c82701f53541d900a49524cb086bcbf03f8bfb94",
+        "derived_sha256": "70ebd5020e2b0860c4a13458c82701f53541d900a49524cb086bcbf03f8bfb94",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "clk-branch.c",
+        "signature": "static int clk_branch_wait(",
+        "original_sha256": "69374f65f1ade34ec81a769704697711baaec585cd9819c0da0ad20c4b4abfae",
+        "derived_sha256": "d08714980e23d3a279cd40ed1de0ffe1f16f2e1a88898728cf31d0dc48bb8d16",
+        "visibility_or_context_bound_delay_only": true
+      },
+      {
+        "file": "clk-branch.c",
+        "signature": "static int clk_branch_toggle(",
+        "original_sha256": "9e538a964cd88ffb30519afbbb82dba6bee2f93f3752d12778c506c1733703aa",
+        "derived_sha256": "9e538a964cd88ffb30519afbbb82dba6bee2f93f3752d12778c506c1733703aa",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "clk-branch.c",
+        "signature": "static int clk_branch2_enable(",
+        "original_sha256": "f19f64b2fcdbb9b470b3b3bcd8cb57873c14e6bb7804ed629fb2113144feba9c",
+        "derived_sha256": "f19f64b2fcdbb9b470b3b3bcd8cb57873c14e6bb7804ed629fb2113144feba9c",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "clk-branch.c",
+        "signature": "static void clk_branch2_disable(",
+        "original_sha256": "6d5faa330b03cda9a38310bde6d226c02c64362eb187d1746975a466f69a6d64",
+        "derived_sha256": "6d5faa330b03cda9a38310bde6d226c02c64362eb187d1746975a466f69a6d64",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "gdsc.c",
+        "signature": "static int gdsc_check_status(",
+        "original_sha256": "0be7d5abc7a0dbdaa01359e45c6a0a4bddaaae194d92b1f034ad8e462ee4f1b6",
+        "derived_sha256": "0be7d5abc7a0dbdaa01359e45c6a0a4bddaaae194d92b1f034ad8e462ee4f1b6",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "gdsc.c",
+        "signature": "static int gdsc_update_collapse_bit(",
+        "original_sha256": "1b3839d0b4160f5c162ca1369ca028cdbe331a13462efd0794df9413a506dd18",
+        "derived_sha256": "1b3839d0b4160f5c162ca1369ca028cdbe331a13462efd0794df9413a506dd18",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "gdsc.c",
+        "signature": "static void gdsc_retain_ff_on(",
+        "original_sha256": "1c194badd4967951567c4c9bf0659fe57f2932c3e9791624a44564708ef939f5",
+        "derived_sha256": "1c194badd4967951567c4c9bf0659fe57f2932c3e9791624a44564708ef939f5",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "pinctrl-msm.c",
+        "signature": "static int msm_gpio_direction_output(",
+        "original_sha256": "eb655a049c2cac00abc4844e4e1f609a1d844481f508cd222ed833ea70e4e425",
+        "derived_sha256": "eb655a049c2cac00abc4844e4e1f609a1d844481f508cd222ed833ea70e4e425",
+        "visibility_or_context_bound_delay_only": false
+      },
+      {
+        "file": "pinctrl-msm.c",
+        "signature": "static int msm_gpio_set(",
+        "original_sha256": "e63e9f6e75edf2000a53d7312feb73279687dc30fac06a765c78cbdb93354803",
+        "derived_sha256": "e63e9f6e75edf2000a53d7312feb73279687dc30fac06a765c78cbdb93354803",
+        "visibility_or_context_bound_delay_only": false
+      }
+    ],
+    "generated_sha256": {
+      "ClockIds.h": "950a1629c70af331a4fab42a31c8937708c0541e5272380d9d29d1fa4cd6dfb3",
+      "ClockTopology.inc": "3b7ae1f49e3f58c455b3fea53b9995579330fa6ce5320bd1dfb24baa19fa2adb",
+      "ClockBoard.inc": "77e07a57dd6a94d9d7ec4e00e6ee8a4d64cda0b5f89147d0415939f2c639b1b6",
+      "ClockOriginal.inc": "032f1bc1be560bddbf98e5c7b827dd29adf2cf87cf53fc3a7dee7dad38c585db"
+    },
+    "hardware": false
+  },
+  "source_record_sha256": "56ef17edd64184642247cfc9c2ad8e9e3c09598509ec6d63e8da2568f71fab13",
+  "audit_jobs": [
+    {
+      "name": "runtime",
+      "exit": 0,
+      "output": "PASS actual native sensor runtime prepare/listener/SSC/observer/recovery link; old deadline/other owners retained\n"
+    },
+    {
+      "name": "pen",
+      "exit": 0,
+      "output": "PASS: linked pen HID inheritance,207slots/10overrides,late initialization and interfaces\n"
+    },
+    {
+      "name": "motion",
+      "exit": 0,
+      "output": "PASS: motion IOHIDDevice207slots/10overrides, original constructors/driver and late initialization\n"
+    },
+    {
+      "name": "haptics",
+      "exit": 0,
+      "output": "PASS: actual haptics service/client inheritance, late initializer, startup and stop→RTC→UFS calls\n"
+    },
+    {
+      "name": "sleep",
+      "exit": 0,
+      "output": "PASS: actual original-worker nonterminal pen/pause/IRQ/SPI/firmware/event-wait call edges; no fake power provider\n"
+    },
+    {
+      "name": "camera",
+      "exit": 0,
+      "output": "PASS: actual source sensor/native CCI call chain, unchanged owners/initializers and no automatic camera startup\n"
+    },
+    {
+      "name": "rtc",
+      "exit": 0,
+      "output": "PASS: one register-only RTC initializer, exact clock callbacks and RTC-before-UFS recovery call\n"
+    },
+    {
+      "name": "qrtr",
+      "exit": 0,
+      "output": "PASS actual sole QRTR/SSC provider/queue/flow edges, exact3members, original ABI/other components retained\n"
+    },
+    {
+      "name": "adsp",
+      "exit": 0,
+      "output": "PASS: actual original ADSP/GLINK close→sensor endpoint/RPC calls, two type consumers only, original IOBuffer ABI/other owners retained\n"
+    },
+    {
+      "name": "ssc",
+      "exit": 0,
+      "output": "PASS: actual SSC worker/strict parser/HID calls, no auto-start, motion→haptics→RTC→UFS recovery and existing archives retained\n"
+    },
+    {
+      "name": "memory",
+      "exit": 0,
+      "output": "PASS: actual original IOKit/PAR/cache/4K table→pack→RPC paths, unchanged owners/initializers; no new startup\n"
+    },
+    {
+      "name": "pack",
+      "exit": 0,
+      "output": "PASS: actual VFS/SHA256/cache→RPC calls, original owners/initializers retained, no unqualified startup\n"
+    },
+    {
+      "name": "rpc",
+      "exit": 0,
+      "output": "PASS: actual RPC-provider/core/file-service edges, no owner auto-start, original peripheral archives/initializer count retained\n"
+    },
+    {
+      "name": "pipeline",
+      "exit": 0,
+      "output": "PASS actual Gen4 native pipeline/CCI capture calls, original owners/Apple code, no auto camera start\n"
+    },
+    {
+      "name": "power",
+      "exit": 0,
+      "output": "PASS actual shared I2C10/WL/capture call bounds, genuine169slot backlight, original archives/recovery and absent automatic startup\n"
+    },
+    {
+      "name": "clocks",
+      "exit": 0,
+      "output": "PASS actual native camera39clock graph/board/MMIO edges, exact startup scopes, all original inputs/recovery and no auto-start\n"
+    }
+  ],
+  "guards": {
+    "new_actual_function": 17,
+    "prior_peripheral": 32,
+    "prior_power": 19
+  },
+  "guard_reports": {
+    "audit-tests3/result.json": {
+      "passed": true,
+      "checks": 17,
+      "actual_function_bounds": true,
+      "injected_negative_edges": true,
+      "tests": [
+        {
+          "case": "all_actual_source_boundaries",
+          "accepted": true
+        },
+        {
+          "case": "before_actual_function__elden_camera_sensor_bind",
+          "refused": true,
+          "reason": "Incoming camera call outside actual capture wrapper: _elden_camera_sensor_bind"
+        },
+        {
+          "case": "before_actual_function__elden_camera_sensor_probe",
+          "refused": true,
+          "reason": "Incoming camera call outside actual capture wrapper: _elden_camera_sensor_probe"
+        },
+        {
+          "case": "before_actual_function__elden_camera_sensor_start",
+          "refused": true,
+          "reason": "Incoming camera call outside actual capture wrapper: _elden_camera_sensor_start"
+        },
+        {
+          "case": "before_actual_function__elden_camera_capture_bind",
+          "refused": true,
+          "reason": "Incoming capture call outside actual powered wrapper: _elden_camera_capture_bind"
+        },
+        {
+          "case": "before_actual_function__elden_camera_capture_probe",
+          "refused": true,
+          "reason": "Incoming capture call outside actual powered wrapper: _elden_camera_capture_probe"
+        },
+        {
+          "case": "before_actual_function__elden_camera_capture_start",
+          "refused": true,
+          "reason": "Incoming capture call outside actual powered wrapper: _elden_camera_capture_start"
+        },
+        {
+          "case": "before_actual_function__elden_camera_native_cci_open",
+          "refused": true,
+          "reason": "Incoming camera call outside actual source wrapper: _elden_camera_native_cci_open"
+        },
+        {
+          "case": "before_actual_function__elden_camera_native_pipeline_open",
+          "refused": true,
+          "reason": "Incoming camera call outside actual source wrapper: _elden_camera_native_pipeline_open"
+        },
+        {
+          "case": "before_actual_function__elden_camera_powered_capture_bind",
+          "refused": true,
+          "reason": "Incoming camera call outside actual source wrapper: _elden_camera_powered_capture_bind"
+        },
+        {
+          "case": "before_actual_function__elden_camera_powered_capture_probe",
+          "refused": true,
+          "reason": "Incoming camera call outside actual source wrapper: _elden_camera_powered_capture_probe"
+        },
+        {
+          "case": "before_actual_function__elden_camera_powered_capture_start",
+          "refused": true,
+          "reason": "Incoming camera call outside actual source wrapper: _elden_camera_powered_capture_start"
+        },
+        {
+          "case": "unqualified_outer__elden_camera_board_bind",
+          "refused": true,
+          "reason": "Unqualified outer camera board/clock startup: _elden_camera_board_bind"
+        },
+        {
+          "case": "unqualified_outer__elden_camera_board_prepare",
+          "refused": true,
+          "reason": "Unqualified outer camera board/clock startup: _elden_camera_board_prepare"
+        },
+        {
+          "case": "unqualified_outer__elden_camera_board_probe",
+          "refused": true,
+          "reason": "Unqualified outer camera board/clock startup: _elden_camera_board_probe"
+        },
+        {
+          "case": "unqualified_outer__elden_camera_board_start",
+          "refused": true,
+          "reason": "Unqualified outer camera board/clock startup: _elden_camera_board_start"
+        },
+        {
+          "case": "unqualified_outer__elden_camera_native_clocks_open",
+          "refused": true,
+          "reason": "Unqualified outer camera board/clock startup: _elden_camera_native_clocks_open"
+        }
+      ],
+      "hardware": false
+    },
+    "prior-audit-tests3/result.json": {
+      "passed": true,
+      "checks": 32,
+      "actual_compiled_ar_members": true,
+      "actual_native_function_symbols": true,
+      "negative_calls_and_declarations_injected": true,
+      "kernel_sha256": "feb34fe9c4cee76227ea9e556db34c7a778ce438e75e956f60cb184171f42460",
+      "native_sha256": "ffc5d65bbc85be07ee489dcc7d95b052b8f52e16ccb63fc3254a4e3192f7a65c",
+      "tests": [
+        {
+          "case": "exact_original_member_replacement",
+          "accepted": true
+        },
+        {
+          "case": "unchanged_actual_SHA",
+          "accepted": true
+        },
+        {
+          "case": "original_SHA_mismatch",
+          "refused": true,
+          "reason": "Original inherited archive fingerprint missing/changed"
+        },
+        {
+          "case": "fabricated_member_SHA",
+          "refused": true,
+          "reason": "Actual ar member hash differs from declaration: libEldenAdspRuntime.a/AdspProbe.o"
+        },
+        {
+          "case": "missing_archive_declaration",
+          "refused": true,
+          "reason": "Declared transport member proof absent"
+        },
+        {
+          "case": "duplicate_replacement",
+          "refused": true,
+          "reason": "One actual replacement archive required"
+        },
+        {
+          "case": "replacement_absent",
+          "refused": true,
+          "reason": "One actual replacement archive required"
+        },
+        {
+          "case": "declared_unrelated_peer_change",
+          "refused": true,
+          "reason": "Only the exact original transport type consumers may change"
+        },
+        {
+          "case": "exact_three_QRTR_consumers",
+          "accepted": true
+        },
+        {
+          "case": "three_consumers_without_profile_refused",
+          "refused": true,
+          "reason": "Only the exact original transport type consumers may change"
+        },
+        {
+          "case": "exact_cumulative_original_members",
+          "accepted": true
+        },
+        {
+          "case": "counterfeit_cumulative_members_refused",
+          "refused": true,
+          "reason": "Actual ar member hash differs from declaration: libEldenAdspRuntime.a/AdspProbe.o"
+        },
+        {
+          "case": "exact_runtime_member_MemoryBinding.o",
+          "accepted": true
+        },
+        {
+          "case": "runtime_member_without_profile_MemoryBinding.o",
+          "refused": true,
+          "reason": "Existing archive lost or changed without a supported transport delta"
+        },
+        {
+          "case": "counterfeit_runtime_member_MemoryBinding.o",
+          "refused": true,
+          "reason": "Actual ar member hash differs from declaration: libEldenSensorMemory.a/MemoryBinding.o"
+        },
+        {
+          "case": "exact_runtime_member_NativeSsc.o",
+          "accepted": true
+        },
+        {
+          "case": "runtime_member_without_profile_NativeSsc.o",
+          "refused": true,
+          "reason": "Existing archive lost or changed without a supported transport delta"
+        },
+        {
+          "case": "counterfeit_runtime_member_NativeSsc.o",
+          "refused": true,
+          "reason": "Actual ar member hash differs from declaration: libEldenMotionSsc.a/NativeSsc.o"
+        },
+        {
+          "case": "exact_runtime_member_ShengUfs.o",
+          "accepted": true
+        },
+        {
+          "case": "runtime_member_without_profile_ShengUfs.o",
+          "refused": true,
+          "reason": "Existing archive lost or changed without a supported transport delta"
+        },
+        {
+          "case": "counterfeit_runtime_member_ShengUfs.o",
+          "refused": true,
+          "reason": "Actual ar member hash differs from declaration: libShengUfs.a/ShengUfs.o"
+        },
+        {
+          "case": "actual_binding_function_allowed",
+          "accepted": true
+        },
+        {
+          "case": "before_actual_function_rejected",
+          "refused": true,
+          "reason": "Unqualified incoming call outside exact binding function: _elden_sensor_pack_binding_open"
+        },
+        {
+          "case": "next_actual_function_rejected",
+          "refused": true,
+          "reason": "Unqualified incoming call outside exact binding function: _elden_sensor_pack_binding_open"
+        },
+        {
+          "case": "outer_actual_startup_rejected",
+          "refused": true,
+          "reason": "Outer actual sensor startup has an unqualified caller: _elden_sensor_memory_binding_open"
+        },
+        {
+          "case": "actual_finish_stop_allowed",
+          "accepted": true
+        },
+        {
+          "case": "unrelated_actual_endpoint_stop_rejected",
+          "refused": true,
+          "reason": "Unqualified incoming call outside exact binding function: _elden_sensor_rpc_request_stop"
+        },
+        {
+          "case": "exact_runtime_worker_and_setup_calls",
+          "accepted": true
+        },
+        {
+          "case": "runtime_outer_startup_refused",
+          "refused": true,
+          "reason": "Actual outer runtime has an unqualified startup caller: _elden_sensor_runtime_start"
+        },
+        {
+          "case": "unrelated_runtime_worker_call_refused",
+          "refused": true,
+          "reason": "Incoming startup outside actual runtime worker: _elden_sensor_adsp_endpoint_open"
+        },
+        {
+          "case": "actual_prepared_memory_binding_calls",
+          "accepted": true
+        },
+        {
+          "case": "prepared_binding_without_profile_refused",
+          "refused": true,
+          "reason": "Unqualified incoming call outside exact binding function: _elden_sensor_pack_binding_open"
+        }
+      ],
+      "hardware": false
+    },
+    "prior-power-tests1/result.json": {
+      "passed": true,
+      "checks": 19,
+      "tests": [
+        {
+          "name": "actual_shared_archive_2members",
+          "accepted": true
+        },
+        {
+          "name": "missing_one_original_I2c10_GENI_owner",
+          "refused": true,
+          "reason": "Existing archive lost or changed without a supported transport delta"
+        },
+        {
+          "name": "missing_changed_backlight_archive",
+          "refused": true,
+          "reason": "Declared transport member proof absent"
+        },
+        {
+          "name": "missing_backlight_original_path",
+          "refused": true,
+          "reason": "Actual original I2C10 path differs"
+        },
+        {
+          "name": "missing_backlight_shared_path",
+          "refused": true,
+          "reason": "Actual shared I2C10 path differs"
+        },
+        {
+          "name": "original_GENI_misdeclared",
+          "refused": true,
+          "reason": "Actual ar member hash differs from declaration: libEldenBacklight.a/GeniI2c.o"
+        },
+        {
+          "name": "changed_platform_hash_mismatch",
+          "refused": true,
+          "reason": "Actual ar member hash differs from declaration: libEldenBacklight.a/Platform.o"
+        },
+        {
+          "name": "duplicate_shared_controller",
+          "refused": true,
+          "reason": "One actual replacement archive required"
+        },
+        {
+          "name": "honestly_declared_GENI_replacement",
+          "refused": true,
+          "reason": "Only the exact original transport type consumers may change"
+        },
+        {
+          "name": "actual_powered_wrapper_bounds",
+          "accepted": true
+        },
+        {
+          "name": "power_calls_without_profile",
+          "refused": true,
+          "reason": "Unqualified outer camera startup caller: _elden_camera_capture_bind"
+        },
+        {
+          "name": "outer__elden_camera_native_cci_open",
+          "refused": true,
+          "reason": "Unqualified outer camera startup caller: _elden_camera_native_cci_open"
+        },
+        {
+          "name": "outer__elden_camera_native_pipeline_open",
+          "refused": true,
+          "reason": "Unqualified outer camera startup caller: _elden_camera_native_pipeline_open"
+        },
+        {
+          "name": "outer__elden_camera_powered_capture_bind",
+          "refused": true,
+          "reason": "Unqualified outer powered camera startup: _elden_camera_powered_capture_bind"
+        },
+        {
+          "name": "outer__elden_camera_powered_capture_probe",
+          "refused": true,
+          "reason": "Unqualified outer powered camera startup: _elden_camera_powered_capture_probe"
+        },
+        {
+          "name": "outer__elden_camera_powered_capture_start",
+          "refused": true,
+          "reason": "Unqualified outer powered camera startup: _elden_camera_powered_capture_start"
+        },
+        {
+          "name": "before_actual__elden_camera_powered_capture_bind",
+          "refused": true,
+          "reason": "Incoming capture call outside actual powered wrapper: _elden_camera_capture_bind"
+        },
+        {
+          "name": "before_actual__elden_camera_powered_capture_probe",
+          "refused": true,
+          "reason": "Incoming capture call outside actual powered wrapper: _elden_camera_capture_probe"
+        },
+        {
+          "name": "before_actual__elden_camera_powered_capture_start",
+          "refused": true,
+          "reason": "Incoming capture call outside actual powered wrapper: _elden_camera_capture_start"
+        }
+      ],
+      "actual_archives_and_function_bounds": true,
+      "injected_negative_edges": true,
+      "kernel_sha256": "cbad4612351729e17e991368d1ab2cbb79486836112593d1b4ce2a94430cb25a",
+      "hardware": false
+    }
+  },
+  "guards_unchanged_after_CFG_restore": true,
+  "private_archive": {
+    "file": "camera-clocks-final-offline.tar.gz",
+    "bytes": 27244479,
+    "sha256": "939884a7588ecf0989430e81a1c67347078323490861734dde2dfe8e06385721",
+    "members": 649,
+    "members_verified": true,
+    "manifest_sha256": "1603c835cf1ec05bcc72fa25e42da6f7da6ecb2f28fccf7e0f532c390e129d2c"
+  },
+  "complete_original_CFG_restored": true,
+  "actual_native_clock_board_WL_CCI_CAMSS_linked": true,
+  "physical_PLL_RPMh_GCC_CSIrails_DMA_owner_installed": false,
+  "hardware_tested": false,
+  "real_camera_frames_OSservice_accepted": false,
+  "automatic_startup_added": false,
+  "overall_five_part_goal_complete": false,
+  "legacy_flags": {
+    "abi_qualified": false,
+    "loadable": false,
+    "runtime_qualified": false,
+    "instruction_relocation_complete": false
+  }
+}

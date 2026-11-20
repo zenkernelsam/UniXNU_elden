@@ -40,7 +40,8 @@ def main():
                         if word&0x7c000000==0x14000000:
                             pc=sec['va']+off;calls.append((pc,pc+(signed(word&0x3ffffff,26)<<2)))
     if len(initial)!=len(before):raise ValueError('Automatic camera/backlight initializer added')
-    startup=check_camera_startup(calls,symbol,a.kernel_build/'native.macho',True)
+    board=report.get('actual_native_camera_clock_board') is True
+    startup=check_camera_startup(calls,symbol,a.kernel_build/'native.macho',True,board)
     def edge(caller,callee,empty=False):
         lo=symbol(caller);hi=min((v for v,n in starts if v>lo),default=None)
         hits=[pc for pc,target in calls if target==symbol(callee)]
@@ -51,7 +52,7 @@ def main():
         ('_elden_camera_power_bind_bus','_elden_camera_power_open'),('_elden_camera_power_session_resource','_elden_camera_power_resource'),
         ('_elden_camera_power_session_stop','_elden_camera_power_stop'),('_elden_camera_power_session_stop','_elden_camera_i2c10_close'),
         ('_elden_camera_powered_capture_stop','_elden_camera_capture_stop')]:boundaries[callee]=edge(caller,callee)
-    for name in ('_elden_camera_power_session_open','_elden_camera_powered_capture_bind','_elden_camera_powered_capture_probe','_elden_camera_powered_capture_start'):
+    for name in ('_elden_camera_power_session_open',) if board else ('_elden_camera_power_session_open','_elden_camera_powered_capture_bind','_elden_camera_powered_capture_probe','_elden_camera_powered_capture_start'):
         if any(target==symbol(name) for pc,target in calls):raise ValueError('Unqualified outer camera power startup: '+name)
     for name in ('_elden_camera_i2c10_read','_elden_camera_i2c10_write','_elden_bl_platform_i2c10_read','_elden_bl_platform_i2c10_write'):
         if not any(target==symbol(name) for pc,target in calls):raise ValueError('Actual regulator/shared transfer edge absent: '+name)

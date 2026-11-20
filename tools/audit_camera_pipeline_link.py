@@ -37,7 +37,8 @@ def main():
                         if w&0x7c000000==0x14000000:
                             pc=sec['va']+off;calls.append((pc,pc+(signed(w&0x3ffffff,26)<<2)))
     if len(initial)!=len(before):raise ValueError('Automatic camera initializer added')
-    startup=check_camera_startup(calls,symbol,a.kernel_build/'native.macho',report.get('actual_camera_WL_power_session') is True)
+    startup=check_camera_startup(calls,symbol,a.kernel_build/'native.macho',report.get('actual_camera_WL_power_session') is True,
+        report.get('actual_native_camera_clock_board') is True)
     edges={}
     for n in ('_elden_camera_pipeline_resources','_elden_camera_pipeline_open','_elden_camera_pipeline_queue','_elden_camera_pipeline_start',
               '_elden_camera_pipeline_service','_elden_camera_pipeline_frame','_elden_camera_pipeline_ready','_elden_camera_pipeline_stop','_elden_camera_pipeline_status',

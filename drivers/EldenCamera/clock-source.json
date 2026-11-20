@@ -1,0 +1,128 @@
+{
+  "repository": "https://github.com/h0cheung/tb322fc-linux-kernel",
+  "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+  "board": "TB322FC/SM8750",
+  "files": [
+    {
+      "file": "wl2868c-regulator.c",
+      "path": "drivers/regulator/wl2868c-regulator.c",
+      "bytes": 3905,
+      "sha256": "26806c52fa5d4d5e56cf436a57a8fcc1d8b055ae4f65d3e2970d4cfbb1880136"
+    },
+    {
+      "file": "helpers.c",
+      "path": "drivers/regulator/helpers.c",
+      "bytes": 26780,
+      "sha256": "860f6e07370505cf909331d120390a3f622056af8d1c197dac795b1f5f9fa981"
+    },
+    {
+      "file": "clk-rcg2.c",
+      "path": "drivers/clk/qcom/clk-rcg2.c",
+      "bytes": 46477,
+      "sha256": "4a1c8f29e2d4a80ef14f5c58f14de7a3576ea591c84f091b59cf5257e303f947"
+    },
+    {
+      "file": "clk-branch.c",
+      "path": "drivers/clk/qcom/clk-branch.c",
+      "bytes": 4947,
+      "sha256": "d29259eb77a5d1d6a07adf4aa835588f8e04d1fa3c14be2b7d4162cce737abfa"
+    },
+    {
+      "file": "clk-branch.h",
+      "path": "drivers/clk/qcom/clk-branch.h",
+      "bytes": 3986,
+      "sha256": "bac7dcf51a0da5b27eaa0d4dc276f540fec80013bd4862cfbbc115a50161ef72"
+    },
+    {
+      "file": "camcc-sm8750.c",
+      "path": "drivers/clk/qcom/camcc-sm8750.c",
+      "bytes": 73195,
+      "sha256": "191c1754ca0f1408cdd9e2e1c9caaa290b5f707633f7bb84e443dfde08f29b93"
+    },
+    {
+      "file": "cambistmclkcc-sm8750.c",
+      "path": "drivers/clk/qcom/cambistmclkcc-sm8750.c",
+      "bytes": 13296,
+      "sha256": "b9368cf617af714f47273b24f674677213a2b6189cf51ff02b61b9e7b7568dfa"
+    },
+    {
+      "file": "pinctrl-sm8750.c",
+      "path": "drivers/pinctrl/qcom/pinctrl-sm8750.c",
+      "bytes": 55646,
+      "sha256": "9764b4a28ee8189dc3c48b1657ccf8ec8c000733403db381edcce17ce15e32fe"
+    },
+    {
+      "file": "gdsc.c",
+      "path": "drivers/clk/qcom/gdsc.c",
+      "bytes": 18545,
+      "sha256": "a7ba3aad9fe83609a9562eb8f4153ee9b91d9108130e7a4d1439437b5501b791"
+    },
+    {
+      "file": "gdsc.h",
+      "path": "drivers/clk/qcom/gdsc.h",
+      "bytes": 3161,
+      "sha256": "c33696adccfcd38a78baf39dbcea179e1f7d3b13c5d3095e822065477e30c888"
+    },
+    {
+      "file": "clk-regmap.c",
+      "path": "drivers/clk/qcom/clk-regmap.c",
+      "bytes": 2828,
+      "sha256": "2438f057d67c3cd0229e710494dcf0a381bc69021591fe9cb89219734b8e633d"
+    },
+    {
+      "file": "clk-regmap.h",
+      "path": "drivers/clk/qcom/clk-regmap.h",
+      "bytes": 1151,
+      "sha256": "3c8dab9af916ecc46ed515533eb2535222a2ecd172cb9f0abfcbe16ca726735a"
+    },
+    {
+      "file": "clk-rcg.h",
+      "path": "drivers/clk/qcom/clk-rcg.h",
+      "bytes": 5525,
+      "sha256": "128e149a3f94d356a16e294e0ba406452e2a47af0443396cc2ff078da7731e1d"
+    },
+    {
+      "file": "common.c",
+      "path": "drivers/clk/qcom/common.c",
+      "bytes": 10838,
+      "sha256": "ea4541695d6567d8a7e3b3ff450c50353c278a44777fc6565f98616a28f30949"
+    },
+    {
+      "file": "common.h",
+      "path": "drivers/clk/qcom/common.h",
+      "bytes": 2674,
+      "sha256": "9a2f6db86a796403b600f7e0f3a5b3b6a8cfc8f84feccf2d1ec7eeee68f9bc4a"
+    },
+    {
+      "file": "pinctrl-msm.c",
+      "path": "drivers/pinctrl/qcom/pinctrl-msm.c",
+      "bytes": 43920,
+      "sha256": "d6638c03c09f5c0b24d9e343e19fb04ad7d483ec4f1c5fdabde4efc3570d59f8"
+    },
+    {
+      "file": "pinctrl-msm.h",
+      "path": "drivers/pinctrl/qcom/pinctrl-msm.h",
+      "bytes": 7670,
+      "sha256": "68e7845e7f785a84c476b03b347b09fbf6789de991f4d0684b81d2af6354d814"
+    },
+    {
+      "file": "sm8750.dtsi",
+      "path": "arch/arm64/boot/dts/qcom/sm8750.dtsi",
+      "bytes": 191275,
+      "sha256": "cbf8bad5006ec6d2c3d654aeec94bb0f08be235e03804164a2252e5b65a4e175"
+    },
+    {
+      "file": "sm8750-lenovo-elden.dts",
+      "path": "arch/arm64/boot/dts/qcom/sm8750-lenovo-elden.dts",
+      "bytes": 54331,
+      "sha256": "0a4361f3f2225befd954dd5420216f357bfa8a68294c28c895ec2478ebea3ba3"
+    },
+    {
+      "file": "camss.c",
+      "path": "drivers/media/platform/qcom/camss/camss.c",
+      "bytes": 147035,
+      "sha256": "62f3bbc5c393a26ef6488e8c0b2eed19bdcb61db1dd7ac61982b21260554704f"
+    }
+  ],
+  "hardware": false
+}

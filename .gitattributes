@@ -35,3 +35,6 @@ drivers/EldenCamera/upstream/clk-* -text -whitespace
 drivers/EldenCamera/upstream/cambistmclkcc-sm8750.c -text -whitespace
 drivers/EldenCamera/upstream/camcc-sm8750.c -text -whitespace
 drivers/EldenCamera/upstream/pinctrl-sm8750.c -text -whitespace
+drivers/EldenCamera/upstream/pinctrl-msm.* -text -whitespace
+drivers/EldenCamera/upstream/common.* -text -whitespace
+drivers/EldenCamera/upstream/gdsc.* -text -whitespace
