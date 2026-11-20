@@ -24,6 +24,13 @@ Current kernel:
 `d054975d87c1c1aca07db77f6f2bac2884db48d03af8b7ada533ca10cadc2359`.
 Current native:
 `b70f270e75562fe2bd3d4d7aa3404f26f1ebd43cfef458a9d08d836cce6aa30d`.
+Final implementation commit: `d7571f2f161051c0d0c130556d3b2915d841cd67`.
+Current receipts: workbench `lab/records/shared-smmu-postroute-20261120`;
+artifact `edl_work/shared-smmu-postroute-20261120/`
+`shared-smmu-postroute-offline.tar.gz`,26,931,850B/SHA256
+`9c9dddf658dc680a2d65e0de891d07be8bcabc9b4d29e584d91020142cfe1e10`;
+all587archive members reverified on Windows. Earlier folders below retain
+the first delivery for comparison, rather than representing the current image.
 
 ## Source and immutable transaction
 
