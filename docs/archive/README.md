@@ -1,5 +1,10 @@
 # 历史文档
 
+本离线外设工作树的当前入口是 [peripherals/STATUS](../peripherals/STATUS.md)
+和 [peripherals/INDEX](../peripherals/INDEX.md)；本周旧流水保存在
+[peripherals-20261121](peripherals-20261121/README.md)，原文件指纹在其 manifest.json。
+下方旧主线入口用于历史复现；今日主线设备状态请读主线自己的 docs/INDEX.md。
+
 `pre-cleanup-20261111/` 保留整理前的 91 项文档与旧 README。
 其中的“当前”“下一发”及相对路径描述的是当时现场，不能当作今日设备状态或刷写入口。
 

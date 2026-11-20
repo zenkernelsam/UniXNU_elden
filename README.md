@@ -2,6 +2,11 @@
 
 Lenovo Legion Y700 Gen4 / TB322FC / SM8750 的 UniXNU 适配源码。
 
+本工作树是 **offline-peripheral-fixes** 分支，当前五项外设入口为
+[文档索引](docs/INDEX.md) 和 [外设状态](docs/peripherals/STATUS.md)。
+最新相机真实帧/只读服务/OS17 CMIO 源码已离线构建，主线继续负责真机验收；
+下方 v91/v121 描述保留作原始构建来源，不代表当前主线全部状态。
+
 **新克隆构建入口：[CLEAN-BUILD.md](docs/CLEAN-BUILD.md)**。`tools/build_clean.py` 从源码
 生成8GiB GUI或v121蓝牙分支，独立再生载荷和boot，不要求旧v99/旧对象/工作台路径。
 需自备原始21H461系统、TB322FC固件及声明的工具链/签名输入。当前原生构建宿主为macOS；

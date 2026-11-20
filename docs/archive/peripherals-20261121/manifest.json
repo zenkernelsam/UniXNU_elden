@@ -1,0 +1,17 @@
+{
+  "AGENTS.md": {
+    "archive": "docs/archive/peripherals-20261121/AGENTS.md",
+    "sha256": "9251b08d05a32be0df70670bf254542abc4cfebdc1abeb3566042eb5bd3f6d34",
+    "bytes": 161292
+  },
+  "docs/peripherals/STATUS.md": {
+    "archive": "docs/archive/peripherals-20261121/STATUS.md",
+    "sha256": "1647c58cd8ca6db7f0ed50131229149df6dca25af6d124318c74693a28fb6274",
+    "bytes": 20994
+  },
+  "docs/peripherals/MAINLINE-HANDOFF-PROMPT.md": {
+    "archive": "docs/archive/peripherals-20261121/MAINLINE-HANDOFF-PROMPT.md",
+    "sha256": "1dce2f5a0efc5badb33f61dbbb87ace1583e28bbf49bd3399ad137236934c38c",
+    "bytes": 26070
+  }
+}
