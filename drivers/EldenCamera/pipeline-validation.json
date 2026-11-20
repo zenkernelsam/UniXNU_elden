@@ -1,0 +1,271 @@
+{
+  "schema": 1,
+  "branch": "offline-peripheral-fixes",
+  "parent_commit": "d8361c6fc8adb79b2101d87444b7aa7e9fce82ef",
+  "kernel_sha256": "70a217137db6d6404d6c05c8412e314ff41b4fa6952faae89f999ca8a26a67e4",
+  "native_sha256": "6641316f764eea9b1d77889d3c0fc26cb552bb5f3c1c78985a3b88c5e62650be",
+  "parent_kernel_sha256": "28d31bc51fb5b33706f3fd6da933d19d42a862129f5411e2ec658cc46b0c4ec8",
+  "source_files": {
+    ".gitattributes": "f6899d5678dd79a8181970e92fd4e0970870280ab944533f2bf8af1511e6c6b7",
+    "AGENTS.md": "e3c5c36727f6d3f7af2904123d82d2204739b4062620d66c3a06bf99d9dedcf1",
+    "docs/peripherals/CAMERA-PIPELINE.md": "31194a5a82ee92735a7734f86afd155a8b8d1a657d43bd3b8c398ba4390e887b",
+    "docs/peripherals/MAINLINE-HANDOFF-PROMPT.md": "9ba39b70d28ba61cb92e1b686b2cb4aef580555122366cad60646bd9ed40af21",
+    "docs/peripherals/STATUS.md": "011f72b3415c85e56495ddb32e27904fecb365aa5973d815b5679658663f28bc",
+    "drivers/EldenCamera/CaptureBinding.c": "81aa89e7029f4182b717bf7e0455fa60de4c1b065898b83e8759f66d9fcdc759",
+    "drivers/EldenCamera/NativePipeline.cpp": "b0474e93c351aaad2cf2cde88170d0687cbfd775990d55911cea9ca32c53bae7",
+    "drivers/EldenCamera/NativePipeline.h": "dd1f42757daba68e67634c151c382e6df65167f33d100ffddb8dc577de2d33d1",
+    "drivers/EldenCamera/NativePipelineMethods.inc": "b0227a44daa2be8f0eba0320d0852fef55e9ecefe156704a436dffe3592cd16d",
+    "drivers/EldenCamera/Pipeline.c": "c02cfa5c1e6822cb549fc5b2163848b40109439d625a0f4d87e75d662ea51105",
+    "drivers/EldenCamera/Pipeline.h": "10bcc040e483b5f0a5e7ade256d9c0b83b696c089c01f6e53fb82d94b6bae5b2",
+    "drivers/EldenCamera/PipelineSource.py": "cd09a5ac72e5ad83099d720c81a8eb06db93feb29072a99c9135c5c6552d65d4",
+    "drivers/EldenCamera/TestCaptureStack.cpp": "b5a210f13facc3169587d3cd73771a4f288108fc3702639c1507d266522da6e7",
+    "drivers/EldenCamera/TestNativePipeline.cpp": "9aaa36d923d42206ad5477b6aad870a89d29ecec00c562c10c8a4525688923fc",
+    "drivers/EldenCamera/TestPipeline.c": "ecc7c1f55b718a61a7e46f32237d531f6bd79deb2f284b20972a7d3a2937e5e3",
+    "drivers/EldenCamera/pipeline-source.json": "a3602c4938145a70da7fc70eeff6a7b653324e68def08d4e0bf450aa26c3677b",
+    "drivers/EldenCamera/upstream/camss-csid-980.c": "5015cd9f2fe0a10803a515ccc232ef851d069c2eef2be1fa6de28542fd59cd08",
+    "drivers/EldenCamera/upstream/camss-csid-gen3.h": "059c9bdf11de22f39f3abeff2bf780eb66eb0d553fb7f9dc6f2ca55a74ee5e57",
+    "drivers/EldenCamera/upstream/camss-csid.c": "64abba53e758982a3f0072c367337d7f6237d391d3549f80c239c7c69c9dbba4",
+    "drivers/EldenCamera/upstream/camss-csid.h": "637bc07f63ea78bd20c5f87331de97f3d15275389b16bd81a5f087e5c50768f1",
+    "drivers/EldenCamera/upstream/camss-csiphy-3ph-1-0.c": "571529bc4ea491c23b54322ffe0ade30714c464f5ec718889bafd559a16f6232",
+    "drivers/EldenCamera/upstream/camss-vfe-gen4.c": "29c970836132ceee021dfaf90faab43b18066d3b27d782c73b5757299b03648d",
+    "drivers/EldenCamera/upstream/camss-vfe.c": "83de5d90a1443733abf4d7e0f8a937e51c3ac8ed7665d45572e3ac355c15226c",
+    "drivers/EldenCamera/upstream/camss-video.c": "b4550ee896ae2d14ef16c2fe05a40476419cd2f2e3311c822a664dc67fbeaccf",
+    "drivers/EldenCamera/upstream/camss.c": "62f3bbc5c393a26ef6488e8c0b2eed19bdcb61db1dd7ac61982b21260554704f",
+    "drivers/EldenCamera/upstream/camss.h": "d06b62be6874a9d27f009a853b268a96403f7339fd5c489d960f707581f533c4",
+    "drivers/EldenCamera/upstream/sm8750-lenovo-elden.dts": "0a4361f3f2225befd954dd5420216f357bfa8a68294c28c895ec2478ebea3ba3",
+    "drivers/EldenCamera/upstream/sm8750.dtsi": "cbf8bad5006ec6d2c3d654aeec94bb0f08be235e03804164a2252e5b65a4e175",
+    "tools/audit_camera_cci_link.py": "30a2380fd851974b903e807900bf56719a746fce38ef8cc546b6deb827ba5b51",
+    "tools/audit_camera_pipeline_board.py": "88054b9209e66792f1feff63781cd5096361360a79156342603dbe5b549a20bd",
+    "tools/audit_camera_pipeline_link.py": "4325aab4a2cba3793b02b75ffd425766ec20725b01fa11f5077bedfb66f63c2d",
+    "tools/camera_startup_audit.py": "0a61eeb0d3ee42a8902413f7717a181a7b4c2081aacc73bfaa8344bfb1646f78",
+    "tools/link_camera_pipeline.py": "afe58d950e54bd87eec943dbac73d97e184e46b7d2efc2d02e757e7e000b2226",
+    "tools/prepare_camera_pipeline.py": "c2a44f3bd1f8e52c60f7714ecd0515a8a608233f818edea41b54db6f402df7ea",
+    "tools/test_camera_capture_stack.py": "7a8f11d950e87d41524a14b705ecd30ec70da4adc1a559ac925503f76bdd9051",
+    "tools/test_camera_link_audit.py": "86b40cb5fdbe0493a2d6373fe9ba9ca6bcf39e092f78f835d0f683481655066d",
+    "tools/test_camera_pipeline.py": "a13db7aabb2961e3b57f5d8421313b2b19bbfc969b6ef9528d85919f7c8ab66c"
+  },
+  "source_manifest": {
+    "repository": "https://github.com/h0cheung/tb322fc-linux-kernel",
+    "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+    "board": "Lenovo TB322FC SM8750",
+    "files": [
+      {
+        "file": "camss-csiphy-3ph-1-0.c",
+        "path": "drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c",
+        "bytes": 54803,
+        "sha256": "571529bc4ea491c23b54322ffe0ade30714c464f5ec718889bafd559a16f6232"
+      },
+      {
+        "file": "camss-csid-980.c",
+        "path": "drivers/media/platform/qcom/camss/camss-csid-980.c",
+        "bytes": 14043,
+        "sha256": "5015cd9f2fe0a10803a515ccc232ef851d069c2eef2be1fa6de28542fd59cd08"
+      },
+      {
+        "file": "camss-csid-gen3.h",
+        "path": "drivers/media/platform/qcom/camss/camss-csid-gen3.h",
+        "bytes": 896,
+        "sha256": "059c9bdf11de22f39f3abeff2bf780eb66eb0d553fb7f9dc6f2ca55a74ee5e57"
+      },
+      {
+        "file": "camss-vfe-gen4.c",
+        "path": "drivers/media/platform/qcom/camss/camss-vfe-gen4.c",
+        "bytes": 5920,
+        "sha256": "29c970836132ceee021dfaf90faab43b18066d3b27d782c73b5757299b03648d"
+      },
+      {
+        "file": "camss-csid.c",
+        "path": "drivers/media/platform/qcom/camss/camss-csid.c",
+        "bytes": 32187,
+        "sha256": "64abba53e758982a3f0072c367337d7f6237d391d3549f80c239c7c69c9dbba4"
+      },
+      {
+        "file": "camss-vfe.c",
+        "path": "drivers/media/platform/qcom/camss/camss-vfe.c",
+        "bytes": 57304,
+        "sha256": "83de5d90a1443733abf4d7e0f8a937e51c3ac8ed7665d45572e3ac355c15226c"
+      },
+      {
+        "file": "camss.h",
+        "path": "drivers/media/platform/qcom/camss/camss.h",
+        "bytes": 4633,
+        "sha256": "d06b62be6874a9d27f009a853b268a96403f7339fd5c489d960f707581f533c4"
+      },
+      {
+        "file": "camss.c",
+        "path": "drivers/media/platform/qcom/camss/camss.c",
+        "bytes": 147035,
+        "sha256": "62f3bbc5c393a26ef6488e8c0b2eed19bdcb61db1dd7ac61982b21260554704f"
+      },
+      {
+        "file": "sm8750.dtsi",
+        "path": "arch/arm64/boot/dts/qcom/sm8750.dtsi",
+        "bytes": 191275,
+        "sha256": "cbf8bad5006ec6d2c3d654aeec94bb0f08be235e03804164a2252e5b65a4e175"
+      },
+      {
+        "file": "sm8750-lenovo-elden.dts",
+        "path": "arch/arm64/boot/dts/qcom/sm8750-lenovo-elden.dts",
+        "bytes": 54331,
+        "sha256": "0a4361f3f2225befd954dd5420216f357bfa8a68294c28c895ec2478ebea3ba3"
+      },
+      {
+        "file": "camss-csid.h",
+        "path": "drivers/media/platform/qcom/camss/camss-csid.h",
+        "bytes": 7112,
+        "sha256": "637bc07f63ea78bd20c5f87331de97f3d15275389b16bd81a5f087e5c50768f1"
+      },
+      {
+        "file": "camss-video.c",
+        "path": "drivers/media/platform/qcom/camss/camss-video.c",
+        "bytes": 20702,
+        "sha256": "b4550ee896ae2d14ef16c2fe05a40476419cd2f2e3311c822a664dc67fbeaccf"
+      }
+    ],
+    "resource_source_sha256": "62f3bbc5c393a26ef6488e8c0b2eed19bdcb61db1dd7ac61982b21260554704f",
+    "soc_DT_sha256": "cbf8bad5006ec6d2c3d654aeec94bb0f08be235e03804164a2252e5b65a4e175",
+    "elden_DT_sha256": "0a4361f3f2225befd954dd5420216f357bfa8a68294c28c895ec2478ebea3ba3",
+    "csiphy": "lane_regs_2_4_0/offset0x1000/status0x138",
+    "csid": "csid_ops_980",
+    "vfe": "vfe_ops_gen4",
+    "dma_mask_bits": 32,
+    "CAMSS_INIT_BUF_COUNT": 2,
+    "hardware": false
+  },
+  "core_scenarios": 218,
+  "core_checks": 1202627,
+  "native_adapter_cases": 8,
+  "native_adapter_checks": 5077,
+  "front_rear_capture_stack": {
+    "normal": "PASS composed Gen4 front/rear capture normal: 50667 checks; actual sensor/CCI/native PHY-CSID-VFE binding; power/MMIO/GIC/DMA peers modeled\n",
+    "drain-fail": "PASS composed Gen4 front/rear capture drain-fail: 50774 checks; actual sensor/CCI/native PHY-CSID-VFE binding; power/MMIO/GIC/DMA peers modeled\n"
+  },
+  "actual_compiled_startup_guard_checks": 10,
+  "fixed_topology_source_checks": 36,
+  "native_objects": {
+    "CameraPipeline.o": {
+      "sha256": "7ee649c5d35ac86d00d3f657db3fff723115dacc2b0b54ebe5cfa53b5f080a8a",
+      "imports": []
+    },
+    "NativePipeline.o": {
+      "sha256": "855f53c90951c050adf8fe55cdcc9f4e66bfcdf338bc2e3216adaf69a0b547d2",
+      "imports": [
+        "_IODelay",
+        "_IOLockAlloc",
+        "_IOMalloc_internal",
+        "_KHEAP_DEFAULT",
+        "__ZN14IODeviceMemory9withRangeEyy",
+        "___stack_chk_fail",
+        "___stack_chk_guard",
+        "_armcpu_gic_ready",
+        "_armcpu_spi_attach",
+        "_armcpu_spi_mask",
+        "_elden_camera_pipeline_frame",
+        "_elden_camera_pipeline_open",
+        "_elden_camera_pipeline_queue",
+        "_elden_camera_pipeline_ready",
+        "_elden_camera_pipeline_resources",
+        "_elden_camera_pipeline_service",
+        "_elden_camera_pipeline_start",
+        "_elden_camera_pipeline_status",
+        "_elden_camera_pipeline_stop",
+        "_lck_mtx_lock",
+        "_lck_mtx_unlock",
+        "_ml_at_interrupt_context"
+      ]
+    },
+    "CaptureBinding.o": {
+      "sha256": "ed668f943ddadfe82a69b376579d6f5ad9871ab4fa2f4c9d4b594889f738b9a4",
+      "imports": [
+        "_elden_camera_native_pipeline_prepared",
+        "_elden_camera_native_pipeline_ready",
+        "_elden_camera_native_pipeline_start",
+        "_elden_camera_native_pipeline_status",
+        "_elden_camera_native_pipeline_stop",
+        "_elden_camera_sensor_bind",
+        "_elden_camera_sensor_probe",
+        "_elden_camera_sensor_shutdown",
+        "_elden_camera_sensor_start",
+        "_elden_camera_sensor_stop"
+      ]
+    }
+  },
+  "native_objects_equal_actual_linked_inputs": true,
+  "final_source9_exact_bytes_equal_compiled_source8": {
+    "final_source9_exact_bytes_equal_compiled_source8": true,
+    "compiled_source_record_sha256": "cc77da9a1fa5f3edab1dd6f3d7472f5e7a57e0e2418a5b8021263de1d1c03ce2",
+    "final_source_record_sha256": "b2f07e6566095ba079e6a81b7f0caba22aa0459968e455d4506a6b6fb00f7b77",
+    "final_native9_objects_equal_linked_native8": true,
+    "source_count": 20,
+    "additional_topology_evidence_only": true,
+    "hardware": false
+  },
+  "power_MMIO_GIC_DMA_sensor_physical_peers_modeled": true,
+  "no_synthetic_camera_frame_producer": true,
+  "native_compile_warnings": 0,
+  "original_link_warnings_retained": true,
+  "full_component_link": true,
+  "original_Apple_regions": 30,
+  "all_original_archives_and_recovery_objects_retained": true,
+  "all_prior_peripheral_ABI_recovery_audits_pass": true,
+  "actual_sensor_CCI_nativePHY_CSID_VFE_capture_binding": true,
+  "frame_geometry": {
+    "rear_stride": 5104,
+    "front_stride": 4080,
+    "raw_bits": 10,
+    "dma_bits": 32,
+    "address_units_bytes": 256
+  },
+  "physical_power_clocks_rails_pins_SMMU_buffers_DMA_IRQ_provider_installed": false,
+  "real_RAW10_frames_ISP_debayer_OS17_camera": false,
+  "no_automatic_camera_start": true,
+  "native_parent_IRQs_masked_and_service_polled": true,
+  "hardware": false,
+  "boot_packaged": false,
+  "global_flags": {
+    "abi_qualified": false,
+    "loadable": false,
+    "runtime_qualified": false,
+    "instruction_relocation_complete": false
+  },
+  "whole_goal_complete": false,
+  "jobs_terminal": true,
+  "archive": {
+    "file": "camera-pipeline-offline.tar.gz",
+    "bytes": 20531062,
+    "sha256": "7191de6d88be73181324750d1d2bb5bcad3b192076858db986031cb9c682d3f0",
+    "members": 277,
+    "members_verified": true,
+    "manifest_sha256": "75a6f23a98befa9fcfdc879dd948d21df9d74d6e011dcf2a39a81695d18dcbe2"
+  },
+  "archive_members_verified_Windows": 277,
+  "required_parent_delivery": "sensor-runtime-20261120/6d474943d2e3d9bff5623554a57119e95924656e70b646bb2cbd8e359513e663",
+  "report_sha256": {
+    "accepted/source8/source.json": "cc77da9a1fa5f3edab1dd6f3d7472f5e7a57e0e2418a5b8021263de1d1c03ce2",
+    "accepted/source9/source.json": "b2f07e6566095ba079e6a81b7f0caba22aa0459968e455d4506a6b6fb00f7b77",
+    "accepted/native8/result.json": "23207d12cbe610f9b2225bf212c04e2ce864495c2814732d407089ee9053c3d5",
+    "accepted/native9/result.json": "4e4b4fd387b7f99e3bbe1511c9ac87f7f82226592d82afc75ddd81d05fdd0af3",
+    "accepted/kernel1/adsp-audit.json": "9f27c21339904c5b3acbc1fd2606dafd999567f6d87f9da1f8f1a1115fd4e650",
+    "accepted/kernel1/audit-jobs.json": "85bf8233194e1665c2a108938bd036581c391c94558d5bef9092a2dc37e96c7d",
+    "accepted/kernel1/camera-audit.json": "6cba35d845546e8c47e2d28d167bf94e9d65e2b9f7bb67dc5a921f63677b1275",
+    "accepted/kernel1/haptics-audit.json": "79ba0ad74fa65560e60e11a0f97959e3388a4a2ebaf5ec946cb15dcdc5ab5378",
+    "accepted/kernel1/memory-audit.json": "10f3d91cfb1de23e9356070d355dce22d1fa6e413d98015bc82dae6d18dbe0c0",
+    "accepted/kernel1/motion-audit.json": "0f60db416831562f0bdb8f7479a47954774b4bf1ba40024b22bf56823208279e",
+    "accepted/kernel1/pack-audit.json": "4ed9772d2aee5e8a5e799eec9c7d21236494ce7d7e36965d14df484f6e9fa47f",
+    "accepted/kernel1/pen-audit.json": "332e8123c237fa4b1fd69e6870cfd34b515fab450cfabdb02c2722604d0f4e10",
+    "accepted/kernel1/pipeline-audit.json": "6eca37217268a014864ab4e8be2f3580b75b1a918042ece7cc2e414bac18fd6e",
+    "accepted/kernel1/pipeline-final-audit.json": "ecc4a0cff02a87f41cced80781a93a08fba0ab38f83497af522fe079b3662060",
+    "accepted/kernel1/qrtr-audit.json": "3e2b509084b924cac603fff52555f446f312f6f5b30a552f8fa470c6bd6464dc",
+    "accepted/kernel1/result.json": "f383291fa70089a1a98ce4cb36219ee6859f3d0573798f556fbcb3831ab6e1e0",
+    "accepted/kernel1/rpc-audit.json": "f435334e64a499a4f4c1fc4dd2af95a22388e36ead03c74afd9ddd0340a8d104",
+    "accepted/kernel1/rtc-audit.json": "d0f1b341133547956640a788145fab13f4af141bc20f322c8d45be35ef6fe861",
+    "accepted/kernel1/runtime-audit.json": "a239bfdb1713aa596ff3f43562ba5e5eaf9d55351a05017385dd2421b545d3c0",
+    "accepted/kernel1/sleep-audit.json": "9256df3e5fd727d94c3b27bc046b13f965cc4de185c0ede484b34f9452cf0cb0",
+    "accepted/kernel1/ssc-audit.json": "7832fd9d16f1811350b2c2a330c4d2ad6690eb9377e57d7ddc18c7d1bf23a6bb",
+    "accepted/capture-stack4/result.json": "cb7e4b419568bead331275298f8937400dc03f5fc40befca5b64acb355aeb7bc",
+    "accepted/audit-tests1/result.json": "13b4cc37fd96aaffccd8720aa4433974138de85170828219f181b78d817f692c",
+    "accepted/final-source-proof.json": "9d5cb0b541e142455101953de01aed87e9aafec362cac37ff339b32aebf41e76",
+    "accepted/board-source-audit.json": "6eee5258d1fa498f3662b7f86a173b8df70e3a9d9d69d82717b1b75b245e116d"
+  },
+  "workbench_receipt": "lab/records/camera-pipeline-20261120/closure.json"
+}

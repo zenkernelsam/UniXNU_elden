@@ -1,0 +1,88 @@
+{
+  "repository": "https://github.com/h0cheung/tb322fc-linux-kernel",
+  "commit": "6f97250ead155fc3b980856323e99a4623dae73d",
+  "board": "Lenovo TB322FC SM8750",
+  "files": [
+    {
+      "file": "camss-csiphy-3ph-1-0.c",
+      "path": "drivers/media/platform/qcom/camss/camss-csiphy-3ph-1-0.c",
+      "bytes": 54803,
+      "sha256": "571529bc4ea491c23b54322ffe0ade30714c464f5ec718889bafd559a16f6232"
+    },
+    {
+      "file": "camss-csid-980.c",
+      "path": "drivers/media/platform/qcom/camss/camss-csid-980.c",
+      "bytes": 14043,
+      "sha256": "5015cd9f2fe0a10803a515ccc232ef851d069c2eef2be1fa6de28542fd59cd08"
+    },
+    {
+      "file": "camss-csid-gen3.h",
+      "path": "drivers/media/platform/qcom/camss/camss-csid-gen3.h",
+      "bytes": 896,
+      "sha256": "059c9bdf11de22f39f3abeff2bf780eb66eb0d553fb7f9dc6f2ca55a74ee5e57"
+    },
+    {
+      "file": "camss-vfe-gen4.c",
+      "path": "drivers/media/platform/qcom/camss/camss-vfe-gen4.c",
+      "bytes": 5920,
+      "sha256": "29c970836132ceee021dfaf90faab43b18066d3b27d782c73b5757299b03648d"
+    },
+    {
+      "file": "camss-csid.c",
+      "path": "drivers/media/platform/qcom/camss/camss-csid.c",
+      "bytes": 32187,
+      "sha256": "64abba53e758982a3f0072c367337d7f6237d391d3549f80c239c7c69c9dbba4"
+    },
+    {
+      "file": "camss-vfe.c",
+      "path": "drivers/media/platform/qcom/camss/camss-vfe.c",
+      "bytes": 57304,
+      "sha256": "83de5d90a1443733abf4d7e0f8a937e51c3ac8ed7665d45572e3ac355c15226c"
+    },
+    {
+      "file": "camss.h",
+      "path": "drivers/media/platform/qcom/camss/camss.h",
+      "bytes": 4633,
+      "sha256": "d06b62be6874a9d27f009a853b268a96403f7339fd5c489d960f707581f533c4"
+    },
+    {
+      "file": "camss.c",
+      "path": "drivers/media/platform/qcom/camss/camss.c",
+      "bytes": 147035,
+      "sha256": "62f3bbc5c393a26ef6488e8c0b2eed19bdcb61db1dd7ac61982b21260554704f"
+    },
+    {
+      "file": "sm8750.dtsi",
+      "path": "arch/arm64/boot/dts/qcom/sm8750.dtsi",
+      "bytes": 191275,
+      "sha256": "cbf8bad5006ec6d2c3d654aeec94bb0f08be235e03804164a2252e5b65a4e175"
+    },
+    {
+      "file": "sm8750-lenovo-elden.dts",
+      "path": "arch/arm64/boot/dts/qcom/sm8750-lenovo-elden.dts",
+      "bytes": 54331,
+      "sha256": "0a4361f3f2225befd954dd5420216f357bfa8a68294c28c895ec2478ebea3ba3"
+    },
+    {
+      "file": "camss-csid.h",
+      "path": "drivers/media/platform/qcom/camss/camss-csid.h",
+      "bytes": 7112,
+      "sha256": "637bc07f63ea78bd20c5f87331de97f3d15275389b16bd81a5f087e5c50768f1"
+    },
+    {
+      "file": "camss-video.c",
+      "path": "drivers/media/platform/qcom/camss/camss-video.c",
+      "bytes": 20702,
+      "sha256": "b4550ee896ae2d14ef16c2fe05a40476419cd2f2e3311c822a664dc67fbeaccf"
+    }
+  ],
+  "resource_source_sha256": "62f3bbc5c393a26ef6488e8c0b2eed19bdcb61db1dd7ac61982b21260554704f",
+  "soc_DT_sha256": "cbf8bad5006ec6d2c3d654aeec94bb0f08be235e03804164a2252e5b65a4e175",
+  "elden_DT_sha256": "0a4361f3f2225befd954dd5420216f357bfa8a68294c28c895ec2478ebea3ba3",
+  "csiphy": "lane_regs_2_4_0/offset0x1000/status0x138",
+  "csid": "csid_ops_980",
+  "vfe": "vfe_ops_gen4",
+  "dma_mask_bits": 32,
+  "CAMSS_INIT_BUF_COUNT": 2,
+  "hardware": false
+}

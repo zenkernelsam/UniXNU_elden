@@ -1,5 +1,25 @@
 # UniXNU elden — authoritative source repository
 
+CameraPipeline20261120: exact6f97250e TB322FC PHY2.4/CSID980/VFEgen4register/
+two-bufferqueue + nativeMMIO/GIC/capture→originalsensorCCI fullylinked.218core
+1202627/8native5077/frontrearstack50667/drainfailure50774/10functionnegatives/
+36actualsourceDTchecks pass. MMIO/power/GIC/bufferDMA/sensorresponsesmodeled.
+Three scalarobjects0warnings/noinitSIMD;originlinkwarningsretained. Kernel
+70a21713/native6641316f;all originalarchives/recovery exact/Apple30/penmotion
+20710/Actuator168186/RTC/sleep/SSC/memorypackRPC/ADSPQRTR/sensorruntime pass.
+native9objects==linkednative8;finalsource9preparedbytes==compiledsource8,
+provenanceonlyexpanded. Read CAMERA-PIPELINE.md/pipeline-validation.json.
+RearPHY3/adaf000/IRQ480,frontPHY4/adb1000/154,CSIDVFEpaired/freeownerchoice;
+256Baddressunits/32bitDMA/twoqueue/RAW10stride5104/4080. NoTPG/fakeframe.
+WholeCSID/VFE/PHYpreflight,realSOFdone/cache/ownerbeforeoutput,unknownstatus
+refuses. Originalsensorstop→physicalreceiverDMAIRQdrain→railsCCIstop;
+fakeVFEglobalreset/halt NOTproof,failedretireallrefsretainreset. Nativeowned
+maskedGIC/polledbyoriginalworker,notcontinuousIRQ/framesHWacceptance.
+Noactualpower/CAMCC/MCLK/pins/earlySMMU/wired32IOVA/DMA/provider orauto
+capturestartup/tablet/merge. NEXT actualowner+RAW10frames/ISP/OS17CMIO;
+motionrealPD/calibration/mounttime/UI/wakePM/hapticcal/RTCpersistence remain.
+FivepartGoalactive/no subagents,preserve mainlineWifiQRTR/GPU/peer/floor/recovery.
+
 SensorRuntime20261120: actual earlyretainedmemory→sealedcache/RPClistener→SSC
 worker lifecycle +singleoriginalrecoverywrapper fullylinked;source4/native4/
 components5/kernel3.16runtime410/20memorycacheRPC18580/7SSCobserver795 checks;
