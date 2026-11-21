@@ -22,7 +22,7 @@ not hardware proof. Missing calibration is not replaced with a guessed safe
 gain, sample, pixel, RTC epoch or callback success. Unqualified motor output
 stays disabled. Completing a parser/component cannot close the full Goal.
 
-The source-side haptics wave compiler is qualified by 4,887 host checks and
+The source-side haptics wave compiler is qualified by 4,888 host checks and
 freestanding ARM64 object builds on WSL LLVM-14 and CiscoMac LLVM-20. Its
 bounded chunks now also reach the same serialized native Broker/RTP worker
 through a pull-source clip under one live session — recipe->chunk->FIFO flow is
