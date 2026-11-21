@@ -1,18 +1,19 @@
 # Offline peripherals — current status
 
 Branch `offline-peripheral-fixes`, from main@f82da007 on2026-11-16. Latest
-source delivery includes the RTC-003/004 guarded owner facade and the
-Haptics-003/004 compiled-recipe RTP path, independent of mainline Wi-Fi and the completed
+source commit is `f238e67`; accepted offline deliveries also include the
+RTC-003/004 guarded owner facade, the Haptics-003/004 compiled-recipe RTP path,
+and the deterministic Apple recipe manifest builder, independent of mainline Wi-Fi and the completed
 GPU branch. The full five-part Goal is **active**.
 
 ## Current delivery and remaining work
 
 | Objective | Source-built offline implementation | Required evidence still missing |
 | --- | --- | --- |
-| AP501U pen | Stock NT36536/F1 report decoder, independent Pencil HID/tilt hook, original touch delivery and reversible release, guarded named-provider sampling owner facade | Actual raw pen/scan mode, UIKit Pencil type/force/tilt, palm/rotation/release and resume, real NT36536 worker→facade binding |
-| Dual AW86937/iOS effects | Source-bound Apple recipe/AHAP compiler, bounded calibrated-gain catalog/RTP/budget, continuous 24 kHz dual-motor chunk compiler, native service and OS17 Actuator HAL/ring/original worker; compiled-recipe pull source now plumbed into the same serialized native Broker/RTP worker but stays disabled without a measured dual-motor profile | Mechanical/electrical gain/boost/frequency/duty/thermal/dual-load calibration; authoritative recipe bank, system capabilities/VirtualAudio/tunings/real UIKit requests |
-| RTC/wake | Original PMK8550 read-onlyRTC/SPMI shared gate, board-clock registration, guarded named-owner persistence/alarm facade, original-worker reversible pen/touch pause/gesture IRQ/firmware resume | Real named NVMEM/SDAM provider, PMK8550 alarm IRQ owner, actual shared display/systemPM power provider, physical doubletap/sleep/wake cycles |
-| Accel/gyro/rotation | Exact sensor protocols/OS17 HID, one original ADSP/GLINK/QRTR/FastRPC/SSC worker, retained native memory/cache/pack/listener and prepared-memory adoption, guarded J317 orientation-consumer contract over the existing gravity classifier with mapped-time hold | Genuine same-device PD/registry/calibration/mount/unit/time/SUID/sample input; actual J317 SPU/CoreMotion/UI provider and rotation acceptance |
+| AP501U pen | Stock NT36536/F1 report decoder, independent Pencil HID/tilt hook, original touch delivery and reversible release, guarded named-provider sampling facade with stale-owner lifts and confirmed-retire/rebind | Actual raw pen/scan mode, UIKit Pencil type/force/tilt, palm/rotation/release and resume, real NT36536 worker→facade binding |
+| Dual AW86937/iOS effects | Source-bound Apple recipe/AHAP compiler, deterministic source-manifest generator, bounded calibrated-gain catalog/RTP/budget, continuous 24 kHz dual-motor chunks through the serialized Broker/RTP worker; output remains disabled without a measured dual-motor profile | Mechanical/electrical gain/boost/frequency/duty/thermal/dual-load calibration; production recipe bank/profile bind, system capabilities/VirtualAudio/tunings/real UIKit requests |
+| RTC/wake | Original PMK8550 read-onlyRTC/SPMI shared gate, board-clock registration, guarded named-owner persistence/alarm facade with stop/retire callback fences, original-worker reversible pen/touch pause/gesture IRQ/firmware resume | Real named NVMEM/SDAM provider, PMK8550 alarm IRQ owner, actual shared display/systemPM power provider, physical doubletap/sleep/wake cycles |
+| Accel/gyro/rotation | Exact sensor protocols/OS17 HID, one original ADSP/GLINK/QRTR/FastRPC/SSC worker, retained native memory/cache/pack/listener and prepared-memory adoption, guarded J317 orientation consumer over the existing gravity classifier with mapped-time hold and terminal provider-drift generation fence | Genuine same-device PD/registry/calibration/mount/unit/time/SUID/sample input; actual J317 SPU/CoreMotion/UI provider and rotation acceptance |
 | Front/rear cameras | Exact Gen4 sensor/CCI/CAMSS/clock/WL power and original DMA queue/visibility; shared early SMMU; original-executor CSID IRQ/wait/service; explicit capture-session composition; receipt-bound 3-object + session-object full link and 16-leaf audit; signed OS17 CMIO/RAW10 preview | Actual original power/PLL/RPMh/CSIrails/early-owner startup, physical RAW10/IRQ/DMA/retirement, calibration/ISP, camera-app/service acceptance |
 
 No new tablet access, flashing, QEMU, mainline merge or automatic boot/service
@@ -37,18 +38,22 @@ qualifies a generated manifest end-to-end through WaveCompiler/WaveFeed in
 5,821 host checks on both toolchains. Synthetic
 linear-LUT carriers are host-only; no measured calibration is present and no
 production manifest/profile is bound, so no output route is enabled. The
-guarded orientation consumer is
-qualified by 164 host checks and scalar object builds on both toolchains. Its
-hold uses provider-mapped mach time converted to the existing classifier's
+guarded orientation consumer is qualified by 204 host checks and scalar
+object builds on both toolchains. Owner/epoch drift terminates the generation,
+clears the pending candidate and requires a new begin. Its hold uses
+provider-mapped mach time converted to the existing classifier's
 19.2 MHz tick domain. No real J317 provider, physical samples or UI route is
 connected.
 
-RTC-003 adds `EldenRtc/Owner.{c,h}`, a default-off named-provider and
+RTC-003/004 adds `EldenRtc/Owner.{c,h}`, a default-off named-provider and
 owner/epoch fence in front of the existing RTC persistence and PMK8550 alarm
 core. Host checks cover stale generations, callback re-entry, failed
 read/write uncertainty, stop-during-callback publication fences, and
-owner-IRQ-only alarm acknowledgement. The WSL LLVM-14 suite passes 77 checks
-and the scalar ARM64 object is qualified. No physical NVMEM cell, SDAM offset,
+owner-IRQ-only alarm acknowledgement, no I/O after stop during owner/epoch,
+retire refusal during active callbacks, and rebind after retire. The WSL
+LLVM-14 suite passes 104 checks and scalar ARM64 objects are qualified on both
+toolchains. Stop gates the facade, while the RTC core lifecycle remains with
+its clock owner. No physical NVMEM cell, SDAM offset,
 alarm IRQ, RTC persistence, or wake cycle is present, and `Native.cpp` still
 binds no provider.
 
