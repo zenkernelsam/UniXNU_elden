@@ -13,6 +13,14 @@ extern "C" {
  * to another process after close. Grants no kernel camera privacy bypass. */
 int elden_camera_service_publish(EldenCameraFrameOutput *,unsigned sensor);
 int elden_camera_service_withdraw(unsigned sensor);
+/* Which output currently owns the published slot; nullptr when none. Lets the
+ * capture owner verify registry identity before any sensor-only operation. */
+EldenCameraFrameOutput *elden_camera_service_output(unsigned sensor);
+/* Identity-checked withdrawal: retires the published slot only when it holds
+ * exactly this output (including a slot committed by a publish that later
+ * failed to start). A foreign session's slot is refused with -16, never
+ * withdrawn through the sensor-only lookup. */
+int elden_camera_service_withdraw_output(unsigned sensor,EldenCameraFrameOutput *);
 #ifdef __cplusplus
 }
 #endif

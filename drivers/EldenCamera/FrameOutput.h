@@ -35,6 +35,10 @@ int elden_camera_output_release(EldenCameraFrameOutput *,uint64_t ticket);
 /* Internal native IOUserClient: returns a retained IOMemoryDescriptor only
  * for a current held ticket. Map read-only. Never expose a writable DMA alias. */
 void *elden_camera_output_memory(EldenCameraFrameOutput *,uint64_t ticket,unsigned slot);
+/* Serialized original executor closes new pump/service admission before the
+ * actual physical teardown. Held consumer tickets stay returnable; the output
+ * still retires only through output_stop after real DMA/pipeline retirement. */
+int elden_camera_output_close(EldenCameraFrameOutput *);
 /* Real original camera shutdown/context retirement must precede this stop.
  * Held output snapshots stay held until their actual consumer releases them. */
 int elden_camera_output_stop(EldenCameraFrameOutput *);

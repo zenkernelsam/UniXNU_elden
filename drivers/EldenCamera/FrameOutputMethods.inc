@@ -108,6 +108,9 @@ extern "C" void *elden_camera_output_memory(EldenCameraFrameOutput *c,uint64_t t
     if(!c||!c->lock||!ticket||slot>=c->count||ml_at_interrupt_context())return nullptr;IOLockLock(c->lock);IOBufferMemoryDescriptor *out=nullptr;
     if(c->state[slot]==2&&c->frame[slot].ticket==ticket){out=c->memory[slot];out->retain();}IOLockUnlock(c->lock);return out;
 }
+extern "C" int elden_camera_output_close(EldenCameraFrameOutput *c){
+    if(!c||!c->lock||ml_at_interrupt_context())return -22;IOLockLock(c->lock);c->status.stopping=1;IOLockUnlock(c->lock);return 0;
+}
 extern "C" int elden_camera_output_stop(EldenCameraFrameOutput *c){
     if(!c||!c->lock||ml_at_interrupt_context())return -22;IOLockLock(c->lock);c->status.stopping=1;
     int rc=output_return_input(c,0);EldenCameraDmaStatus dma={};EldenCameraPipelineStatus pipe={};

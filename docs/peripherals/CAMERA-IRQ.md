@@ -54,6 +54,100 @@ Failed drain retains every registration, worker reference, mapping and CPU
 buffer lifetime to reset. Consumer-held snapshots still require explicit
 ticket return even after physical camera retirement.
 
+## Outer lifecycle composition
+
+`drivers/EldenCamera/CaptureSession.{h,c}` composes the explicit outer
+lifecycle the same original executor performs. It is deliberately not linked
+into the audited native objects: `audit_camera_frames_link.py` rejects any
+new outer caller of the output open/publish/withdraw/IRQ entry points, so the
+composition stays a source-level contract plus host regression. No new
+thread, automatic boot/start or register route is added; every step invokes
+the existing board/DMA/output/service owner exactly once.
+
+Per target, `elden_camera_capture_session_begin` runs the required order:
+board prepare → sensor identity probe → real initial DMA queue → stream
+start → retained snapshot open → original CSID listen. A failed step latches
+session error and teardown stays with the board's existing partial-state
+cleanup. `elden_camera_capture_session_publish` publishes the running
+producer through the real service; its failure leaves capture running.
+`elden_camera_capture_session_serve` is the executor's bounded-wait entry
+(the retained `pump_irq` timeout path, `-11` on timeout or no frame).
+
+`elden_camera_output_close` is the distinct pre-teardown admission close: it
+sets the output's real stopping flag so new pump/service/client admission is
+refused before physical teardown, while consumer-held tickets stay
+returnable and retirement still requires `output_stop` after the actual DMA/
+pipeline retirement. `elden_camera_capture_session_stop` runs that close
+then the real physical drain/stop, and reaches the board stop even when no
+prepare ever completed so a stop before begin or a failed board_prepare
+leaves honest terminal state. `elden_camera_capture_session_shutdown` first
+attempts admission close on every output; a refused close on a fully opened
+output gates all physical teardown (the consumer path can still be live),
+while a lockless partial output from a failed `output_open` is already
+admission-impossible, stays explicit (`output[sensor]` retained while
+`opened[sensor]` is clear), is never claimed freed, and blocks neither
+sensor. With both admissions closed it then attempts both physical stops
+even when the first drain fails, reporting the first real error and
+retaining state. The board shutdown, whole-arena retirement and per-output
+retirement follow only after both stops settle. A published slot is retired
+through `elden_camera_service_withdraw_output`, which the owner calls only
+when `elden_camera_service_output` proves the registry holds exactly this
+session's output — that same path retires a partially published service
+(slot committed, start failed) and a foreign registration is never touched
+through the sensor-only lookup; `elden_camera_service_withdraw` itself
+stays uncalled by this composition. `EldenCameraClient::clientClose`/`free`
+likewise perform only admission withdrawal plus the client's own ticket
+return; physical teardown and output retirement stay with the serialized
+session owner.
+
+Host regression `drivers/EldenCamera/TestCaptureSession.cpp` drives the real
+Board/DMA/output/service methods over the same modeled OS peers as the frame
+stack test: `normal` (success plus held-ticket return after retirement),
+`partial-start` (rear stream denial; the shared board error honestly refuses
+the surviving front capture and cleanup still completes),
+`partial-prepare` (acquire authority denial leaves the board clean and the
+surviving sensor serving), `partial-open` (lock-allocation failure retains
+an explicit lockless partial output that blocks nothing), `publish-fail`
+(failed publish leaves the committed slot, a permanent duplicate refusal and
+a running capture), `client-close` (client close returns only its own ticket
+and withdraws admission; the output retires later at owner teardown),
+`irq-timeout`, `drain-fail` (first-sensor drain failure still closes both
+outputs and attempts the peer stop; retry completes), `close-gate` (a
+refused close on a fully opened output gates all physical teardown; retry
+completes) and `early-stop` (stop before begin marks the sensor terminal
+and a later begin refuses).
+
+The production-object path is a separate claim from this source-only
+composition: `tools/prepare_camera_session.py` +
+`tools/build_camera_session.py` compile `CaptureSession.c` alone to a
+scalar arm64 object against the prepared actual headers, and
+`tools/audit_camera_session_link.py` audits a session-linked image by
+requiring each mandatory owner method's direct/tail calls to every required
+leaf (begin/serve/publish/stop/shutdown edges plus the `clientClose`/`free`
+client-ownership edges), by checking leaf symbols resolve to their expected
+defining objects, and by bounding the retained parent link command to the
+approved camera replacements — `NativePipeline.o`, `FrameOutput.o` and now
+`Service.o` as a third source-built replacement since the client-ownership
+methods changed — plus exactly one new `CaptureSession.o`. The session-aware
+link itself is `tools/link_camera_session.py`: it preserves the parent link
+command and recovery/Apple30 gates, replaces exactly those three receipt-bound
+objects, and inserts exactly one `CaptureSession.o` (bound to the session build
+receipt; an already-linked session object or a missing build profile rejects).
+Rebuilt-but-unchanged peers (`CameraPipeline.o`, `CaptureBinding.o`) must hash
+byte-identical to the retained inputs — an undeclared delta is never linked.
+`tools/test_camera_session_link.py` carries focused negatives for an undeclared
+object delta, a duplicate session object and a changed retained input; `tools/
+test_camera_session_audit.py` keeps the required-edge negatives. The session
+link and full audit ran on the qualified Mac inputs over the original OS17
+kernelcache `f18b4df8…`: `link_camera_session.py` produced a session-linked
+`kernel.macho` `8b8e9eb4…` / `native.macho` `8e8f9bb3…` off parent kernel5
+(`d7fc72c7…`) with the three receipt-bound replacements plus one
+`CaptureSession.o`, all other inputs byte-identical, recovery bound 5500ms and
+all 30 original executable regions preserved; `audit_camera_session_link.py`
+passed with 16 leaf APIs edge-verified, the six session entries caller-free and
+no added `__mod_init_func`. This is still an offline link — it does not prove
+physical capture, and the candidate keeps the parent's not-yet-loadable flags.
+
 ## Offline evidence and limits
 
 Current exact source/artifact authority is `drivers/EldenCamera/irq-validation.json`.

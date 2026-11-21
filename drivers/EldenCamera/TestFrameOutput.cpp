@@ -11,7 +11,7 @@ static unsigned checks;
 #define CHECK(x) do{checks++;if(!(x)){fprintf(stderr,"output line%u %s\n",__LINE__,#x);exit(1);}}while(0)
 using IOLock=std::mutex;using IOOptionBits=uint32_t;using IOReturn=int;
 enum {kIODirectionInOut=3,kIOMemoryKernelUserShared=0x100,kIOMemoryMapperNone=0x200};
-static void *kernel_task=(void *)1;static bool interrupt;static int fail_alloc,allocations,release_error,queue_error,admit_error,done_error;
+static void *kernel_task=(void *)1;static bool interrupt;static int fail_alloc,allocations,release_error,queue_error,admit_error,done_error,fail_lock,lock_allocs;
 static unsigned releases,queues,claims;static bool event_ready,borrowed;static uint64_t sequence=UINT64_MAX;static bool retired;
 static unsigned peer_sensor;
 static uint32_t frame_stride(){return peer_sensor?4080u:5104u;}
@@ -23,8 +23,12 @@ static uint64_t frame_size(){return (uint64_t)frame_stride()*frame_height();}
 static std::vector<void *> heaps;static std::vector<IOLock *> locks;
 static bool ml_at_interrupt_context(){return interrupt;}
 static void *IOMallocData(size_t n){void *p=calloc(1,n);if(p)heaps.push_back(p);return p;}
-static IOLock *IOLockAlloc(){auto *p=new IOLock;locks.push_back(p);return p;}
+static IOLock *IOLockAlloc(){if(++lock_allocs==fail_lock)return nullptr;auto *p=new IOLock;locks.push_back(p);return p;}
 static void IOLockLock(IOLock *p){p->lock();}static void IOLockUnlock(IOLock *p){p->unlock();}
+#if defined(ELDEN_CAMERA_FRAME_PEER_API)
+extern "C" void elden_camera_output_peer_fail_alloc(unsigned alloc,unsigned lock){fail_alloc=alloc;fail_lock=lock;}
+extern "C" void elden_camera_output_peer_interrupt(int v){interrupt=!!v;}
+#endif
 class IOBufferMemoryDescriptor {public:uint8_t *bytes;size_t length;unsigned refs=1;bool prepared=false;
     void retain(){refs++;}
     static IOBufferMemoryDescriptor *inTaskWithOptions(void *task,unsigned flags,uint64_t n,unsigned alignment);
@@ -36,6 +40,10 @@ IOBufferMemoryDescriptor *IOBufferMemoryDescriptor::inTaskWithOptions(void *task
 }
 static void *elden_camera_output_bytes(IOBufferMemoryDescriptor *m){CHECK(m&&m->prepared);return m->bytes;}
 static IOReturn elden_camera_output_prepare(IOBufferMemoryDescriptor *m,unsigned flags){CHECK(m&&flags==3&&!m->prepared);m->prepared=true;return 0;}
+#if defined(ELDEN_CAMERA_FRAME_PEER_API)
+extern "C" void elden_camera_output_peer_cleanup(void){for(auto *p:descriptors){free(p->bytes);delete p;}descriptors.clear();
+    for(auto *p:locks)delete p;locks.clear();for(void *p:heaps)free(p);heaps.clear();free(raw);raw=nullptr;}
+#endif
 static EldenCameraDmaCapture capture{};
 extern "C" int elden_camera_dma_admit(EldenCameraNativeDma *,uint64_t o,uint64_t e,int cleanup){CHECK(o==7&&e==9&&(cleanup==0||cleanup==1));return cleanup?0:admit_error;}
 extern "C" int elden_camera_native_pipeline_status(unsigned sensor,EldenCameraPipelineStatus *out){CHECK(sensor==peer_sensor&&out);*out={};out->started=1;out->stopped=retired;out->active=!retired;out->state=retired?EldenPipeStopped:EldenPipeStreaming;out->stride=frame_stride();out->frame_bytes=(uint32_t)frame_size();return 0;}

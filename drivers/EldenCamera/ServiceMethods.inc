@@ -20,14 +20,14 @@ public:
         return true;
     }
     IOReturn clientClose() override{
-        if(sensor<2){__atomic_store_n(&withdrawn[sensor],1u,__ATOMIC_RELEASE);(void)elden_camera_output_stop(outputs[sensor]);}
+        if(sensor<2){__atomic_store_n(&withdrawn[sensor],1u,__ATOMIC_RELEASE);(void)elden_camera_output_close(outputs[sensor]);}
         if(serial){IOLockLock(serial);uint64_t ticket=held;held=0;slot=4;
             if(ticket)(void)elden_camera_output_release(outputs[sensor],ticket);IOLockUnlock(serial);}
         if(sensor<2)__atomic_store_n(&withdrawn[sensor],1u,__ATOMIC_RELEASE);
         terminate();return kIOReturnSuccess;
     }
     void free() override{
-        if(sensor<2){__atomic_store_n(&withdrawn[sensor],1u,__ATOMIC_RELEASE);if(outputs[sensor])(void)elden_camera_output_stop(outputs[sensor]);}
+        if(sensor<2){__atomic_store_n(&withdrawn[sensor],1u,__ATOMIC_RELEASE);if(outputs[sensor])(void)elden_camera_output_close(outputs[sensor]);}
         if(serial){IOLockLock(serial);uint64_t ticket=held;held=0;
             if(ticket&&sensor<2)(void)elden_camera_output_release(outputs[sensor],ticket);IOLockUnlock(serial);IOLockFree(serial);serial=nullptr;}
         IOUserClient::free();
@@ -97,4 +97,18 @@ extern "C" int elden_camera_service_publish(EldenCameraFrameOutput *output,unsig
 extern "C" int elden_camera_service_withdraw(unsigned sensor){if(sensor>1||ml_at_interrupt_context())return -22;
     __atomic_store_n(&withdrawn[sensor],1u,__ATOMIC_RELEASE);auto *out=__atomic_load_n(&outputs[sensor],__ATOMIC_ACQUIRE);
     return out?elden_camera_output_stop(out):0;
+}
+/* Read-only registry peek so the capture owner can compare the published
+ * slot to its own output before any sensor-only operation. */
+extern "C" EldenCameraFrameOutput *elden_camera_service_output(unsigned sensor){
+    return sensor>1?nullptr:__atomic_load_n(&outputs[sensor],__ATOMIC_ACQUIRE);
+}
+/* Withdraw only when the published slot is exactly the caller's own output.
+ * A partially published service (slot committed, start failed) is covered
+ * since the CAS already placed this output in the slot. A slot belonging to
+ * a different session's output is refused instead of withdrawn. */
+extern "C" int elden_camera_service_withdraw_output(unsigned sensor,EldenCameraFrameOutput *output){
+    if(sensor>1||ml_at_interrupt_context())return -22;
+    auto *out=__atomic_load_n(&outputs[sensor],__ATOMIC_ACQUIRE);if(out!=output)return -16;
+    __atomic_store_n(&withdrawn[sensor],1u,__ATOMIC_RELEASE);return out?elden_camera_output_stop(out):0;
 }
