@@ -8,21 +8,23 @@ active until every objective is achieved; component success is not global
 acceptance. No tablet/ADB/fastboot/flashing/QEMU, automatic merge or subagents.
 Mainline owns hardware tests and Wi-Fi/PCIe/WCN/QRTR; GPU remains separate.
 
-Current camera delivery56c22f7 adds CSID IRQ→retained originalexecutor wait/
-service→actual DMA/snapshot pump over Bayer/latest fixc15d94e. source5/frames5/
-native5/frames-native5/stack5/bridge5/kernel5/input-gates9/irq-audit10 plus
-elevenfinal-audits5 accepted;218core1202627/18native/20inputgates,
+Current camera session delivery is `b85cacd`, over IRQ delivery `56c22f7` and
+Bayer/latest fix `c15d94e`. It composes the explicit capture lifecycle and
+links receipt-bound `NativePipeline.o`/`FrameOutput.o`/`Service.o` plus one
+`CaptureSession.o`; the full source-linked audit verifies 16 required leaf
+edges, six caller-free session entries, unchanged 30 Apple executable regions,
+and recovery5500ms. The emitted kernel/native are `8b8e9eb4…`/
+`8e8f9bb3…`; global loadable/runtime/relocation flags remain false.
+Parent IRQ counts remain218core1202627/18native/20inputgates,
 front/rearfourframes normal63174/drain63382/visibility61846; actualOSclient/
-RAW10each1382433checks. Kerneld7fc72c7/nativefa0b40a8; scalar0warnings.
-IRQ onlymask/latch/wake, exact rising-edge CSID. No GICpendingclear on rearm;
-wait has no sleepable provider afterassert_wait; attach/stop/active races
-retain/refuse. Explicit currentoriginal executor enable_irq/pump_irq only;
-no auto caller/thread/start. OnlyNativePipeline.o/FrameOutput.o replaced,
-Service retained after loaded local/global symbols/relocs/bytes comparison.
-Physical IOKit/PAR/cache/clock/GIC/MMIO/firmware modeled; actualoriginalpower/
-PLL/RPMh/CSIrails/earlyauthority/DMA/RAW10/calibration/ISP/appacceptance missing.
-Noauto-start/jobcachetrustinstall/device/merge. CAMERA-IRQ.md and
-irq-validation.json contain current inputs/artifacts. CAMERA-FRAMES.md,
+RAW10each1382433checks. IRQ onlymask/latch/wake, exact rising-edge CSID. No
+GICpendingclear on rearm; wait has no sleepable provider afterassert_wait;
+attach/stop/active races retain/refuse. No automatic caller/thread/start.
+Physical IOKit/PAR/cache/clock/GIC/MMIO/firmware are modeled; actualoriginal
+power/PLL/RPMh/CSIrails/earlyauthority/DMA/RAW10/calibration/ISP/appacceptance
+remain missing. Noauto-start/jobcachetrustinstall/device/merge. CAMERA-IRQ.md
+and irq-validation.json contain current parent inputs; the session link receipt
+is in the workbench `_relay/camera-005`. CAMERA-FRAMES.md,
 bridge-validation.json/frames-validation.json retain interface/history details. Parent sharedSMMU
 d7571f2/source12-host12-stack13-native12-kernel12:173core1400032+
 11composed2395232,actualpostrouteTTBR/tablegraphcheck BEFOREbatchpublication.
