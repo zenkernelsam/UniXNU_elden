@@ -13,6 +13,60 @@ failed outputs, learns a volatile offset when the system sets time, and latches
 counter rollback. The provider reads PMK8550 SID0/control0x6146/counter0x6148..4b.
 It never writes the raw counter, alarm or an assumed SDAM cell.
 
+## Board facts and alarm bank
+
+Captured DTS evidence (`lab/records/cpu-activation-20261111/.../pmk8550.dtsi`,
+ArmadaOS TB322FC kernel bf96c3d per `linux-source.json`): node
+`pmk8550_rtc: rtc@6100` compatible `qcom,pmk8350-rtc` with
+`reg = <0x6100>, <0x6200>` ("rtc"/"alarm" banks) and
+`interrupts = <0x0 0x62 0x1 IRQ_TYPE_EDGE_RISING>`. The board dts declares no
+`nvmem-cells` "offset" cell, no `qcom,uefi-rtc-info`, no `allow-set-time` and
+no `qcom,no-alarm`; absence in this DTS is a declaration gap only and does
+not prove no accessible cell exists on the physical PMK8550.
+
+Pinned register table (donor `pmk8350_regs` in
+`drivers/EldenRtc/upstream/rtc-pm8xxx.c`, tb322fc-linux-kernel@6f97250e):
+counter ctrl/write/read 0x6146/0x6140/0x6148 and **alarm** rw/ctrl/ctrl2
+0x6240/0x6246/0x6248 with enable bit7 and status-clear bit0. An earlier draft
+addressed alarm traffic at 0x61xx, which is the counter bank; programming
+"disable" there would have cleared the RTC enable bit. All alarm I/O now uses
+0x6240/0x6246/0x6248 exclusively.
+
+## Tested core interface and provider model
+
+Host-tested (`drivers/EldenRtc/TestCore.c`, assert-based PMIC/NVM/alarm
+models; not a physical test): `elden_rtc_core_raw` donor Gen4 carry/reread
+plus rollback->CounterReset; `elden_rtc_core_learn` volatile offset;
+`elden_rtc_core_bind_persistence`/`restore_offset`/`learn_persistent` and
+`elden_rtc_core_bind_alarm`/`alarm_set`/`alarm_read`/`alarm_ack` explicit
+providers; `elden_rtc_core_persist_state` None/Uncertain/Verified;
+`elden_rtc_core_stop` gating. The core never picks a cell or SDAM address:
+unbound paths return `EldenRtcNoProvider` and every provider call refuses
+with `EldenRtcStopped` after stop, before any provider I/O.
+
+Restore reads the live counter before touching NVMEM and validates the
+stored value; rejected or failed NVM access leaves the prior accepted RAM
+offset intact and marks the state Uncertain. Persistent learn writes the
+cell, reads the four bytes back, and only publishes RAM+Verified on exact
+equality; a failed write/readback or mismatched data keeps the prior
+accepted RAM and marks Uncertain. A counter rollback invalidates the
+offset's Verified claim.
+
+Alarm set follows donor order RMW-disable -> 4-byte data write -> RMW-enable,
+preserving unrelated control/status bits; enabled requests at or before now
+are rejected before any register access, and the live counter is re-read
+after programming but before enable so an overrun deadline stays disabled
+with the confirmed data value exposed. Ack follows donor handler order
+RMW-disable -> RMW-clear status bit0 and is for the serialized clock owner
+to invoke from a real IRQ path only. A failed register write may have
+partially applied and raises `alarm_uncertain` until a fully completed
+set/read/ack resynchronizes the cache.
+
+Neither provider is bound in the current build: the SPMI transport stays
+counter-read-only (no NVMEM writer, no alarm-bank owner) and there is no real
+alarm IRQ owner, so PMK8550 0x62/1 edge-rising delivery and system wake are
+explicitly unvalidated.
+
 The actual v7.2 SPMI PPID061 selection is unique and observer-only. Native maps
 core0xc400000, owner0xc42d000 and selected observer0xc440000+APID*0x20. The only
 MMIO write issues a read command in that observer. Shared TransactionGate owner3
