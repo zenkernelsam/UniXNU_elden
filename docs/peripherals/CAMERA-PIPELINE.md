@@ -73,11 +73,12 @@ No foreign status is cleared to manufacture idle or progress.
 GIC windows. It retains an owned registration for each exact IRQ and verifies
 mask/RWP/active/pending/inflight state. Its exclusive decoder/PHY claims are never
 reused before reset. Mapping or attach failure keeps its partial context; it
-does not mask a peer's failed attach. Original camera worker calls `service`
-to observe the actual peripheral status while GIC parents remain masked.
-Unexpected primary IRQ closes admission and remains visible in native status.
-This is the current bounded polled integration, not qualification of continuous
-interrupt-driven capture or power-saving behavior.
+does not mask a peer's failed attach. Original bounded polling is preserved.
+The explicit original-executor CSID IRQ/listen/wait/service addition is described
+in [CAMERA-IRQ.md](CAMERA-IRQ.md), current code56c22f7/irq-validation.json. It
+enables only source CSID, masks/latches/wakes in IRQ, and reuses this original
+service/ack path before rearm. Attach/stop/inflight/wait races are modeled and
+tested, but real sustained capture and power-saving behavior remain unverified.
 
 All accesses additionally require the original physical power/clock/pin owner.
 Native MMIO uses plain scalar LDR/STR and barriers, not compiler-generated paired

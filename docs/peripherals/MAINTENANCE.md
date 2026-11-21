@@ -37,7 +37,12 @@ filelist/源 manifest 的引用。当前内核、必要原 OS/固件/SDK、源�
 AnyRouter 等任务的 staged/unstaged 字节。research 只允许独立 Git 克隆；一次性
 脚本在 WindowsTemp，Mac辅助在/tmp，清理后也使用原生垃圾桶退役。
 
-当前完整离线候选：c15d94e，CAMERA-FRAMES.md／bridge-validation.json；
-原sharedSMMU父d7571f2，旧frame父f3329c9。docs/archive/peripherals-20261121
+相机IRQ交付56c22f7后，另有16个被source5/native5/kernel5取代的试验目录
+（allocated111,009,792B，约106MiB）进原生Trash；完整归档905成员已在
+Windows重核，搬后1070项候选输入仍匹配。凭据在workbench maintenance/
+camera-irq-cleanup-20261121。每轮只保留当前构建和需要的真实继承输入。
+
+当前完整离线候选：56c22f7，CAMERA-IRQ.md／irq-validation.json；
+相机接口父c15d94e、sharedSMMU父d7571f2、旧frame父f3329c9。docs/archive/peripherals-20261121
 保存旧状态／旧相机说明，当前文档不再累积多轮互相过时的结论。
 物理设备工作、主线 Wi-Fi/GPU 和所有 Goal 状态不由本周整理更改。

@@ -8,9 +8,10 @@ camera discovery path. No test pattern, pixel generator, sensor gain write or
 GPU is used. Hardware capture, calibration and camera-app acceptance remain
 unverified; the original physical boot/power/SMMU owner is still required.
 
-Source branch is `offline-peripheral-fixes`, current implementation `c15d94e`
-over `f3329c9`. Read `drivers/EldenCamera/bridge-validation.json` for current
-source/artifact hashes. `frames-validation.json` retains the earlier delivery.
+Source branch is `offline-peripheral-fixes`. Interface delivery `c15d94e` over
+`f3329c9` is recorded in `drivers/EldenCamera/bridge-validation.json`; the
+current IRQ addition `56c22f7` is documented in [CAMERA-IRQ.md](CAMERA-IRQ.md)
+and irq-validation.json. `frames-validation.json` retains the first delivery.
 The five-part peripheral Goal remains active. No tablet access, boot package,
 job/cache/trust installation, mainline edit or automatic merge occurred.
 
@@ -24,8 +25,9 @@ are called directly; the captured getBytesNoCopy slot43 is never used.
 Descriptors and partial allocation state remain retained until reset.
 
 The original camera executor must explicitly call `elden_camera_output_pump`.
-The current integration is bounded polling; a continuous IRQ/wake caller is
-not installed. The pump executes the real pipeline service/dequeue,
+The original bounded polling path remains. The explicit original-executor
+IRQ wait/pump addition is described in CAMERA-IRQ.md; mainline installs its
+outer loop and physical owner. The pump executes the real pipeline service/dequeue,
 device-written visibility and DMA CPU-borrow operation, copies only that held
 input, explicitly returns it, then requeues. Returned input and requeue are
 separate: a requeue failure cannot fabricate that the CPU still owns a buffer
@@ -123,13 +125,14 @@ after Windows transfer. Historical `f3329c9` evidence stays separately archived.
   the original4K single owner remain preserved. Both CMIO providers compile and
   verify ad-hoc4K signatures, without installation or an AVFoundation claim.
 
-Current kernel:
+Interface-parent kernel:
 `c12fcecef16090d4110a2a9ca14ffc83c412fce87c72c803ccd456943dcd7669`.
-Current native:
+Interface-parent native:
 `2afd524cf92cab332cf6717b792f2a9296fb44d426a2c29ffeaad0f2f408db08`.
 Private archive `camera-bridge-offline.tar.gz`: 25,579,962 bytes, SHA256
 `cd8e9422a351ea88da7e99438fcae8775af0ff669def914f72f8c7be8aec7e0e`.
-`bridge-validation.json` is current candidate authority. Tools:
+`bridge-validation.json` is the interface-parent authority; irq-validation.json
+is the current continuous-delivery candidate. Tools:
 `prepare_camera_frames.py`, `test_camera_bridge.py` (use
 `--compare-original f3329c9` for the source regression), `test_camera_frames.py`,
 `test_camera_frame_stack.py`, `build_camera_frames.py`,
@@ -139,12 +142,11 @@ is not a clean-mainline boot or hardware acceptance.
 
 ## Next integration step
 
-The original NativePipeline registers and masks its three IRQs; its current
-callback treats an arriving IRQ as an error. Continuous frame delivery needs
-the exact SM8750 DTS interrupt types and original `csid_isr` read/clear/done
-logic routed through the existing admitted owner/executor. The IRQ path must
-stay nonsleeping and actual stop/inflight/GIC/DMA retirement remains required.
-This is an identified gap, not a newly installed service thread.
+NativePipeline now has the explicit original-executor CSID listen/wait/service
+and snapshot pump wrapper in CAMERA-IRQ.md. It only masks/latches/wakes in IRQ,
+acks via original `csid_isr`, preserves pending edges and proves active/inflight
+drain before stop. The actual outer camera loop and physical startup remain
+mainline integration steps; no automatic service thread is installed.
 
 Real shared physical startup/PLL/RPMh/CSIrails/DMA, RAW10, calibration/ISP and
 robust CMIO/Camera.app lifecycle still require mainline hardware evidence.

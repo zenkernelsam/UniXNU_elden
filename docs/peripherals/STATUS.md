@@ -1,7 +1,7 @@
 # Offline peripherals — current status
 
 Branch `offline-peripheral-fixes`, from main@f82da007 on2026-11-16. Current
-implementation delivery is `c15d94e`, independent of mainline Wi-Fi and the
+implementation delivery is `56c22f7`, independent of mainline Wi-Fi and the
 completed GPU branch. The full five-part Goal is **active**.
 
 ## Current delivery and remaining work
@@ -12,7 +12,7 @@ completed GPU branch. The full five-part Goal is **active**.
 | Dual AW86937/iOS effects | Source-bound Apple recipe/AHAP compiler, bounded calibrated-gain catalog/RTP/budget, native service and OS17 Actuator HAL/ring/original worker | Mechanical/electrical gain/boost/frequency/duty/thermal/dual-load calibration; system capabilities/VirtualAudio/tunings/real UIKit requests |
 | RTC/wake | Original PMK8550 read-onlyRTC/SPMI shared gate, board-clock registration, original-worker reversible pen/touch pause/gesture IRQ/firmware resume | Persistent epoch/alarm, actual shared display/systemPM power provider, physical doubletap/sleep/wake cycles |
 | Accel/gyro/rotation | Exact sensor protocols/OS17 HID, one original ADSP/GLINK/QRTR/FastRPC/SSC worker, retained native memory/cache/pack/listener and prepared-memory adoption | Genuine same-device PD/registry/calibration/mount/unit/time/SUID/sample input; complete J317SPU/CoreMotion/UI rotation |
-| Front/rear cameras | Exact Gen4 sensor/CCI/CAMSS/clock/WL power and original DMA queue/visibility; shared early SMMU; real cached snapshot service; signed OS17CMIO/RAW10 preview | Actual original power/PLL/RPMh/CSIrails/early-owner startup, physical RAW10/IRQ/DMA/retirement, calibration/ISP, camera-app/service acceptance |
+| Front/rear cameras | Exact Gen4 sensor/CCI/CAMSS/clock/WL power and original DMA queue/visibility; shared early SMMU; original-executor CSID IRQ/wait/service, real cached snapshots and signed OS17CMIO/RAW10 preview | Actual original power/PLL/RPMh/CSIrails/early-owner startup, physical RAW10/IRQ/DMA/retirement, calibration/ISP, camera-app/service acceptance |
 
 No new tablet access, flashing, QEMU, mainline merge or automatic boot/service
 installation occurred. Host MMIO/IOKit/PAR/clock/GIC/firmware peers are modeled,
@@ -22,26 +22,30 @@ stays disabled. Completing a parser/component cannot close the full Goal.
 
 ## Latest accepted candidate
 
-[CAMERA-FRAMES.md](CAMERA-FRAMES.md), code `c15d94e` over `f3329c9`, connects
-original DMA→Board/CCI/CAMSS done/visibility→CPU borrow→cached snapshot→explicit
-return/requeue to the OS17 read-only IOKit/CMIO consumer. Sensor Bayer enums
-are explicitly translated into the RAW10 ABI. Acquiring the newest frame
-discards older READY snapshots; held tickets retain their original lifetime.
+[CAMERA-IRQ.md](CAMERA-IRQ.md), code `56c22f7` over interface fix `c15d94e`,
+routes actual CSID IRQs through the retained original camera executor. It
+services/acks the fixed-source CSID records, performs actual DMA visibility/
+CPU borrow/snapshot/return/requeue, and rearms without clearing pending edges.
+Wait enrollment uses atomic peeks only; attach-before-return, wake/stop/rearm
+races retain or refuse correctly. No new thread, automatic camera start or
+hardware owner is installed. [CAMERA-FRAMES.md](CAMERA-FRAMES.md) describes the
+read-only OS17/CMIO and Bayer/latest-ticket boundaries retained from `c15d94e`.
 
-Actual front/rear snapshot→native service→user client→RAW10 paths each pass
-1,382,433 checks. Exact `f3329c9` methods reproduce both original client-open
-refusals and stale delivery. RAW10 1069 cases/6062 checks; five snapshot
-scenarios; original full stack normal30192/drain30358/visibility30027 and all
-11 final ABI/archive/recovery audits pass. Physical and OS peers/pixels are modeled.
+Accepted original core218/1202627checks,18 native scenarios,20 strict input
+gates; front/rear original IRQ→DMA→snapshot normal63174/drain63382/visibility61846;
+actual service→CameraClient→RAW10 each1382433checks. Twelve final component/
+IRQ/ABI/archive/recovery audits pass. IOKit/MMIO/GIC/power/PAR/cache/physical
+completion and pixel test fixtures are modeled, not hardware capture evidence.
 
-Kernel `c12fcecef16090d4110a2a9ca14ffc83c412fce87c72c803ccd456943dcd7669`;
-native `2afd524cf92cab332cf6717b792f2a9296fb44d426a2c29ffeaad0f2f408db08`.
-Two scalar OS17 objects have zero warnings and no automatic initialization.
-Actual original archives and declared deltas, recovery5500ms and Apple30 are
-audited. Signed providers/jobs/cache/trust are not installed. The original
-pipeline remains bounded polling; continuous IRQ delivery is still required.
-`bridge-validation.json` is current authority; `frames-validation.json` is
-historical. The 25,579,962-byte private archive has 644 verified members.
+Kernel `d7fc72c79f7643ae2464c0fb8d539865b8b0da469a2cd5c80e339461c7e64998`;
+native `fa0b40a861d81ad375b4317ae9bc5a1e9be4fa79fcd1b68335421bd66c122bdf`.
+Only NativePipeline.o/FrameOutput.o are replaced. Retained Service.o matches
+the source rebuild's loaded code/data/local/global symbols/relocations.
+All other link arguments and original recovery5500ms/Apple30 remain retained.
+`irq-validation.json` is current authority; bridge/frames-validation are prior
+delivery evidence. Private archive47,831,662B/905members verified on Windows.
+Mainline must install its real physical authorities and outer original camera
+loop, then prove sustained physical RAW10/retirement and app/ISP acceptance.
 
 Parent [SHARED-SMMU.md](SHARED-SMMU.md), code`d7571f2`, uses an atomic early
 exact1401/1c00/all4ADSP-session batch and original4K algorithms once. Complete
