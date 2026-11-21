@@ -24,6 +24,15 @@ ArmadaOS TB322FC kernel bf96c3d per `linux-source.json`): node
 no `qcom,no-alarm`; absence in this DTS is a declaration gap only and does
 not prove no accessible cell exists on the physical PMK8550.
 
+The exact TB322FC source is retained at
+`research/tb322fc-linux-kernel/arch/arm64/boot/dts/qcom/pmk8550.dtsi`; its
+SDAM2 node declares reboot-reason storage but no RTC offset cell. ArmadaOS-
+Freedom's Gen4 device record
+`research/armadaos-freedom/devices/lenovo-tb322fc/camera/DEVICE-TEST-20261118.md`
+reports a 45-second RTC alarm wake and subsequent battery-only 600/1200-second
+s2idle RTC wakes. These Linux results provide a board-level functional
+acceptance reference, not an XNU NVMEM cell or XNU IRQ/provider implementation.
+
 Pinned register table (donor `pmk8350_regs` in
 `drivers/EldenRtc/upstream/rtc-pm8xxx.c`, tb322fc-linux-kernel@6f97250e):
 counter ctrl/write/read 0x6146/0x6140/0x6148 and **alarm** rw/ctrl/ctrl2
@@ -86,6 +95,15 @@ stale); alarm acknowledge is callable only from the owner-supplied IRQ-path
 identity bound at `bind_alarm`. Donor register ordering and the
 recovery 5500ms gates are untouched. HOST-ONLY synthetic provider peers prove
 the fences; `Native.cpp` binds nothing and no physical NVMEM/alarm/IRQ exists.
+
+The owner facade now uses two nonblocking atomic claims. The operation claim
+covers each complete restore/learn/alarm/status/bind/retire lifecycle through
+the core call and publication, while the nested busy claim serializes provider
+callbacks. Stop during a callback or an in-flight second bind aborts later
+provider I/O and publication, and stale generations remain fenced. WSL and
+CiscoMac pass 112 owner checks plus 308 deterministic pthread checks under
+ASan/UBSan and TSan; scalar ARM64 `Owner.o` objects are warning-free. These
+are host/model checks only and do not bind a physical provider.
 
 The actual v7.2 SPMI PPID061 selection is unique and observer-only. Native maps
 core0xc400000, owner0xc42d000 and selected observer0xc440000+APID*0x20. The only

@@ -17,8 +17,11 @@ typedef struct {
     const char *pname,*aname;uint64_t powner,pepoch,aowner,aepoch;int p_oe_fail,a_oe_fail;
     int p_stop_in_write,p_stop_in_read,a_stop_in_write,p_reenter,irq_obj,other;
     unsigned poe_calls,aoe_calls,p_stop_oe_at,a_stop_oe_at;int a_retire,retire_rc;
+    unsigned pname_calls,aname_calls;int p_name_reenter;uint64_t reenter_gen;
     uint64_t ngen,agen;int reenter_rc;
 } M;
+static const char *a_name(void *);static int a_oe(void *,uint64_t *,uint64_t *);
+static int a_read(void *,uint16_t,uint8_t *,size_t);static int a_write(void *,uint16_t,const uint8_t *,size_t);
 static int read_rtc(void *p,uint16_t a,uint8_t *o,size_t n){
     M*m=p;if(++m->reads==m->fail_at)return -71;
     if(a==0x6146){assert(n==1);*o=m->control;}
@@ -26,8 +29,16 @@ static int read_rtc(void *p,uint16_t a,uint8_t *o,size_t n){
     else{assert(a==0x6148&&n==4&&m->full<3);uint32_t v=m->raw[m->full++];for(unsigned i=0;i<4;++i)o[i]=(uint8_t)(v>>(i*8));}
     return 0;
 }
-static const char *p_name(void *c){M*m=c;return m->pname;}
-static const char *a_name(void *c){M*m=c;return m->aname;}
+static const char *p_name(void *c){
+    M*m=c;++m->pname_calls;
+    /* rtc-005: a facade op reentered while bind holds the claim inside the
+     * name callback is refused Busy — the name probe is serialized too. */
+    if(m->p_name_reenter){m->p_name_reenter=0;
+        EldenRtcAlarmOwner a={m,a_name,a_oe,a_read,a_write};
+        m->reenter_rc=elden_rtc_owner_bind_alarm(m->f,&a,"pmk8550-alarm",&m->irq_obj,&m->reenter_gen);}
+    return m->pname;
+}
+static const char *a_name(void *c){M*m=c;++m->aname_calls;return m->aname;}
 static int p_oe(void *c,uint64_t *o,uint64_t *e){M*m=c;++m->poe_calls;if(m->p_stop_oe_at==m->poe_calls)elden_rtc_owner_stop(m->f,m->ngen);if(m->p_oe_fail)return -1;*o=m->powner;*e=m->pepoch;return 0;}
 static int a_oe(void *c,uint64_t *o,uint64_t *e){M*m=c;++m->aoe_calls;if(m->a_stop_oe_at==m->aoe_calls)elden_rtc_owner_stop(m->f,m->agen);if(m->a_oe_fail)return -1;*o=m->aowner;*e=m->aepoch;return 0;}
 static int p_read(void *c,uint8_t out[4]){
@@ -244,5 +255,24 @@ int main(void){
     CHECK(rtc.offset==1800000000u-180&&rtc.persist_state==EldenRtcPersistVerified);
     CHECK(elden_rtc_owner_restore(&f,gn)==EldenRtcOwnerStale);          /* prior generation stale */
     CHECK(elden_rtc_owner_stop(&f,gn)==EldenRtcOwnerStale);             /* old gen cannot fence */
+    /* rtc-005 fix 1: the provider name callback itself runs under the claim —
+     * a concurrent bind attempted while the first bind is inside name() is
+     * refused Busy and never touches its own provider callbacks. */
+    setup(&m,&rtc,&f,190);nvm=NVM(&m);
+    m.p_name_reenter=1;m.reenter_rc=0;m.reenter_gen=0;
+    CHECK(elden_rtc_owner_bind_nvmem(&f,&nvm,"nvmem-offset",&gn)==0&&gn);
+    CHECK(m.reenter_rc==EldenRtcOwnerBusy&&!m.reenter_gen&&m.pname_calls==1);
+    /* rtc-005 fix 2: seq exhaustion refuses bind before any provider
+     * callback — no wrap, no armed generation, out-param untouched. */
+    setup(&m,&rtc,&f,200);f.seq=UINT64_MAX;gn=77;nvm=NVM(&m);
+    CHECK(elden_rtc_owner_bind_nvmem(&f,&nvm,"nvmem-offset",&gn)==EldenRtcInvalid);
+    CHECK(gn==77&&!f.nvmem_gen&&!f.nvmem_bound&&!m.pname_calls&&!m.poe_calls&&!rtc.persistence_bound);
+    CHECK(elden_rtc_owner_bind_nvmem(&f,&nvm,"nvmem-offset",&gn)==EldenRtcInvalid);   /* sticky */
+    ga=88;alm=ALM(&m);
+    CHECK(elden_rtc_owner_bind_alarm(&f,&alm,"pmk8550-alarm",&m.irq_obj,&ga)==EldenRtcInvalid);
+    CHECK(ga==88&&!f.alarm_gen&&!f.alarm_bound&&!m.aname_calls&&!m.aoe_calls&&!rtc.alarm_bound);
+    /* below the boundary a bind still arms seq+1 — no reuse of a wrapped 0. */
+    f.seq=0;nvm=NVM(&m);
+    CHECK(elden_rtc_owner_bind_nvmem(&f,&nvm,"nvmem-offset",&gn)==0&&gn==1);
     printf("PASS %d\n",checks);return 0;
 }

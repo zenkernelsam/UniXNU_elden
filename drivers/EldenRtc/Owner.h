@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 #ifndef ELDEN_RTC_OWNER_H
 #define ELDEN_RTC_OWNER_H
+#include <stdatomic.h>
 #include <stddef.h>
 #include <stdint.h>
 #include "Core.h"
@@ -35,14 +36,26 @@ typedef struct {
     int (*read)(void *context,uint16_t address,uint8_t *out,size_t bytes);
     int (*write)(void *context,uint16_t address,const uint8_t *data,size_t bytes);
 } EldenRtcAlarmOwner;
+/* Thread model: the serialized clock owner runs facade ops and the core's
+ * bridged provider I/O; the alarm IRQ owner may acknowledge on its own path;
+ * policy threads may bind/stop/retire/read status concurrently. Every shared
+ * field below is a C11 atomic, fenced by two nonblocking claims: op covers a
+ * complete high-level operation (fence -> whole core call -> counters) so two
+ * facade operations can never overlap shared core state; busy serializes the
+ * provider callbacks inside it (name, owner_epoch, read, write for both
+ * providers). Reentrant or concurrent callers get the existing Busy code —
+ * never a wait — and a stop landing mid-operation is deferred to the in-flight
+ * callback's unwind or applied directly between callbacks, after which later
+ * provider I/O and publication stay fenced. */
 typedef struct {
     EldenRtc *core;
     EldenRtcNvmem nvmem;EldenRtcAlarmOwner alarm;
     EldenRtcPersistence persist_io;EldenRtcAlarmIo alarm_io;
-    void *irq;
-    uint64_t seq,nvmem_gen,alarm_gen,nvmem_owner,nvmem_epoch,alarm_owner,alarm_epoch;
-    uint32_t nvmem_bound,alarm_bound,nvmem_registered,alarm_registered,stopped,busy;
-    uint32_t restores,learns,alarm_sets,alarm_reads,acks,stops,rejected,dropped;
+    _Atomic uintptr_t irq;
+    _Atomic uint64_t seq,nvmem_gen,alarm_gen,nvmem_owner,nvmem_epoch,alarm_owner,alarm_epoch;
+    _Atomic uint32_t nvmem_bound,alarm_bound,nvmem_registered,alarm_registered,
+        stopped,stopping,busy,op;
+    _Atomic uint32_t restores,learns,alarm_sets,alarm_reads,acks,stops,rejected,dropped;
 } EldenRtcOwner;
 typedef struct {
     uint32_t nvmem_bound,alarm_bound,stopped;
@@ -83,8 +96,10 @@ int elden_rtc_owner_stop(EldenRtcOwner *,uint64_t generation);
  * reusable for a new qualified bind (a fresh generation is armed; prior
  * generations stay stale). */
 int elden_rtc_owner_retire(EldenRtcOwner *,uint64_t generation);
-/* Read-only status for tests/status surfaces; no side effects. */
-int elden_rtc_owner_status(const EldenRtcOwner *,EldenRtcOwnerStatus *);
+/* Status under a nonblocking op+busy claim: a coherent snapshot while no
+ * operation or provider callback can mutate shared state, or EldenRtcOwnerBusy
+ * without reading the core mid-mutation. */
+int elden_rtc_owner_status(EldenRtcOwner *,EldenRtcOwnerStatus *);
 #ifdef __cplusplus
 }
 #endif

@@ -1,7 +1,7 @@
 # Offline peripherals — current status
 
 Branch `offline-peripheral-fixes`, from main@f82da007 on2026-11-16. Latest
-source commit is `8c89b6b`; accepted offline deliveries also include the
+source commit is `0630d84`; accepted offline deliveries also include the
 RTC-003/004 guarded owner facade, the Haptics-003/004 compiled-recipe RTP path,
 and the deterministic Apple recipe manifest builder, independent of mainline Wi-Fi and the completed
 GPU branch. The full five-part Goal is **active**.
@@ -56,6 +56,14 @@ toolchains. Stop gates the facade, while the RTC core lifecycle remains with
 its clock owner. No physical NVMEM cell, SDAM offset,
 alarm IRQ, RTC persistence, or wake cycle is present, and `Native.cpp` still
 binds no provider.
+
+The RTC owner facade is now guarded by separate atomic operation and provider
+claims. Restore/learn/alarm/status/bind/retire lifecycles cannot overlap core
+state or provider publication; stop during provider callbacks or a second bind
+aborts later I/O and publication. The current source passes 112 owner checks
+and 308 deterministic concurrency checks under ASan/UBSan and TSan on WSL and
+CiscoMac, with warning-free scalar ARM64 objects. This remains host/model
+evidence only; no NVMEM cell, alarm IRQ owner or Native.cpp binding exists.
 
 Wake-power-001/002 adds `EldenWake/PowerOwner.{c,h}`, a default-off guarded
 display/system-PM owner contract between the real panel/rail provider and the
