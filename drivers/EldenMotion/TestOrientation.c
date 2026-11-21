@@ -17,10 +17,16 @@ typedef struct {
     const uint64_t *mach_seq;unsigned mach_n,mach_i;
     int fail_desc,fail_owner,fail_map,fail_next,next_ret,map_back;
     EldenMotionConsumer *cons;int stop_in_sink,sample_in_sink,fail_sink,inner_rc;
+    int stop_in_own,sample_in_own,inner_own;
     int32_t published[32];unsigned pub_count;
 } Peer;
 static int p_desc(void *c,uint32_t kind,EldenMotionSpec *s){Peer*p=c;if(p->fail_desc)return -13;*s=kind==EldenMotionAccel?p->accel:p->gyro;return 0;}
-static int p_own(void *c,uint64_t *o,uint64_t *e){Peer*p=c;if(p->fail_owner)return -13;*o=p->owner;*e=p->epoch;return 0;}
+static int p_own(void *c,uint64_t *o,uint64_t *e){
+    Peer*p=c;
+    if(p->stop_in_own)p->inner_own=elden_motion_consumer_stop(p->cons,p->cons->generation);
+    else if(p->sample_in_own)p->inner_own=elden_motion_consumer_sample(p->cons,p->cons->generation);
+    if(p->fail_owner)return -13;*o=p->owner;*e=p->epoch;return 0;
+}
 static int p_map(void *c,uint64_t t,uint64_t *m){
     Peer*p=c;if(p->fail_map)return -13;
     if(p->mach_seq){*m=p->mach_i<p->mach_n?p->mach_seq[p->mach_i++]:0;return 0;}
@@ -174,10 +180,61 @@ int main(void){
     CHECK(elden_motion_consumer_stop(&c,gen+1)==-116);
 
     /* A stale/foreign provider is fenced: owner and epoch are re-checked on
-     * every sample against the armed values. */
+     * every sample against the armed values. Drift is terminal for the
+     * generation — the second call refuses disabled, not stale. */
     setup(&p);EldenMotionSample run5[]={ACC(0,65536,0,5)};p.q=run5;p.n=1;gen=arm(&c,&p);
     p.owner=8;CHECK(elden_motion_consumer_sample(&c,gen)==-116);
-    p.owner=7;p.epoch=12;CHECK(elden_motion_consumer_sample(&c,gen)==-116);
+    p.owner=7;p.epoch=12;CHECK(elden_motion_consumer_sample(&c,gen)==-125);
+    setup(&p);p.q=run5;p.n=1;gen=arm(&c,&p);
+    p.epoch=12;CHECK(elden_motion_consumer_sample(&c,gen)==-116&&p.at==0);
+    CHECK(elden_motion_consumer_sample(&c,gen)==-125);
+
+    /* Owner/epoch drift is a terminal generation fence. A pending candidate
+     * exists (axis -1 accumulating hold); when the provider owner changes the
+     * sample refuses before next() runs, the candidate clears, the last
+     * published axis stays the accepted UI state and no further sample can
+     * publish — even when the provider reports the armed identity again. */
+    setup(&p);EldenMotionSample drift1[]={ACC(0,65536,0,10),ACC(0,65536,0,10+STEP),
+        ACC(-65536,0,0,20+STEP),ACC(-65536,0,0,20+2*STEP)};
+    p.q=drift1;p.n=4;gen=arm(&c,&p);
+    CHECK(elden_motion_consumer_sample(&c,gen)==0);
+    CHECK(elden_motion_consumer_sample(&c,gen)==1&&peek(&c).published_axis==2);
+    CHECK(elden_motion_consumer_sample(&c,gen)==0);
+    CHECK(peek(&c).pending_candidate==-1&&p.at==3);
+    p.owner=8;
+    CHECK(elden_motion_consumer_sample(&c,gen)==-116&&p.at==3); /* refused before next() */
+    CHECK(peek(&c).pending_candidate==0&&peek(&c).published_axis==2&&p.pub_count==1);
+    CHECK(peek(&c).state==EldenConsStopped&&peek(&c).published==1);
+    CHECK(elden_motion_consumer_sample(&c,gen)==-125);           /* generation fenced */
+    p.owner=7;CHECK(elden_motion_consumer_sample(&c,gen)==-125); /* old identity can't resume */
+    CHECK(p.pub_count==1);                                       /* nothing synthesized */
+    /* Rebind a new owner: only the new generation publishes, after its own
+     * full hold — no hold credit carries across the discontinuity — and the
+     * drifted generation stays stale forever. */
+    p.owner=9;uint64_t drift_gen=arm(&c,&p);CHECK(drift_gen!=gen);
+    CHECK(elden_motion_consumer_sample(&c,gen)==-116);
+    EldenMotionSample drift2[]={ACC(0,65536,0,30),ACC(0,65536,0,30+STEP)};
+    p.q=drift2;p.n=2;p.at=0;
+    CHECK(elden_motion_consumer_sample(&c,drift_gen)==0);   /* new candidate starts fresh */
+    CHECK(peek(&c).pending_candidate==2&&peek(&c).published==0);
+    CHECK(elden_motion_consumer_sample(&c,drift_gen)==1&&peek(&c).published_axis==2);
+    CHECK(p.pub_count==2&&p.published[1]==2);
+
+    /* A failed ownership probe is the same discontinuity: the generation
+     * fences and cannot resume when the probe recovers. */
+    setup(&p);p.q=run5;p.n=1;gen=arm(&c,&p);p.fail_owner=1;
+    CHECK(elden_motion_consumer_sample(&c,gen)==-116&&p.at==0);
+    p.fail_owner=0;CHECK(elden_motion_consumer_sample(&c,gen)==-125);
+
+    /* Reentry through the ownership probe: an inner sample is fenced busy
+     * while the outer sample still consumes, and a stop landing inside the
+     * probe unwinds the outer sample before next() runs. */
+    setup(&p);EldenMotionSample gyr_own=GYR(1,2,3,1);p.q=&gyr_own;p.n=1;
+    p.sample_in_own=1;gen=arm(&c,&p);
+    CHECK(elden_motion_consumer_sample(&c,gen)==0&&p.inner_own==-16);
+    setup(&p);p.q=drift2;p.n=2;p.stop_in_own=1;gen=arm(&c,&p);
+    CHECK(elden_motion_consumer_sample(&c,gen)==-125&&p.inner_own==0&&p.at==0);
+    CHECK(peek(&c).state==EldenConsStopped);
 
     /* Wrong SUID, wrong unit, unknown kind, zero ticks and out-of-range refuse. */
     setup(&p);EldenMotionSample bad_suid=ACC(0,65536,0,1);bad_suid.suid=(EldenMotionSuid){9,9};

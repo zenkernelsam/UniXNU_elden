@@ -51,7 +51,12 @@ sink. `begin` qualifies every callback output before arming a generation;
 `sample` re-fences owner/epoch and generation, rejects foreign SUID/unit/kind,
 duplicate/reversed ticks, nonmonotonic mach mappings, out-of-range axes and
 flat/poor-quality input, applies the real mount and m/s²→g normalization, and
-only then feeds the existing classifier. The source ticks keep the source-side
+only then feeds the existing classifier. An owner/epoch check failure or drift
+is terminal for the generation: the sample refuses before `next`/map/sink, the
+pending candidate clears, the last published axis stays the already accepted
+UI state and no sample can publish until a fresh `begin` arms a new generation
+— a provider re-reporting the armed identity cannot resume the session, so
+hold time never accumulates across an ownership discontinuity. The source ticks keep the source-side
 monotonicity fence; the classifier's hold is driven by the mapped mach time
 converted into its 19.2 MHz tick domain with the same ceiling rounding as the
 SSC hold, so the hold duration tracks real elapsed time, not the source rate —
@@ -69,10 +74,13 @@ representable signed float values, full-message truncation, malformed nested
 containers, identity/client/mount/units/bounds and rotation hold/clock behavior.
 One warning-free scalar native object builds. Test samples are synthetic fixtures,
 not a production sensor source or real hardware result.
-The consumer boundary passes164 host checks over the real classifier —
+The consumer boundary passes204 host checks over the real classifier —
 provider-backed ±Y/−X publishes, real-mount remap, m/s² normalization, a
-mach-driven hold (source-rate mismatch and conversion boundary/overflow) and
-every fence/rollback path — plus one warning-free scalar `Orientation.o` that
+mach-driven hold (source-rate mismatch and conversion boundary/overflow),
+terminal owner/epoch drift fencing (candidate cleared, refused before
+`next`, no resume on the old identity, rebind publishes only under a fresh
+generation's own hold) and every fence/rollback path — plus one warning-free
+scalar `Orientation.o` that
 imports only `elden_motion_rotation`. Its samples are host-only synthetic
 fixtures.
 Evidence: `drivers/EldenMotion/validation.json` and workbench

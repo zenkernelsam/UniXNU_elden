@@ -59,7 +59,15 @@ int elden_motion_consumer_sample(EldenMotionConsumer *s,uint64_t generation){
     uint64_t owner=0,epoch=0;
     s->busy=1;int rc=s->provider.owner_epoch(s->provider.context,&owner,&epoch);s->busy=0;
     if(s->state==EldenConsStopped)return EldenOrientationDisabled;
-    if(rc||owner!=s->owner||epoch!=s->epoch)return EldenMotionStale;
+    if(rc||owner!=s->owner||epoch!=s->epoch){
+        /* An ownership discontinuity is terminal for this generation: clear
+         * the pending candidate so hold time can never accumulate across it,
+         * keep the last published axis as the already accepted UI state and
+         * fence every later sample until a fresh begin re-arms. A provider
+         * re-reporting the armed identity must not resume the session. */
+        s->rotation.candidate=0;s->rotation.axis=s->published_axis;
+        s->state=EldenConsStopped;return EldenMotionStale;
+    }
     EldenMotionSample v={0};
     s->busy=1;rc=s->provider.next(s->provider.context,&v);s->busy=0;
     if(s->state==EldenConsStopped)return EldenOrientationDisabled;

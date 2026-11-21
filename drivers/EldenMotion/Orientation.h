@@ -63,7 +63,11 @@ int elden_motion_consumer_begin(EldenMotionConsumer *,const EldenMotionProvider 
  * owner/epoch, wrong generation, foreign SUID/unit/kind, zero/duplicate/
  * reversed timestamps, nonmonotonic mach mapping, out-of-range axes and
  * flat/poor-quality input; a flat sample still resets the pending candidate
- * through the existing classifier. */
+ * through the existing classifier. An owner/epoch check failure or drift is
+ * terminal for the generation: the sample refuses before next()/map/sink, the
+ * pending candidate clears, the last published axis stays the accepted UI
+ * state and no further sample can publish until a fresh begin re-arms —
+ * a provider re-reporting the armed identity cannot resume the session. */
 int elden_motion_consumer_sample(EldenMotionConsumer *,uint64_t generation);
 /* Stop. A stop landing during an in-flight sink callback aborts that
  * publication (never counted); after stop every produce refuses — no
