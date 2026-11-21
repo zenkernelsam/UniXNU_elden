@@ -67,11 +67,42 @@ That retry count is not a wall-clock bound on an unreturning IOKit workloop call
 existing platform watchdog/recovery remains necessary. Soft restart and full
 screen-suspend/resume are not implemented by this first native integration.
 
+`drivers/EldenPen/Owner.c` is a guarded sampling-owner facade the real
+worker can bind when mainline is ready (pen-003/004/005). It admits only an
+explicitly named provider carrying nonzero owner/epoch and every callback;
+`owner_epoch` is rechecked before every facade operation and the frame-owner
+identity is sampled per packet before anything reaches delivery. Worker
+timestamps and sequence numbers must stay monotonic; owner/epoch drift
+observed at ANY facade entry (packet, tick, pause, resume, fault) lifts a
+held contact, and a live-generation foreign frame owner or rollback
+refusal never decodes the packet but still lifts through the existing
+`elden_pen_decode`/`EldenPenDelivery` neutral-release path at the last
+accepted monotonic time — a stale/foreign generation mutates nothing.
+A failed lift stays pending: `elden_pen_owner_release` retries it through
+the bound send with no provider callback, even after stop (which stays
+terminal for packets). Stop during an active provider or send callback
+defers and unwinds after it returns; retire needs a prior stop and a
+confirmed `delivery_released`, then re-arms the caller-owned delivery for
+reuse and permits a fresh rebind. `Native.cpp` does not bind the facade;
+transport counters plus `pencil_accepted==0` are reported honestly and no
+SPI/Pencil/UIKit acceptance is claimed.
+
 ## Verified scope
 
 - 924 prior actual decoder/delivery checks remain valid; those C sources are
   unchanged. New checks cover15 report/pressure cases and249 actual hook/owner/
   forwarding cases with explicit OS peers under ASan/UBSan.
+- The pen-003/004/005 owner facade adds217 host checks on synthetic
+  provider peers: bind refusals, owner/epoch drift lifting a held contact
+  at every facade entry, foreign frame owners and timestamp/sequence
+  rollback doing the same on packets, malformed and transport-faulted
+  packets, retained failed lifts, an oe-free release retry after a failed
+  stop lift, pause/resume gating, callback re-entry (including inside
+  `owner_epoch`), stop inside a guard release send, retire refused while a
+  lift is owed, and confirmed-retire rebind with old-generation fencing.
+  Scalar ARM64 `Owner.o` exports twelve facade entries and imports only
+  `elden_pen_decode` plus delivery APIs; `result.json` reports
+  `pencil_accepted:false`, `hardware:false`.
 - Five native objects compile scalar, with no automatic initializer section.
   The pen's metaclass initializer is explicit/late. Four new pen objects have
   no warnings; the touch replacement retains exactly one existing DmaSurvey.h
@@ -135,7 +166,9 @@ the physical pen. Preserve mainline's newer SMMU/Wi-Fi changes when replacing it
 touch member, and rerun full boot/trust/entry/AVB/recovery audits. Install/launch
 the probe only in that coordinated window; it has not run on the tablet.
 
-The original finger checksum does not cover the pen. Raw SPI pen capture,0xF1,
+The owner facade is source-only: no production caller binds it yet, so the
+NT36536 worker→facade→delivery wiring is a mainline decision. The original
+finger checksum does not cover the pen. Raw SPI pen capture,0xF1,
 tail-byte/integrity semantics and possible scan-mode dependencies remain open.
 HID X/Y tilt is retained, but its conversion to UIKit polar altitude/azimuth is
 still needed; a descriptor alone does not prove tilt support. Real Pencil type,
