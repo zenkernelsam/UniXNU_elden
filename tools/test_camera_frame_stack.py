@@ -34,6 +34,12 @@ def main():
  # translation unit; rename host-only IOKit types to keep independent models.
  obj=out/'DmaPeer.o';run(['xcrun','clang++','-std=c++17',*flags,'-DELDEN_CAMERA_DMA_PEER_API=1','-Dmain=previous_dma_main','-c',CAM/'TestNativeDma.cpp','-o',obj],'DmaPeer-compile');objects.append(obj)
  model=out/'FramePeer.cpp';text=(CAM/'TestFrameOutput.cpp').read_text();start=text.index('static EldenCameraDmaCapture capture{};');end=text.index('#include "FrameOutputMethods.inc"',start)
+ # The independent frame-output tests also own a synthetic completion peer.
+ # The composed stack uses the actual CCI/CAMSS/DMA producer instead; keep
+ # only its IOKit allocator methods, not that peer's geometry functions.
+ geometry_start=text.index('static uint32_t frame_stride(');geometry_end=text.index('static std::vector<void *> heaps;',geometry_start)
+ text=text[:geometry_start]+text[geometry_end:]
+ start=text.index('static EldenCameraDmaCapture capture{};');end=text.index('#include "FrameOutputMethods.inc"',start)
  text=text[:start]+text[end:];text=text[:text.index('static void frame(')]
  model.write_text(text)
  obj=out/'FramePeer.o';run(['xcrun','clang++','-std=c++17',*flags,'-DIOBufferMemoryDescriptor=HostOutputDescriptor','-Wno-unused-variable','-c',model,'-o',obj],'FramePeer-compile');objects.append(obj)

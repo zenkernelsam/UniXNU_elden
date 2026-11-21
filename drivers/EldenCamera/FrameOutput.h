@@ -2,6 +2,7 @@
 #ifndef ELDEN_CAMERA_FRAME_OUTPUT_H
 #define ELDEN_CAMERA_FRAME_OUTPUT_H
 #include "DmaBinding.h"
+#include "Raw10.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -9,6 +10,9 @@ typedef struct EldenCameraFrameOutput EldenCameraFrameOutput;
 typedef struct {
     uint64_t ticket,sequence,timestamp_ns,bytes;uint32_t slot,width,height,stride,bayer,rotation,sensor;
 } EldenCameraOutputFrame;
+/* Output Bayer metadata uses EldenRaw* values from Raw10.h. EldenCamera*
+ * mode enums describe the source sensor and have a different numeric order.
+ * Translate explicitly at this boundary; do not forward mode.bayer as ABI. */
 typedef struct {uint32_t prepared,stopping,retired,ready,held;int error;uint64_t copied,dropped,last_sequence,last_ns;} EldenCameraOutputStatus;
 /* Explicit original camera executor only. Snapshots use real retained cached
  * IOKit descriptors, not a fixed carve-out or mutable raw DMA map. Service

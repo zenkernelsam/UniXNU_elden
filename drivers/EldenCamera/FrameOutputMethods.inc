@@ -7,6 +7,9 @@ struct EldenCameraFrameOutput {
 };
 namespace {
 static uint32_t camera_output_attempted;
+static uint32_t output_bayer(const EldenCameraMode &mode){
+    return mode.bayer==EldenCameraGrbg?EldenRawGrbg:EldenRawRggb;
+}
 static int output_fail(EldenCameraFrameOutput *c,int rc){if(!c->status.error)c->status.error=rc<0?rc:-13;return rc<0?rc:-13;}
 static int output_admit(EldenCameraFrameOutput *c,int cleanup){
     if(!c||!c->capture||ml_at_interrupt_context())return -22;
@@ -64,7 +67,7 @@ extern "C" int elden_camera_output_pump(EldenCameraFrameOutput *c){
     // borrow through the whole copy; no overwrite of any consumer-held slot.
     memcpy(c->bytes[slot],f.buffer.mapping,(size_t)c->frame_bytes);
     c->frame[slot]={++c->next_ticket,f.sequence,f.timestamp_ns,c->frame_bytes,slot,c->capture->board.configs[c->sensor].mode.width,
-        c->capture->board.configs[c->sensor].mode.height,c->sensor?4080u:5104u,c->sensor?0u:1u,c->sensor?270u:90u,c->sensor};
+        c->capture->board.configs[c->sensor].mode.height,c->sensor?4080u:5104u,output_bayer(c->capture->board.configs[c->sensor].mode),c->sensor?270u:90u,c->sensor};
     uint64_t sequence=f.sequence,time=f.timestamp_ns;rc=output_return_input(c,1);
     if(!rc){__atomic_thread_fence(__ATOMIC_RELEASE);c->state[slot]=1;c->status.copied++;c->seen=1;c->status.last_sequence=sequence;c->status.last_ns=time;}
     else {c->state[slot]=3;output_fail(c,rc);}IOLockUnlock(c->lock);return rc;
@@ -72,7 +75,16 @@ extern "C" int elden_camera_output_pump(EldenCameraFrameOutput *c){
 extern "C" int elden_camera_output_acquire(EldenCameraFrameOutput *c,EldenCameraOutputFrame *out){
     if(!c||!out||!c->lock||ml_at_interrupt_context())return -22;IOLockLock(c->lock);int rc=output_admit(c,0);unsigned slot=c->count;
     if(!rc)for(unsigned i=0;i<c->count;i++)if(c->state[i]==1&&(slot==c->count||c->frame[i].sequence>c->frame[slot].sequence))slot=i;
-    if(!rc&&slot==c->count)rc=-11;if(!rc){c->state[slot]=2;*out=c->frame[slot];__atomic_thread_fence(__ATOMIC_ACQUIRE);}IOLockUnlock(c->lock);return rc;
+    if(!rc&&slot==c->count)rc=-11;
+    if(!rc){
+        /* This single producer lends the newest completed snapshot. Older
+         * ready snapshots can no longer be delivered afterward; otherwise
+         * the real client's monotonic sequence check would terminate capture.
+         * Already-held snapshots remain untouched until their actual return. */
+        for(unsigned i=0;i<c->count;i++)if(i!=slot&&c->state[i]==1&&c->frame[i].sequence<c->frame[slot].sequence){c->state[i]=0;c->status.dropped++;}
+        c->state[slot]=2;*out=c->frame[slot];__atomic_thread_fence(__ATOMIC_ACQUIRE);
+    }
+    IOLockUnlock(c->lock);return rc;
 }
 extern "C" int elden_camera_output_release(EldenCameraFrameOutput *c,uint64_t ticket){
     if(!c||!ticket||!c->lock||ml_at_interrupt_context())return -22;IOLockLock(c->lock);int rc=-116;
@@ -98,7 +110,7 @@ extern "C" int elden_camera_output_status(EldenCameraFrameOutput *c,EldenCameraO
 extern "C" int elden_camera_output_info(EldenCameraFrameOutput *c,uint64_t out[8]){
     if(!c||!out||!c->lock||ml_at_interrupt_context())return -22;IOLockLock(c->lock);int rc=output_admit(c,0);
     if(!rc&&!c->status.prepared)rc=-19;
-    if(!rc){const auto &m=c->capture->board.configs[c->sensor].mode;uint64_t values[]={1,c->sensor,m.width,m.height,c->sensor?4080u:5104u,m.raw_bits,m.bayer,m.rotation};
+    if(!rc){const auto &m=c->capture->board.configs[c->sensor].mode;uint64_t values[]={1,c->sensor,m.width,m.height,c->sensor?4080u:5104u,m.raw_bits,output_bayer(m),m.rotation};
         for(unsigned i=0;i<8;i++)out[i]=values[i];}
     IOLockUnlock(c->lock);return rc;
 }

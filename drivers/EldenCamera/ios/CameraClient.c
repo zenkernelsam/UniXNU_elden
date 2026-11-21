@@ -11,7 +11,7 @@ int elden_camera_client_open(EldenCameraUserClient *c,unsigned sensor){
     io_connect_t connection=0;kern_return_t rc=IOServiceOpen(service,mach_task_self(),0,&connection);IOObjectRelease(service);if(rc)return -19;
     uint64_t info[8]={};uint32_t count=8;rc=IOConnectCallScalarMethod(connection,EldenCameraServiceInfo,NULL,0,info,&count);
     if(rc||count!=8||info[0]!=1||info[1]!=sensor||info[2]!=(sensor?3264u:4080u)||info[3]!=(sensor?2448u:3072u)||
-       info[4]!=(sensor?4080u:5104u)||info[5]!=10||info[6]!=(sensor?0u:1u)||info[7]!=(sensor?270u:90u)){IOServiceClose(connection);return -116;}
+       info[4]!=(sensor?4080u:5104u)||info[5]!=10||info[6]!=(sensor?EldenRawRggb:EldenRawGrbg)||info[7]!=(sensor?270u:90u)){IOServiceClose(connection);return -116;}
     c->sensor=sensor;c->connection=connection;c->last_sequence=0;c->seen=0;
     c->conversion=(EldenRaw10Config){(uint32_t)info[2],(uint32_t)info[3],(uint32_t)info[4],(uint32_t)info[6],(uint32_t)info[7],0,
         720,960,0,1023,{65536,65536,65536}}; // explicit uncalibrated RAW preview; no inferred hardware ISP

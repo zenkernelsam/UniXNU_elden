@@ -1,0 +1,238 @@
+{
+  "source_parent_commit": "09f0eb9277f61af1e005879a0ee254ce7f079c35",
+  "original_regression_commit": "f3329c96631180fae75c0df6f8f1f185b91b5c86",
+  "source_sha256": {
+    "drivers/EldenCamera/FrameOutput.h": "ec6e10e23a3c6c2e0d2ff47a4e5a450ee24da7e0e623a97a5c27b59862f38fac",
+    "drivers/EldenCamera/FrameOutputMethods.inc": "edbf89e7633cceab16ee95b47dba3b126d20cab562bde0d76d7f3fd105dbaeeb",
+    "drivers/EldenCamera/FrameStackSource.py": "18c4d63288523ca0de421885b5fad623cc16f885507b5a17a6184c1b655d0ea9",
+    "drivers/EldenCamera/LICENSE.CMIO": "62706200ebfd0da6d8d8c94dd7e977f5b13df9b95eb12184f79e3d79c065e8cc",
+    "drivers/EldenCamera/Raw10.c": "9672a62cc6129c618077c41656049e254f1e91f285445dce62e463b7045d2fe6",
+    "drivers/EldenCamera/Raw10.h": "c75866a247a6b53da2fec240397549ccfc7b8eb0b821bc31600c16e19415102c",
+    "drivers/EldenCamera/ServiceAbi.h": "c5b2159bf52e5587a1a3beb380e8fdda884063cd6d545d401573d3e47db7179a",
+    "drivers/EldenCamera/TestCameraBridge.inc": "93950b8405740b58b90ab0be944cfced760c2f3c51c22a4ae25eb7155d9e21fa",
+    "drivers/EldenCamera/TestCameraClient.c": "43f81532a87a60f21c0e832a026f05182e49a137f4e99a8f313f69fa0504cd92",
+    "drivers/EldenCamera/TestFrameOutput.cpp": "3fbe1a74fd9f597e04e327a7be65a6259b9aff3b89ed91b0c2086a647dc18584",
+    "drivers/EldenCamera/TestRaw10.c": "957e78beef315f69f8883702baf2d7a1ef9e0cd0efb6949ce900ccc5fcf73779",
+    "drivers/EldenCamera/TestService.cpp": "8087c40e17f0be06c6d9ca907a4dceb1e2ef604ecd031ee1c5a3296d117a2779",
+    "drivers/EldenCamera/frames-source.json": "e1f172a155d43872bf2054fff334312637b5d861e0f275c5157da4715ae54968",
+    "drivers/EldenCamera/ios/CameraClient.c": "eb80a5591369518472de4e47d9c6b846cd33ab3277d167fa9dc4993b8289293e",
+    "drivers/EldenCamera/ios/CameraClient.h": "38375e3734aeb808c066c7f33a22b40d4fc146d3751338f1b9f9b1cc2957bded",
+    "drivers/EldenCamera/ios/CameraProvider.m": "bc44dbd3a573865a4c972787bc1d1cf0381bea85a77e4eeeaed98dba7f84305f",
+    "tools/audit_camera_frames_link.py": "7897014adad38e3f677eb46f1daf0fe81d666bfe8519f81f766a78a27bcea9a4",
+    "tools/build_camera_frames.py": "a7fb80bb8679d3aa26db772617b8f88b524768f90dacc32fe8baa8bf60eb82de",
+    "tools/build_camera_provider.py": "46cfff76d9c3a221ccafb6a61f005e7c43fc2562af2cd49978bcddad3c76469f",
+    "tools/link_camera_frames.py": "c4ab2ebb6011bb23f8638ec203aa3c07cb30999a4084aa05200c870bb536a398",
+    "tools/prepare_camera_frames.py": "93837126d9393144e6eed7f27c4044aa436d249b1999a9145fdd42c952654015",
+    "tools/test_camera_bridge.py": "3fd6cc816024132081a6fa6d9ffe475bf49e992991b0fe2f98a645e9af0ff4ef",
+    "tools/test_camera_frame_stack.py": "23d896c15dbb7560425d68ff98a7ebd4f71ac24b6a5f3855b345087c4770882f",
+    "tools/test_camera_frames.py": "ec3b7d11a7fb2bff4ef7bb7e6df2bd745b16a531fd40713c6293299065c40866"
+  },
+  "accepted_folders": [
+    "source1",
+    "host7",
+    "regressions3",
+    "native3",
+    "provider3",
+    "kernel3",
+    "stack4",
+    "final-audits3"
+  ],
+  "source_record_sha256": "464f8d5cfdbd3175700b1a06849d51c546f22384feeba5602d9fc09398e5d057",
+  "kernel_sha256": "c12fcecef16090d4110a2a9ca14ffc83c412fce87c72c803ccd456943dcd7669",
+  "native_sha256": "2afd524cf92cab332cf6717b792f2a9296fb44d426a2c29ffeaad0f2f408db08",
+  "parent_kernel_sha256": "d054975d87c1c1aca07db77f6f2bac2884db48d03af8b7ada533ca10cadc2359",
+  "native_objects": {
+    "FrameOutput.o": {
+      "sha256": "a1a9e4d80687daa31ea60f6b91d1e950844abc633e965df81239812d46e049f9",
+      "warnings": 0
+    },
+    "Service.o": {
+      "sha256": "fffe02bb2e5da0ab9e537e91164f47636f8228248b78761f4229001d87b8cdfc",
+      "warnings": 0
+    }
+  },
+  "providers": {
+    "rear": {
+      "sha256": "02ebc97267cb11572829c9e1aead86bb03b6f985b33dfac4c8eb060d22d67369",
+      "cdhash": "bc54ce1f0d2de0faad444cb183e717e82c7ee176",
+      "compile_command": [
+        "xcrun",
+        "--sdk",
+        "iphoneos",
+        "clang",
+        "-target",
+        "arm64-apple-ios17.0",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.2.sdk",
+        "-I",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-bridge-20261121/provider3/headers",
+        "-I",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-bridge-20261121/source1",
+        "-fobjc-arc",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-fstack-protector-strong",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "CoreMedia",
+        "-framework",
+        "CoreVideo",
+        "-framework",
+        "IOKit",
+        "-framework",
+        "CoreMediaIO",
+        "-Wl,-sectcreate,__TEXT,__info_plist,/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-bridge-20261121/provider3/rear-embedded-info.plist",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-bridge-20261121/source1/CameraProvider.m",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-bridge-20261121/source1/CameraClient.c",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-bridge-20261121/source1/Raw10.c",
+        "-o",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-bridge-20261121/provider3/rear/bin/eldencamerad"
+      ],
+      "sensor": 0,
+      "identity": "org.unixnu.elden.camera.rear"
+    },
+    "front": {
+      "sha256": "d722e2fc80ec92fa9b9487d9ceb98a3387010d7fe8665a2a1fe3c6bcdc5d30a0",
+      "cdhash": "9ad1331dc16c69ebfdafb6bff0298c9f3eab8dc6",
+      "compile_command": [
+        "xcrun",
+        "--sdk",
+        "iphoneos",
+        "clang",
+        "-target",
+        "arm64-apple-ios17.0",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.2.sdk",
+        "-I",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-bridge-20261121/provider3/headers",
+        "-I",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-bridge-20261121/source1",
+        "-fobjc-arc",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-fstack-protector-strong",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "CoreMedia",
+        "-framework",
+        "CoreVideo",
+        "-framework",
+        "IOKit",
+        "-framework",
+        "CoreMediaIO",
+        "-Wl,-sectcreate,__TEXT,__info_plist,/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-bridge-20261121/provider3/front-embedded-info.plist",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-bridge-20261121/source1/CameraProvider.m",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-bridge-20261121/source1/CameraClient.c",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-bridge-20261121/source1/Raw10.c",
+        "-o",
+        "/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes/lab/camera-bridge-20261121/provider3/front/bin/eldencamerad"
+      ],
+      "sensor": 1,
+      "identity": "org.unixnu.elden.camera.front"
+    }
+  },
+  "bridge": {
+    "passed": true,
+    "results": {
+      "rear": "PASS camera native\u2192ticketclient\u2192RAW10 rear: 1382433 checks; complete code path, OS/physical/pixels modeled\n",
+      "front": "PASS camera native\u2192ticketclient\u2192RAW10 front: 1382433 checks; complete code path, OS/physical/pixels modeled\n"
+    },
+    "actual_snapshot_service_client_raw10_connected": true,
+    "source_record_sha256": "464f8d5cfdbd3175700b1a06849d51c546f22384feeba5602d9fc09398e5d057",
+    "host_IOKit_peer_source_sha256": "8087c40e17f0be06c6d9ca907a4dceb1e2ef604ecd031ee1c5a3296d117a2779",
+    "bridge_source_sha256": "93950b8405740b58b90ab0be944cfced760c2f3c51c22a4ae25eb7155d9e21fa",
+    "physical_completion_IOKit_pixels_modeled": true,
+    "original_reproduction": {
+      "rear": {
+        "source_commit": "f3329c96631180fae75c0df6f8f1f185b91b5c86",
+        "original_method_sha256": "70ac0b07a7339b6f56d7f156235563e05f069908076beca06c4e11ee161437f0",
+        "exit": 1,
+        "actual_client_open_rejected": true
+      },
+      "front": {
+        "source_commit": "f3329c96631180fae75c0df6f8f1f185b91b5c86",
+        "original_method_sha256": "70ac0b07a7339b6f56d7f156235563e05f069908076beca06c4e11ee161437f0",
+        "exit": 1,
+        "actual_client_open_rejected": true
+      },
+      "latest": {
+        "source_commit": "f3329c96631180fae75c0df6f8f1f185b91b5c86",
+        "exit": 1,
+        "original_stale_frame_reproduced": true
+      }
+    },
+    "hardware": false
+  },
+  "regressions": {
+    "passed": true,
+    "raw10": "PASS RAW10 fullbits/cell/rotation/mirror/calibration/refusal: 1069 cases/6062 checks; pixels synthetic host fixtures\n",
+    "snapshots": {
+      "normal": "PASS real frame snapshot normal: 69 checks; IOKit/physical completion peers modeled\n",
+      "allocation": "PASS real frame snapshot allocation: 11 checks; IOKit/physical completion peers modeled\n",
+      "release": "PASS real frame snapshot release: 68 checks; IOKit/physical completion peers modeled\n",
+      "queue": "PASS real frame snapshot queue: 66 checks; IOKit/physical completion peers modeled\n",
+      "latest": "PASS real frame snapshot latest: 46 checks; IOKit/physical completion peers modeled\n"
+    },
+    "service": "PASS actual read-only camera service privilege/ticket/close/ABI methods: 22 checks; OS peers modeled\n",
+    "clients": {
+      "normal": "PASS actual OS17 ticket client normal: 20 checks; IOKit/map/converter peers modeled\n",
+      "unmap": "PASS actual OS17 ticket client unmap: 17 checks; IOKit/map/converter peers modeled\n",
+      "map": "PASS actual OS17 ticket client map: 17 checks; IOKit/map/converter peers modeled\n",
+      "convert": "PASS actual OS17 ticket client convert: 20 checks; IOKit/map/converter peers modeled\n",
+      "metadata": "PASS actual OS17 ticket client metadata: 16 checks; IOKit/map/converter peers modeled\n"
+    },
+    "IOKit_PAR_power_completion_peers_modeled": true,
+    "conversion_pixels_synthetic_host_fixture": true,
+    "hardware": false
+  },
+  "stack": {
+    "normal": "PASS actual frame-snapshot board Gen4 front/rear capture normal: 30192 checks; actual sensor/CCI/native PHY-CSID-VFE binding; power/MMIO/GIC/DMA peers modeled\n",
+    "drain-fail": "PASS actual frame-snapshot board Gen4 front/rear capture drain-fail: 30358 checks; actual sensor/CCI/native PHY-CSID-VFE binding; power/MMIO/GIC/DMA peers modeled\n",
+    "visibility-fail": "PASS actual frame-snapshot board Gen4 front/rear capture visibility-fail: 30027 checks; actual sensor/CCI/native PHY-CSID-VFE binding; power/MMIO/GIC/DMA peers modeled\n"
+  },
+  "final_audits": {
+    "frames": 0,
+    "shared": 0,
+    "camera": 0,
+    "runtime": 0,
+    "sleep": 0,
+    "motion": 0,
+    "haptics": 0,
+    "rtc": 0,
+    "qrtr": 0,
+    "guards": 0,
+    "camera-guards": 0
+  },
+  "report_sha256": {
+    "host7/result.json": "c7293e15568d10fb6981339f0f73b33b493e138ff7f1b7332d2c776ea05fffdc",
+    "regressions3/result.json": "e321b0c276007e47d962f61e6ac6ee8bab8393cafcf4424a5efeeaeb666d9a30",
+    "native3/result.json": "38a9701fc88f47f899e23d3bef33215f0e88bf6b70055e5fb7f04ff30f08297f",
+    "provider3/result.json": "5d1f2d6a237c645483390e56838a1501254d533b4d9a571d0367ad3ff877232a",
+    "kernel3/result.json": "27818fc2565dd0029ee486d1bbffc04e567c0f7638577cc5ac300412d1c4c507",
+    "stack4/result.json": "eff51e2a88dc3bd1c05dab3dcc5baa2c2a1968940b61c2e2e9ebb0b1ad656a3d",
+    "final-audits3/result.json": "d9fc534769de52799f2e673e1050ec6ed8beb51136b3f13b95e3bd7df4b03b37"
+  },
+  "aggregate_recovery_bound_ms": 5500,
+  "declared_archive_deltas_audited": true,
+  "original4K_recovery_Apple30_retained": true,
+  "physical_IOKit_PAR_power_GIC_MMIO_capture_peers_modeled": true,
+  "test_pixels_synthetic": true,
+  "hardware": false,
+  "job_cache_trust_installed": false,
+  "automatic_startup": false,
+  "five_part_goal": "active",
+  "archive": {
+    "file": "camera-bridge-offline.tar.gz",
+    "bytes": 25579962,
+    "sha256": "cd8e9422a351ea88da7e99438fcae8775af0ff669def914f72f8c7be8aec7e0e",
+    "members": 644,
+    "members_verified": true,
+    "manifest_sha256": "eafb9dd4fa0d6e27534b8ea5bead760dd6edc30407b00299efdcffff780638ee"
+  }
+}

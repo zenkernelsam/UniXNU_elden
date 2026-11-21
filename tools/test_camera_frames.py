@@ -17,7 +17,7 @@ def main():
     run(['xcrun','clang','-std=c11',*flags,ROOT/'drivers/EldenCamera/TestRaw10.c',a.source/'Raw10.c','-o',out/'raw10'],'raw-build')
     raw=run([out/'raw10'],'raw-run')
     run(['xcrun','clang++','-std=c++17',*flags,ROOT/'drivers/EldenCamera/TestFrameOutput.cpp','-o',out/'snapshots'],'snapshot-build')
-    results={n:run([out/'snapshots',n],n+'-run') for n in ('normal','allocation','release','queue')}
+    results={n:run([out/'snapshots',n],n+'-run') for n in ('normal','allocation','release','queue','latest')}
     run(['xcrun','clang++','-std=c++17',*flags,ROOT/'drivers/EldenCamera/TestService.cpp','-o',out/'service'],'service-build')
     service=run([out/'service'],'service-run')
     run(['xcrun','clang','-std=c11',*flags,'-DELDEN_CAMERA_CLIENT_TEST=1',ROOT/'drivers/EldenCamera/TestCameraClient.c','-o',out/'client'],'client-build')
