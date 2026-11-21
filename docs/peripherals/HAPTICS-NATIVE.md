@@ -65,7 +65,12 @@ budget reservation, no recipe-sized allocation, staged pulls that neither drop
 nor replay frames, and `fed` accounting only on confirmed FIFO writes. This is
 capability, not enablement: `Native.cpp` binds no production manifest/profile,
 userspace still supplies no PCM/gain/calibration, there is no automatic startup,
-and the host test uses explicitly synthetic carriers/LUT only. A real measured
+and the host test uses explicitly synthetic carriers/LUT only. The manifest's
+caller side now has a deterministic generator — `tools/build_wave_manifest.py`
+emits sorted/deduplicated `EldenWaveSource` C data from the original Apple
+sources plus a qualified bank (test-only synthetic mode stamps
+`production_ready:false`; production demands the measured
+`hardware_qualified` bank). A real measured
 dual-motor profile and an authoritative recipe bank are still absent, so the
 route produces nothing.
 

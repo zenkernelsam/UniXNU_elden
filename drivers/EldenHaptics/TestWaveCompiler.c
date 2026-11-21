@@ -92,6 +92,10 @@ int main(void){
      EldenWaveAutomationList al={&it,1};EldenWaveEvent b[1]={{&cHi,NULL,0,480,32767,0}};EldenWaveRecipe r={b,1,&al,NULL,960};
      CHECK(elden_wave_compiler_begin(&s,&r,&prof,1,hist,480,&g)==-22);}       /* unordered curve */
     memset(&s,0,sizeof(s));
+    {EldenWaveControlPoint pt[2]={{120,100},{120,200}};EldenWaveAutomation it={0,EldenWaveCurve,0,pt,2};
+     EldenWaveAutomationList al={&it,1};EldenWaveEvent b[1]={{&cHi,NULL,0,480,32767,0}};EldenWaveRecipe r={b,1,&al,NULL,960};
+     CHECK(elden_wave_compiler_begin(&s,&r,&prof,1,hist,480,&g)==-22);}       /* collapsed equal point frames */
+    memset(&s,0,sizeof(s));
     {EldenWaveEvent b[1]={{&cHi,NULL,0,480,32767,0}};EldenWaveRecipe r={b,1,NULL,NULL,0};
      CHECK(elden_wave_compiler_begin(&s,&r,&prof,1,hist,480,&g)==-22);}       /* zero duration */
     /* ---- tail underflow: an event shorter than its explicit tail refuses ---- */

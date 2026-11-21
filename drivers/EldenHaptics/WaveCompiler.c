@@ -148,7 +148,11 @@ static int valid_curve(const EldenWaveAutomationList *l){
         if(it->kind==EldenWaveCurve){
             if(!it->points||!it->count||it->count>1024)return -22;
             uint32_t pt=0;
-            for(uint32_t j=0;j<it->count;j++){if(it->points[j].frame<pt||it->points[j].value_q15>32767)return -22;pt=it->points[j].frame;}
+            for(uint32_t j=0;j<it->count;j++){
+                /* Control-point frames must strictly increase: equal frames
+                 * are a collapsed pair that would divide by zero in curve_at. */
+                if((j&&it->points[j].frame<=pt)||it->points[j].value_q15>32767)return -22;pt=it->points[j].frame;
+            }
         }
     }
     return 0;

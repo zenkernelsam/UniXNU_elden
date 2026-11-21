@@ -115,6 +115,35 @@ with a busy sibling never retires the chunk, and a busy retry writes the staged
 tail exactly once. Measured calibration and physical acceptance remain
 missing.
 
+`tools/build_wave_manifest.py` is the deterministic offline generator for that
+caller manifest: it parses the original `SystemSoundVibrationPatterns` plist
+and supported AHAP through the existing `AppleEffects` parser, qualifies every
+carrier against the measured source-bound bank via `EffectCompiler.load_bank`,
+and emits bounded static C — deduplicated 24 kHz sample arrays, `EldenWaveCarrier`
+(one-shot/loop/tail), `EldenWaveEvent`/`EldenWaveAutomation` (intensity and
+sharpness steps/curves), `EldenWaveRecipe` and a sorted `EldenWaveSource` table
+whose ids are stable from source name+hash, nonzero, unique and free of the
+`0x80000000` recipe tag. Only semantics `WaveCompiler` already represents are
+emitted: one-shot/loop/tail carriers, AHAP transient/continuous events with a
+single sharpness morph pair of identical layout, intensity/sharpness
+automation, and VibePattern segments only under an explicit qualified legacy
+carrier/order. Unsupported waveform mappings, >2-point sharpness morphs,
+mismatched morph carriers, unresolved duration, envelope units, fractional
+repeats, audio sidecars, duplicate names/ids and unqualified dynamic policy all
+refuse; no Tap/Sine carrier is ever synthesized and no intensity->voltage is
+inferred. A source set yielding no supported non-empty recipe refuses rather
+than emitting a zero-entry manifest, and distinct curve point times that
+quantize to the same 24 kHz frame refuse in both the generator and
+`WaveCompiler.valid_curve` (strict point ordering — equal frames would divide
+by zero in `curve_at`). Production mode requires the bank's `hardware_qualified` evidence,
+exact TB322FC board/rate/boost and pinned firmware identity; `--test-only`
+admits a synthetic bank and stamps `production_ready:false`. The generated TU
+is host-qualified by `TestWaveManifest` (5,821 checks: sorted/unique/untagged
+ids, carrier dedup, morph/automation contract, every recipe drained through
+WaveCompiler and the staged->confirmed WaveFeed) and builds a scalar ARM64
+object on both toolchains. Nothing links it into `Native.cpp` — the manifest
+remains source-derived capability, not enablement.
+
 ## Evidence and reproduction
 
 Final RTP host3:361674 actual modeled GENI/AW/RTP checks including60s admission/
@@ -142,11 +171,17 @@ python3 tools/test_wave_feed.py --firmware /original/y700-gen4-haptic.bin \
   --llvm /path/to/llvm/bin --output /new/wavefeed-host
 python3 tools/compile_apple_effects.py --source /original/patterns.plist --recipe NAME \
   --bank /measured/bank.json --sample-map-library /host/libSampleMap.dylib --output /new/effect
+python3 tools/build_wave_manifest.py --source /original/patterns.plist \
+  --source /original/effect.ahap --bank /measured/bank.json --output /new/manifest
+python3 tools/test_wave_manifest.py --llvm /path/to/llvm/bin --output /new/manifest-host
 ```
 
 Full native uses existing prepare/build/link_haptics tools; native-source2/native2/
 kernel1 accepted. The source-bound compiled-recipe path is now plumbed into the
-same arbiter/worker but stays disabled without a measured profile. Still needed:
-a real measured dual-motor calibration bank, an authoritative source recipe
-manifest, actual iOS Actuator for the RAM path, then port/rebuild current
+same arbiter/worker but stays disabled without a measured profile, and the
+deterministic manifest generator (`build_wave_manifest.py`) exists but has no
+production bank to consume. Still needed:
+a real measured dual-motor calibration bank (`hardware_qualified` with
+evidence), a production manifest generated from it, an explicit `Native.cpp`
+bind, actual iOS Actuator for the RAM path, then port/rebuild current
 mainline with floor/recovery. No tablet or auto merge.

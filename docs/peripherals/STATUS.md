@@ -28,7 +28,13 @@ through a pull-source clip under one live session — recipe->chunk->FIFO flow i
 qualified by 688,101 host checks on the real GENI/AW peer chain, and `fed`
 accounting now waits for confirmed FIFO writes via the `consumed` ack (staged
 bytes persist across busy retries; unconfirmed tails drop honestly on
-cancel/stop). Synthetic
+cancel/stop).
+`tools/build_wave_manifest.py` now emits a deterministic build-time
+`EldenWaveSource` manifest from the original Apple sources plus a qualified
+carrier/calibration bank — deduplicated static sample arrays, events,
+automation and sorted nonzero untagged ids — and `tools/test_wave_manifest.py`
+qualifies a generated manifest end-to-end through WaveCompiler/WaveFeed in
+5,821 host checks on both toolchains. Synthetic
 linear-LUT carriers are host-only; no measured calibration is present and no
 production manifest/profile is bound, so no output route is enabled. The
 guarded orientation consumer is

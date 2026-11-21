@@ -13,7 +13,7 @@
 | AP501U／Pencil HID | [PEN-NATIVE](PEN-NATIVE.md)，EldenPen/Owner.{c,h}，EldenPen/protocol-validation.json；原 Android 可行性 docs/AP501U-PENCIL-FEASIBILITY-20261114.md |
 | 原 touch／pen 可逆暂停与亮屏 | [INPUT-SLEEP](INPUT-SLEEP.md) → [WAKE-IRQ](WAKE-IRQ.md) → [WAKE-PROTOCOL](WAKE-PROTOCOL.md) |
 | RTC／时间持久化边界 | [RTC-WAKE](RTC-WAKE.md)，EldenRtc/Owner.{c,h}，EldenRtc/validation.json |
-| 马达 iOS 系统路线 | [HAPTICS-ACTUATOR](HAPTICS-ACTUATOR.md) → [HAPTICS-BROKER](HAPTICS-BROKER.md) → [HAPTICS-RTP](HAPTICS-RTP.md) → [HAPTICS-NATIVE](HAPTICS-NATIVE.md) → [HAPTICS](HAPTICS.md) |
+| 马达 iOS 系统路线 | [HAPTICS-ACTUATOR](HAPTICS-ACTUATOR.md) → [HAPTICS-BROKER](HAPTICS-BROKER.md) → [HAPTICS-RTP](HAPTICS-RTP.md) → [HAPTICS-NATIVE](HAPTICS-NATIVE.md) → [HAPTICS](HAPTICS.md)；tools/build_wave_manifest.py + test_wave_manifest.py（manifest 生成器） |
 | 传感器当前运行与原 QRTR | [SENSOR-RUNTIME](SENSOR-RUNTIME.md) → [MOTION-QRTR](MOTION-QRTR.md) → [ADSP-CHANNELS](ADSP-CHANNELS.md) |
 | 传感器 pack／RPC／内存 | [SENSOR-MEMORY](SENSOR-MEMORY.md) → [SENSOR-PACK](SENSOR-PACK.md) → [SENSOR-RPC](SENSOR-RPC.md) |
 | 采样到 OS17／旋转缺口 | [MOTION-SSC](MOTION-SSC.md) → [MOTION-HID](MOTION-HID.md) → [MOTION-CORE](MOTION-CORE.md) |
