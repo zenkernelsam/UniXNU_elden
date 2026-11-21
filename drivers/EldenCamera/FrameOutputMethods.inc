@@ -3,7 +3,7 @@ struct EldenCameraFrameOutput {
     EldenCameraDmaCapture *capture;unsigned sensor,count;uint64_t owner,epoch,route_epoch,next_ticket;
     IOLock *lock;IOBufferMemoryDescriptor *memory[4];uint8_t *bytes[4];
     uint32_t state[4];EldenCameraOutputFrame frame[4];EldenCameraFrame input;
-    uint32_t input_held,seen;EldenCameraOutputStatus status;uint64_t frame_bytes;
+    uint32_t input_held,seen,irq_enabled;EldenCameraOutputStatus status;uint64_t frame_bytes;
 };
 namespace {
 static uint32_t camera_output_attempted;
@@ -71,6 +71,19 @@ extern "C" int elden_camera_output_pump(EldenCameraFrameOutput *c){
     uint64_t sequence=f.sequence,time=f.timestamp_ns;rc=output_return_input(c,1);
     if(!rc){__atomic_thread_fence(__ATOMIC_RELEASE);c->state[slot]=1;c->status.copied++;c->seen=1;c->status.last_sequence=sequence;c->status.last_ns=time;}
     else {c->state[slot]=3;output_fail(c,rc);}IOLockUnlock(c->lock);return rc;
+}
+extern "C" int elden_camera_output_enable_irq(EldenCameraFrameOutput *c){
+    if(!c||!c->lock||ml_at_interrupt_context())return -22;IOLockLock(c->lock);int rc=output_admit(c,0);
+    if(!rc&&c->irq_enabled)rc=-16;if(!rc)rc=elden_camera_native_pipeline_listen(c->owner,c->epoch,c->sensor);
+    if(!rc)c->irq_enabled=1;IOLockUnlock(c->lock);return rc;
+}
+extern "C" int elden_camera_output_pump_irq(EldenCameraFrameOutput *c,unsigned ms){
+    if(!c||!c->lock||ml_at_interrupt_context())return -22;IOLockLock(c->lock);int rc=output_admit(c,0);
+    if(!rc&&!c->irq_enabled)rc=-19;IOLockUnlock(c->lock);if(rc)return rc;
+    // No output lock across the real original worker's wait. The pending bit
+    // is consumed by service, not wait; an event before sleep cannot disappear.
+    rc=elden_camera_native_pipeline_wait(c->owner,c->epoch,c->sensor,ms);
+    if(rc<0)return rc;if(!rc)return -11;return elden_camera_output_pump(c);
 }
 extern "C" int elden_camera_output_acquire(EldenCameraFrameOutput *c,EldenCameraOutputFrame *out){
     if(!c||!out||!c->lock||ml_at_interrupt_context())return -22;IOLockLock(c->lock);int rc=output_admit(c,0);unsigned slot=c->count;

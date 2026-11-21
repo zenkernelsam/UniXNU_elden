@@ -3,6 +3,7 @@ from pathlib import Path
 import argparse,hashlib,json,re,struct,subprocess,sys
 from camera_startup_audit import check_camera_startup
 from peripheral_archive_audit import retained_archive
+from camera_irq_input_audit import retained_camera_irq_input
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def signed(v,b):return v-(1<<b) if v&(1<<(b-1)) else v
 def main():
@@ -59,6 +60,8 @@ def main():
         path=Path(value.split(',')[-1])
         if value.startswith('-Wl,-force_load,'):retained[str(path)]=retained_archive(value,cmd,r)
         elif path.is_file() and path.suffix in ('.a','.o'):
+            if r.get('actual_original_camera_IRQ_executor') is True and path.name=='NativePipeline.o':
+                retained[str(path)]=retained_camera_irq_input(path,cmd,r);continue
             if r.get('actual_shared_SMMU_native_staged_peripherals') is True:
                 delta=r.get('shared_direct_deltas',{}).get(path.name)
                 if isinstance(delta,dict) and delta.get('before_path')==str(path):

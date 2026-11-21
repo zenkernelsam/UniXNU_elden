@@ -19,10 +19,11 @@ int elden_camera_pipeline_peer_write(void *,unsigned,uint32_t,uint32_t);void eld
 uint64_t elden_camera_pipeline_peer_now(void *);void elden_camera_pipeline_peer_delay(void *,unsigned);void elden_camera_pipeline_peer_destroy(void *);
 }
 using IOReturn=int;using IOLock=std::mutex;static uint32_t armcpu_gic_ready=1,gic[0x10000/4];static std::vector<IOLock *> locks;
-static void *cci_peers[2],*capture_peers[2];static bool drain_fail;static unsigned mappings;
+static void *cci_peers[2],*capture_peers[2];static bool drain_fail,capture_irq_mode;static unsigned mappings;
 static IOLock *IOLockAlloc(){auto *p=new IOLock;locks.push_back(p);return p;}
-static void IOLockLock(IOLock *p){p->lock();}static void IOLockUnlock(IOLock *p){p->unlock();}
-static bool ml_at_interrupt_context(){return false;}
+static void IOLockLock(IOLock *p){CHECK(!capture_irq_mode);p->lock();}static void IOLockUnlock(IOLock *p){p->unlock();}
+static bool ml_at_interrupt_context(){return capture_irq_mode;}
+#include "TestIrqPeer.inc"
 static void *IOMalloc(size_t bytes){return std::malloc(bytes);}static void IOFree(void *p,size_t){std::free(p);}
 static void IODelay(unsigned us){for(auto p:cci_peers)if(p)elden_camera_cci_peer_delay(p,us);for(auto p:capture_peers)if(p)elden_camera_pipeline_peer_delay(p,us);}
 static uint64_t now_us(void *){return elden_camera_cci_peer_now(cci_peers[0]);}
@@ -30,7 +31,7 @@ static uint64_t pipeline_now_us(void *){return elden_camera_pipeline_peer_now(ca
 struct Handler{uint32_t id;void (*callback)(void *);void *context;};static std::vector<Handler> handlers;
 static IOReturn armcpu_spi_attach(uint32_t id,bool edge,void (*callback)(void *),void *context,uint32_t *flags,uint64_t *router){
     CHECK(edge&&callback&&context);for(auto h:handlers)CHECK(h.id!=id);handlers.push_back({id,callback,context});gic[(0x100+id/32*4)/4]|=1u<<(id%32);*flags=0xa007;*router=0;return 0;}
-static IOReturn armcpu_spi_mask(uint32_t id,bool on){CHECK(on);gic[(0x100+id/32*4)/4]&=~(1u<<(id%32));return 0;}
+static IOReturn armcpu_spi_mask(uint32_t id,bool on){if(on)gic[(0x100+id/32*4)/4]&=~(1u<<(id%32));else gic[(0x100+id/32*4)/4]|=1u<<(id%32);return 0;}
 namespace {
 constexpr uint64_t CciBase[2]={0xac7b000,0xac7c000};constexpr uint32_t CciIntid[2]={458,459};
 struct Window {unsigned source=9;

@@ -45,6 +45,8 @@ extern "C" int elden_camera_dma_capture_frame(EldenCameraDmaCapture *p,unsigned 
     event_ready=false;borrowed=true;claims++;*out={{1,7,9,11,0x20001000,frame_size(),raw},sequence,(sequence+1)*1000000,(uint32_t)frame_size(),0};return 0;}
 extern "C" int elden_camera_dma_capture_release(EldenCameraDmaCapture *p,unsigned sensor,const EldenCameraFrame *f,int requeue){CHECK(p==&capture&&sensor==peer_sensor&&f&&!requeue&&borrowed);releases++;if(release_error)return release_error;borrowed=false;return 0;}
 extern "C" int elden_camera_native_pipeline_queue(uint64_t o,uint64_t e,unsigned sensor,const EldenCameraBuffer *b){CHECK(o==7&&e==9&&sensor==peer_sensor&&b&&!borrowed);queues++;return queue_error;}
+extern "C" int elden_camera_native_pipeline_listen(uint64_t o,uint64_t e,unsigned sensor){CHECK(o==7&&e==9&&sensor==peer_sensor);return -19;}
+extern "C" int elden_camera_native_pipeline_wait(uint64_t o,uint64_t e,unsigned sensor,unsigned ms){CHECK(o==7&&e==9&&sensor==peer_sensor&&ms);return -19;}
 extern "C" int elden_camera_dma_status(EldenCameraNativeDma *,EldenCameraDmaStatus *out){CHECK(out);*out={};out->retired=retired;return 0;}
 #include "FrameOutputMethods.inc"
 static void frame(uint8_t value){CHECK(!borrowed);memset(raw,value,5104*3072);event_ready=true;sequence++;}

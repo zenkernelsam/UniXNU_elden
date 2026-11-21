@@ -2,6 +2,7 @@
 from pathlib import Path
 import argparse,hashlib,json,re,struct,subprocess,sys
 from peripheral_archive_audit import retained_archive
+from camera_irq_input_audit import retained_camera_irq_input
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def signed(v,b):return v-(1<<b) if v&(1<<(b-1)) else v
 def main():
@@ -61,6 +62,8 @@ def main():
         path=Path(value.split(',')[-1])
         if value.startswith('-Wl,-force_load,'):archives[str(path)]=retained_archive(value,after,r)
         elif path.is_file() and path.suffix in ('.a','.o'):
+            if r.get('actual_original_camera_IRQ_executor') is True and path.name=='NativePipeline.o':
+                direct[str(path)]=retained_camera_irq_input(path,after,r);continue
             delta=r.get('shared_direct_deltas',{}).get(path.name)
             if delta and delta['before_path']==str(path):
                 if sha(path)!=delta['before'] or after.count(delta['after_path'])!=1 or sha(Path(delta['after_path']))!=delta['after']:raise ValueError('Declared native layout consumer changed')

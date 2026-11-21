@@ -6,13 +6,14 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
  p=argparse.ArgumentParser(description=__doc__)
  for n in ('frame-source','dma-source','clock-source','power-source','pipeline-source','cci-source','sensor-source','output'):p.add_argument('--'+n,type=Path,required=True)
+ p.add_argument('--irq',action='store_true',help='Execute original IRQ/wait/service and four actual completed DMA frames per sensor')
  a=p.parse_args();out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
  for n in ('frame_source','dma_source','clock_source','power_source','pipeline_source','cci_source','sensor_source'):
   folder=getattr(a,n).resolve(strict=True);setattr(a,n,folder);record=json.loads((folder/'source.json').read_text())
   for name,d in record['sources'].items():
    if sha(folder/name)!=d:raise ValueError('Actual input changed')
  sys.path.insert(0,str(CAM));from FrameStackSource import derive
- body,proof=derive();(out/'TestFrameStack.cpp').write_bytes(body)
+ body,proof=derive(irq=a.irq);(out/'TestFrameStack.cpp').write_bytes(body)
  def run(cmd,label):
   r=subprocess.run(list(map(str,cmd)),capture_output=True,timeout=180);(out/(label+'.log')).write_bytes(r.stdout+r.stderr)
   if r.returncode:raise RuntimeError(label+' failed; original log retained')
@@ -45,5 +46,5 @@ def main():
  obj=out/'FramePeer.o';run(['xcrun','clang++','-std=c++17',*flags,'-DIOBufferMemoryDescriptor=HostOutputDescriptor','-Wno-unused-variable','-c',model,'-o',obj],'FramePeer-compile');objects.append(obj)
  run(['xcrun','clang++','-std=c++17',*flags,out/'TestFrameStack.cpp',*objects,'-o',out/'test'],'host-build')
  outputs={n:run([out/'test',n],n+'-run') for n in ('normal','drain-fail','visibility-fail')}
- (out/'result.json').write_text(json.dumps({'passed':True,'outputs':outputs,'derivation':proof,'actual_done_DMA_output_chain':True,'IOKit_power_GIC_PAR_MMIO_completion_peers_modeled':True,'hardware':False},indent=2)+'\n');print(''.join(outputs.values()))
+ (out/'result.json').write_text(json.dumps({'passed':True,'outputs':outputs,'derivation':proof,'actual_done_DMA_output_chain':True,'actual_original_worker_IRQ_wait_service':a.irq,'IOKit_power_GIC_PAR_MMIO_completion_peers_modeled':True,'hardware':False},indent=2)+'\n');print(''.join(outputs.values()))
 if __name__=='__main__':main()

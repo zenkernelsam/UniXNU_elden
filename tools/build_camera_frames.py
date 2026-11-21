@@ -6,6 +6,7 @@ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
  p=argparse.ArgumentParser(description=__doc__)
  for n in ('source','base-native','llvm','parent','output'):p.add_argument('--'+n,type=Path,required=True)
+ p.add_argument('--pipeline-build',type=Path,help='Source-qualified adjacent IRQ pipeline providing the new original-worker methods')
  a=p.parse_args()
  for n in ('source','base_native','llvm','parent'):setattr(a,n,getattr(a,n).resolve(strict=True))
  out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);record=json.loads((a.source/'source.json').read_text())
@@ -45,10 +46,24 @@ def main():
  for line in subprocess.check_output(['xcrun','nm','-a',a.parent/'native.macho'],text=True).splitlines():
   m=re.match(r'^[0-9a-fA-F]+\s+[sStTdDbB]\s+(\S+)$',line)
   if m:available.add(m[1])
+ adjacent=None
+ if a.pipeline_build:
+  folder=a.pipeline_build.resolve(strict=True);adjacent=json.loads((folder/'result.json').read_text())
+  if not adjacent['passed'] or set(adjacent['native_objects'])!={'CameraPipeline.o','NativePipeline.o','CaptureBinding.o'}:
+   raise ValueError('Unqualified adjacent native pipeline')
+  source=folder.parent/('source'+folder.name.removeprefix('native'));source_record=source/'source.json'
+  if sha(source_record)!=adjacent['source_record_sha256'] or sha(source/'NativePipeline.h')!=sha(a.source/'NativePipeline.h'):
+   raise ValueError('Frame and adjacent IRQ pipeline source ABI differs')
+  for name,row in adjacent['native_objects'].items():
+   obj=folder/name
+   if sha(obj)!=row['sha256'] or any(n.endswith('/__mod_init_func') for n in sections(obj)):
+    raise ValueError('Adjacent native pipeline object changed or auto-starts')
+   available.update(n for n,v in global_symbols(obj).items() if v[0]&0xe)
  defined={n for row in objects.values() for n in row['exports']};used={n for row in objects.values() for n in row['imports']}
  if used-defined-available:raise ValueError('Real frame native provider unresolved: '+str(used-defined-available))
  result={'passed':True,'objects':objects,'compile_commands':commands,'cwd':remap(job['directory']),'source_record_sha256':sha(a.source/'source.json'),
      'software_raw10_user_object_sha256':sha(out/'Raw10.user.o'),'parent_kernel_sha256':sha(a.parent/'kernel.macho'),
      'automatic_startup':False,'physical_provider_installed':False,'hardware':False,'full_link':False}
+ if adjacent:result['adjacent_pipeline_build_sha256']=sha(a.pipeline_build/'result.json')
  (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print('PASS2scalarOS17 retained frames/read-only service objects and userland full10bit preview; explicit late classes')
 if __name__=='__main__':main()

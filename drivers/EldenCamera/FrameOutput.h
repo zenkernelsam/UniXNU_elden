@@ -23,6 +23,13 @@ int elden_camera_output_open(EldenCameraDmaCapture *,unsigned sensor,unsigned bu
  * Uses actual pipeline done -> DMA visibility -> frame borrow -> snapshot ->
  * explicit release/requeue. Does not synthesize SOF/pixels or CPU returns. */
 int elden_camera_output_pump(EldenCameraFrameOutput *);
+/* Explicitly bind the current original camera executor to the retained CSID
+ * IRQ latch, then call pump_irq from that executor's existing loop. No new
+ * thread/startup/provider is installed. Timeout has no frame and returns-11;
+ * an actual event services/acks CSID then performs the same real DMA copy and
+ * explicit return/requeue. Stop wakes the waiting original executor. */
+int elden_camera_output_enable_irq(EldenCameraFrameOutput *);
+int elden_camera_output_pump_irq(EldenCameraFrameOutput *,unsigned timeout_ms);
 int elden_camera_output_acquire(EldenCameraFrameOutput *,EldenCameraOutputFrame *);
 int elden_camera_output_release(EldenCameraFrameOutput *,uint64_t ticket);
 /* Internal native IOUserClient: returns a retained IOMemoryDescriptor only

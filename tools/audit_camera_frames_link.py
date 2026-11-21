@@ -2,6 +2,7 @@
 from pathlib import Path
 import argparse,hashlib,json,re,struct,subprocess,sys
 from peripheral_archive_audit import retained_archive
+from camera_irq_input_audit import retained_camera_irq_input,equivalent_service
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def signed(v,b):return v-(1<<b) if v&(1<<(b-1)) else v
 def main():
@@ -32,8 +33,15 @@ def main():
       word=struct.unpack_from('<I',b,off)[0]
       if word&0x7c000000==0x14000000:pc=sec['va']+off;calls.append((pc,pc+(signed(word&0x3ffffff,26)<<2)))
  if len(init)!=len(previous):raise ValueError('New automatic frame/service initializer')
- for n in ('_elden_camera_output_open','_elden_camera_output_pump','_elden_camera_service_publish','_elden_camera_service_withdraw'):
+ for n in ('_elden_camera_output_open','_elden_camera_service_publish','_elden_camera_service_withdraw'):
   if any(t==symbol(n) for pc,t in calls):raise ValueError('Unqualified camera frame/service outer startup')
+ pump_hits=[pc for pc,t in calls if t==symbol('_elden_camera_output_pump')]
+ if r.get('actual_original_camera_IRQ_executor') is True:
+  caller=symbol('_elden_camera_output_pump_irq');end=min((pc for pc,_ in starts if pc>caller),default=None)
+  if not pump_hits or end is None or any(not caller<=pc<end for pc in pump_hits):raise ValueError('Frame pump caller outside actual IRQ wrapper')
+  for n in ('_elden_camera_output_enable_irq','_elden_camera_output_pump_irq'):
+   if any(t==symbol(n) for pc,t in calls):raise ValueError('Unqualified outer camera IRQ executor start')
+ elif pump_hits:raise ValueError('Unqualified original frame pump caller')
  late=symbol('__GLOBAL__sub_I_Service.cpp')
  if late in init or len([pc for pc,t in calls if t==late])!=1:raise ValueError('Exactly one explicit late class registration required')
  # Verify original IOService/IOUserClient inheritance, exact overrides and
@@ -69,8 +77,17 @@ def main():
   path=Path(v.split(',')[-1])
   if v.startswith('-Wl,-force_load,'):archives[str(path)]=retained_archive(v,after,r)
   elif path.is_file() and path.suffix in ('.a','.o'):
+   if r.get('actual_original_camera_IRQ_executor') is True and path.name in ('NativePipeline.o','FrameOutput.o'):
+    retained_camera_irq_input(path,after,r);continue
    if after.count(v)!=1 or sha(path)!=r['inherited_inputs'].get(str(path)):raise ValueError('Original peer native object changed')
  for n,row in build['objects'].items():
+  if r.get('actual_original_camera_IRQ_executor') is True and n=='Service.o':
+   eq=r.get('camera_irq_equivalent_objects',{}).get(n)
+   if not isinstance(eq,dict) or eq['recompiled_path']!=str((a.frames_build/n).resolve()) or row['sha256']!=eq['recompiled_sha256']:
+    raise ValueError('Exact equivalent service source-build receipt absent')
+   if equivalent_service(eq['retained_path'],eq['recompiled_path'])!=eq or after.count(eq['retained_path'])!=1:
+    raise ValueError('Retained original Service differs from source rebuild')
+   continue
   if sha(a.frames_build/n)!=row['sha256'] or after.count(str((a.frames_build/n).resolve()))!=1:raise ValueError('New frame object changed/duplicate')
  if r['recovery_object_sha256']!=prior['recovery_object_sha256'] or r['aggregate_recovery_bound_ms']!=5500:raise ValueError('Original peripheral recovery changed')
  flags=json.loads((a.kernel_build/'kernel.json').read_text());flags={n:flags.get(n) for n in ('abi_qualified','loadable','runtime_qualified','instruction_relocation_complete')}

@@ -23,7 +23,9 @@ def main():
     run(['xcrun','clang',*flags,'-DELDEN_CAMERA_PIPELINE_PEER_API=1','-Wno-unused-function','-c',DRIVER/'TestPipeline.c','-o',out/'peer-host.o'],'peer-host')
     run(['xcrun','clang++','-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-I',a.source,
          DRIVER/'TestNativePipeline.cpp',out/'pipeline-host.o',out/'peer-host.o','-o',out/'native-test'],'native-host-build')
-    cases=('normal','front','map-fail','attach-fail','deny','unexpected-irq','drain-fail','active-irq')
+    cases=('normal','front','map-fail','attach-fail','deny','unexpected-irq','drain-fail','active-irq',
+           'irq-normal','irq-front','irq-before-sleep','irq-during-sleep','irq-stop-wait','irq-rearm-race','irq-rearm-fail',
+           'irq-during-attach','irq-mask-fail','irq-active-stop')
     native_host={name:run([out/'native-test',name],'native-host-'+name) for name in cases}
     run([a.llvm/'clang','-target','arm64-apple-ios17.0','-std=c11','-O2','-ffreestanding','-fno-builtin','-fno-stack-protector','-mgeneral-regs-only',
          '-nostdinc','-isystem',Path(resource)/'include','-Wall','-Wextra','-Werror','-I',a.source,'-c',a.source/'Pipeline.c','-o',obj],'native-build')
