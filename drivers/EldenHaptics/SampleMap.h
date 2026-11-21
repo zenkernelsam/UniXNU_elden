@@ -20,6 +20,11 @@ typedef struct {
  * Output remains unchanged on invalid samples/calibration/budget overrun. */
 int elden_haptics_samples(const int16_t *,size_t,uint16_t intensity_q15,
     const EldenHapticsCalibration *,int8_t *,uint64_t *square_cost);
+/* Read-only qualification of a measured calibration LUT: endpoints anchored
+ * (first magnitude0/drive0, last magnitude32767), strictly increasing
+ * magnitudes, nondecreasing drive bounded by drive_peak, a supported rate and
+ * max_frames, and a nonzero square budget. Produces no output. */
+int elden_haptics_calibration_check(const EldenHapticsCalibration *);
 #ifdef __cplusplus
 }
 #endif

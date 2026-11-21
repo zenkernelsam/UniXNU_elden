@@ -52,6 +52,29 @@ recipes/20 atom types and17AHAP pass with explicitly SYNTHETIC template/gain pee
 These tests prove compiler plumbing, not calibrated Taptic equivalence. Real
 template/physical gains and source-envelope/legacy policy qualification remain.
 
+`WaveCompiler.c` is the source-side continuous counterpart: it carries a parsed
+recipe (ordered events plus intensity/sharpness automation) to the two channels
+as bounded480-sample timestamped RTP chunks under a caller-fed contract. Each
+chunk converts through the calibrated `SampleMap` LUT for BOTH motors and enters
+the moving dual-motor window (squares, motor-on, simultaneous dual-on) before it
+is emitted. Output requires an explicit measured dual-motor profile — absent,
+disabled, stale-revision, out-of-range or single-motor coverage all refuse; the
+conservative default stays disabled. Each motor's LUT is re-qualified at
+admission through the shared `SampleMap` validator (anchored endpoints, strictly
+increasing magnitudes, nondecreasing drive bounded by peak, supported rate/
+max_frames, nonzero budget), and an explicit tail must fit inside its event —
+a shorter duration refuses rather than underflowing into silent loop playback.
+Armed runs are generation-stamped; produce
+requests must land on the exact next source position so a skipped/gapped or
+already-served frame is a timing/underrun refusal, and a stop during a pending
+feed becomes a recorded partial abort, never false-complete. Intensity and
+sharpness stay perceptual conversion inputs — no voltage/boost/resonance/duty
+or thermal limit is invented and no carrier/amplifier is inferred. Host tests use
+a SYNTHETIC linear-LUT profile: they prove the refusal/contract plumbing and the
+exact conversion math, not measured motor equivalence. Real measured
+calibration, an authoritative recipe bank and physical acceptance remain
+missing.
+
 ## Evidence and reproduction
 
 Final RTP host3:361674 actual modeled GENI/AW/RTP checks including60s admission/
@@ -72,6 +95,7 @@ python3 tools/test_haptics_rtp.py --source /new/source --firmware /original/y700
   --llvm /path/to/llvm/bin --output /new/host-native
 python3 tools/test_effect_compiler.py --vibration /original/patterns.plist \
   --ahap-dir /original/Patterns --output /new/compiler-host
+python3 tools/test_wave_compiler.py --llvm /path/to/llvm/bin --output /new/wave-host
 python3 tools/compile_apple_effects.py --source /original/patterns.plist --recipe NAME \
   --bank /measured/bank.json --sample-map-library /host/libSampleMap.dylib --output /new/effect
 ```
