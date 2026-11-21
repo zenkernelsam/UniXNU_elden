@@ -67,6 +67,26 @@ counter-read-only (no NVMEM writer, no alarm-bank owner) and there is no real
 alarm IRQ owner, so PMK8550 0x62/1 edge-rising delivery and system wake are
 explicitly unvalidated.
 
+`drivers/EldenRtc/Owner.{c,h}` is the guarded owner-facade source contract a
+mainline clock owner can later bind to the real named NVMEM offset cell and the
+real PMK8550 0x62/1 alarm owner. It is default-off and chooses nothing: each
+provider must declare a name equal to the caller's, a nonzero owner/epoch and
+all serialized callbacks before `elden_rtc_core_bind_persistence` or
+`elden_rtc_core_bind_alarm` runs; it never selects a cell, SDAM offset, bank or
+IRQ from a filename or donor default. Guarded restore/learn/alarm_set/
+alarm_read/alarm_ack/stop/status re-check owner/epoch and reject stale
+generations before provider I/O; a failed provider operation keeps the existing
+core uncertainty and retains the bound handles; stop is facade-level (it gates
+the facade's guarded operations, not the live core's clock lifecycle), and a
+stop landing inside any provider callback — `owner_epoch` included — blocks the
+pending read/write, blocks later publication and retains the registration until
+an explicit stop->retire fence that also refuses while a callback is active and
+leaves the facade reusable for a new qualified bind (prior generations stay
+stale); alarm acknowledge is callable only from the owner-supplied IRQ-path
+identity bound at `bind_alarm`. Donor register ordering and the
+recovery 5500ms gates are untouched. HOST-ONLY synthetic provider peers prove
+the fences; `Native.cpp` binds nothing and no physical NVMEM/alarm/IRQ exists.
+
 The actual v7.2 SPMI PPID061 selection is unique and observer-only. Native maps
 core0xc400000, owner0xc42d000 and selected observer0xc440000+APID*0x20. The only
 MMIO write issues a read command in that observer. Shared TransactionGate owner3
@@ -98,6 +118,7 @@ was the length of `[extent,flags,digest]`, not a three-byte code section.
 ```sh
 python3 tools/prepare_elden_rtc.py --output /new/rtc-source
 python3 tools/test_elden_rtc.py --source /new/rtc-source --output /new/rtc-host
+python3 tools/test_rtc_owner.py --llvm /path/to/llvm/bin --output /new/rtc-owner
 python3 tools/build_elden_rtc.py --source /new/rtc-source --base-native /base/native \
   --llvm /path/to/llvm/bin --output /new/rtc-native
 python3 tools/link_elden_rtc.py --parent /base/pen-kernel --base-native /base/native \

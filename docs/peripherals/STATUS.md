@@ -1,7 +1,7 @@
 # Offline peripherals — current status
 
 Branch `offline-peripheral-fixes`, from main@f82da007 on2026-11-16. Latest
-source commit is `b85cacd`, independent of mainline Wi-Fi and the completed
+source delivery is the RTC-003 guarded owner facade, independent of mainline Wi-Fi and the completed
 GPU branch. The full five-part Goal is **active**.
 
 ## Current delivery and remaining work
@@ -10,7 +10,7 @@ GPU branch. The full five-part Goal is **active**.
 | --- | --- | --- |
 | AP501U pen | Stock NT36536/F1 report decoder, independent Pencil HID/tilt hook, original touch delivery and reversible release | Actual raw pen/scan mode, UIKit Pencil type/force/tilt, palm/rotation/release and resume |
 | Dual AW86937/iOS effects | Source-bound Apple recipe/AHAP compiler, bounded calibrated-gain catalog/RTP/budget, continuous 24 kHz dual-motor chunk compiler, native service and OS17 Actuator HAL/ring/original worker; compiler remains disconnected from native output and disabled without a measured dual-motor profile | Mechanical/electrical gain/boost/frequency/duty/thermal/dual-load calibration; authoritative recipe bank, system capabilities/VirtualAudio/tunings/real UIKit requests |
-| RTC/wake | Original PMK8550 read-onlyRTC/SPMI shared gate, board-clock registration, original-worker reversible pen/touch pause/gesture IRQ/firmware resume | Persistent epoch/alarm, actual shared display/systemPM power provider, physical doubletap/sleep/wake cycles |
+| RTC/wake | Original PMK8550 read-onlyRTC/SPMI shared gate, board-clock registration, guarded named-owner persistence/alarm facade, original-worker reversible pen/touch pause/gesture IRQ/firmware resume | Real named NVMEM/SDAM provider, PMK8550 alarm IRQ owner, actual shared display/systemPM power provider, physical doubletap/sleep/wake cycles |
 | Accel/gyro/rotation | Exact sensor protocols/OS17 HID, one original ADSP/GLINK/QRTR/FastRPC/SSC worker, retained native memory/cache/pack/listener and prepared-memory adoption, guarded J317 orientation-consumer contract over the existing gravity classifier with mapped-time hold | Genuine same-device PD/registry/calibration/mount/unit/time/SUID/sample input; actual J317 SPU/CoreMotion/UI provider and rotation acceptance |
 | Front/rear cameras | Exact Gen4 sensor/CCI/CAMSS/clock/WL power and original DMA queue/visibility; shared early SMMU; original-executor CSID IRQ/wait/service; explicit capture-session composition; receipt-bound 3-object + session-object full link and 16-leaf audit; signed OS17 CMIO/RAW10 preview | Actual original power/PLL/RPMh/CSIrails/early-owner startup, physical RAW10/IRQ/DMA/retirement, calibration/ISP, camera-app/service acceptance |
 
@@ -28,6 +28,15 @@ qualified by 164 host checks and scalar object builds on both toolchains. Its
 hold uses provider-mapped mach time converted to the existing classifier's
 19.2 MHz tick domain. No real J317 provider, physical samples or UI route is
 connected.
+
+RTC-003 adds `EldenRtc/Owner.{c,h}`, a default-off named-provider and
+owner/epoch fence in front of the existing RTC persistence and PMK8550 alarm
+core. Host checks cover stale generations, callback re-entry, failed
+read/write uncertainty, stop-during-callback publication fences, and
+owner-IRQ-only alarm acknowledgement. The WSL LLVM-14 suite passes 77 checks
+and the scalar ARM64 object is qualified. No physical NVMEM cell, SDAM offset,
+alarm IRQ, RTC persistence, or wake cycle is present, and `Native.cpp` still
+binds no provider.
 
 ## Latest accepted candidate
 
