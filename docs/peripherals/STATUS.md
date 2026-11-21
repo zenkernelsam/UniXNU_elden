@@ -64,7 +64,7 @@ nonzero owner/epoch, queues wake work asynchronously, and accepts an explicit
 panel/rail-ready result before invoking the existing bounded resume path.
 Atomic nonblocking claims fence provider-thread readiness against touch-worker
 callbacks, stop, retire, duplicate requests, stale generations and rebinds.
-The host suite passes 104 owner checks and 570 deterministic concurrency checks
+The host suite passes 118 owner checks and 575 deterministic concurrency checks
 under ASan/UBSan and TSan on both toolchains; scalar ARM64 objects are clean.
 No panel registers, rail values, readiness, physical provider or Native.cpp
 binding is supplied, so hardware and production state remain false.
