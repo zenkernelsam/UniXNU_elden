@@ -87,6 +87,15 @@ reuse and permits a fresh rebind. `Native.cpp` does not bind the facade;
 transport counters plus `pencil_accepted==0` are reported honestly and no
 SPI/Pencil/UIKit acceptance is claimed.
 
+The owner facade now uses a single nonblocking atomic whole-operation claim
+across the sampling worker, provider callbacks, send/delivery path, stop,
+retire and status. Generation-tagged deferred stops are consumed only by the
+armed generation; bind refuses generation wrap, and retire reinitializes the
+caller-owned delivery only after a confirmed release. WSL and CiscoMac pass
+217 single-thread checks and 317 deterministic pthread checks under ASan/UBSan
+and TSan, with scalar ARM64 objects clean. These checks remain host-only and
+do not establish AP501U SPI, PencilKit, UIKit or backboardd acceptance.
+
 ## Verified scope
 
 - 924 prior actual decoder/delivery checks remain valid; those C sources are
@@ -103,6 +112,10 @@ SPI/Pencil/UIKit acceptance is claimed.
   Scalar ARM64 `Owner.o` exports twelve facade entries and imports only
   `elden_pen_decode` plus delivery APIs; `result.json` reports
   `pencil_accepted:false`, `hardware:false`.
+- The concurrency hardening adds317 deterministic provider/worker/policy checks
+  for packet/stop/send/retire/status races, stale-generation isolation and
+  generation exhaustion. `Native.cpp` remains unbound and the facade stays
+  default-off.
 - Five native objects compile scalar, with no automatic initializer section.
   The pen's metaclass initializer is explicit/late. Four new pen objects have
   no warnings; the touch replacement retains exactly one existing DmaSurvey.h

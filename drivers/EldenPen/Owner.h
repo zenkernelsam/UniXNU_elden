@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: BSD-2-Clause-Patent */
 #ifndef ELDEN_PEN_OWNER_H
 #define ELDEN_PEN_OWNER_H
+#include <stdatomic.h>
 #include <stddef.h>
 #include <stdint.h>
 #include "PenReport.h"
@@ -38,18 +39,31 @@ typedef struct {
     int (*packet)(void *context,uint8_t out[EldenPenPacketBytes],
                   uint64_t *timestamp_us,uint64_t *sequence);
 } EldenPenProvider;
+/* Concurrency model: every cross-thread field is C11 atomic; `busy` is a
+ * nonblocking claim (atomic_exchange) held for the WHOLE facade operation —
+ * the provider probe, every provider/send callback and the deferred-stop
+ * unwind — so a packet/tick/fault/pause/resume/release op, a bind/retire
+ * lifecycle step and a status snapshot can never interleave. `stop` never
+ * waits: it either claims and runs the release itself, or posts the deferred
+ * stop for the holder's unwind. `stopped`/`stop_deferred` carry the armed
+ * GENERATION, so a stop that races a retire can never poison a successor
+ * binding, and a stale deferral is simply consumed as moot. */
 typedef struct {
     EldenPenDelivery *delivery;      /* caller-owned, initialized; never owned */
     EldenPenSend send;void *send_context;
     EldenPenLimits limits;
-    EldenPenProvider provider;
-    uint64_t seq,gen,owner,epoch,frame_owner,frame_epoch;
-    uint64_t last_ts,last_seq,last_now,stop_now;
-    uint32_t bound,stopped,busy,stop_deferred,have_seq;
-    uint32_t packets,decoded,metadata,faults,pauses,resumes,stops;
-    uint32_t rejected,dropped,stale_ts,stale_seq,foreign_frames;
+    EldenPenProvider provider;       /* published/cleared under the claim */
+    _Atomic uint64_t seq,gen,owner,epoch,frame_owner,frame_epoch;
+    _Atomic uint64_t last_ts,last_seq,last_now,stop_now;
+    _Atomic uint64_t stopped;        /* armed stopped generation, 0 = none */
+    _Atomic uint64_t stop_deferred;  /* armed generation of a deferred stop */
+    _Atomic uint32_t bound,busy,have_seq;
+    _Atomic uint32_t packets,decoded,metadata,faults,pauses,resumes,stops;
+    _Atomic uint32_t rejected,dropped,stale_ts,stale_seq,foreign_frames;
 } EldenPenOwner;
-/* Read-only status. transport_delivered counts frames the bound send() accepted;
+/* Read-only status under the claim — either a coherent snapshot or Busy;
+ * st.busy is always 0 on success (no other op was in flight when read).
+ * transport_delivered counts frames the bound send() accepted;
  * pencil_accepted stays 0 forever at this layer — actual IOHIDEventDriver/
  * backboardd/UIKit Pencil acceptance is a separate downstream claim this facade
  * does not and cannot make. */
@@ -109,10 +123,14 @@ int elden_pen_owner_release(EldenPenOwner *,uint64_t generation);
  * the facade reusable for a new qualified bind (fresh generation; prior
  * generations stay stale). */
 int elden_pen_owner_retire(EldenPenOwner *,uint64_t generation);
-/* True once the delivery has no delivered tip/range/button and owes no lift. */
-int elden_pen_owner_released(const EldenPenOwner *);
-/* Read-only status/acceptance surface; no side effects. */
-int elden_pen_owner_status(const EldenPenOwner *,EldenPenOwnerStatus *);
+/* True once the delivery has no delivered tip/range/button and owes no lift.
+ * Read under the claim — during any in-flight operation it returns the
+ * conservative 0 rather than a torn read of delivery state mid-mutation. */
+int elden_pen_owner_released(EldenPenOwner *);
+/* Read-only status/acceptance surface; no side effects. Claims the operation
+ * claim nonblocking — returns a coherent snapshot or EldenPenOwnerBusy without
+ * touching delivery state mid-mutation. */
+int elden_pen_owner_status(EldenPenOwner *,EldenPenOwnerStatus *);
 #ifdef __cplusplus
 }
 #endif
