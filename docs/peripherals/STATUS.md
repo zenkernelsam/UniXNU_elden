@@ -1,7 +1,8 @@
 # Offline peripherals — current status
 
 Branch `offline-peripheral-fixes`, from main@f82da007 on2026-11-16. Latest
-source delivery is the RTC-003 guarded owner facade, independent of mainline Wi-Fi and the completed
+source delivery includes the RTC-003/004 guarded owner facade and the
+Haptics-003/004 compiled-recipe RTP path, independent of mainline Wi-Fi and the completed
 GPU branch. The full five-part Goal is **active**.
 
 ## Current delivery and remaining work
@@ -9,7 +10,7 @@ GPU branch. The full five-part Goal is **active**.
 | Objective | Source-built offline implementation | Required evidence still missing |
 | --- | --- | --- |
 | AP501U pen | Stock NT36536/F1 report decoder, independent Pencil HID/tilt hook, original touch delivery and reversible release | Actual raw pen/scan mode, UIKit Pencil type/force/tilt, palm/rotation/release and resume |
-| Dual AW86937/iOS effects | Source-bound Apple recipe/AHAP compiler, bounded calibrated-gain catalog/RTP/budget, continuous 24 kHz dual-motor chunk compiler, native service and OS17 Actuator HAL/ring/original worker; compiler remains disconnected from native output and disabled without a measured dual-motor profile | Mechanical/electrical gain/boost/frequency/duty/thermal/dual-load calibration; authoritative recipe bank, system capabilities/VirtualAudio/tunings/real UIKit requests |
+| Dual AW86937/iOS effects | Source-bound Apple recipe/AHAP compiler, bounded calibrated-gain catalog/RTP/budget, continuous 24 kHz dual-motor chunk compiler, native service and OS17 Actuator HAL/ring/original worker; compiled-recipe pull source now plumbed into the same serialized native Broker/RTP worker but stays disabled without a measured dual-motor profile | Mechanical/electrical gain/boost/frequency/duty/thermal/dual-load calibration; authoritative recipe bank, system capabilities/VirtualAudio/tunings/real UIKit requests |
 | RTC/wake | Original PMK8550 read-onlyRTC/SPMI shared gate, board-clock registration, guarded named-owner persistence/alarm facade, original-worker reversible pen/touch pause/gesture IRQ/firmware resume | Real named NVMEM/SDAM provider, PMK8550 alarm IRQ owner, actual shared display/systemPM power provider, physical doubletap/sleep/wake cycles |
 | Accel/gyro/rotation | Exact sensor protocols/OS17 HID, one original ADSP/GLINK/QRTR/FastRPC/SSC worker, retained native memory/cache/pack/listener and prepared-memory adoption, guarded J317 orientation-consumer contract over the existing gravity classifier with mapped-time hold | Genuine same-device PD/registry/calibration/mount/unit/time/SUID/sample input; actual J317 SPU/CoreMotion/UI provider and rotation acceptance |
 | Front/rear cameras | Exact Gen4 sensor/CCI/CAMSS/clock/WL power and original DMA queue/visibility; shared early SMMU; original-executor CSID IRQ/wait/service; explicit capture-session composition; receipt-bound 3-object + session-object full link and 16-leaf audit; signed OS17 CMIO/RAW10 preview | Actual original power/PLL/RPMh/CSIrails/early-owner startup, physical RAW10/IRQ/DMA/retirement, calibration/ISP, camera-app/service acceptance |
@@ -21,9 +22,16 @@ gain, sample, pixel, RTC epoch or callback success. Unqualified motor output
 stays disabled. Completing a parser/component cannot close the full Goal.
 
 The source-side haptics wave compiler is qualified by 4,887 host checks and
-freestanding ARM64 object builds on WSL LLVM-14 and CiscoMac LLVM-20. Synthetic
-linear-LUT inputs are host-only; no measured calibration is present and no
-native broker/chip feed is connected. The guarded orientation consumer is
+freestanding ARM64 object builds on WSL LLVM-14 and CiscoMac LLVM-20. Its
+bounded chunks now also reach the same serialized native Broker/RTP worker
+through a pull-source clip under one live session — recipe->chunk->FIFO flow is
+qualified by 688,101 host checks on the real GENI/AW peer chain, and `fed`
+accounting now waits for confirmed FIFO writes via the `consumed` ack (staged
+bytes persist across busy retries; unconfirmed tails drop honestly on
+cancel/stop). Synthetic
+linear-LUT carriers are host-only; no measured calibration is present and no
+production manifest/profile is bound, so no output route is enabled. The
+guarded orientation consumer is
 qualified by 164 host checks and scalar object builds on both toolchains. Its
 hold uses provider-mapped mach time converted to the existing classifier's
 19.2 MHz tick domain. No real J317 provider, physical samples or UI route is

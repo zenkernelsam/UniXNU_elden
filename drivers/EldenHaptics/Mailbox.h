@@ -23,6 +23,7 @@ typedef struct {
 int elden_haptics_mail_open(EldenHapticsMailbox *,uint64_t owner,uint64_t epoch);
 int elden_haptics_mail_submit(EldenHapticsMailbox *,const EldenHapticsRequest *,uint16_t intensity_q15);
 int elden_haptics_mail_submit_effect(EldenHapticsMailbox *,const EldenHapticsRequest *,uint16_t intensity_q15,uint32_t effect_id);
+int elden_haptics_mail_submit_recipe(EldenHapticsMailbox *,const EldenHapticsRequest *,uint16_t intensity_q15,uint32_t tagged_recipe_id);
 int elden_haptics_mail_take(EldenHapticsMailbox *,EldenHapticsRequest *,uint16_t *intensity_q15);
 int elden_haptics_mail_take_native(EldenHapticsMailbox *,EldenHapticsRequest *,uint16_t *intensity_q15,uint32_t *effect_id);
 int elden_haptics_mail_cancel(EldenHapticsMailbox *,uint64_t owner,uint64_t epoch,uint64_t id);

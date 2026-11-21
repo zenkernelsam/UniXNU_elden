@@ -9,7 +9,7 @@
 #include <string.h>
 static unsigned checks;
 #define CHECK(x) do{++checks;if(!(x)){fprintf(stderr,"line%d: %s\n",__LINE__,#x);exit(1);}}while(0)
-typedef struct {uint8_t reg[129],ram[4096],rtp[256];unsigned position,rtp_count,starts;} Motor;
+typedef struct {uint8_t reg[129],ram[4096],rtp[16384];unsigned position,rtp_count,starts;} Motor;
 typedef struct {
     uint32_t se[0x1000/4];Motor motor[2];EldenHapticsBus bus;
     uint64_t now;
@@ -26,7 +26,7 @@ static void execute_write(Model *m){
     for(unsigned i=1;i<m->se[GENI_TX_LEN/4];++i){
         uint8_t value=m->tx[i];
         if(reg==0x42){CHECK(chip->position<4096);chip->ram[chip->position++]=value;}
-        else if(reg==0x32){CHECK(chip->rtp_count<256);chip->rtp[chip->rtp_count++]=value;}
+        else if(reg==0x32){CHECK(chip->rtp_count<16384);chip->rtp[chip->rtp_count++]=value;}
         else{
             unsigned at=reg+i-1;CHECK(at<=0x80);chip->reg[at]=value;
             if(at==0x40||at==0x41)chip->position=((unsigned)chip->reg[0x40]<<8)|chip->reg[0x41];

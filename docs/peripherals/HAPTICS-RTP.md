@@ -75,6 +75,46 @@ exact conversion math, not measured motor equivalence. Real measured
 calibration, an authoritative recipe bank and physical acceptance remain
 missing.
 
+`WaveFeed.c` now carries the compiled chunks the rest of the way: it is the
+pull source that connects `WaveCompiler` to the SAME serialized native
+Broker/RTP worker (`RtpStream`/`Broker`) a resident catalog clip already uses.
+A build-time `EldenWaveSource` manifest binds source recipe ids (tagged
+`0x80000000` so they can never collide with a catalog effect id, and `Catalog`
+rejects that bit) to caller-qualified parsed recipes; `elden_broker_bind_recipes`
+then admits one manifest plus a measured dual-motor `EldenWaveProfile` and a
+caller-owned rolling-history ring. `elden_broker_submit_recipe` queues a recipe
+id through the existing immutable-id mailbox/session/worker path — never PCM,
+gain, boost, calibration, register or voltage, which userspace cannot supply.
+On dispatch `start_recipe` arms the `WaveFeed` (the measured-profile admission
+still refuses absent/disabled/stale/out-of-range/single-motor coverage) and
+hands `RtpStream` a pull-source clip: `clip.pull` serves each motor's next
+≤64-sample window from ONE bounded resident chunk at the exact expected source
+position, `peak_squares` reserves the producer's verified worst moving-window
+cost once for the whole streamed recipe. One live prepare+GO session spans the
+full recipe — no per-chunk STOP/GO restart, no recipe-sized allocation, and the
+shared budget reservation is made once, not per 20ms chunk. Consumption is
+two-phase: `clip.pull` only STAGES bytes into the worker's per-motor `feed`
+buffer (advancing the `pulled` cursor), and `RtpStream` invokes
+`clip.consumed(motor, first_frame, count)` only after `elden_aw_rtp_feed`
+succeeds for those exact bytes. Staged bytes persist across `EldenAwBusy`
+unchanged and retry exactly once — no repull, no duplication; `WaveFeed` keeps
+the chunk resident until BOTH motors' `confirmed` cursors reach the chunk
+length, and only then calls `compiler_fed` and compiles the next chunk. A
+cancel or stop with staged-but-unconfirmed bytes therefore drops them honestly
+(`dropped`/`pending` account for them) instead of counting unwritten samples as
+drained. Missing source carrier, partial coverage,
+budget/timing/FIFO failure, cancellation, stop and stale generation all refuse
+or settle through the existing broker uncertainty/ownership rules. `Native.cpp`
+still binds no production manifest/profile — no measured dual-motor profile
+exists, so the production/default route stays disabled and there is no
+automatic startup path. Host `TestWaveFeed` drives the real GENI/AW peer chain
+with explicitly SYNTHETIC carriers/LUT: ordered no-dropped/no-replayed FIFO
+bytes, simultaneous GO, refusals, cancel/stop, and the staged→confirmed
+contract — staged-then-FIFO-busy + cancel drains nothing, one confirmed motor
+with a busy sibling never retires the chunk, and a busy retry writes the staged
+tail exactly once. Measured calibration and physical acceptance remain
+missing.
+
 ## Evidence and reproduction
 
 Final RTP host3:361674 actual modeled GENI/AW/RTP checks including60s admission/
@@ -82,7 +122,9 @@ setup/stop without a60s sleep. Bus/delivery regressions and nine native objects
 pass. Kernel14f945b5/nativec54fd2fb preserves Apple30, service168/client186, late
 initializers and actual stop→RTC→UFS calls; pen207/10 and RTC audits pass again.
 Global ABI/loadable/runtime/relocation flags remain false. Native links the RTP
-library but does not yet route a user request to it.
+library; the source-bound compiled-recipe path now reaches it through the
+bounded WaveFeed pull source, but `Native.cpp` still binds no production
+manifest/profile, so no route is enabled and there is no automatic startup.
 
 `rtp-validation.json` and workbench `lab/records/haptics-rtp-20261119` hold compact
 evidence. Private archive21,828,210B/SHA94e011f5 has276 verified members, excludes
@@ -96,11 +138,15 @@ python3 tools/test_haptics_rtp.py --source /new/source --firmware /original/y700
 python3 tools/test_effect_compiler.py --vibration /original/patterns.plist \
   --ahap-dir /original/Patterns --output /new/compiler-host
 python3 tools/test_wave_compiler.py --llvm /path/to/llvm/bin --output /new/wave-host
+python3 tools/test_wave_feed.py --firmware /original/y700-gen4-haptic.bin \
+  --llvm /path/to/llvm/bin --output /new/wavefeed-host
 python3 tools/compile_apple_effects.py --source /original/patterns.plist --recipe NAME \
   --bank /measured/bank.json --sample-map-library /host/libSampleMap.dylib --output /new/effect
 ```
 
 Full native uses existing prepare/build/link_haptics tools; native-source2/native2/
-kernel1 accepted. Next persistent native RAM/RTP arbiter, source-bound catalog and
-session requests, actual iOS Actuator. Calibrate motor/temperature/dual-load and
-then port/rebuild current mainline with floor/recovery. No tablet or auto merge.
+kernel1 accepted. The source-bound compiled-recipe path is now plumbed into the
+same arbiter/worker but stays disabled without a measured profile. Still needed:
+a real measured dual-motor calibration bank, an authoritative source recipe
+manifest, actual iOS Actuator for the RAM path, then port/rebuild current
+mainline with floor/recovery. No tablet or auto merge.

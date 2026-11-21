@@ -13,7 +13,7 @@ int elden_haptics_catalog_check(const EldenHapticsEffect *e,size_t count,const E
        !l->window_frames||l->window_frames>240000)return -22;
     uint64_t bytes=0;
     for(size_t i=0;i<count;i++){
-        if(!e[i].id||(i&&e[i-1].id>=e[i].id)||!name(e[i].name)||!digest(e[i].source_sha256)||!digest(e[i].bank_sha256)||
+        if(!e[i].id||e[i].id&0x80000000u||(i&&e[i-1].id>=e[i].id)||!name(e[i].name)||!digest(e[i].source_sha256)||!digest(e[i].bank_sha256)||
            !e[i].frames||e[i].frames>1440000||!e[i].mask||e[i].mask&~l->mask||
            ((uint64_t)e[i].frames*1000000+23999)/24000>l->max_duration_us||
            (unsigned)e[i].gain[0]+e[i].gain[1]>l->max_sum_gain)return -22;

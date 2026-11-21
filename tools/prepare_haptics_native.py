@@ -74,7 +74,7 @@ def main():
     sys.path.insert(0,str(DRIVER));from AwSource import derive;from GeniSource import sources
     (h/'AwChip.c').write_bytes(derive())
     for name,data in sources().items():(h/name).write_bytes(data)
-    for name in ('AwChip.h','AwKernelShim.h','AwRtp.h','Bus.c','Bus.h','Board.h','Platform.c','Platform.h','Queue.c','Queue.h','Mailbox.c','Mailbox.h','RtpStream.c','RtpStream.h','Budget.c','Budget.h','Catalog.c','Catalog.h','Broker.c','Broker.h','Native.h','ClientMethods.inc','SampleMap.h','SampleMap.c'):
+    for name in ('AwChip.h','AwKernelShim.h','AwRtp.h','Bus.c','Bus.h','Board.h','Platform.c','Platform.h','Queue.c','Queue.h','Mailbox.c','Mailbox.h','RtpStream.c','RtpStream.h','Budget.c','Budget.h','Catalog.c','Catalog.h','Broker.c','Broker.h','Native.h','ClientMethods.inc','SampleMap.h','SampleMap.c','WaveCompiler.c','WaveCompiler.h','WaveFeed.c','WaveFeed.h'):
         shutil.copyfile(DRIVER/name,h/name)
     for original,dest in [('Abi.h','Abi.h'),('Ring.c','ActuatorRing.c'),('Live.h','ActuatorLive.h'),('Live.c','ActuatorLive.c'),('Profile.cpp','ActuatorProfile.cpp'),('NativeActuator.inc','NativeActuator.inc')]:
         shutil.copyfile(DRIVER/'actuator'/original,h/dest)

@@ -10,8 +10,29 @@ static int limits(const EldenRtpLimits *l){
     }
     return 1;
 }
+static int preflight_pull(const EldenRtpLimits *l,const EldenRtpClip *c,uint64_t squares[2],uint32_t on[2]){
+    if(!c||!c->source||!c->pull||!c->consumed||c->pcm[0]||c->pcm[1]||!c->id||!c->mask||c->mask&~l->mask||
+       c->rate_hz!=24000||!c->frames||c->frames>1440000)return -22;
+    uint64_t duration=((uint64_t)c->frames*1000000+23999)/24000;
+    if(duration>l->max_duration_us||(unsigned)c->gain[0]+c->gain[1]>l->max_sum_gain)return -13;
+    unsigned motors=0;
+    for(unsigned m=0;m<2;m++)if(c->mask&(1u<<m)){
+        motors++;if(!c->gain[m]||c->gain[m]>l->max_gain[m])return -13;
+        /* No resident PCM to scan: reserve the producer's verified worst
+         * moving-window cost once for the whole streamed duration. Motor-on is
+         * the full window just like a resident clip — zeros are not motor-off. */
+        uint32_t motor_on=(uint32_t)(c->frames<l->window_frames?c->frames:l->window_frames);
+        if(!c->peak_squares[m]||c->peak_squares[m]>l->max_window_squares[m]||
+           motor_on>l->max_window_on_frames[m])return -13;
+        squares[m]=c->peak_squares[m];on[m]=motor_on;
+    }
+    if(l->measured_min_payload_bps<24000u*motors*5u/4u)return -13;
+    return 0;
+}
 static int preflight(const EldenRtpLimits *l,const EldenRtpClip *c,uint64_t squares[2],uint32_t on[2]){
-    if(!c||!c->id||!c->mask||c->mask&~l->mask||c->rate_hz!=24000||!c->frames||c->frames>1440000)return -22;
+    if(!c)return -22;
+    if(c->source)return preflight_pull(l,c,squares,on);
+    if(!c->id||!c->mask||c->mask&~l->mask||c->rate_hz!=24000||!c->frames||c->frames>1440000)return -22;
     uint64_t duration=((uint64_t)c->frames*1000000+23999)/24000;
     if(duration>l->max_duration_us||(unsigned)c->gain[0]+c->gain[1]>l->max_sum_gain)return -13;
     unsigned motors=0;
@@ -88,10 +109,32 @@ int elden_rtp_stream_step(EldenRtpStream *s){
             if(now>=s->startup_deadline)return stop_all(s,-110);blocked++;continue;
         }else{if(now>=s->startup_deadline)return stop_all(s,-110);blocked++;continue;}
         if(status.almost_full||s->sent[m]==s->clip.frames){blocked++;continue;}
-        size_t bytes=s->clip.frames-s->sent[m];if(bytes>64)bytes=64;
-        rc=elden_aw_rtp_feed(&s->motor[m],s->clip.pcm[m]+s->sent[m],bytes);
+        const int8_t *data;size_t bytes;
+        if(s->clip.source){
+            /* Bounded pull source: stage one burst into feed[] only when the
+             * prior burst is confirmed written. A FIFO-busy retry keeps the
+             * staged bytes so a pulled frame is neither dropped nor replayed. */
+            if(!s->staged[m]){
+                size_t want=s->clip.frames-s->sent[m];if(want>64)want=64;
+                int got=s->clip.pull(s->clip.source,m,(uint32_t)s->sent[m],s->feed[m],want);
+                if(got==EldenAwBusy){blocked++;continue;}
+                if(got<0)return stop_all(s,got);
+                if(got<=0){blocked++;continue;}
+                s->staged[m]=(size_t)got;
+            }
+            data=s->feed[m];bytes=s->staged[m];
+        }else{
+            bytes=s->clip.frames-s->sent[m];if(bytes>64)bytes=64;
+            data=s->clip.pcm[m]+s->sent[m];s->staged[m]=bytes;
+        }
+        rc=elden_aw_rtp_feed(&s->motor[m],data,bytes);
         if(rc==EldenAwBusy){blocked++;continue;}if(rc)return stop_all(s,rc);
-        s->sent[m]+=bytes;wrote+=(unsigned)bytes;blocked=0;
+        uint32_t first=(uint32_t)s->sent[m];
+        s->sent[m]+=bytes;s->staged[m]=0;wrote+=(unsigned)bytes;blocked=0;
+        /* Ack source progress only after the FIFO confirmed the write: a staged
+         * but unwritten burst is never consumed. A producer fence error here
+         * fails the stream through the same settle path as a pull error. */
+        if(s->clip.consumed){int ack=s->clip.consumed(s->clip.source,m,first,bytes);if(ack<0)return stop_all(s,ack);}
         now=s->io.now_us(s->io.context);
         if(now<s->last_us||now-s->last_us>s->limits.max_service_gap_us)return stop_all(s,-110);
         s->last_us=now;

@@ -17,7 +17,7 @@ def main():
         return r.stdout.decode()
     include=a.source/'haptics';flags=['xcrun','clang','-std=c11','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-I',include]
     run([*flags,include/'Budget.c',DRIVER/'TestBudget.c','-o',out/'budget'],'budget-build');budget=run([out/'budget'],'budget-run')
-    files=[include/n for n in ['Budget.c','Catalog.c','Broker.c','Mailbox.c','Queue.c','RtpStream.c','GeniCore.c','Bus.c','AwChip.c']]
+    files=[include/n for n in ['Budget.c','Catalog.c','Broker.c','Mailbox.c','Queue.c','RtpStream.c','GeniCore.c','Bus.c','AwChip.c','SampleMap.c','WaveCompiler.c','WaveFeed.c']]
     run([*flags,*files,DRIVER/'TestBroker.c','-o',out/'broker'],'broker-build');broker=run([out/'broker',a.firmware],'broker-run')
     run(['xcrun','clang++','-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-I',include,
          DRIVER/'TestClient.cpp','-o',out/'client'],'client-build');client=run([out/'client'],'client-run')

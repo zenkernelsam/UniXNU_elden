@@ -35,7 +35,7 @@ int main(int argc,char **argv){
         CHECK(elden_aw_rtp_feed(&r,samples,1)==-16&&p->bus.motor[0].rtp_count==writes);
         CHECK(!elden_aw_rtp_stop(&r));for(unsigned i=0;i<7;i++)CHECK(p->bus.motor[0].reg[regs[i]]==old[i]);free(p);
     }
-    RtpPeer *p=setup(firmware,n);EldenRtpStream s={0};EldenRtpLimits l=profile();EldenRtpClip clip={{samples,samples},128,24000,3,{32,24},1};
+    RtpPeer *p=setup(firmware,n);EldenRtpStream s={0};EldenRtpLimits l=profile();EldenRtpClip clip={{samples,samples},128,24000,3,{32,24},1,0,0,0,{0,0}};
     EldenAwChip *chips[]={&p->chips[0],&p->chips[1]};EldenRtpIo io={p,r_admit,reserve,r_now};
     CHECK(!elden_rtp_stream_start(&s,chips,&io,&l,&clip)&&p->reserve==1);
     CHECK(!elden_rtp_stream_step(&s)&&s.sent[0]==128&&s.sent[1]==128&&s.state==EldenRtpPlaying);
@@ -59,7 +59,7 @@ int main(int argc,char **argv){
     // No60-second sleep or hardware output: just actual preflight/setup/stop.
     int8_t *long_pcm=calloc(1440000,1);CHECK(long_pcm);
     p=setup(firmware,n);memset(&s,0,sizeof(s));chips[0]=&p->chips[0];chips[1]=&p->chips[1];io.context=p;l=profile();l.max_duration_us=60000000;
-    EldenRtpClip long_clip={{long_pcm,long_pcm},1440000,24000,3,{32,24},1};
+    EldenRtpClip long_clip={{long_pcm,long_pcm},1440000,24000,3,{32,24},1,0,0,0,{0,0}};
     CHECK(!elden_rtp_stream_start(&s,chips,&io,&l,&long_clip));CHECK(!elden_rtp_stream_stop(&s)&&s.state==EldenRtpCancelled);
     CHECK(p->on[0]==24000&&p->on[1]==24000); // silence still has active motors
     free(p);free(long_pcm);

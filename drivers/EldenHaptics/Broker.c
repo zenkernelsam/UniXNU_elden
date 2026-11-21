@@ -67,7 +67,8 @@ int elden_broker_init(EldenHapticsBroker *b,const EldenHapticsBrokerIo *io,Elden
     if(shared){int rc=elden_shared_budget_init(&b->budget,shared);if(rc)return rc;}
     if(ram){EldenHapticsQueueIo qio={b,ram_admit,ram_start,ram_poll,ram_stop,ram_complete,ram_reserve};
         int rc=elden_haptics_queue_init(&b->ram,ram,&qio);if(rc)return rc;b->ram_ready=1;}
-    if(count){b->effects=effects;b->effect_count=count;b->rtp_limits=*rtp;b->rtp_ready=1;}
+    if(rtp)b->rtp_limits=*rtp;                 /* worker limits independent of any resident catalog */
+    if(count){b->effects=effects;b->effect_count=count;b->rtp_ready=1;}
     __atomic_store_n(&b->initialized,1u,__ATOMIC_RELEASE);return 0;
 }
 int elden_broker_open(EldenHapticsBroker *b,uint64_t *owner,uint64_t *epoch){
@@ -101,6 +102,29 @@ int elden_broker_submit_effect(EldenHapticsBroker *b,uint64_t owner,uint64_t epo
     uint32_t duration=(uint32_t)(((uint64_t)e->frames*1000000+23999)/24000);
     EldenHapticsRequest r={owner,epoch,id,0,duration,e->mask,1,{0,0},0};return submit(b,&r,delay,intensity,effect);
 }
+int elden_broker_bind_recipes(EldenHapticsBroker *b,const EldenWaveSource *recipes,size_t count,
+    const EldenWaveProfile *profile,uint32_t accepted_revision,EldenWaveCell *history,uint32_t cells){
+    if(!b||!b->initialized||b->wave_ready||!b->budget.initialized||!b->rtp_limits.mask)return -13;
+    if(!recipes||!count||count>512||!profile||!history||!accepted_revision)return -22;
+    if(cells<profile->window_frames)return -22;
+    for(size_t i=0;i<count;i++){
+        const EldenWaveSource *s=&recipes[i];
+        if(!s->id||s->id&EldenWaveRecipeTag||!s->recipe||!s->recipe->total_frames||(i&&recipes[i-1].id>=s->id))return -22;
+    }
+    b->recipes=recipes;b->recipe_count=count;b->wave_profile=profile;b->wave_revision=accepted_revision;
+    b->wave_history=history;b->wave_history_cells=cells;b->wave_ready=1;return 0;
+}
+int elden_broker_submit_recipe(EldenHapticsBroker *b,uint64_t owner,uint64_t epoch,uint64_t id,uint32_t recipe,uint64_t delay,uint16_t intensity){
+    if(!b||!b->initialized||!b->wave_ready||!recipe||recipe&EldenWaveRecipeTag)return -13;
+    const EldenWaveSource *src=elden_wave_source_find(b->recipes,b->recipe_count,recipe);if(!src)return -116;
+    uint32_t duration=(uint32_t)(((uint64_t)src->recipe->total_frames*1000000+23999)/24000);
+    EldenHapticsRequest r={owner,epoch,id,0,duration,3,1,{0,0},0};
+    if(delay>1000000||intensity>32767)return -22;
+    int rc=elden_broker_output_admit(b);if(rc)return rc;
+    uint64_t now=b->io.now_us(b->io.context);if(now>UINT64_MAX-delay)return -22;r.not_before_us=now+delay;
+    lock(b);rc=__atomic_load_n(&b->current_kind,__ATOMIC_ACQUIRE)==3?-16:
+        elden_haptics_mail_submit_recipe(&b->mail,&r,intensity,EldenWaveRecipeTag|recipe);unlock(b);return rc;
+}
 int elden_broker_cancel(EldenHapticsBroker *b,uint64_t owner,uint64_t epoch,uint64_t id){
     if(!b||!b->initialized)return -22;lock(b);int rc=elden_haptics_mail_cancel(&b->mail,owner,epoch,id);unlock(b);return rc;
 }
@@ -122,6 +146,20 @@ static int start_rtp(EldenHapticsBroker *b){
     EldenRtpIo io={b,rtp_admit,rtp_reserve,rtp_now};
     return elden_rtp_stream_start(&b->rtp,b->chips,&io,&b->rtp_limits,&clip);
 }
+/* Source-bound compiled recipe: arm the bounded chunk feed with the measured
+ * profile, then drive the SAME rtp stream through its pull-source clip. One
+ * live session spans the whole recipe; no userspace PCM/gain is admitted. */
+static int start_recipe(EldenHapticsBroker *b){
+    EldenRtpStream zero={0};b->rtp=zero;
+    const EldenWaveSource *src=elden_wave_source_find(b->recipes,b->recipe_count,b->effect_id&~EldenWaveRecipeTag);
+    if(!src||!b->wave_profile)return -116;
+    uint64_t generation;int rc=elden_wave_feed_begin(&b->wave,src->recipe,b->wave_profile,b->wave_revision,
+        b->wave_history,b->wave_history_cells,&generation);
+    if(rc)return rc;
+    EldenRtpClip clip;elden_wave_feed_clip(&b->wave,&clip,b->current.id);
+    EldenRtpIo io={b,rtp_admit,rtp_reserve,rtp_now};
+    return elden_rtp_stream_start(&b->rtp,b->chips,&io,&b->rtp_limits,&clip);
+}
 static int end_rtp(EldenHapticsBroker *b,int error,uint32_t state){
     if(b->rtp.state==EldenRtpHeld){
         (void)elden_shared_budget_finish(&b->budget,b->current.owner,b->current.epoch,b->current.id,b->io.now_us(b->io.context),0);
@@ -129,6 +167,7 @@ static int end_rtp(EldenHapticsBroker *b,int error,uint32_t state){
     }
     // No RTP state after preflight rejection means no GO/owned chip; buffers
     // are safe to release. All other terminal states imply actual STOP/restore.
+    if(b->wave.enabled){(void)elden_wave_feed_stop(&b->wave);EldenWaveFeed clear={0};b->wave=clear;}
     pcm_release(b);EldenHapticsResult r={b->current.owner,b->current.epoch,b->current.id,state,error};completion(b,&r);return error;
 }
 int elden_broker_step(EldenHapticsBroker *b){
@@ -169,7 +208,8 @@ int elden_broker_step(EldenHapticsBroker *b){
         EldenRtpStream zero={0};b->rtp=zero;
         __atomic_store_n(&b->current_kind,2u,__ATOMIC_RELEASE);
         if(now-b->current.not_before_us>1000000)return end_rtp(b,-116,EldenHapticsFailed);
-        rc=start_rtp(b);if(rc)return end_rtp(b,rc,EldenHapticsFailed);return 0;
+        rc=(b->effect_id&EldenWaveRecipeTag)?start_recipe(b):start_rtp(b);
+        if(rc)return end_rtp(b,rc,EldenHapticsFailed);return 0;
     }
     __atomic_store_n(&b->current_kind,1u,__ATOMIC_RELEASE);
     rc=elden_haptics_queue_submit(&b->ram,b->current.owner,b->current.epoch,b->current.id,b->current.not_before_us,

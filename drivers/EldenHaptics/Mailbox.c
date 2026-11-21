@@ -34,6 +34,11 @@ int elden_haptics_mail_submit(EldenHapticsMailbox *m,const EldenHapticsRequest *
 int elden_haptics_mail_submit_effect(EldenHapticsMailbox *m,const EldenHapticsRequest *r,uint16_t intensity,uint32_t effect){
     if(!effect)return EldenHapticsRequestArgument;return submit(m,r,intensity,effect);
 }
+int elden_haptics_mail_submit_recipe(EldenHapticsMailbox *m,const EldenHapticsRequest *r,uint16_t intensity,uint32_t effect){
+    /* Same immutable-id slot as a catalog effect; the high-bit recipe tag keeps
+     * a source-bound compiled recipe distinct from a resident effect id. */
+    if(!(effect&0x80000000u))return EldenHapticsRequestArgument;return submit(m,r,intensity,effect);
+}
 static int take(EldenHapticsMailbox *m,EldenHapticsRequest *out,uint16_t *intensity,uint32_t *effect){
     if(!m||!out||!intensity)return EldenHapticsRequestArgument;
     if(m->stopping||m->held||m->closing)return EldenHapticsRequestDenied;

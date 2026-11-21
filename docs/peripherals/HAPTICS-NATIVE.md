@@ -2,9 +2,10 @@
 
 SE6, the bounded driver chain and root-only IOKit user client now compile and
 fully link with the existing pen and RTC components. This is a fixed source-built
-v152 offline image, not a current-mainline boot or hardware result. Continuous
-RTP, source-bound official waveform compilation and system Actuator remain open.
-The five-part Goal stays active.
+v152 offline image, not a current-mainline boot or hardware result. The
+source-bound compiled-recipe→RTP path is now plumbed into the same arbiter but
+stays disabled without a measured profile; a measured production route and
+system Actuator remain open. The five-part Goal stays active.
 
 ## Actual platform and worker
 
@@ -52,6 +53,21 @@ validation is not a measurement or safety certification. This delivery has
 temperature is read from the existing PMIC cache, without another GLINK owner.
 Battery temperature and gain-squared budget do not qualify the motor coil or
 mechanical response. No synthetic host gain becomes a production limit.
+
+Source-bound recipes are now also carried into that same worker: a build-time
+`EldenWaveSource` manifest plus `elden_broker_bind_recipes` admit caller-qualified
+parsed recipes under a measured dual-motor `EldenWaveProfile`, and
+`elden_broker_submit_recipe` queues a recipe id (`0x80000000`-tagged, so it can
+never alias a resident catalog effect id) through the immutable-id mailbox. The
+`WaveFeed` pull source then serves the SAME `RtpStream` one bounded 480-sample
+chunk at a time — one live prepare+GO session per recipe, one up-front shared
+budget reservation, no recipe-sized allocation, staged pulls that neither drop
+nor replay frames, and `fed` accounting only on confirmed FIFO writes. This is
+capability, not enablement: `Native.cpp` binds no production manifest/profile,
+userspace still supplies no PCM/gain/calibration, there is no automatic startup,
+and the host test uses explicitly synthetic carriers/LUT only. A real measured
+dual-motor profile and an authoritative recipe bank are still absent, so the
+route produces nothing.
 
 ## Verified scope
 

@@ -34,6 +34,7 @@ def main():
     for folder,name in [('haptics','EldenHapticsNative.cpp'),('haptics','Platform.c'),('haptics','GeniCore.c'),('haptics','Bus.c'),
                         ('haptics','AwChip.c'),('haptics','Queue.c'),('haptics','Mailbox.c'),('haptics','RtpStream.c'),
                         ('haptics','Budget.c'),('haptics','Catalog.c'),('haptics','Broker.c'),('haptics','SampleMap.c'),
+                        ('haptics','WaveCompiler.c'),('haptics','WaveFeed.c'),
                         ('haptics','ActuatorRing.c'),('haptics','ActuatorLive.c'),('haptics','ActuatorProfile.cpp'),('touch','EldenTouchRuntime.cpp')]:
         src=a.source/folder/name;obj=out/(src.stem+'.o');raw=out/(src.stem+'.raw.o') if name=='EldenHapticsNative.cpp' else obj
         if src.suffix=='.cpp':
