@@ -41,6 +41,27 @@ timestamps are stale and backwards time latches refusal. It emits ±X/±Y axes,
 not an assumed UIKit orientation/polarity. SSC's19.2MHz timestamp convention is
 used for relative holds; native synchronization/retention remains unverified.
 
+`Orientation.c` is the guarded J317 orientation-consumer boundary over that
+classifier — a source-side contract a mainline J317 SPU/CoreMotion/UI owner can
+bind to, not a producer. It synthesizes nothing: an explicit `EldenMotionProvider`
+must describe both accel and gyro (SUID identity, units/ranges and the real
+signed-permutation board mount), report owner/epoch, map source ticks to
+monotonic mach time and yield calibrated samples; the owner supplies the rotation
+sink. `begin` qualifies every callback output before arming a generation;
+`sample` re-fences owner/epoch and generation, rejects foreign SUID/unit/kind,
+duplicate/reversed ticks, nonmonotonic mach mappings, out-of-range axes and
+flat/poor-quality input, applies the real mount and m/s²→g normalization, and
+only then feeds the existing classifier. The source ticks keep the source-side
+monotonicity fence; the classifier's hold is driven by the mapped mach time
+converted into its 19.2 MHz tick domain with the same ceiling rounding as the
+SSC hold, so the hold duration tracks real elapsed time, not the source rate —
+a zero, overflowing or nonmonotonic conversion latches a clock refusal. A
+matured dominant axis reaches the sink; a stop landing inside any callback, a
+failing sink and any call after stop roll back or refuse — nothing publishes
+after stop. The published value stays the ±1/±2 device axis, never a UIKit
+orientation enum or an 0x20/0x8a orientation HID node. No provider leaves the
+consumer disabled by default.
+
 ## Validation and remaining work
 
 Source2/host2 passes2622678 wire/math checks under ASan/UBSan, including32769
@@ -48,6 +69,12 @@ representable signed float values, full-message truncation, malformed nested
 containers, identity/client/mount/units/bounds and rotation hold/clock behavior.
 One warning-free scalar native object builds. Test samples are synthetic fixtures,
 not a production sensor source or real hardware result.
+The consumer boundary passes164 host checks over the real classifier —
+provider-backed ±Y/−X publishes, real-mount remap, m/s² normalization, a
+mach-driven hold (source-rate mismatch and conversion boundary/overflow) and
+every fence/rollback path — plus one warning-free scalar `Orientation.o` that
+imports only `elden_motion_rotation`. Its samples are host-only synthetic
+fixtures.
 Evidence: `drivers/EldenMotion/validation.json` and workbench
 `lab/records/motion-core-20261119`; object in corresponding `edl_work`.
 
@@ -55,6 +82,8 @@ Evidence: `drivers/EldenMotion/validation.json` and workbench
 python3 tools/prepare_motion_core.py --output /new/source
 python3 tools/test_motion_core.py --source /new/source \
   --llvm /path/to/llvm/bin --output /new/host-native
+python3 tools/test_motion_orientation.py \
+  --llvm /path/to/llvm/bin --output /new/orientation
 ```
 
 Next establish the exact Gen4 SSC/GLINK/FastRPC path and retained mainline owner,

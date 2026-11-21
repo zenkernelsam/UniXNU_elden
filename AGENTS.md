@@ -8,7 +8,7 @@ active until every objective is achieved; component success is not global
 acceptance. No tablet/ADB/fastboot/flashing/QEMU, automatic merge or subagents.
 Mainline owns hardware tests and Wi-Fi/PCIe/WCN/QRTR; GPU remains separate.
 
-Current camera session delivery is `b85cacd`, over IRQ delivery `56c22f7` and
+Current source delivery is `1cee9ed` with camera session `b85cacd`, over IRQ delivery `56c22f7` and
 Bayer/latest fix `c15d94e`. It composes the explicit capture lifecycle and
 links receipt-bound `NativePipeline.o`/`FrameOutput.o`/`Service.o` plus one
 `CaptureSession.o`; the full source-linked audit verifies 16 required leaf

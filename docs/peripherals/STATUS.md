@@ -9,9 +9,9 @@ GPU branch. The full five-part Goal is **active**.
 | Objective | Source-built offline implementation | Required evidence still missing |
 | --- | --- | --- |
 | AP501U pen | Stock NT36536/F1 report decoder, independent Pencil HID/tilt hook, original touch delivery and reversible release | Actual raw pen/scan mode, UIKit Pencil type/force/tilt, palm/rotation/release and resume |
-| Dual AW86937/iOS effects | Source-bound Apple recipe/AHAP compiler, bounded calibrated-gain catalog/RTP/budget, native service and OS17 Actuator HAL/ring/original worker | Mechanical/electrical gain/boost/frequency/duty/thermal/dual-load calibration; system capabilities/VirtualAudio/tunings/real UIKit requests |
+| Dual AW86937/iOS effects | Source-bound Apple recipe/AHAP compiler, bounded calibrated-gain catalog/RTP/budget, continuous 24 kHz dual-motor chunk compiler, native service and OS17 Actuator HAL/ring/original worker; compiler remains disconnected from native output and disabled without a measured dual-motor profile | Mechanical/electrical gain/boost/frequency/duty/thermal/dual-load calibration; authoritative recipe bank, system capabilities/VirtualAudio/tunings/real UIKit requests |
 | RTC/wake | Original PMK8550 read-onlyRTC/SPMI shared gate, board-clock registration, original-worker reversible pen/touch pause/gesture IRQ/firmware resume | Persistent epoch/alarm, actual shared display/systemPM power provider, physical doubletap/sleep/wake cycles |
-| Accel/gyro/rotation | Exact sensor protocols/OS17 HID, one original ADSP/GLINK/QRTR/FastRPC/SSC worker, retained native memory/cache/pack/listener and prepared-memory adoption | Genuine same-device PD/registry/calibration/mount/unit/time/SUID/sample input; complete J317SPU/CoreMotion/UI rotation |
+| Accel/gyro/rotation | Exact sensor protocols/OS17 HID, one original ADSP/GLINK/QRTR/FastRPC/SSC worker, retained native memory/cache/pack/listener and prepared-memory adoption, guarded J317 orientation-consumer contract over the existing gravity classifier with mapped-time hold | Genuine same-device PD/registry/calibration/mount/unit/time/SUID/sample input; actual J317 SPU/CoreMotion/UI provider and rotation acceptance |
 | Front/rear cameras | Exact Gen4 sensor/CCI/CAMSS/clock/WL power and original DMA queue/visibility; shared early SMMU; original-executor CSID IRQ/wait/service; explicit capture-session composition; receipt-bound 3-object + session-object full link and 16-leaf audit; signed OS17 CMIO/RAW10 preview | Actual original power/PLL/RPMh/CSIrails/early-owner startup, physical RAW10/IRQ/DMA/retirement, calibration/ISP, camera-app/service acceptance |
 
 No new tablet access, flashing, QEMU, mainline merge or automatic boot/service
@@ -19,6 +19,15 @@ installation occurred. Host MMIO/IOKit/PAR/clock/GIC/firmware peers are modeled,
 not hardware proof. Missing calibration is not replaced with a guessed safe
 gain, sample, pixel, RTC epoch or callback success. Unqualified motor output
 stays disabled. Completing a parser/component cannot close the full Goal.
+
+The source-side haptics wave compiler is qualified by 4,887 host checks and
+freestanding ARM64 object builds on WSL LLVM-14 and CiscoMac LLVM-20. Synthetic
+linear-LUT inputs are host-only; no measured calibration is present and no
+native broker/chip feed is connected. The guarded orientation consumer is
+qualified by 164 host checks and scalar object builds on both toolchains. Its
+hold uses provider-mapped mach time converted to the existing classifier's
+19.2 MHz tick domain. No real J317 provider, physical samples or UI route is
+connected.
 
 ## Latest accepted candidate
 
