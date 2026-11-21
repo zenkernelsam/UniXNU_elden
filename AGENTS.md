@@ -8,15 +8,21 @@ active until every objective is achieved; component success is not global
 acceptance. No tablet/ADB/fastboot/flashing/QEMU, automatic merge or subagents.
 Mainline owns hardware tests and Wi-Fi/PCIe/WCN/QRTR; GPU remains separate.
 
-Current camera-frame implementation f3329c9: real originalDMA/Board/CCI/CAMSS
-completion→visibility→CPUborrow→cachedsnapshot→explicitreturn/requeue,
-read-onlyOS17IOKitservice and signedfront/rearCMIO/RAW10 preview. Source11/
-host13/native11/kernel11/stack10/provider9/all11finalaudits accepted;
-kernele6459d9c/native70e4c098/2scalar0warnings/1069RAW10cases6062checks.
+Current camera-frame implementation c15d94e over f3329c9: real original
+DMA/Board/CCI/CAMSS completion→visibility→CPUborrow→cachedsnapshot→explicit
+return/requeue, read-only OS17 IOKit service and signed front/rear CMIO/RAW10.
+camera-bridge-20261121 source1/host7/regressions3/native3/kernel3/stack4/
+provider3/all11finalaudits accepted. Bayer mode→RAW10 ABI is explicit;
+newest acquisition discards only older READY snapshots, never held tickets.
+Front/rear actual service→client→RAW10 each1382433checks; exactf3329c9
+reproduces both client-open refusal and stale delivery. Kernelc12fcece/
+native2afd524c;2scalar0warnings/1069RAW10cases6062checks. Continuous IRQ
+capture is not wired; current original pipeline is bounded polling.
 Physical IOKit/PAR/cache/clock/GIC/MMIO/firmware modeled; actualoriginalpower/
 PLL/RPMh/CSIrails/earlyauthority/DMA/RAW10/calibration/ISP/appacceptance missing.
 Noauto-start/jobcachetrustinstall/device/merge. CAMERA-FRAMES.md and
-frames-validation.json contain exact inputs/artifacts. Parent sharedSMMU
+bridge-validation.json contain current inputs/artifacts; historical
+frames-validation.json retains the f3329c9 evidence. Parent sharedSMMU
 d7571f2/source12-host12-stack13-native12-kernel12:173core1400032+
 11composed2395232,actualpostrouteTTBR/tablegraphcheck BEFOREbatchpublication.
 Read SHARED-SMMU.md. Oneoriginal4K/SMMU/global97 provider; no lateappend/no-op/

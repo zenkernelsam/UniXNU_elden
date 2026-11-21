@@ -1,7 +1,7 @@
 # Offline peripherals — current status
 
 Branch `offline-peripheral-fixes`, from main@f82da007 on2026-11-16. Current
-implementation delivery is `f3329c9`, independent of mainline Wi-Fi and the
+implementation delivery is `c15d94e`, independent of mainline Wi-Fi and the
 completed GPU branch. The full five-part Goal is **active**.
 
 ## Current delivery and remaining work
@@ -22,18 +22,26 @@ stays disabled. Completing a parser/component cannot close the full Goal.
 
 ## Latest accepted candidate
 
-[CAMERA-FRAMES.md](CAMERA-FRAMES.md), code`f3329c9`, adds original
-DMA→Board/CCI/CAMSS done/visibility→CPU-borrow→cachedsnapshot→explicitreturn/
-requeue and OS17 read-only IOKit/CMIO consumer. Full10bit RAW10 software preview
-uses explicit Bayer/rotation/black/WB; no generated frame or hardware gain write.
+[CAMERA-FRAMES.md](CAMERA-FRAMES.md), code `c15d94e` over `f3329c9`, connects
+original DMA→Board/CCI/CAMSS done/visibility→CPU borrow→cached snapshot→explicit
+return/requeue to the OS17 read-only IOKit/CMIO consumer. Sensor Bayer enums
+are explicitly translated into the RAW10 ABI. Acquiring the newest frame
+discards older READY snapshots; held tickets retain their original lifetime.
 
-Kernel`e6459d9c77d17ec7d48ee9b3cdccc144a02f3a8baedaed68399f4cd5e3e60b28`;
-native`70e4c098e5958fd51148b6683c6ce2971244e3bb0f0f61d7545f1689ae5dcae3`.
-1069RAW10cases6062checks; snapshot/service/ticket tests; original full stack
-normal30192/drain30358/visibility30027;11final ABI/archive/recovery audits pass.
-Two scalarOS17 objects0warnings/noauto-init. All original inputs/recovery5500ms/
-Apple30 are retained. Signed front/rear providers are not installed; TCC/cache/
-trust stays unmodified. `frames-validation.json` is the exact candidate authority.
+Actual front/rear snapshot→native service→user client→RAW10 paths each pass
+1,382,433 checks. Exact `f3329c9` methods reproduce both original client-open
+refusals and stale delivery. RAW10 1069 cases/6062 checks; five snapshot
+scenarios; original full stack normal30192/drain30358/visibility30027 and all
+11 final ABI/archive/recovery audits pass. Physical and OS peers/pixels are modeled.
+
+Kernel `c12fcecef16090d4110a2a9ca14ffc83c412fce87c72c803ccd456943dcd7669`;
+native `2afd524cf92cab332cf6717b792f2a9296fb44d426a2c29ffeaad0f2f408db08`.
+Two scalar OS17 objects have zero warnings and no automatic initialization.
+Actual original archives and declared deltas, recovery5500ms and Apple30 are
+audited. Signed providers/jobs/cache/trust are not installed. The original
+pipeline remains bounded polling; continuous IRQ delivery is still required.
+`bridge-validation.json` is current authority; `frames-validation.json` is
+historical. The 25,579,962-byte private archive has 644 verified members.
 
 Parent [SHARED-SMMU.md](SHARED-SMMU.md), code`d7571f2`, uses an atomic early
 exact1401/1c00/all4ADSP-session batch and original4K algorithms once. Complete
@@ -52,8 +60,9 @@ still mandatory; current-mainline Wi-Fi ownership must be reviewed before port.
    then allow original touch/SSC/camera starts. See SharedNative.h/Peripheral.h.
 3. For motion, use original SSC/ADSP producer with genuine PD/calibration/mount/
    time input, then finish complete rotation consumer. For cameras, establish
-   real shared rails/PLL/RPMh/CCI/CAMSS/DMA, take RAW10 and retire correctly,
-   then validate source-built OS17 snapshot/CMIO preview and actual app lifecycle.
+   real shared rails/PLL/RPMh/CCI/CAMSS/DMA and original IRQ/service delivery,
+   take RAW10 and retire correctly, then validate source-built OS17 snapshot/
+   CMIO preview and actual app lifecycle.
 4. Complete calibrated motor/system route and actual display/systemPM wake/RTC
    persistence using original owners and functional trials. Mainline owns tests.
 
@@ -76,6 +85,6 @@ workbench`D:\Desktop\Git\Patch\Y700-Elden`.
 Mac`/Users/ciscohe/Desktop/UniXNU_elden-offline-peripheral-fixes`.
 [INDEX.md](INDEX.md) maps component references; [MAINLINE-HANDOFF-PROMPT.md](MAINLINE-HANDOFF-PROMPT.md)
 is the concise mainline prompt. [MAINTENANCE.md](MAINTENANCE.md) describes Trash
-and artifact path receipts. [Historical status](../archive/peripherals-20261121/README.md)
+and artifact path receipts. [Historical status](../archive/peripherals-20261121/INDEX.md)
 retains prior whole documents exactly. Current entries are rewritten when
 evidence changes, not appended with every older contradictory milestone.
