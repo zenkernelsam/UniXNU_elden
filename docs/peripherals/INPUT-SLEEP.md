@@ -41,6 +41,13 @@ readiness. GOP's logical scanout PM does not establish that fact. The provider
 must queue its real wake request asynchronously, then submit a power-ready resume
 from another thread. Synchronous self-ack from the touch worker is refused.
 
+The offline `EldenWake/PowerOwner.{c,h}` facade now enforces this boundary for
+the future provider. Its named owner/epoch and generation fences are atomic and
+nonblocking across the touch worker, provider thread and policy lifecycle calls.
+It permits one outstanding wake request, accepts only an explicit asynchronous
+ready result, and fences duplicate readiness, stop/retire races and stale
+rebinds. The facade remains default-off and is not bound by `Native.cpp`.
+
 `elden_touch_wake_request(owner,epoch,asleep,double_tap)` posts one bounded command
 under the lock and awaits the original worker acknowledgment, up to2.5s.
 Preparation/command/restore errors remain actual codes. Timeout withdraws and

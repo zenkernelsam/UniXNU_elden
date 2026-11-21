@@ -22,7 +22,7 @@ not hardware proof. Missing calibration is not replaced with a guessed safe
 gain, sample, pixel, RTC epoch or callback success. Unqualified motor output
 stays disabled. Completing a parser/component cannot close the full Goal.
 
-The source-side haptics wave compiler is qualified by 4,888 host checks and
+The source-side haptics wave compiler is qualified by 4,895 host checks and
 freestanding ARM64 object builds on WSL LLVM-14 and CiscoMac LLVM-20. Its
 bounded chunks now also reach the same serialized native Broker/RTP worker
 through a pull-source clip under one live session — recipe->chunk->FIFO flow is
@@ -56,6 +56,18 @@ toolchains. Stop gates the facade, while the RTC core lifecycle remains with
 its clock owner. No physical NVMEM cell, SDAM offset,
 alarm IRQ, RTC persistence, or wake cycle is present, and `Native.cpp` still
 binds no provider.
+
+Wake-power-001/002 adds `EldenWake/PowerOwner.{c,h}`, a default-off guarded
+display/system-PM owner contract between the real panel/rail provider and the
+existing `EldenTouchWakePower` flow. It requires a named provider with a live
+nonzero owner/epoch, queues wake work asynchronously, and accepts an explicit
+panel/rail-ready result before invoking the existing bounded resume path.
+Atomic nonblocking claims fence provider-thread readiness against touch-worker
+callbacks, stop, retire, duplicate requests, stale generations and rebinds.
+The host suite passes 104 owner checks and 570 deterministic concurrency checks
+under ASan/UBSan and TSan on both toolchains; scalar ARM64 objects are clean.
+No panel registers, rail values, readiness, physical provider or Native.cpp
+binding is supplied, so hardware and production state remain false.
 
 ## Latest accepted candidate
 
