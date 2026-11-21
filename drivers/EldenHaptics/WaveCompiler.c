@@ -15,6 +15,10 @@ static int32_t carrier_at(const EldenWaveCarrier *t,uint32_t index,uint32_t tota
     *ok=0;
     if(!t||!t->samples||!t->count||t->count>ELDEN_WAVE_RATE_HZ)return 0;
     if(t->loop_frames){
+        /* Each field is bounded by the carrier count before the layout sum is
+         * compared: an overflowing pair could otherwise wrap to a small count
+         * and pass while indexing stays on the declared layout. */
+        if(t->loop_frames>t->count||t->tail_frames>t->count)return 0;
         if(t->loop_frames+t->tail_frames!=t->count)return 0;
         if(t->tail_frames&&total>=t->tail_frames&&index>=total-t->tail_frames){
             uint32_t i=t->loop_frames+index-(total-t->tail_frames);
@@ -144,6 +148,9 @@ static int valid_curve(const EldenWaveAutomationList *l){
     for(uint32_t i=0;i<l->count;i++){
         const EldenWaveAutomation *it=&l->items[i];
         if(it->frame<prior||(it->kind!=EldenWaveStep&&it->kind!=EldenWaveCurve))return -22;
+        /* A step's level is bounded to Q15 full scale: above 32767 the
+         * multiply path would amplify the carrier instead of scaling it. */
+        if(it->kind==EldenWaveStep&&it->value_q15>32767)return -22;
         prior=it->frame;
         if(it->kind==EldenWaveCurve){
             if(!it->points||!it->count||it->count>1024)return -22;
@@ -168,6 +175,11 @@ static int valid_recipe(const EldenWaveRecipe *r){
         prior=e->start_frame;
         const EldenWaveCarrier *t=e->carrier;
         if(!t||!t->samples||!t->count||t->count>ELDEN_WAVE_RATE_HZ)return -22;
+        /* Bound each layout field before the sum: loop+tail is a uint32
+         * expression that can wrap to a small count (e.g. UINT32_MAX+481==480)
+         * and admit a layout carrier_at then indexes differently than
+         * declared. With each field <= count the equality is overflow-safe. */
+        if(t->loop_frames>t->count||t->tail_frames>t->count)return -22;
         if(t->loop_frames&&t->loop_frames+t->tail_frames!=t->count)return -22;
         /* An explicit tail belongs to a loop and must fit inside the event:
          * a tail with no loop, or an event shorter than the tail, refuses so the

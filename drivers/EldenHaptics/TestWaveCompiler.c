@@ -105,6 +105,31 @@ int main(void){
     memset(&s,0,sizeof(s));
     {EldenWaveCarrier bad={carTail,480,0,80};EldenWaveEvent b[1]={{&bad,NULL,0,480,32767,0}};EldenWaveRecipe r={b,1,NULL,NULL,960};
      CHECK(elden_wave_compiler_begin(&s,&r,&prof,1,hist,480,&g)==-22);}       /* tail without loop */
+    /* ---- carrier layout bounds: overflow wrap and over-count fields ---- */
+    memset(&s,0xA5,sizeof(s));EldenWaveCompiler snap=s;
+    {EldenWaveCarrier bad={carHi,480,0xFFFFFFFFu,481};EldenWaveEvent b[1]={{&bad,NULL,0,960,32767,0}};
+     EldenWaveRecipe r={b,1,NULL,NULL,960};
+     CHECK(elden_wave_compiler_begin(&s,&r,&prof,1,hist,480,&g)==-22);
+     CHECK(!memcmp(&s,&snap,sizeof(s)));}                 /* MAX+481 wraps to count: refuse, state untouched */
+    memset(&s,0,sizeof(s));
+    {EldenWaveCarrier bad={carHi,480,481,0xFFFFFFFFu};EldenWaveEvent b[1]={{&bad,NULL,0,480,32767,0}};
+     EldenWaveRecipe r={b,1,NULL,NULL,960};
+     CHECK(elden_wave_compiler_begin(&s,&r,&prof,1,hist,480,&g)==-22);}       /* wrap via tail field */
+    memset(&s,0,sizeof(s));
+    {EldenWaveCarrier bad={carHi,480,481,0};EldenWaveEvent b[1]={{&bad,NULL,0,480,32767,0}};EldenWaveRecipe r={b,1,NULL,NULL,960};
+     CHECK(elden_wave_compiler_begin(&s,&r,&prof,1,hist,480,&g)==-22);}       /* loop>count */
+    memset(&s,0,sizeof(s));
+    {EldenWaveCarrier bad={carHi,480,10,490};EldenWaveEvent b[1]={{&bad,NULL,0,480,32767,0}};EldenWaveRecipe r={b,1,NULL,NULL,960};
+     CHECK(elden_wave_compiler_begin(&s,&r,&prof,1,hist,480,&g)==-22);}       /* tail>count */
+    /* ---- step automation values stay bounded to Q15 full scale ---- */
+    memset(&s,0,sizeof(s));
+    {EldenWaveAutomation st={0,EldenWaveStep,32768,NULL,0};EldenWaveAutomationList al={&st,1};
+     EldenWaveEvent b[1]={{&cHi,NULL,0,480,32767,0}};EldenWaveRecipe r={b,1,&al,NULL,960};
+     CHECK(elden_wave_compiler_begin(&s,&r,&prof,1,hist,480,&g)==-22);}       /* step>q15 */
+    memset(&s,0,sizeof(s));
+    {EldenWaveAutomation st={0,EldenWaveStep,65535,NULL,0};EldenWaveAutomationList al={&st,1};
+     EldenWaveEvent b[1]={{&cHi,NULL,0,480,32767,0}};EldenWaveRecipe r={b,1,&al,NULL,960};
+     CHECK(elden_wave_compiler_begin(&s,&r,&prof,1,hist,480,&g)==-22);}       /* step=u16max */
     /* ---- tail selection: a looped carrier plays its tail in the last frames ---- */
     memset(&s,0,sizeof(s));
     {EldenWaveEvent a[1]={{&cTl,NULL,0,480,32767,0}};EldenWaveRecipe r={a,1,NULL,NULL,480};

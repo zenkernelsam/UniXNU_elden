@@ -64,7 +64,11 @@ admission through the shared `SampleMap` validator (anchored endpoints, strictly
 increasing magnitudes, nondecreasing drive bounded by peak, supported rate/
 max_frames, nonzero budget), and an explicit tail must fit inside its event —
 a shorter duration refuses rather than underflowing into silent loop playback.
-Armed runs are generation-stamped; produce
+Carrier loop/tail fields are each bounded by the carrier count before the
+`loop+tail==count` equality so a wrapping uint32 pair can never masquerade as
+a valid layout, a tail without a loop refuses, and every automation level —
+step `value_q15` and curve point alike — is bounded to Q15 full scale so no
+automation can amplify a carrier. Armed runs are generation-stamped; produce
 requests must land on the exact next source position so a skipped/gapped or
 already-served frame is a timing/underrun refusal, and a stop during a pending
 feed becomes a recorded partial abort, never false-complete. Intensity and
