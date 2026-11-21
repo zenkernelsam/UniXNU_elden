@@ -26,7 +26,7 @@ import argparse,hashlib,json,sys
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'drivers/EldenHaptics'))
 from AppleEffects import vibration,ahap
 from EffectCompiler import load_bank,frame,multiply
-RATE=24000;MAX_US=60000000;MAX_EVENTS=1024;MAX_SOURCES=512
+RATE=24000;MAX_US=60000000;MAX_FRAMES=60*RATE;MAX_EVENTS=1024;MAX_SOURCES=512
 def fnv(text):
     h=2166136261
     for b in text.encode():h=((h^b)*16777619)&0xffffffff
@@ -130,6 +130,13 @@ def legacy_events(recipe,bank):
     out.sort(key=lambda e:e['start']);return out
 def build(recipes,bank):
     """recipes: [(name,events,intensity|None,sharpness|None,source_sha)] -> C text + report rows."""
+    # Compiled duration ceiling, enforced at the build boundary with the same
+    # 24 kHz frame rounding WaveCompiler uses: an event whose quantized
+    # start+frames exceeds 60s must fail here, not inside valid_recipe. Source
+    # parsers bound times individually; the frame-domain sum is the contract.
+    for name,events,i_,s_,sha in recipes:
+        if max((e['start']+e['frames'] for e in events),default=0)>MAX_FRAMES:
+            raise ValueError('Event crosses the 60s compiled boundary for '+name)
     carriers={};car_order=[]
     for name,events,i_,s_,sha in recipes:
         for e in events:

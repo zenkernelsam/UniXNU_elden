@@ -61,6 +61,10 @@ def fixtures(base):
         {'ParameterCurve':{'ParameterID':'HapticIntensityControl','Time':0.0,
             'ParameterCurveControlPoints':[{'Time':0.0,'ParameterValue':0.0},
                                            {'Time':0.000001,'ParameterValue':0.5}]}}]})+'\n')
+    (base/'late.ahap').write_text(json.dumps({'Version':1,'Pattern':[
+        {'Event':{'Time':59.9999,'EventType':'HapticContinuous','EventDuration':0.01,'EventParameters':[]}}]})+'\n')
+    (base/'boundary.ahap').write_text(json.dumps({'Version':1,'Pattern':[
+        {'Event':{'Time':59.98,'EventType':'HapticContinuous','EventDuration':0.02,'EventParameters':[]}}]})+'\n')
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--cc',nargs='+',default=None)
@@ -100,6 +104,18 @@ def main():
     run([sys.executable,str(TOOLS/'build_wave_manifest.py'),'--source',str(work/'collapse.ahap'),
          '--bank',str(work/'bank/bank.json'),'--test-only','--output',out/'gencollapse'],
         'collapse-points-reject',expect=1)
+    # 2d. An event whose quantized end crosses the 60s compiled boundary refuses
+    #     before any output is written.
+    run([sys.executable,str(TOOLS/'build_wave_manifest.py'),'--source',str(work/'late.ahap'),
+         '--bank',str(work/'bank/bank.json'),'--test-only','--output',out/'genlate'],
+        'boundary-reject',expect=1)
+    if (out/'genlate').exists():raise ValueError('Rejected build still wrote output')
+    # 2e. An event ending exactly at the 60s boundary stays accepted.
+    run([sys.executable,str(TOOLS/'build_wave_manifest.py'),'--source',str(work/'boundary.ahap'),
+         '--bank',str(work/'bank/bank.json'),'--test-only','--output',out/'genboundary'],
+        'boundary-accept')
+    if json.loads((out/'genboundary/manifest.json').read_text())['entries'][0]['total_frames']!=1440000:
+        raise ValueError('Boundary recipe frames differ')
     # 3. Compile + drain the generated manifest through WaveCompiler/WaveFeed.
     gen=out/'gen1'
     flags=[*cc,'-std=c11','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined',
@@ -124,6 +140,7 @@ def main():
         'manifest_c_sha256':sha((gen/'EldenWaveManifest.c').read_bytes()),
         'sources':4,'carriers_deduplicated':3,'deterministic':True,'production_reject':True,
         'empty_manifest_reject':True,'collapse_points_reject':True,
+        'boundary_reject':True,'boundary_accept':True,
         'production_ready':False,'native_bound':False,'hardware':False}
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n')
     print(msg)

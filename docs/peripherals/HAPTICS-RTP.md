@@ -135,7 +135,11 @@ inferred. A source set yielding no supported non-empty recipe refuses rather
 than emitting a zero-entry manifest, and distinct curve point times that
 quantize to the same 24 kHz frame refuse in both the generator and
 `WaveCompiler.valid_curve` (strict point ordering — equal frames would divide
-by zero in `curve_at`). Production mode requires the bank's `hardware_qualified` evidence,
+by zero in `curve_at`). The 60 s compiled ceiling is also enforced at the
+build boundary with the same frame rounding: any event whose quantized
+`start_frame+frames` exceeds 1,440,000 — including a carrier-length
+transient — refuses before output, while an event ending exactly on the
+boundary stays accepted. Production mode requires the bank's `hardware_qualified` evidence,
 exact TB322FC board/rate/boost and pinned firmware identity; `--test-only`
 admits a synthetic bank and stamps `production_ready:false`. The generated TU
 is host-qualified by `TestWaveManifest` (5,821 checks: sorted/unique/untagged
