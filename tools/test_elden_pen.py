@@ -7,6 +7,7 @@ from pathlib import Path
 import argparse, hashlib, json, re, subprocess
 ROOT=Path(__file__).resolve().parents[1]
 DRIVER=ROOT/'drivers/EldenPen'
+TOUCH=ROOT/'drivers/EldenNvt36536'
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
     p=argparse.ArgumentParser(description=__doc__)
@@ -19,7 +20,7 @@ def main():
         (out/(name+'.log')).write_bytes(r.stdout+r.stderr)
         if r.returncode:raise RuntimeError(name+' failed; logs retained')
         return r.stdout.decode('utf8','replace')
-    sources=[DRIVER/n for n in ('PenReport.c','Delivery.c','TestPen.c')]
+    sources=[DRIVER/n for n in ('PenReport.c','Delivery.c','TestPen.c')]+[TOUCH/'PointReport.c']
     exe=out/'pen-test'
     run(['xcrun','clang','-std=c11','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined',
          *sources,'-o',exe],'host-build')
@@ -29,7 +30,7 @@ def main():
         obj=out/(source.stem+'.o')
         cmd=[clang,'-target','arm64-apple-ios17.0','-std=c11','-O2','-ffreestanding','-fno-builtin',
              '-fno-stack-protector','-mgeneral-regs-only','-nostdinc','-isystem',Path(resource)/'include',
-             '-Wall','-Wextra','-Werror','-c',source,'-o',obj]
+             '-Wno-error=incompatible-sysroot','-Wall','-Wextra','-Werror','-c',source,'-o',obj]
         run(cmd,source.stem+'-native')
         dis=run([a.llvm/'llvm-objdump','--disassemble','--no-show-raw-insn',obj],source.stem+'-disassembly')
         instructions=re.findall(r'^\s*[0-9a-fA-F]+:\s+(.+)$',dis,re.M)
@@ -42,7 +43,7 @@ def main():
         exports=run([a.llvm/'llvm-nm','--defined-only','--extern-only',obj],source.stem+'-exports')
         results[source.name]={'source_sha256':sha(source),'object_sha256':sha(obj),'imports':imports.splitlines(),
                               'exports':exports.splitlines(),'command':list(map(str,cmd))}
-    report={'passed':True,'host_output':result,'sources':{p.name:sha(p) for p in sources+[DRIVER/'PenReport.h',DRIVER/'Delivery.h']},
+    report={'passed':True,'host_output':result,'sources':{p.name:sha(p) for p in sources+[DRIVER/'PenReport.h',DRIVER/'Delivery.h',TOUCH/'PointReport.h']},
             'native':results,'warnings':0,'actual_functions':True,'synthetic_packets':True,
             'native_hid_linked':False,'hardware':False}
     (out/'result.json').write_text(json.dumps(report,indent=2)+'\n');print(result.strip())

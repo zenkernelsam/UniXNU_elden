@@ -122,9 +122,14 @@ by the native entry, no second SPI read, and no invented packet, coordinate,
 pressure, tilt, timestamp, sequence or frame owner. `elden-pen=1` is still the
 only opt-in; start refuses without a live nonzero frame owner, and every
 packet is re-fenced against the declared worker association by the facade.
-`tools/test_pen_native_route.py` passes125 unit and51 deterministic race
+`tools/test_pen_native_route.py` passes157 unit and51 deterministic race
 checks under ASan/UBSan and TSan on WSL and CiscoMac, with scalar ARM64
 `NativeRoute.o` clean. These are host-model contracts, not hardware proof.
+The added cases cover hover packets delivered through the route (in-range
+without tip), a stale hover lifting through `route_tick`, pause during
+hover releasing through the real path, resume without replayed state, and
+out-of-bounds pen data refused at decode with the held contact lifted
+through the existing fault path.
 
 The reproducible pen package now also carries `Owner.o`, `NativeBridge.o` and
 `NativeRoute.o`. `prepare_elden_pen_hid.py` hash-qualifies all six
@@ -144,9 +149,17 @@ has no Pencil or hardware acceptance.
 
 ## Verified scope
 
-- 924 prior actual decoder/delivery checks remain valid; those C sources are
-  unchanged. New checks cover15 report/pressure cases and249 actual hook/owner/
-  forwarding cases with explicit OS peers under ASan/UBSan.
+- The decoder/delivery suite now runs1005 actual checks (product sources
+  unchanged): the prior cases plus simultaneous finger+pen decode of one
+  109-byte packet through both real decoders, pen Leave/kind faults never
+  poisoning the finger frame, the shared bytes1..65 envelope masking the
+  pen sample on finger corruption (fail closed), stale-hover lift,
+  out-of-range coordinate emission with nothing owed, hover
+  leave-and-return without a phantom tip, metadata never extending a
+  stale deadline, and pause during hover releasing then resuming without
+  replay. The wire report/boundary suite covers22 cases and the scoped
+  pressure-hook suite310, plus249 actual owner/forwarding cases with
+  explicit OS peers under ASan/UBSan.
 - The pen-003/004/005 owner facade adds217 host checks on synthetic
   provider peers: bind refusals, owner/epoch drift lifting a held contact
   at every facade entry, foreign frame owners and timestamp/sequence
@@ -167,11 +180,13 @@ has no Pencil or hardware acceptance.
   frame owners or Pencil identity are synthesized into the native path. WSL
   TSan uses the recorded `setarch -R` workaround; CiscoMac TSan runs natively.
   Scalar ARM64 `NativeBridge.o` is clean on both toolchains.
-- The worker route adds125 unit and51 deterministic race checks. Synthetic
+- The worker route adds157 unit and51 deterministic race checks. Synthetic
   peers prove the route contract only: default-off refusal before arm,
   argument validation, real worker-packet forwarding through the armed
   generation, stale/foreign frame fencing, malformed-packet and transport
-  faults, stop/release/retire, rebind generation fencing and callback-safe
+  faults, hover delivery and stale-hover lift, pause/resume fencing without
+  state replay, out-of-bounds decode refusal lifting a held contact,
+  stop/release/retire, rebind generation fencing and callback-safe
   deferred stop. Scalar ARM64 `NativeRoute.o` is clean on both toolchains;
   WSL TSan uses the recorded `setarch -R` workaround.
 - The pen source-build pipeline packages `Owner.o`, `NativeBridge.o` and

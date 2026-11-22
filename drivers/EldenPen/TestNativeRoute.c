@@ -181,5 +181,42 @@ int main(void){
      CHECK(!elden_pen_route_retire(&r));
      CHECK(!s.count);}
 
+    /* 15. Hover through the route: an in-range-only packet delivers an
+     * in-range/no-tip report; a stale hover lifts via route_tick; pause
+     * during hover releases through the real path and resume admits the
+     * next real packet without replaying the old hover. */
+    {EldenPenNativeRoute r;Sink s;setup(&r,&s);begin(&r,&s);
+     coord(buf,0);put(buf,75,0xffff);                 /* hover: distance set, no pressure */
+     CHECK(!elden_pen_route_packet(&r,buf,109,7,100));
+     CHECK(s.count==1&&!s.trace[0].tip&&s.trace[0].in_range&&s.trace[0].distance==0xffff);
+     CHECK(!elden_pen_route_tick(&r,100+99999));
+     CHECK(s.count==1);                               /* inside 100ms: still held */
+     CHECK(!elden_pen_route_tick(&r,100+100000));
+     CHECK(s.count==2&&s.trace[1].kind==EldenPenLeave&&!s.trace[1].in_range);
+     CHECK(released(&r));
+     /* Pause during hover releases the same way; resume never replays it. */
+     coord(buf,0);put(buf,75,0xffff);
+     CHECK(!elden_pen_route_packet(&r,buf,109,7,200100));
+     CHECK(!elden_pen_route_pause(&r,200110));
+     CHECK(released(&r));
+     CHECK(elden_pen_route_packet(&r,buf,109,7,200120)==EldenPenPaused);
+     CHECK(!elden_pen_route_resume(&r,200130));
+     coord(buf,300);
+     CHECK(!elden_pen_route_packet(&r,buf,109,7,200140));
+     CHECK(s.count==5&&s.trace[4].tip&&s.trace[4].pressure==300);}
+
+    /* 16. Out-of-bounds pen data is refused at decode under the owner — the
+     * existing fault path runs, a held contact lifts, and the facade counts
+     * it as a fault, never a synthetic frame. */
+    {EldenPenNativeRoute r;Sink s;setup(&r,&s);begin(&r,&s);
+     coord(buf,300);CHECK(!elden_pen_route_packet(&r,buf,109,7,100));
+     coord(buf,300);buf[73]=195;                      /* signed tilt -61 > bound 60 */
+     CHECK(elden_pen_route_packet(&r,buf,109,7,110)==EldenPenRange);
+     EldenPenOwnerStatus st;CHECK(!elden_pen_route_status(&r,&st));
+     CHECK(st.faults==1&&st.decoded==1&&s.count==2&&!s.trace[1].tip);
+     /* The next in-bounds real packet flows again under the same session. */
+     coord(buf,400);CHECK(!elden_pen_route_packet(&r,buf,109,7,120));
+     CHECK(s.count==3&&s.trace[2].tip&&s.trace[2].pressure==400);}
+
     printf("TestNativeRoute: %u checks passed\n",checks);return 0;
 }

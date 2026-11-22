@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: BSD-2-Clause-Patent */
 #include "Delivery.h"
+#include "../EldenNvt36536/PointReport.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,6 +54,31 @@ static void decode_cases(void){
     p[66]=0xff;CHECK(!elden_pen_decode(p,109,&limits,&f));CHECK(f.kind==EldenPenLeave&&!f.tip&&!f.buttons);
     packet(p,1);unsigned previous=0;
     for(unsigned x=0;x<=19040;x+=119){put(p,67,x);CHECK(!elden_pen_decode(p,109,&limits,&f));CHECK(f.x>=previous&&f.x<=32767);previous=f.x;}
+    /* Simultaneous finger + pen: one 109-byte packet carries fingers in
+     * bytes1..65 (with the shared envelope) and the pen in bytes66 onward.
+     * Each region decodes independently through its own real decoder. */
+    packet(p,300);                                         /* pen fields; finger region zeroed */
+    p[1]=9;put(p,2,9520);put(p,4,15200);p[6]=3;             /* finger slot0: status1,id1 */
+    {uint8_t sum=0;for(unsigned i=1;i<=64;++i)sum=(uint8_t)(sum+p[i]);p[65]=(uint8_t)(0u-sum);}
+    struct elden_nvt_frame nf;EldenPenFrame pf;
+    CHECK(!elden_nvt_decode(p,109,19040,30400,&nf));
+    CHECK(nf.count==1&&nf.contacts[0].id==0&&nf.contacts[0].raw_x==9520&&nf.contacts[0].raw_y==15200&&nf.contacts[0].width==3);
+    CHECK(!elden_pen_decode(p,109,&limits,&pf));
+    CHECK(pf.tip&&pf.in_range&&pf.pressure==300&&pf.raw_x==9520&&pf.raw_y==15200);
+    /* A pen Leave coexists with held fingers: kind 0xff is pen-only state. */
+    p[66]=0xff;
+    CHECK(!elden_nvt_decode(p,109,19040,30400,&nf)&&nf.count==1);
+    CHECK(!elden_pen_decode(p,109,&limits,&pf)&&pf.kind==EldenPenLeave&&!pf.tip);
+    /* A pen-region kind fault never poisons the finger decode. */
+    p[66]=0xf2;
+    CHECK(elden_pen_decode(p,109,&limits,&pf)==EldenPenUnsupported);
+    CHECK(!elden_nvt_decode(p,109,19040,30400,&nf)&&nf.count==1);
+    /* The shared envelope covers bytes1..65 only: a corrupt finger region
+     * masks the pen sample for that packet too — fail closed, no synthetic
+     * pen data is produced from a bad frame. */
+    p[2]^=0xff;
+    CHECK(elden_pen_decode(p,109,&limits,&pf)==EldenPenEnvelope);
+    CHECK(elden_nvt_decode(p,109,19040,30400,&nf)==ELDEN_NVT_CHECKSUM);
 }
 typedef struct {unsigned count,fail;EldenPenFrame trace[64];} Sink;
 static int send(void *p,const EldenPenFrame *f){
@@ -107,5 +133,56 @@ static void delivery_cases(void){
     CHECK(elden_pen_delivery_resume(&s,309)==EldenPenClock); // cannot clear rollback by wake
     CHECK(!elden_pen_delivery_init(&s,100));CHECK(!elden_pen_delivery_pause(&s,400,send,&sink));
     CHECK(!elden_pen_delivery_stop(&s,401,send,&sink));CHECK(elden_pen_delivery_resume(&s,402)==EldenPenStopped);
+    /* Stale hover: an in-range-only frame is held contact state for the
+     * release contract and lifts on the same staleness deadline. */
+    CHECK(!elden_pen_delivery_init(&s,100));
+    CHECK(!elden_pen_delivery_feed(&s,&hover,500,send,&sink));
+    CHECK(!elden_pen_delivery_tick(&s,599,send,&sink));     /* before deadline: held */
+    old=sink.count;
+    CHECK(!elden_pen_delivery_tick(&s,600,send,&sink));
+    CHECK(sink.count==old+1&&sink.trace[old].kind==EldenPenLeave&&
+          !sink.trace[old].tip&&!sink.trace[old].in_range);
+    CHECK(elden_pen_delivery_released(&s));
+    /* Out-of-range coordinate (pressure and distance both zero): emitted
+     * verbatim as a Coordinate report with no flags — not rewritten to a
+     * Leave, and nothing remains owed afterwards. */
+    CHECK(!elden_pen_delivery_init(&s,100));
+    CHECK(!elden_pen_delivery_feed(&s,&hover,700,send,&sink));
+    EldenPenFrame empty=decoded(0);CHECK(!empty.tip&&!empty.in_range&&!empty.distance);
+    old=sink.count;
+    CHECK(!elden_pen_delivery_feed(&s,&empty,710,send,&sink));
+    CHECK(sink.count==old+1&&sink.trace[old].kind==EldenPenCoordinate&&
+          !sink.trace[old].tip&&!sink.trace[old].in_range);
+    CHECK(elden_pen_delivery_released(&s));
+    CHECK(!elden_pen_delivery_tick(&s,810,send,&sink));
+    CHECK(sink.count==old+1&&elden_pen_delivery_released(&s)); /* no owed lift */
+    /* A hover that leaves and returns re-emits in-range — never a phantom
+     * tip from the earlier session. */
+    leave.kind=EldenPenLeave;
+    CHECK(!elden_pen_delivery_init(&s,100));
+    CHECK(!elden_pen_delivery_feed(&s,&hover,900,send,&sink));
+    old=sink.count;
+    CHECK(!elden_pen_delivery_feed(&s,&leave,910,send,&sink));
+    CHECK(sink.count==old+1&&sink.trace[old].kind==EldenPenLeave&&!sink.trace[old].in_range);
+    CHECK(elden_pen_delivery_released(&s));
+    old=sink.count;
+    CHECK(!elden_pen_delivery_feed(&s,&hover,920,send,&sink));
+    CHECK(sink.count==old+1&&sink.trace[old].in_range&&!sink.trace[old].tip);
+    /* Metadata is never a keepalive: an Info frame inside the window does
+     * not move the hover's stale deadline. */
+    EldenPenFrame info={0};info.kind=EldenPenInfo;
+    CHECK(!elden_pen_delivery_feed(&s,&info,990,send,&sink));
+    CHECK(!elden_pen_delivery_tick(&s,1020,send,&sink));
+    CHECK(elden_pen_delivery_released(&s));
+    /* Pause during hover performs the same real release; resume restores
+     * with no replayed hover state. */
+    CHECK(!elden_pen_delivery_init(&s,100));
+    CHECK(!elden_pen_delivery_feed(&s,&hover,1100,send,&sink));
+    CHECK(!elden_pen_delivery_pause(&s,1101,send,&sink));
+    CHECK(elden_pen_delivery_released(&s));
+    CHECK(!elden_pen_delivery_resume(&s,1102));
+    old=sink.count;
+    CHECK(!elden_pen_delivery_feed(&s,&hover,1103,send,&sink));
+    CHECK(sink.count==old+1&&sink.trace[old].in_range&&!sink.trace[old].tip);
 }
 int main(void){decode_cases();delivery_cases();printf("PASS: %u checks; synthetic protocol boundaries and actual delivery state; no raw SPI or hardware claim\n",checks);return 0;}

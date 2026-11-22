@@ -24,8 +24,20 @@ int main(void){
     CHECK(!elden_pen_hid_report(&f,4095,r)&&!memcmp(r,expected,sizeof(r)));
     memcpy(saved,r,sizeof(r));f.pressure=4096;CHECK(elden_pen_hid_report(&f,4095,r)!=0&&!memcmp(saved,r,sizeof(r)));
     f.pressure=0;f.tip=0;f.buttons=0;CHECK(!elden_pen_hid_report(&f,4095,r)&&r[1]==0x10);
-    f.in_range=0;f.kind=EldenPenLeave;CHECK(!elden_pen_hid_report(&f,4095,r)&&r[1]==0);
-    f.kind=EldenPenIdentity;CHECK(elden_pen_hid_report(&f,4095,r)==EldenPenUnsupported);
+    /* Hover with a barrel button: in-range and the first button bit. */
+    f.buttons=1;CHECK(!elden_pen_hid_report(&f,4095,r)&&r[1]==0x12);
+    /* Second barrel bit reports on bit5 without inventing an eraser. */
+    f.buttons=2;CHECK(!elden_pen_hid_report(&f,4095,r)&&r[1]==0x30);
+    /* A button-only frame is emitted as-is — flags carry the button alone. */
+    f.in_range=0;f.buttons=1;CHECK(!elden_pen_hid_report(&f,4095,r)&&r[1]==0x02);
+    /* Report boundary: tilt beyond ±60 is refused, as is a tip with no
+     * in-range, or a Leave that still claims contact. */
+    f.buttons=0;f.tilt_x=61;CHECK(elden_pen_hid_report(&f,4095,r)==EldenPenRange);
+    f.tilt_x=-61;CHECK(elden_pen_hid_report(&f,4095,r)==EldenPenRange);
+    f.tilt_x=0;f.tip=1;f.pressure=100;CHECK(elden_pen_hid_report(&f,4095,r)==EldenPenRange);
+    f.tip=0;f.pressure=0;f.in_range=0;f.kind=EldenPenLeave;CHECK(!elden_pen_hid_report(&f,4095,r)&&r[1]==0);
+    f.tip=1;CHECK(elden_pen_hid_report(&f,4095,r)==EldenPenRange);
+    f.tip=0;f.kind=EldenPenIdentity;CHECK(elden_pen_hid_report(&f,4095,r)==EldenPenUnsupported);
     int32_t scaled=42;CHECK(elden_pen_pressure_fixed(-1,&scaled)!=0&&scaled==42);
     CHECK(elden_pen_pressure_fixed(65537,&scaled)!=0&&scaled==42);
     CHECK(!elden_pen_pressure_fixed(0,&scaled)&&scaled==0);
