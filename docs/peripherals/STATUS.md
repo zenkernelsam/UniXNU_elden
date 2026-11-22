@@ -8,6 +8,12 @@ the AW86937 output-safety regressions, and current motion/camera refusal
 regressions, independent of mainline Wi-Fi and the completed GPU branch. The
 full five-part Goal is **active**.
 
+GPU is the first completed offline peripheral delivery and remains isolated on
+`codex/elden-gpu-offline`. Its accepted A830/SM8750 source, build and merge
+boundaries are documented in that checkout's `docs/GPU-GOAL-STATUS.md` and
+`docs/GPU-MERGE.md`; it is not merged into this peripheral branch and is not a
+hardware-qualified or flashable image.
+
 ## Current delivery and remaining work
 
 | Objective | Source-built offline implementation | Required evidence still missing |
