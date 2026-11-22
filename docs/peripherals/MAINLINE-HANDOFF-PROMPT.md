@@ -17,3 +17,7 @@ AP501U独立HID/tilt、原worker可逆pause/gesturewake、pen-003 named-provider
 板级优先 ArmadaOS-Freedom 的TB322FC/SM8750精确源码/补丁，冻结Linux6f97250e，不搬三代/五代寄存器；OS17接口复用同版成熟UniXNU。真实启动仍须原sharedpower/clock/IOKitmapping/ACTLRsecurity/serializedtouch authority，不能no-op/固定bank/lateexception；旧整个kernel不可盖当前主线。按唯一owners/recoveryport/rebuild后做功能性真机验收，保持floor1738713600@0/parent3与自动回程。五项Goal继续active，组件成功不清全局flag。
 
 源码仓 https://github.com/zenkernelsam/UniXNU_elden ，分支 offline-peripheral-fixes；Windows独立工作树 C:\Users\Cisco He\.codex\worktrees\offline-peripheral-fixes\UniXNU_elden 。Mac对应独立checkout；证据在工作台 lab/records 和 edl_work，research只放Git克隆。GPU已完成、继续保持在codex/elden-gpu-offline。当前主线先推进Wi-Fi，不自动merge这些离线外设。
+
+交接给没有本线程记忆的主线 agent 时，先读两个 checkout 的 `AGENTS.md`，再读本仓 `docs/peripherals/STATUS.md`、`INDEX.md`、`REAL-HARDWARE-RUNBOOK.md`、`GOAL-ACCEPTANCE-MATRIX.md` 和本文件。CiscoMac 是隔离的 macOS 编译主机；Windows/WSL 只提供辅助 host evidence。`Patch/Y700-Elden/research` 只放可核验的 Git 参考克隆，笔记和产物按 `docs/MAINTENANCE.md` 分流。
+
+实现任务使用 `Patch/Y700-Elden/_relay/dispatch.py` 派发给 `Devin-worker-agent-Y700`。worker 只写自己的 relay 交接目录并以 `(handover to codex now)` 结束；主线 agent 负责审查、提交和 push 到 `offline-peripheral-fixes`。不要让 Devin 直接 commit，也不要把源代码写入 Patch 或 GPU checkout。GPU 独立分支 `codex/elden-gpu-offline` 的现状和合并边界以其 GPU status/merge 文档为准，不能和外设分支混写。

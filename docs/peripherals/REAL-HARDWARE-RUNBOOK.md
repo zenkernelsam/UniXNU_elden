@@ -51,3 +51,29 @@ each component. A host test or linked object proves only its source contract.
 Set a component hardware flag only after its row in
 `GOAL-ACCEPTANCE-MATRIX.md` has all required Y700 evidence. The five-part Goal
 remains active until every row passes.
+
+## Handoff and worker workflow
+
+The next mainline agent should begin by reading `AGENTS.md`,
+`docs/peripherals/STATUS.md`, `INDEX.md`, `MAINLINE-HANDOFF-PROMPT.md`, this
+runbook and `GOAL-ACCEPTANCE-MATRIX.md`. The authoritative source checkout is
+`UniXNU_elden` on `offline-peripheral-fixes`. Source changes and commits belong
+there. The `Patch/Y700-Elden` workbench stores evidence, relay records and
+independent Git clones under `research/`; do not treat research notes or
+artifacts as source. The ArmadaOS-Freedom TB322FC/SM8750 tree is the board
+reference, and the pinned Linux source and same-version UniXNU donors are
+recorded in the component manifests.
+
+CiscoMac is the isolated macOS build host. Its source checkout, toolchain and
+full-link receipts must be read before reusing a build. Windows and WSL host
+tests are supporting evidence only. The GPU work is separate on
+`codex/elden-gpu-offline`; read its GPU status and merge documents before
+proposing a GPU merge.
+
+For implementation work, use the existing `Devin-worker-agent-Y700` through
+`Patch/Y700-Elden/_relay`. Create a round directory with `task.md`, dispatch it
+with `_relay/dispatch.py`, wait for the worker handover, then review its diff,
+source hashes and host results in Codex. The worker must end with
+`(handover to codex now)`. The mainline agent owns the review, commit and push
+on the correct branch. Do not let Devin commit directly, merge automatically,
+or write source into `Patch`, the GPU checkout, or a different worktree.
