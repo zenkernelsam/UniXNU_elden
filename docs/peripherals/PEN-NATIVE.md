@@ -105,7 +105,7 @@ serialize bind/start/stop/retire, preventing a delayed old-generation start
 from opening a successor after stop-retire-rebind. Callback-reentrant stop
 remains deferred and nonblocking. `Native.cpp`, `EldenPenHid.cpp`, the original
 touch worker and default boot path remain unchanged. `tools/test_pen_native_bridge.py`
-passes 86 unit and 149 deterministic race checks on WSL and CiscoMac, including
+passes 86 unit and 179 deterministic race checks on WSL and CiscoMac, including
 TSan and scalar ARM64 object checks. This remains source-only with
 `native_bound:false`, `pencil_accepted:false` and `hardware:false`.
 
@@ -129,7 +129,7 @@ TSan and scalar ARM64 object checks. This remains source-only with
   for packet/stop/send/retire/status races, stale-generation isolation and
   generation exhaustion. `Native.cpp` remains unbound and the facade stays
   default-off.
-- The native bridge adds 86 unit and 149 lifecycle/race checks. Provider peers
+- The native bridge adds 86 unit and 179 lifecycle/race checks. Provider peers
   exist only in host tests. No packets, coordinates, pressure, tilt, timestamps,
   frame owners or Pencil identity are synthesized into the native path. WSL
   TSan uses the recorded `setarch -R` workaround; CiscoMac TSan runs natively.

@@ -1,7 +1,7 @@
 # Offline peripherals — current status
 
 Branch `offline-peripheral-fixes`, from main@f82da007 on2026-11-16. Latest
-source commit is `a562ba1`; accepted offline deliveries also include the
+source commit is `b46dbde`; accepted offline deliveries also include the
 RTC-003/004 guarded owner facade, the Haptics-003/004 compiled-recipe RTP path,
 and the deterministic Apple recipe manifest builder, independent of mainline Wi-Fi and the completed
 GPU branch. The full five-part Goal is **active**.
@@ -77,7 +77,7 @@ Pencil/hardware acceptance is false.
 The default-off `drivers/EldenPen/NativeBridge.{c,h}` routes future NT36536
 worker hooks through that owner facade. Its generation-tagged gate and
 nonblocking lifecycle claim close delayed-start races across stop/retire/rebind.
-The bridge adds 86 unit and 149 lifecycle/race checks, including WSL/CiscoMac
+The bridge adds 86 unit and 179 lifecycle/race checks, including WSL/CiscoMac
 TSan and scalar ARM64 objects. No real provider is bound, so
 `native_bound:false`, `pencil_accepted:false`, and `hardware:false` remain true.
 
