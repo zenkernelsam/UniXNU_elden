@@ -22,6 +22,9 @@ def main():
         if sha(native/(Path(name).stem+'.o'))!=row['sha256']:raise ValueError('Pen object changed')
     pen=native/'libEldenPen.a'
     if sha(pen)!=report['archive_sha256']:raise ValueError('Pen archive changed')
+    pen_members=subprocess.check_output(['ar','t',str(pen)],text=True).splitlines()
+    for need in ('Owner.o','NativeBridge.o'):
+        if pen_members.count(need)!=1:raise ValueError('Pen archive dropped bridge member: '+need)
     command=read(base/'link-command.json');args=[v for v in command if v.startswith('-Wl,-force_load,') and v.endswith('/libNativeLegacyDisplay.late.a')]
     if len(args)!=1:raise ValueError('Expected one display archive')
     original=Path(args[0].split(',',2)[2]);cap=read(a.base_native/'capture.json')
@@ -66,6 +69,15 @@ def main():
     with (out/'native-link.log').open('x') as f:subprocess.run(command,cwd=out,stdout=f,stderr=subprocess.STDOUT,check=True)
     for path,digest in inherited.items():
         if sha(Path(path))!=digest:raise ValueError('Baseline input changed during link')
+    bridge_exports={n for n in defs(out/'native.macho') if n.startswith(('_elden_pen_bridge_','_elden_pen_owner_'))}
+    expected_exports={'_elden_pen_owner_init','_elden_pen_owner_bind','_elden_pen_owner_packet','_elden_pen_owner_tick',
+        '_elden_pen_owner_fault','_elden_pen_owner_pause','_elden_pen_owner_resume','_elden_pen_owner_stop',
+        '_elden_pen_owner_release','_elden_pen_owner_retire','_elden_pen_owner_released','_elden_pen_owner_status',
+        '_elden_pen_bridge_init','_elden_pen_bridge_bind','_elden_pen_bridge_start','_elden_pen_bridge_packet',
+        '_elden_pen_bridge_tick','_elden_pen_bridge_fault','_elden_pen_bridge_pause','_elden_pen_bridge_resume',
+        '_elden_pen_bridge_stop','_elden_pen_bridge_release','_elden_pen_bridge_retire','_elden_pen_bridge_status',
+        '_elden_pen_bridge_started','_elden_pen_bridge_bound'}
+    if bridge_exports!=expected_exports:raise ValueError('Native link changed/dropped bridge exports: '+str(sorted(bridge_exports^expected_exports)))
     image=read(base/'kernel.json')
     if sha(a.original_kernelcache)!=image['original_sha256']:raise ValueError('Original kernelcache differs')
     plan=read(ROOT/'profiles/v91/image-build/plan.json')['prelink']
@@ -78,8 +90,9 @@ def main():
     result={'passed':True,'native_sha256':sha(out/'native.macho'),'kernel_sha256':sha(out/'kernel.macho'),
             'original_regions_preserved':count,'display_members':members,'touch_new_imports':sorted(added),
             'new_exports':sorted(defs(out/'native.macho')-defs(base/'native.macho')),
+            'pen_archive_members':pen_members,'bridge_exports':sorted(bridge_exports),
             'inherited_inputs':inherited,'pen_report_sha256':sha(native/'result.json'),
-            'default_off':True,'boot_packaged':False,'hardware':False,
+            'default_off':True,'boot_packaged':False,'hardware':False,'native_bound':False,'pencil_accepted':False,
             'legacy_emitter_flags':{k:final.get(k) for k in ('abi_qualified','loadable','runtime_qualified','instruction_relocation_complete')}}
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n')
     print('PASS: pen/touch full native link; original Apple execution regions preserved; no boot/hardware claim')

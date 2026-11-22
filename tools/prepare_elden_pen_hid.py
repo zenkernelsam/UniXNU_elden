@@ -53,7 +53,8 @@ def main():
     shutil.copyfile(original_header,out/'OriginalHidDeviceABI.h')
     sys.path.insert(0,str(ROOT/'drivers/EldenPen'));from TouchSource import derive
     (out/'EldenTouchRuntime.cpp').write_bytes(derive())
-    for name in ('EldenPenHid.cpp','EldenPenNative.h','HidReport.c','HidReport.h','PenReport.c','PenReport.h','Delivery.c','Delivery.h','PressureHook.inc','PoseHook.inc','Tilt.c','Tilt.h','TiltConstants.h'):
+    for name in ('EldenPenHid.cpp','EldenPenNative.h','HidReport.c','HidReport.h','PenReport.c','PenReport.h','Delivery.c','Delivery.h','PressureHook.inc','PoseHook.inc','Tilt.c','Tilt.h','TiltConstants.h',
+                 'Owner.c','Owner.h','NativeBridge.c','NativeBridge.h'):
         shutil.copyfile(ROOT/'drivers/EldenPen'/name,out/name)
     report={'qualified':True,'reference_kernel_sha256':sha(path),'original_hid_text_sha256':expected,
         'private_overrides':overrides,'event_set_fixed_target':hex(tables['event'][26]),
