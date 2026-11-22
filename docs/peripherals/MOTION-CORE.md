@@ -92,6 +92,16 @@ generation. WSL and CiscoMac pass 204 single-thread checks plus 92 deterministic
 pthread checks under ASan/UBSan and TSan, with scalar ARM64 `Orientation.o`
 objects clean. These are host-model checks only and do not bind J317, SPU,
 CoreMotion or UI.
+
+`Orientation.o` is now included in the SSC source-build archive and the current
+native/full-link path. `audit_motion_ssc_link.py` requires all four consumer
+exports in the final image and verifies that they have no automatic
+initializer, external call site or data-pointer reference. CiscoMac linked the
+object into the input-sleep parent while preserving all 30 original execution
+regions, recovery-stop order and inherited archives. This proves the
+default-off contract is packaged and inert. The real Gen4 producer, J317
+provider, CoreMotion/UI caller, physical samples and rotation acceptance remain
+unconnected.
 Evidence: `drivers/EldenMotion/validation.json` and workbench
 `lab/records/motion-core-20261119`; object in corresponding `edl_work`.
 

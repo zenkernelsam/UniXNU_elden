@@ -7,6 +7,13 @@ accelerometer/gyroscope HID adapter. It has no automatic startup. The sole
 mainline ADSP/QRTR owner still must install a real transport and board provider;
 sensor-PD registry/FastRPC, real samples and UI rotation remain unaccepted.
 
+The guarded `Orientation.o` consumer now ships in the SSC source-build archive
+and current full-link candidate. Its four public entries are present in the
+final image but have no initializer or outside call/data-reference edge. This
+keeps the existing mainline worker, QRTR owner, HID producer and rotation UI
+separate until a real J317 provider is qualified; it does not publish
+orientation or install an automatic caller.
+
 ## Exact references
 
 Armada's qualified TB322FC kernel is
