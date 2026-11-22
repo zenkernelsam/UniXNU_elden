@@ -50,10 +50,11 @@ connected.
 RTC-003/004 adds `EldenRtc/Owner.{c,h}`, a default-off named-provider and
 owner/epoch fence in front of the existing RTC persistence and PMK8550 alarm
 core. Host checks cover stale generations, callback re-entry, failed
-read/write uncertainty, stop-during-callback publication fences, and
+read/write uncertainty, unbound-provider refusals, stop-during-callback
+publication fences, and
 owner-IRQ-only alarm acknowledgement, no I/O after stop during owner/epoch,
 retire refusal during active callbacks, and rebind after retire. The WSL
-LLVM-14 suite passes 112 owner checks plus 308 concurrency checks and scalar
+LLVM-14 suite passes 125 owner checks plus 308 concurrency checks and scalar
 ARM64 objects are qualified on both toolchains. Stop gates the facade, while the RTC core lifecycle remains with
 its clock owner. No physical NVMEM cell, SDAM offset,
 alarm IRQ, RTC persistence, or wake cycle is present, and `Native.cpp` still
@@ -62,7 +63,7 @@ binds no provider.
 The RTC owner facade is now guarded by separate atomic operation and provider
 claims. Restore/learn/alarm/status/bind/retire lifecycles cannot overlap core
 state or provider publication; stop during provider callbacks or a second bind
-aborts later I/O and publication. The current source passes 112 owner checks
+aborts later I/O and publication. The current source passes 125 owner checks
 and 308 deterministic concurrency checks under ASan/UBSan and TSan on WSL and
 CiscoMac, with warning-free scalar ARM64 objects. This remains host/model
 evidence only; no NVMEM cell, alarm IRQ owner or Native.cpp binding exists.

@@ -31,10 +31,10 @@ def main():
         if v in ('-o','-MF','-MJ','-MT','-MQ','-serialize-diagnostics'):i+=2;continue
         if v==job['file'] or v in ('-MD','-MP','-MMD'):i+=1;continue
         kept.append(remap(v));i+=1
-    pobj=out/'EldenNvtProtocol.o';run([*kept,'-mgeneral-regs-only','-Werror',protocol/'Protocol.c','-o',pobj],'protocol-native',remap(job['directory']))
+    pobj=out/'EldenNvtProtocol.o';run([*kept,'-mgeneral-regs-only','-Werror','-Wno-error=incompatible-sysroot',protocol/'Protocol.c','-o',pobj],'protocol-native',remap(job['directory']))
     resource=run([a.llvm/'clang','-print-resource-dir'],'resource').strip();obj=out/'Gesture.o'
     run([a.llvm/'clang','-target','arm64-apple-ios17.0','-std=c11','-O2','-ffreestanding','-fno-builtin','-fno-stack-protector','-mgeneral-regs-only',
-        '-nostdinc','-isystem',Path(resource)/'include','-Wall','-Wextra','-Werror','-c',wake/'Gesture.c','-o',obj],'gesture-native')
+        '-nostdinc','-isystem',Path(resource)/'include','-Wall','-Wextra','-Werror','-Wno-error=incompatible-sysroot','-c',wake/'Gesture.c','-o',obj],'gesture-native')
     for path in (pobj,obj):
         dis=run([a.llvm/'llvm-objdump','--disassemble','--no-show-raw-insn',path],path.stem+'-asm');ops=re.findall(r'^\s*[0-9a-fA-F]+:\s+(.+)$',dis,re.M)
         if not ops or any(re.search(r'\b[vsdqhb][0-9]+(?:\b|\.)',s) for s in ops):raise ValueError('Unexpected vector code')

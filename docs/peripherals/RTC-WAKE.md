@@ -101,7 +101,7 @@ covers each complete restore/learn/alarm/status/bind/retire lifecycle through
 the core call and publication, while the nested busy claim serializes provider
 callbacks. Stop during a callback or an in-flight second bind aborts later
 provider I/O and publication, and stale generations remain fenced. WSL and
-CiscoMac pass 112 owner checks plus 308 deterministic pthread checks under
+CiscoMac pass 125 owner checks plus 308 deterministic pthread checks under
 ASan/UBSan and TSan; scalar ARM64 `Owner.o` objects are warning-free. These
 are host/model checks only and do not bind a physical provider.
 

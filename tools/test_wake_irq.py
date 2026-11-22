@@ -32,12 +32,12 @@ def main():
         if v in ('-o','-MF','-MJ','-MT','-MQ','-serialize-diagnostics'):i+=2;continue
         if v==job['file'] or v in ('-MD','-MP','-MMD','-Wno-unnecessary-virtual-specifier'):i+=1;continue
         flags.append(remap(v));i+=1
-    cpp=out/'NativeIrq.o';cmd=[*flags,'-mgeneral-regs-only','-Werror','-I',DRIVER,DRIVER/'NativeIrq.cpp','-o',cpp]
+    cpp=out/'NativeIrq.o';cmd=[*flags,'-mgeneral-regs-only','-Werror','-Wno-error=incompatible-sysroot','-I',DRIVER,DRIVER/'NativeIrq.cpp','-o',cpp]
     run(cmd,'native-build',remap(job['directory']))
     resource=run([a.llvm/'clang','-print-resource-dir'],'resource').strip();obj=out/'Irq.o';flow=out/'Flow.o';gesture=out/'Gesture.o'
     for source,target in [(DRIVER/'Irq.c',obj),(DRIVER/'Flow.c',flow),(DRIVER/'Gesture.c',gesture)]:
         run([a.llvm/'clang','-target','arm64-apple-ios17.0','-std=c11','-O2','-ffreestanding','-fno-builtin','-fno-stack-protector','-mgeneral-regs-only',
-            '-nostdinc','-isystem',Path(resource)/'include','-Wall','-Wextra','-Werror','-c',source,'-o',target],source.stem+'-native')
+            '-nostdinc','-isystem',Path(resource)/'include','-Wall','-Wextra','-Werror','-Wno-error=incompatible-sysroot','-c',source,'-o',target],source.stem+'-native')
     objects={}
     for p in (obj,cpp,flow,gesture):
         dis=run([a.llvm/'llvm-objdump','--disassemble','--no-show-raw-insn',p],p.stem+'-asm');ops=re.findall(r'^\s*[0-9a-fA-F]+:\s+(.+)$',dis,re.M)

@@ -88,6 +88,22 @@ int main(void){
     EldenRtcNvmem nvm;EldenRtcAlarmOwner alm;EldenRtcOwnerStatus st;
     /* Missing provider and missing callbacks refuse before any core bind. */
     setup(&m,&rtc,&f,100);
+    /* Unbound facade: every guarded op refuses NoProvider or Stale before any
+     * generation check, callback or provider I/O; init refuses bad arguments. */
+    CHECK(elden_rtc_owner_init(0,&rtc)==EldenRtcInvalid);
+    CHECK(elden_rtc_owner_init(&f,0)==EldenRtcInvalid);
+    {EldenRtc raw={0};CHECK(elden_rtc_owner_init(&f,&raw)==EldenRtcInvalid);}
+    CHECK(elden_rtc_owner_restore(&f,42)==EldenRtcNoProvider);
+    CHECK(elden_rtc_owner_learn(&f,42,1800000000)==EldenRtcNoProvider);
+    CHECK(elden_rtc_owner_alarm_set(&f,42,1800001000,1)==EldenRtcNoProvider);
+    CHECK(elden_rtc_owner_alarm_read(&f,42,&sec,&en)==EldenRtcNoProvider);
+    CHECK(elden_rtc_owner_alarm_ack(&f,42,&m.irq_obj)==EldenRtcNoProvider);
+    CHECK(elden_rtc_owner_stop(&f,42)==EldenRtcOwnerStale);
+    CHECK(elden_rtc_owner_stop(&f,0)==EldenRtcOwnerStale);
+    CHECK(elden_rtc_owner_retire(&f,42)==EldenRtcOwnerStale);
+    CHECK(elden_rtc_owner_status(&f,&st)==0&&!st.nvmem_bound&&!st.alarm_bound&&!st.stopped);
+    CHECK(!rtc.persistence_bound&&!rtc.alarm_bound&&!m.pname_calls&&!m.aname_calls&&!m.poe_calls&&!m.aoe_calls);
+    /* Missing provider and missing callbacks refuse before any core bind. */
     CHECK(elden_rtc_owner_bind_nvmem(&f,0,"nvmem-offset",&gn)==EldenRtcInvalid);
     nvm=NVM(&m);CHECK(elden_rtc_owner_bind_nvmem(&f,&nvm,0,&gn)==EldenRtcInvalid);
     CHECK(elden_rtc_owner_bind_nvmem(&f,&nvm,"",&gn)==EldenRtcInvalid);
