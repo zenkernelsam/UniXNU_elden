@@ -8,6 +8,10 @@ items; the supplementary GPU ABI audit does not change those flags.
 
 ## Inputs and hosts
 
+- Run compilation, builds, linking, signing, packaging and compiled tests
+  on CiscoMac. Windows/WSL use the installed tools for source review, input
+  preparation and transfer. Keep build tool downloads and installation on
+  CiscoMac. [Host paths and handoff](GPU-OPTIMIZATION-HANDOFF.md)
 - Python3.12 for preparation; macOS/Xcode for native and userland builds.
 - Exact Git objects listed in `config/gpu-build.lock.json` and
   `config/gpu-firmware.lock.json`. `config/gpu-cargo.lock` freezes transitive

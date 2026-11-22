@@ -4,6 +4,11 @@ GPU offline objective20261116 (this isolated branch): complete native/Elden
 runtime/framebuffer/recovery/Rust/Turnip/Metal/entry chain passed at9fca006.
 Read docs/GPU-GOAL-STATUS.md, GPU-BUILD.md and GPU-MERGE.md. Mac accepted output
 lab/gpu-goal-20261115/complete-3 uses new fixed-a13e508 baseline (28 stages).
+For the next optimization round read docs/GPU-OPTIMIZATION-HANDOFF.md.
+Run compilation, builds, linking, signing and packaging on CiscoMac using
+its existing toolchains. Windows/WSL use the installed tools for source
+review, input preparation and transfer. Install or download no build
+toolchains on Windows/WSL.
 30 original Apple execution regions preserved; GPU-specific ABI136B/168slots/
 C2/D2 passes. Legacy global ABI/loadable/runtime/relocation flags remain false.
 No hardware qualification, tablet access or mainline merge. Default GPU disabled;

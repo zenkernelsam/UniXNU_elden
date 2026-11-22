@@ -10,6 +10,8 @@ completed from a new output. GPU sources and outputs share one consolidated tree
 [complete evidence](evidence/gpu-complete-20261116.json), and
 [delivery receipt](evidence/gpu-delivery-20261116.json) are authoritative.
 Earlier `GPU-OFFLINE.md` and progress evidence describe the component milestones.
+The next agent's offline optimization plan, CiscoMac worktrees, and mainline
+acceptance order are in [GPU-OPTIMIZATION-HANDOFF.md](GPU-OPTIMIZATION-HANDOFF.md).
 
 ## Results
 
