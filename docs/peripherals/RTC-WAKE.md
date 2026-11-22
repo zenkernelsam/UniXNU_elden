@@ -105,6 +105,15 @@ CiscoMac pass 112 owner checks plus 308 deterministic pthread checks under
 ASan/UBSan and TSan; scalar ARM64 `Owner.o` objects are warning-free. These
 are host/model checks only and do not bind a physical provider.
 
+Commit `6df5588` packages the scalar owner in the RTC archive. The CiscoMac
+link produced kernel `0d785566…`, preserving 30 original executable regions,
+the register-only clock initializer, shared SPMI gate and RTC-before-UFS
+recovery. The audit checks the 11 owner exports in the image and receipt
+agreement, direct B/BL callers, absolute pointer references and initializer
+entries. The historical receipt paired with this new image correctly refuses.
+An exact historical image/parent rerun was unavailable. Provider and hardware
+acceptance remain pending. See workbench `_relay/rtc-owner-package-001`.
+
 The actual v7.2 SPMI PPID061 selection is unique and observer-only. Native maps
 core0xc400000, owner0xc42d000 and selected observer0xc440000+APID*0x20. The only
 MMIO write issues a read command in that observer. Shared TransactionGate owner3

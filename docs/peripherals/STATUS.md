@@ -1,7 +1,7 @@
 # Offline peripherals — current status
 
 Branch `offline-peripheral-fixes`, from main@f82da007 on2026-11-16. Latest
-source commit is `d1bed6b`; accepted offline deliveries also include the
+source commit is `6df5588`; accepted offline deliveries also include the
 RTC-003/004 guarded owner facade, the Haptics-003/004 compiled-recipe RTP path,
 and the deterministic Apple recipe manifest builder, independent of mainline Wi-Fi and the completed
 GPU branch. The full five-part Goal is **active**.
@@ -64,6 +64,11 @@ aborts later I/O and publication. The current source passes 112 owner checks
 and 308 deterministic concurrency checks under ASan/UBSan and TSan on WSL and
 CiscoMac, with warning-free scalar ARM64 objects. This remains host/model
 evidence only; no NVMEM cell, alarm IRQ owner or Native.cpp binding exists.
+
+RTC persistence and alarm `Owner.o` now ships in the offline RTC archive.
+CiscoMac linked it with 11 owner exports, 30 original execution regions and
+the existing clock registration and recovery order. The audit rejected an
+old receipt paired with the new image. Physical providers remain unbound.
 
 The AP501U owner facade now uses a single nonblocking atomic claim across
 sampling, provider/send callbacks, delivery mutation, stop, retire and status.
