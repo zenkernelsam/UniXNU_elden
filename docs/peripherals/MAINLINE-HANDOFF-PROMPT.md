@@ -1,6 +1,6 @@
 请继续 Y700 Elden 主线 Goal。离线分支 `offline-peripheral-fixes` 持续交付五项外设源码，独立于主线 Wi-Fi/PCIe/WCN/QRTR 和 GPU 分支；不要 commit/merge 错目录。
 
-离线最新提交为 `cfecd03`，已加固 WaveCompiler 的 carrier loop/tail 与 Q15 automation admission；Motion owner/epoch drift fence、RTC owner facade、AP501U sampling facade 与 Haptics compiled-recipe/manifest 工具均已进入此分支。完整硬件缺口仍见 `docs/peripherals/STATUS.md`，host checks 不等于主线实机接受。
+离线最新提交为 `45ba357`。Motion generation exhaustion、RTC owner facade、AP501U NT36536 worker route 与 hover/release regressions、Haptics output-safety regressions、Camera session refusal regressions 均已进入此分支。完整硬件缺口仍见 `docs/peripherals/STATUS.md`，host checks 不等于主线实机接受。
 
 当前离线交付包含 RTC-003 guarded owner facade，入口 `docs/peripherals/STATUS.md`、`INDEX.md` 和各组件文档。相机源码链新增显式 capture-session 生命周期；已在 CiscoMac 以原始 OS17 kernelcache（固定 SHA）完成离线全链接：精确保留父 123 参数链接，只替换带回执的 `NativePipeline.o`、`FrameOutput.o`、`Service.o` 并加入唯一 `CaptureSession.o`。16 个 required leaf edge 审计通过，6 个 session entry 无调用者，30 个原 Apple executable regions、recovery5500ms和Apple30保持。产物 kernel `8b8e9eb4…`、native `8e8f9bb3…`。这不是可加载或硬件候选：physical flags false、自动启动 false、全局 ABI/loadable/runtime/relocation gates 仍 false。原 Bayer ABI/latest 修复父 `c15d94e` 保留。IRQ只屏蔽/原子锁存/唤醒，精确SM8750上升沿；只开CSID，原PHY mask和VFE nop不改。service rearm绝不清GICpending，wait enrollment后只atomic peek，附加attach未返回时IRQ/stop等待/active drain/rearm race防护。没有新线程或自动outercaller，`elden_camera_output_enable_irq`与`elden_camera_output_pump_irq`由原 camera executor 显式调用（文档有用法）。
 
@@ -12,7 +12,7 @@ kernel d7fc72c7/nativefa0b40a8，218core1202627checks、18native/20inputgate、�
 
 共享 SMMU 父提交 `d7571f2`：一次 EARLY 原子 batch，legacyWiFi1401保留，可含camera1c00及 ADSPsession3..8 的100N/104N/106N/108N，严格按6f97250e DT带mask的有效集合展开。不同group独立bank/ASID，slot>=8/bank>=7，全 backing 含保护页。每actualwrite前校验原physicalidle/IRQ/memory/ACTLRsecurity/完整slot-bank状态；写完再次核 TTBR/tablegraph后才发布。partialfailurepoison/retainreset，global97只注册一次，所有实际CB/TLB/IRQ/mastersidle后才退役；SMR/S2CR/maps保持到reset。173core1400032+11composed2395232、8scalarobjects0warnings及全审计通过。SharedNative.h/Peripheral.h为接口，不能安装第二个global/SMMUowner；主线原WiFi/currenttouch/input恢复应先审核，再port源码重建。
 
-AP501U独立HID/tilt、原worker可逆pause/gesturewake、pen-003 named-provider/owner-epoch/帧owner采样 facade（未绑真实worker）、RTC读钟与 RTC-003 named-owner persistence/alarm facade、ADSP/GLINK/QRTR/FastRPC/SSC/内存cache、双AW86937限增益catalog/RTP/Actuator也已离线链接，具体看各组件文档。真实同机 sensorPD/registry/calibration/mount/time/SUID/samples、J317SPU/CoreMotion/UI旋转、Pencil类型/force/tilt/palm、NT36536 worker→facade实际绑定、屏幕/systemPM唤醒、RTCpersist/alarm及马达机械电气调音/系统路由仍未验收。host/model不是硬件证明；没校准马达输出保持关闭，Apple效果强度不是硬件gain。
+AP501U独立HID/tilt、原worker可逆pause/gesturewake、pen-003 named-provider/owner-epoch/帧owner采样 facade、真实 NT36536 worker→route→owner→HID 路径、RTC读钟与 RTC-003 named-owner persistence/alarm facade、ADSP/GLINK/QRTR/FastRPC/SSC/内存cache、双AW86937限增益catalog/RTP/Actuator也已离线链接，具体看各组件文档。真实同机 sensorPD/registry/calibration/mount/time/SUID/samples、J317SPU/CoreMotion/UI旋转、Pencil类型/force/tilt/palm、屏幕/systemPM唤醒、RTCpersist/alarm及马达机械电气调音/系统路由仍未验收。host/model不是硬件证明；没校准马达输出保持关闭，Apple效果强度不是硬件gain。
 
 板级优先 ArmadaOS-Freedom 的TB322FC/SM8750精确源码/补丁，冻结Linux6f97250e，不搬三代/五代寄存器；OS17接口复用同版成熟UniXNU。真实启动仍须原sharedpower/clock/IOKitmapping/ACTLRsecurity/serializedtouch authority，不能no-op/固定bank/lateexception；旧整个kernel不可盖当前主线。按唯一owners/recoveryport/rebuild后做功能性真机验收，保持floor1738713600@0/parent3与自动回程。五项Goal继续active，组件成功不清全局flag。
 
