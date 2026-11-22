@@ -336,6 +336,14 @@ int main(void){
     setup(&p);gen=arm(&c,&p);EldenMotionConsumerStatus s=peek(&c);
     CHECK(s.state==EldenConsReady&&s.generation==gen&&s.owner==7&&s.epoch==11&&s.published_axis==0);
 
+    /* An exhausted generation refuses before any provider probe: identity is
+     * never reused and no provider output is even requested. */
+    CHECK(!elden_motion_consumer_stop(&c,gen));
+    pr=prov(&p);uint64_t fresh=0;
+    c.generation=UINT64_MAX;
+    CHECK(elden_motion_consumer_begin(&c,&pr,p_sink,&p,HOLD,&fresh)==-22);
+    CHECK(fresh==0&&c.generation==UINT64_MAX&&c.state!=EldenConsReady);
+
     printf("PASS: %u orientation-consumer checks (host-only synthetic fixtures; "
         "no provider/gravity/timestamp/calibration synthesized, no orientation "
         "node or 0x20/0x8a HID device, hardware+J317 absent)\n",checks);
