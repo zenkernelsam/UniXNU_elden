@@ -1,6 +1,6 @@
 """Audit actual final SSC worker/parser/HID/recovery edges and retained owners."""
 from pathlib import Path
-import argparse,hashlib,json,re,struct,subprocess,sys
+import argparse,bisect,hashlib,json,re,struct,subprocess,sys
 from replay_xnu_objects import sections
 from peripheral_archive_audit import retained_archive
 from peripheral_startup_audit import no_outer_sensor_start
@@ -62,6 +62,29 @@ def main():
         sequence.append(hits[0])
     changes=[n for n,row in report['ufs_members'].items() if row['before']!=row['after']]
     if changes!=['ShengUfs.o']:raise ValueError('Other UFS owner changed')
+    # The packaged J317 orientation consumer ships as an independent default-off
+    # object: its four public entries must be exported code with no initializer,
+    # no call/tail from an unrelated caller (orientation/classifier internals
+    # are allowed), and no data reference anywhere outside __LINKEDIT.
+    orientation=['_elden_motion_consumer_begin','_elden_motion_consumer_sample',
+                 '_elden_motion_consumer_stop','_elden_motion_consumer_status']
+    if any(n not in names for n in orientation):raise ValueError('Orientation entry absent from export table')
+    entries=sorted(symbol(n) for n in orientation);entry_set=set(entries)
+    if any(v in initial for v in entries):raise ValueError('Orientation entry initializes automatically')
+    text_addrs=sorted({v for group in symbols.values() for v in group})
+    def next_symbol(v):
+        at=bisect.bisect_right(text_addrs,v)
+        return text_addrs[at] if at<len(text_addrs) else 1<<64
+    internal=[*entries,symbol('_elden_motion_rotation')]
+    spans=[(v,next_symbol(v)) for v in internal]
+    foreign=[(pc,t) for pc,t,link in calls if t in entry_set and not any(lo<=pc<hi for lo,hi in spans)]
+    if foreign:raise ValueError('Unrelated caller reaches orientation entry: '+hex(foreign[0][0]))
+    for seg in im['segments']:
+        if seg['name']=='__LINKEDIT':continue
+        for sec in seg['sections']:
+            body=raw[sec['fileoff']:sec['fileoff']+sec['size']]
+            for v in entries:
+                if body.find(struct.pack('<Q',v))!=-1:raise ValueError('Orientation entry referenced by '+seg['name']+'/'+sec['name'])
     before_cmd=json.loads((a.parent/'link-command.json').read_text());after_cmd=json.loads((a.kernel_build/'link-command.json').read_text())
     retained={}
     for v in before_cmd:
@@ -73,7 +96,10 @@ def main():
     if any(v is not False for v in flags.values()):raise ValueError('Global experimental flags changed')
     result={'ssc_component_link_passed':True,'kernel_sha256':report['kernel_sha256'],'native_sha256':report['native_sha256'],
             'actual_calls':edges,'recovery_order_calls':[hex(n) for n in sequence],'no_SSC_auto_start':True,'init_count_preserved':len(initial),
+            'orientation_exports':{n:hex(names[n]) for n in orientation},
+            'orientation_not_automatically_initialized':True,'orientation_not_called_or_referenced':True,
             'unchanged_peripheral_archives_retained':all(r['unchanged_path'] for r in retained.values()),'actual_retained_archive_checks':retained,'only_changed_UFS_member':changes,'legacy_flags':flags,
-            'shared_QRTR_board_power_mount_clock_provider':False,'sensor_PD_registry_file_service':False,'real_sensor_samples_or_UI_rotation':False,'hardware':False}
+            'shared_QRTR_board_power_mount_clock_provider':False,'sensor_PD_registry_file_service':False,'real_sensor_samples_or_UI_rotation':False,
+            'provider_bound':False,'native_J317_or_UI_connected':False,'physical_samples':False,'boot_packaged':False,'hardware':False}
     a.output.write_text(json.dumps(result,indent=2)+'\n');print('PASS: actual SSC worker/strict parser/HID calls, no auto-start, motion→haptics→RTC→UFS recovery and existing archives retained')
 if __name__=='__main__':main()

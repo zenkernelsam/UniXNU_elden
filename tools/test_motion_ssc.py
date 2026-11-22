@@ -9,6 +9,8 @@ def main():
     for key in ('source','motion-core','llvm','base-native','output'):p.add_argument('--'+key,type=Path,required=True)
     a=p.parse_args();a.source=a.source.resolve(strict=True);a.motion_core=a.motion_core.resolve(strict=True);a.base_native=a.base_native.resolve(strict=True);a.llvm=a.llvm.resolve(strict=True)
     out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);r=json.loads((a.source/'source.json').read_text())
+    for n in ('Orientation.c','Orientation.h'):
+        if n not in r['sources']:raise ValueError('Orientation source omitted from SSC set: '+n)
     for n,d in r['sources'].items():
         if sha(a.source/n)!=d:raise ValueError('SSC source changed: '+n)
     core=json.loads((a.motion_core/'source.json').read_text())
@@ -29,7 +31,7 @@ def main():
     run(['xcrun','clang++','-std=c++17',*host_flags,DRIVER/'TestNativeSsc.cpp',*host_objects,'-o',out/'native-test'],'native-host-build')
     native_host=run([out/'native-test'],'native-host-run')
     resource=run([a.llvm/'clang','-print-resource-dir'],'resource').strip();objects={}
-    for source in sources:
+    for source in [*sources,a.source/'Orientation.c']:
         obj=out/(source.stem+'.o')
         run([a.llvm/'clang','-target','arm64-apple-ios17.0','-std=c11','-O2','-ffreestanding','-fno-builtin','-fno-stack-protector',
              '-mgeneral-regs-only','-nostdinc','-isystem',Path(resource)/'include','-Wall','-Wextra','-Werror','-I',a.source,'-c',source,'-o',obj],source.stem+'-native')

@@ -8,7 +8,8 @@ def main():
     out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);sys.path.insert(0,str(DRIVER));from SscSource import derive
     generated,deltas=derive()
     for name,body in generated.items():(out/name).write_text(body,encoding='utf-8',newline='\n')
-    for name in ('Ssc.h','Ssc.c','SscCodec.c','Core.h','NativeHid.h','NativeSsc.h','NativeSsc.cpp','NativeSscMethods.inc'):
+    for name in ('Ssc.h','Ssc.c','SscCodec.c','Core.h','NativeHid.h','NativeSsc.h','NativeSsc.cpp','NativeSscMethods.inc',
+                 'Orientation.c','Orientation.h'):
         shutil.copyfile(DRIVER/name,out/name)
     (out/'LICENSE.SSC').write_bytes((DRIVER/'LICENSE.HID').read_bytes())
     record={'sources':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.is_file()},

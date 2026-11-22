@@ -25,6 +25,8 @@ def main():
         if any(k.endswith('/__mod_init_func') for k in sections(a.ssc_build/n)):raise ValueError('Automatic sensor initialization')
     library=a.ssc_build/'libEldenMotionSsc.a'
     if sha(library)!=built['archive_sha256']:raise ValueError('SSC archive changed')
+    library_members=subprocess.check_output(['ar','t',library],text=True).splitlines()
+    if library_members.count('Orientation.o')!=1:raise ValueError('SSC archive dropped orientation member')
     core=read(a.motion_core_build/'result.json');core_obj=a.motion_core_build/'MotionCore.o'
     if not core['passed'] or sha(core_obj)!=core['object_sha256'] or core['source_record_sha256']!=built['motion_core_record_sha256']:raise ValueError('Actual SSC sample core input differs')
     if any(k.endswith('/__mod_init_func') for k in sections(core_obj)):raise ValueError('Automatic motion core initialization')
@@ -82,12 +84,19 @@ def main():
         '--prelinked',a.original_kernelcache,'--slide='+str(original['slide']),'--output',out/'kernel.macho']
     for n in plan['roots']:prelink+=['--root',n]
     for n in plan['early_security_initializers']:prelink+=['--early-security-init',n]
+    orientation_exports={'_elden_motion_consumer_begin','_elden_motion_consumer_sample',
+        '_elden_motion_consumer_stop','_elden_motion_consumer_status'}
+    if definitions(out/'native.macho')&orientation_exports!=orientation_exports:
+        raise ValueError('Native link dropped orientation entries')
     run(prelink,'prelink');meta=read(out/'kernel.json');count=verify_original_executables(out/'kernel.macho',meta,original['original_executable_sha256'])
     result={'passed':True,'kernel_sha256':sha(out/'kernel.macho'),'native_sha256':sha(out/'native.macho'),'parent_kernel_sha256':prior['kernel_sha256'],
         'original_regions_preserved':count,'inherited_inputs':inputs,'ufs_members':members,'display_members':prior['display_members'],
         'ssc_build_report_sha256':sha(a.ssc_build/'result.json'),'motion_core_object_sha256':sha(core_obj),'recovery_object_sha256':sha(new),'recovery_compile_command':compile,'recovery_compile_cwd':prior['recovery_compile_cwd'],
+        'orientation_object_sha256':built['objects']['Orientation.o']['sha256'],'ssc_archive_members':library_members,
+        'orientation_exports':sorted(orientation_exports),
         'native_manager_HID_calls_linked':True,'shared_QRTR_provider_installed':False,'real_board_clock_mount_provider_installed':False,
-        'sensor_PD_file_service_installed':False,'device_orientation_service':False,'hardware':False,'boot_packaged':False,
+        'sensor_PD_file_service_installed':False,'device_orientation_service':False,'provider_bound':False,
+        'native_J317_or_UI_connected':False,'physical_samples':False,'hardware':False,'boot_packaged':False,
         'legacy_flags_unchanged':{n:meta.get(n) for n in ('abi_qualified','loadable','runtime_qualified','instruction_relocation_complete')}}
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print('PASS: owned SSC worker/strict attributes/HID/recovery full link; all Apple30 and existing input-sleep/peripherals retained')
 if __name__=='__main__':main()
