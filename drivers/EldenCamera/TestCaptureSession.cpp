@@ -148,7 +148,7 @@ int main(int argc,char **argv){CHECK(argc==2);
     bool irq_timeout=std::strcmp(argv[1],"irq-timeout")==0;drain_fail=std::strcmp(argv[1],"drain-fail")==0;
     bool partial_open=std::strcmp(argv[1],"partial-open")==0,partial_prepare=std::strcmp(argv[1],"partial-prepare")==0;
     bool client_close=std::strcmp(argv[1],"client-close")==0,early_stop=std::strcmp(argv[1],"early-stop")==0;
-    bool close_gate=std::strcmp(argv[1],"close-gate")==0;
+    bool close_gate=std::strcmp(argv[1],"close-gate")==0,normal=!std::strcmp(argv[1],"normal");
     bool failed=partial||partial_open||partial_prepare||early_stop;
     CHECK(partial||publish_fail||irq_timeout||drain_fail||partial_open||partial_prepare||client_close||early_stop||close_gate||!std::strcmp(argv[1],"normal"));
     for(unsigned i=0;i<2;i++){cci_peers[i]=elden_camera_cci_peer_create(i,1);capture_peers[i]=elden_camera_pipeline_peer_create(i,i?3:0);}
@@ -170,6 +170,11 @@ int main(int argc,char **argv){CHECK(argc==2);
     EldenCameraCaptureSession session{};CHECK(elden_camera_capture_session_bind(nullptr,&capture)==-22);
     CHECK(!elden_camera_capture_session_bind(&session,&capture)&&session.owner==7&&session.epoch==9&&session.route_epoch==11);
     CHECK(elden_camera_capture_session_bind(&session,&capture)==-22);
+    /* Sensor indices outside front/rear refuse before any provider step. */
+    CHECK(elden_camera_capture_session_begin(&session,2,nullptr,nullptr,0)==-22);
+    CHECK(elden_camera_capture_session_serve(&session,2,20)==-22);
+    CHECK(elden_camera_capture_session_publish(&session,2)==-22);
+    CHECK(elden_camera_capture_session_stop(&session,2)==-22);
     if(early_stop){CHECK(!elden_camera_capture_session_stop(&session,1)&&session.stopped[1]);}
     EldenCameraBoardClockPlan plan{};for(unsigned i=0;i<EldenCamClockCount;i++)plan.hz[i]=400000000;
     plan.hz[EldenCamClockCpasAhb]=80000000;plan.hz[EldenCamClockVfeLiteAhb]=80000000;
@@ -189,6 +194,16 @@ int main(int argc,char **argv){CHECK(argc==2);
         if(partial&&target)deny_stream=1;
         if(partial_prepare&&target)deny_prepare=1;
         if(partial_open&&target)elden_camera_output_peer_fail_alloc(0,2);
+        if(normal){
+            /* A config bound to a foreign sensor/owner/epoch/route_epoch is
+             * refused before the board is asked for anything; none of these
+             * latches session error or marks the sensor. */
+            EldenCameraPipelineConfig foreign=cfg;foreign.sensor^=1;
+            CHECK(elden_camera_capture_session_begin(&session,target,&foreign,&plan,2)==-116);
+            foreign=cfg;foreign.owner=1;CHECK(elden_camera_capture_session_begin(&session,target,&foreign,&plan,2)==-116);
+            foreign=cfg;foreign.epoch=1;CHECK(elden_camera_capture_session_begin(&session,target,&foreign,&plan,2)==-116);
+            foreign=cfg;foreign.route_epoch=1;CHECK(elden_camera_capture_session_begin(&session,target,&foreign,&plan,2)==-116);
+            if(target)CHECK(elden_camera_capture_session_publish(&session,target)==-19);}
         int rc=elden_camera_capture_session_begin(&session,target,&cfg,&plan,2);
         if(partial&&target){
             CHECK(rc==-13&&session.error==-13&&session.prepared[1]&&session.probed[1]&&session.queued[1]&&!session.started[1]&&!session.opened[1]);
@@ -220,6 +235,7 @@ int main(int argc,char **argv){CHECK(argc==2);
         }
         if(early_stop&&target){CHECK(rc==-125&&session.stopped[1]&&!session.prepared[1]&&!session.output[1]&&!session.opened[1]);continue;}
         CHECK(!rc&&session.prepared[target]&&session.probed[target]&&session.queued[target]&&session.started[target]&&session.opened[target]&&session.listening[target]);
+        if(normal)CHECK(elden_camera_capture_session_begin(&session,target,&cfg,&plan,2)==-16);
         CHECK((elden_camera_i2c10_peer_stat(i2c_peer,6)&0x40)&&elden_camera_clock_peer_mclk(target)&&!elden_camera_clock_peer_reset(target));
         EldenCameraPipelineStatus status{};CHECK(!elden_camera_native_pipeline_status(target,&status)&&status.started&&status.state==EldenPipeStreaming);
         if(publish_fail&&target==0)fail_service_start=1;
@@ -297,6 +313,9 @@ int main(int argc,char **argv){CHECK(argc==2);
         for(unsigned target=0;target<2;target++){
             int rc=elden_camera_capture_session_stop(&session,target);
             CHECK(!rc&&session.stopped[target]&&(!session.opened[target]||session.closed[target]));
+            /* A repeated stop is idempotent: the closed output is not closed
+             * again and the settled board stop is not replayed. */
+            CHECK(!elden_camera_capture_session_stop(&session,target));
             if(!capture.board.captures[target].initialized)continue;
             EldenCameraPipelineStatus status{};CHECK(!elden_camera_native_pipeline_status(target,&status)&&status.stopped);
             CHECK(capture.board.captures[target].capture.sensor.stopped);
@@ -315,6 +334,10 @@ int main(int argc,char **argv){CHECK(argc==2);
     if(partial_prepare)CHECK(session.stopped[1]&&!session.output[1]&&!session.retired[1]);
     if(early_stop)CHECK(session.stopped[1]&&!session.output[1]&&!session.retired[1]);
     CHECK(!elden_camera_capture_session_shutdown(&session));
+    /* After shutdown nothing can start again: an unerrored session refuses at
+     * the stopping gate and an errored one still reports its latched error. */
+    EldenCameraPipelineConfig done{};
+    CHECK(elden_camera_capture_session_begin(&session,0,&done,&plan,2)==(session.error?session.error:-19));
     CHECK(!elden_camera_dma_capture_shutdown(&capture));CHECK(!lease&&!elden_camera_i2c10_peer_stat(i2c_peer,6));
     elden_camera_dma_peer_reset();std::free(native_clock);std::free(shared_power.bus.port);elden_camera_i2c10_peer_destroy(i2c_peer);
     for(auto *p:locks)delete p;for(auto *p:contexts)delete p;for(auto *p:camera_pipelines)delete p;
