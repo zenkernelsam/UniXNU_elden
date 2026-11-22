@@ -1,7 +1,7 @@
 # Offline peripherals — current status
 
 Branch `offline-peripheral-fixes`, from main@f82da007 on2026-11-16. Latest
-source commit is `4b34393`; accepted offline deliveries also include the
+source commit is `a562ba1`; accepted offline deliveries also include the
 RTC-003/004 guarded owner facade, the Haptics-003/004 compiled-recipe RTP path,
 and the deterministic Apple recipe manifest builder, independent of mainline Wi-Fi and the completed
 GPU branch. The full five-part Goal is **active**.
@@ -10,7 +10,7 @@ GPU branch. The full five-part Goal is **active**.
 
 | Objective | Source-built offline implementation | Required evidence still missing |
 | --- | --- | --- |
-| AP501U pen | Stock NT36536/F1 report decoder, independent Pencil HID/tilt hook, original touch delivery and reversible release, atomic whole-operation named-provider facade with generation-tagged deferred stop and confirmed-retire/rebind | Actual raw pen/scan mode, real NT36536 worker→facade binding, Pencil type/force/tilt, palm/rotation/release, Notes/PencilKit and resume |
+| AP501U pen | Stock NT36536/F1 report decoder, independent Pencil HID/tilt hook, original touch delivery and reversible release, atomic named-provider owner facade, generation-tagged native bridge with serialized bind/start/stop/retire and confirmed-release rebind | Actual raw pen/scan mode, real NT36536 worker→bridge binding, Pencil type/force/tilt, palm/rotation/release, Notes/PencilKit and resume |
 | Dual AW86937/iOS effects | Source-bound Apple recipe/AHAP compiler, deterministic source-manifest generator, bounded calibrated-gain catalog/RTP/budget, continuous 24 kHz dual-motor chunks through the serialized Broker/RTP worker; output remains disabled without a measured dual-motor profile | Mechanical/electrical gain/boost/frequency/duty/thermal/dual-load calibration; production recipe bank/profile bind, system capabilities/VirtualAudio/tunings/real UIKit requests |
 | RTC/wake | Original PMK8550 read-onlyRTC/SPMI shared gate, board-clock registration, guarded named-owner persistence/alarm facade with stop/retire callback fences, original-worker reversible pen/touch pause/gesture IRQ/firmware resume | Real named NVMEM/SDAM provider, PMK8550 alarm IRQ owner, actual shared display/systemPM power provider, physical doubletap/sleep/wake cycles |
 | Accel/gyro/rotation | Exact sensor protocols/OS17 HID, one original ADSP/GLINK/QRTR/FastRPC/SSC worker, retained native memory/cache/pack/listener and prepared-memory adoption, atomic whole-operation J317 orientation consumer with generation-tagged deferred stop over the existing gravity classifier | Genuine same-device PD/registry/calibration/mount/unit/time/SUID/sample input; actual J317 SPU/CoreMotion/UI provider and rotation acceptance |
@@ -73,6 +73,20 @@ during contention. WSL and CiscoMac pass 217 facade checks and 317 deterministic
 pthread checks under ASan/UBSan and TSan, plus decoder/HID/pressure/tilt
 regressions and scalar ARM64 objects. The provider remains unbound and
 Pencil/hardware acceptance is false.
+
+The default-off `drivers/EldenPen/NativeBridge.{c,h}` routes future NT36536
+worker hooks through that owner facade. Its generation-tagged gate and
+nonblocking lifecycle claim close delayed-start races across stop/retire/rebind.
+The bridge adds 86 unit and 149 lifecycle/race checks, including WSL/CiscoMac
+TSan and scalar ARM64 objects. No real provider is bound, so
+`native_bound:false`, `pencil_accepted:false`, and `hardware:false` remain true.
+
+The default-off native bridge in `drivers/EldenPen/NativeBridge.{c,h}` routes
+future NT36536 worker hooks through the owner facade. Its generation-tagged
+gate and lifecycle claim close delayed-start races across stop/retire/rebind.
+The 86 unit and 149 race checks, including WSL/CiscoMac TSan and scalar ARM64
+objects, remain host evidence. No real provider is bound and
+`native_bound:false`, `pencil_accepted:false`, `hardware:false` remain true.
 
 The orientation consumer now holds one nonblocking atomic claim across each
 sample, provider callback, classifier update and rotation sink publication;

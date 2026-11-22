@@ -10,7 +10,7 @@
 | 最新相机帧与 OS17 服务 | [CAMERA-FRAMES](CAMERA-FRAMES.md)，bridge-validation.json 为接口父交付；frames-validation.json 为旧凭据 |
 | 共享 early SMMU／内存 | [SHARED-SMMU](SHARED-SMMU.md)，SharedNative.h、Peripheral.h、shared-validation.json |
 | 相机完整底层链 | [CAMERA-DMA](CAMERA-DMA.md) → [CAMERA-CLOCKS](CAMERA-CLOCKS.md) → [CAMERA-POWER](CAMERA-POWER.md) → [CAMERA-PIPELINE](CAMERA-PIPELINE.md) → [CAMERA-CCI](CAMERA-CCI.md) → [CAMERA-CORE](CAMERA-CORE.md) |
-| AP501U／Pencil HID | [PEN-NATIVE](PEN-NATIVE.md)，EldenPen/Owner.{c,h}，EldenPen/protocol-validation.json；原 Android 可行性 docs/AP501U-PENCIL-FEASIBILITY-20261114.md |
+| AP501U／Pencil HID | [PEN-NATIVE](PEN-NATIVE.md)，EldenPen/NativeBridge.{c,h}、Owner.{c,h}、protocol-validation.json；原 Android 可行性 docs/AP501U-PENCIL-FEASIBILITY-20261114.md |
 | 原 touch／pen 可逆暂停与亮屏 | [INPUT-SLEEP](INPUT-SLEEP.md) → [WAKE-IRQ](WAKE-IRQ.md) → [WAKE-PROTOCOL](WAKE-PROTOCOL.md) |
 | RTC／时间持久化边界 | [RTC-WAKE](RTC-WAKE.md)，EldenRtc/Owner.{c,h}，EldenRtc/validation.json |
 | 马达 iOS 系统路线 | [HAPTICS-ACTUATOR](HAPTICS-ACTUATOR.md) → [HAPTICS-BROKER](HAPTICS-BROKER.md) → [HAPTICS-RTP](HAPTICS-RTP.md) → [HAPTICS-NATIVE](HAPTICS-NATIVE.md) → [HAPTICS](HAPTICS.md)；tools/build_wave_manifest.py + test_wave_manifest.py（manifest 生成器） |

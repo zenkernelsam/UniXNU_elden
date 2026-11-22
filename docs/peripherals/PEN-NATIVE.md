@@ -96,6 +96,19 @@ caller-owned delivery only after a confirmed release. WSL and CiscoMac pass
 and TSan, with scalar ARM64 objects clean. These checks remain host-only and
 do not establish AP501U SPI, PencilKit, UIKit or backboardd acceptance.
 
+`NativeBridge.{c,h}` provides the explicit source boundary for a future
+NT36536/AP501U worker. It owns the delivery state, requires a named provider
+with nonzero owner/epoch and a matching touch-frame owner, and forwards each
+packet, tick, fault, pause, resume, stop, release and retire operation through
+`EldenPenOwner`. Its generation-tagged gate and nonblocking lifecycle claim
+serialize bind/start/stop/retire, preventing a delayed old-generation start
+from opening a successor after stop-retire-rebind. Callback-reentrant stop
+remains deferred and nonblocking. `Native.cpp`, `EldenPenHid.cpp`, the original
+touch worker and default boot path remain unchanged. `tools/test_pen_native_bridge.py`
+passes 86 unit and 149 deterministic race checks on WSL and CiscoMac, including
+TSan and scalar ARM64 object checks. This remains source-only with
+`native_bound:false`, `pencil_accepted:false` and `hardware:false`.
+
 ## Verified scope
 
 - 924 prior actual decoder/delivery checks remain valid; those C sources are
@@ -116,6 +129,11 @@ do not establish AP501U SPI, PencilKit, UIKit or backboardd acceptance.
   for packet/stop/send/retire/status races, stale-generation isolation and
   generation exhaustion. `Native.cpp` remains unbound and the facade stays
   default-off.
+- The native bridge adds 86 unit and 149 lifecycle/race checks. Provider peers
+  exist only in host tests. No packets, coordinates, pressure, tilt, timestamps,
+  frame owners or Pencil identity are synthesized into the native path. WSL
+  TSan uses the recorded `setarch -R` workaround; CiscoMac TSan runs natively.
+  Scalar ARM64 `NativeBridge.o` is clean on both toolchains.
 - Five native objects compile scalar, with no automatic initializer section.
   The pen's metaclass initializer is explicit/late. Four new pen objects have
   no warnings; the touch replacement retains exactly one existing DmaSurvey.h
@@ -179,8 +197,9 @@ the physical pen. Preserve mainline's newer SMMU/Wi-Fi changes when replacing it
 touch member, and rerun full boot/trust/entry/AVB/recovery audits. Install/launch
 the probe only in that coordinated window; it has not run on the tablet.
 
-The owner facade is source-only: no production caller binds it yet, so the
-NT36536 worker→facade→delivery wiring is a mainline decision. The original
+The owner facade and native bridge are source-only: no production caller binds
+the bridge to a real NT36536 sampler yet, so worker→bridge→facade→delivery
+wiring is a mainline decision. The original
 finger checksum does not cover the pen. Raw SPI pen capture,0xF1,
 tail-byte/integrity semantics and possible scan-mode dependencies remain open.
 HID X/Y tilt is retained, but its conversion to UIKit polar altitude/azimuth is
