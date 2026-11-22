@@ -27,3 +27,11 @@ establish a Y700 device provider or user-facing acceptance.
 
 The authoritative narrative and current commit are in `STATUS.md` and
 `MAINLINE-HANDOFF-PROMPT.md`.
+
+## A830 GPU
+
+Elden's first offline peripheral delivery lives on `codex/elden-gpu-offline`.
+Its native driver, Rust bridge, Turnip, and Metal build passed the branch's
+offline checks. Mainline acceptance requires physical GPU startup, command
+submission, rendering, and recovery. Use the GPU handoff in the
+[hardware runbook](REAL-HARDWARE-RUNBOOK.md#gpu-handoff).

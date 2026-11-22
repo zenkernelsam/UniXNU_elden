@@ -2,6 +2,8 @@
 
 Branch `offline-peripheral-fixes`, from committed main@f82da007. Read
 docs/peripherals/STATUS.md, INDEX.md and MAINLINE-HANDOFF-PROMPT.md.
+For mainline integration, read docs/peripherals/REAL-HARDWARE-RUNBOOK.md for
+the Devin worker relay, CiscoMac build checkouts, and separate A830 GPU handoff.
 Active full scope: AP501U pen, calibrated iOS effects for dual AW86937,
 RTC/wake, accel/gyro rotation, front/rear cameras. The five-part Goal stays
 active until every objective is achieved; component success is not global

@@ -1,6 +1,6 @@
 请继续 Y700 Elden 主线 Goal。离线分支 `offline-peripheral-fixes` 持续交付五项外设源码，独立于主线 Wi-Fi/PCIe/WCN/QRTR 和 GPU 分支；不要 commit/merge 错目录。
 
-离线最新提交为 `7335835`。Motion generation exhaustion、RTC owner/provider refusal regressions、AP501U NT36536 worker route 与 hover/release regressions、Haptics output-safety regressions、Camera session refusal regressions、Devin/CiscoMac 跨主机交接规则和隔离 GPU 交付说明均已进入此分支。完整硬件缺口仍见 `docs/peripherals/STATUS.md`，host checks 不等于主线实机接受。
+从 `origin/offline-peripheral-fixes` 核对并记录本轮所用提交。AP501U NT36536 worker 接入及其回归、RTC owner、运动、相机和双马达回归均在此分支。各组件的实机验收缺口见 [STATUS](STATUS.md)。
 
 当前离线交付包含 RTC-003 guarded owner facade，入口 `docs/peripherals/STATUS.md`、`INDEX.md` 和各组件文档。相机源码链新增显式 capture-session 生命周期；已在 CiscoMac 以原始 OS17 kernelcache（固定 SHA）完成离线全链接：精确保留父 123 参数链接，只替换带回执的 `NativePipeline.o`、`FrameOutput.o`、`Service.o` 并加入唯一 `CaptureSession.o`。16 个 required leaf edge 审计通过，6 个 session entry 无调用者，30 个原 Apple executable regions、recovery5500ms和Apple30保持。产物 kernel `8b8e9eb4…`、native `8e8f9bb3…`。这不是可加载或硬件候选：physical flags false、自动启动 false、全局 ABI/loadable/runtime/relocation gates 仍 false。原 Bayer ABI/latest 修复父 `c15d94e` 保留。IRQ只屏蔽/原子锁存/唤醒，精确SM8750上升沿；只开CSID，原PHY mask和VFE nop不改。service rearm绝不清GICpending，wait enrollment后只atomic peek，附加attach未返回时IRQ/stop等待/active drain/rearm race防护。没有新线程或自动outercaller，`elden_camera_output_enable_irq`与`elden_camera_output_pump_irq`由原 camera executor 显式调用（文档有用法）。
 
@@ -18,6 +18,6 @@ AP501U独立HID/tilt、原worker可逆pause/gesturewake、pen-003 named-provider
 
 源码仓 https://github.com/zenkernelsam/UniXNU_elden ，分支 offline-peripheral-fixes；Windows独立工作树 C:\Users\Cisco He\.codex\worktrees\offline-peripheral-fixes\UniXNU_elden 。Mac对应独立checkout；证据在工作台 lab/records 和 edl_work，research只放Git克隆。GPU已完成、继续保持在codex/elden-gpu-offline。当前主线先推进Wi-Fi，不自动merge这些离线外设。
 
-交接给没有本线程记忆的主线 agent 时，先读两个 checkout 的 `AGENTS.md`，再读本仓 `docs/peripherals/STATUS.md`、`INDEX.md`、`REAL-HARDWARE-RUNBOOK.md`、`GOAL-ACCEPTANCE-MATRIX.md` 和本文件。CiscoMac 是隔离的 macOS 编译主机；Windows/WSL 只提供辅助 host evidence。`Patch/Y700-Elden/research` 只放可核验的 Git 参考克隆，笔记和产物按 `docs/MAINTENANCE.md` 分流。
+新接手的主线 agent 先读主线、离线外设工作树和 `D:\Desktop\Git\Patch\Y700-Elden` 工作台各自的 `AGENTS.md`。主线 Windows 仓库在 `D:\Desktop\Git\UniXNU_elden`。CiscoMac 是黑苹果编译主机，可通过 `ssh ciscomac` 使用。工作台 `research/` 提供 UniXNU sheng、ArmadaOS-Freedom TB322FC 等参考 Git 仓库。路径、固定输入和派发方式见 [真机运行手册](REAL-HARDWARE-RUNBOOK.md)。
 
-实现任务使用 `Patch/Y700-Elden/_relay/dispatch.py` 派发给 `Devin-worker-agent-Y700`。worker 只写自己的 relay 交接目录并以 `(handover to codex now)` 结束；主线 agent 负责审查、提交和 push 到 `offline-peripheral-fixes`。不要让 Devin 直接 commit，也不要把源代码写入 Patch 或 GPU checkout。GPU 独立分支 `codex/elden-gpu-offline` 的现状和合并边界以其 GPU status/merge 文档为准，不能和外设分支混写。
+使用工作台 `_relay/dispatch.py` 派发移植、构建及日志分析任务给 `Devin-worker-agent-Y700`。Devin 在指定集成工作树改源码，将证据和回执写入对应的 `_relay/<round>/`，并以 `(handover to codex now)` 收尾。主线 agent 每三分钟检查进度，负责审查、真机验证及在正确的集成分支提交、推送和合并。GPU 是首项离线交付，使用独立的 `codex/elden-gpu-offline` 分支及其 GPU 交接文档。

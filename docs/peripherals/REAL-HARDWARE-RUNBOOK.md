@@ -54,26 +54,56 @@ remains active until every row passes.
 
 ## Handoff and worker workflow
 
-The next mainline agent should begin by reading `AGENTS.md`,
-`docs/peripherals/STATUS.md`, `INDEX.md`, `MAINLINE-HANDOFF-PROMPT.md`, this
-runbook and `GOAL-ACCEPTANCE-MATRIX.md`. The authoritative source checkout is
-`UniXNU_elden` on `offline-peripheral-fixes`. Source changes and commits belong
-there. The `Patch/Y700-Elden` workbench stores evidence, relay records and
-independent Git clones under `research/`; do not treat research notes or
-artifacts as source. The ArmadaOS-Freedom TB322FC/SM8750 tree is the board
-reference, and the pinned Linux source and same-version UniXNU donors are
-recorded in the component manifests.
+1. Read `AGENTS.md` in the mainline checkout
+   (`D:DesktopGitUniXNU_elden`), the `offline-peripheral-fixes` worktree,
+   and the workbench (`D:DesktopGitPatchY700-Elden`). Then read
+   [STATUS](STATUS.md), [INDEX](INDEX.md), the
+   [mainline handoff](MAINLINE-HANDOFF-PROMPT.md), and the
+   [acceptance matrix](GOAL-ACCEPTANCE-MATRIX.md). Record the source and
+   destination commits before porting.
+2. Use the independent Git clones under the workbench's `research/`. Start
+   with proven UniXNU sheng driver interfaces and the exact ArmadaOS-Freedom
+   TB322FC/SM8750 board sources for registers and wiring. Use Linux mainline
+   as the secondary board reference and match OS17 donors to the target ABI.
+   See `lab/reference-reviews/20261122-unixnu-reuse/README.md` for reusable
+   projects and qualified revisions.
+3. Use the `ciscomac` SSH alias for CiscoMac, the Hackintosh build host.
+   Its mainline checkout is `/Users/ciscohe/Desktop/UniXNU_elden`. The
+   `UniXNU_elden-offline-peripheral-fixes` and `UniXNU_elden-gpu-offline`
+   siblings are isolated checkouts. Verify the commit, toolchain, and frozen
+   inputs against the build receipt. Use Windows and WSL for host checks.
+4. Assign one reviewable port, build, or log-analysis task to
+   `Devin-worker-agent-Y700` at a time. Create `_relay/<round>/task.md`
+   in the workbench with the source/destination commits, exact writable
+   worktree, acceptance criteria, and required build and test commands.
+   Give Devin write scope for that worktree and its relay directory. Keep
+   logs, input/output SHA-256 values, exit codes, and remaining gaps in
+   `_relay/<round>/handover-to-codex.md` and adjacent evidence files. Use
+   the PowerShell Devin console's current PID in the dispatch command:
 
-CiscoMac is the isolated macOS build host. Its source checkout, toolchain and
-full-link receipts must be read before reusing a build. Windows and WSL host
-tests are supporting evidence only. The GPU work is separate on
-`codex/elden-gpu-offline`; read its GPU status and merge documents before
-proposing a GPU merge.
+   ```powershell
+   py -3.12 'D:\Desktop\Git\Patch\Y700-Elden\_relay\dispatch.py' --pid <worker-pid> <round>
+   ```
 
-For implementation work, use the existing `Devin-worker-agent-Y700` through
-`Patch/Y700-Elden/_relay`. Create a round directory with `task.md`, dispatch it
-with `_relay/dispatch.py`, wait for the worker handover, then review its diff,
-source hashes and host results in Codex. The worker must end with
-`(handover to codex now)`. The mainline agent owns the review, commit and push
-on the correct branch. Do not let Devin commit directly, merge automatically,
-or write source into `Patch`, the GPU checkout, or a different worktree.
+   Wait three minutes between checks until the handover ends with
+   `(handover to codex now)`. Copy compact acceptance evidence to
+   `lab/records/` before retiring relay artifacts.
+5. The mainline agent owns device trials, diff and evidence review, and
+   commits and pushes. Have Devin prepare source ports and reproduce builds
+   on the assigned integration branch based on current mainline. Rebuild
+   with the current shared owners, repeat the component and recovery checks,
+   and record functional Y700 results for each component before merging
+   the reviewed source. Keep offline fixes on `offline-peripheral-fixes`
+   and workbench evidence in Patch.
+
+## GPU handoff
+
+A830/SM8750 was Elden's first offline peripheral delivery. Its branch is
+`codex/elden-gpu-offline`. The accepted CiscoMac build is `complete-3`
+and the delivery archive is `edl_work/gpu-complete-20261116/elden-a830-offline.tar.gz`.
+Use the GPU branch's [build status](https://github.com/zenkernelsam/UniXNU_elden/blob/codex/elden-gpu-offline/docs/GPU-GOAL-STATUS.md)
+and [merge guide](https://github.com/zenkernelsam/UniXNU_elden/blob/codex/elden-gpu-offline/docs/GPU-MERGE.md)
+for the pinned Turnip/metal2vulkan inputs and A830-specific owner, recovery,
+and activation requirements. Keep the GPU integration as a separate round.
+Real GPU startup, command submission, rendering, and recovery still require
+Y700 evidence.
