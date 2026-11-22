@@ -1,7 +1,7 @@
 # Offline peripherals — current status
 
 Branch `offline-peripheral-fixes`, from main@f82da007 on2026-11-16. Latest
-source commit is `d68a53c`; accepted offline deliveries also include the
+source commit is `d74c75f`; accepted offline deliveries also include the
 RTC-003/004 guarded owner facade, the Haptics-003/004 compiled-recipe RTP path,
 and the deterministic Apple recipe manifest builder, independent of mainline Wi-Fi and the completed
 GPU branch. The full five-part Goal is **active**.
@@ -13,7 +13,7 @@ GPU branch. The full five-part Goal is **active**.
 | AP501U pen | Stock NT36536/F1 report decoder, independent Pencil HID/tilt hook, original touch delivery and reversible release, atomic whole-operation named-provider facade with generation-tagged deferred stop and confirmed-retire/rebind | Actual raw pen/scan mode, real NT36536 worker→facade binding, Pencil type/force/tilt, palm/rotation/release, Notes/PencilKit and resume |
 | Dual AW86937/iOS effects | Source-bound Apple recipe/AHAP compiler, deterministic source-manifest generator, bounded calibrated-gain catalog/RTP/budget, continuous 24 kHz dual-motor chunks through the serialized Broker/RTP worker; output remains disabled without a measured dual-motor profile | Mechanical/electrical gain/boost/frequency/duty/thermal/dual-load calibration; production recipe bank/profile bind, system capabilities/VirtualAudio/tunings/real UIKit requests |
 | RTC/wake | Original PMK8550 read-onlyRTC/SPMI shared gate, board-clock registration, guarded named-owner persistence/alarm facade with stop/retire callback fences, original-worker reversible pen/touch pause/gesture IRQ/firmware resume | Real named NVMEM/SDAM provider, PMK8550 alarm IRQ owner, actual shared display/systemPM power provider, physical doubletap/sleep/wake cycles |
-| Accel/gyro/rotation | Exact sensor protocols/OS17 HID, one original ADSP/GLINK/QRTR/FastRPC/SSC worker, retained native memory/cache/pack/listener and prepared-memory adoption, guarded J317 orientation consumer over the existing gravity classifier with mapped-time hold and terminal provider-drift generation fence | Genuine same-device PD/registry/calibration/mount/unit/time/SUID/sample input; actual J317 SPU/CoreMotion/UI provider and rotation acceptance |
+| Accel/gyro/rotation | Exact sensor protocols/OS17 HID, one original ADSP/GLINK/QRTR/FastRPC/SSC worker, retained native memory/cache/pack/listener and prepared-memory adoption, atomic whole-operation J317 orientation consumer with generation-tagged deferred stop over the existing gravity classifier | Genuine same-device PD/registry/calibration/mount/unit/time/SUID/sample input; actual J317 SPU/CoreMotion/UI provider and rotation acceptance |
 | Front/rear cameras | Exact Gen4 sensor/CCI/CAMSS/clock/WL power and original DMA queue/visibility; shared early SMMU; original-executor CSID IRQ/wait/service; explicit capture-session composition; receipt-bound 3-object + session-object full link and 16-leaf audit; signed OS17 CMIO/RAW10 preview | Actual original power/PLL/RPMh/CSIrails/early-owner startup, physical RAW10/IRQ/DMA/retirement, calibration/ISP, camera-app/service acceptance |
 
 No new tablet access, flashing, QEMU, mainline merge or automatic boot/service
@@ -73,6 +73,14 @@ during contention. WSL and CiscoMac pass 217 facade checks and 317 deterministic
 pthread checks under ASan/UBSan and TSan, plus decoder/HID/pressure/tilt
 regressions and scalar ARM64 objects. The provider remains unbound and
 Pencil/hardware acceptance is false.
+
+The orientation consumer now holds one nonblocking atomic claim across each
+sample, provider callback, classifier update and rotation sink publication;
+begin/stop/status serialize against the same lifecycle. Generation-tagged
+deferred stops abort publication at callback fences and cannot affect a fresh
+generation. WSL and CiscoMac pass 204 orientation checks plus 92 deterministic
+pthread checks under ASan/UBSan and TSan, with scalar ARM64 objects clean. The
+J317 provider and UI route remain unbound.
 
 Wake-power-001/002 adds `EldenWake/PowerOwner.{c,h}`, a default-off guarded
 display/system-PM owner contract between the real panel/rail provider and the

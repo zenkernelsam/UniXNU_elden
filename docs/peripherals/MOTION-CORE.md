@@ -83,6 +83,15 @@ generation's own hold) and every fence/rollback path — plus one warning-free
 scalar `Orientation.o` that
 imports only `elden_motion_rotation`. Its samples are host-only synthetic
 fixtures.
+
+The orientation consumer now holds one nonblocking atomic claim across each
+sample, provider callback, classifier update and rotation sink publication;
+begin/stop/status serialize against the same lifecycle. Generation-tagged
+deferred stops abort publication at callback fences and cannot affect a fresh
+generation. WSL and CiscoMac pass 204 single-thread checks plus 92 deterministic
+pthread checks under ASan/UBSan and TSan, with scalar ARM64 `Orientation.o`
+objects clean. These are host-model checks only and do not bind J317, SPU,
+CoreMotion or UI.
 Evidence: `drivers/EldenMotion/validation.json` and workbench
 `lab/records/motion-core-20261119`; object in corresponding `edl_work`.
 

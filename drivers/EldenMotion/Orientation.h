@@ -3,6 +3,7 @@
 #define ELDEN_MOTION_ORIENTATION_H
 #include <stddef.h>
 #include <stdint.h>
+#include <stdatomic.h>
 #include "Core.h"
 #ifdef __cplusplus
 extern "C" {
@@ -15,7 +16,18 @@ enum {EldenOrientationDisabled=-125,EldenOrientationBusy=-16};
  * timestamps, calibration, mount, SUID, orientation nodes and any 0x20/0x8a
  * orientation HID device are all explicit provider outputs that must be
  * qualified at admission and re-fenced on every sample. A missing provider
- * leaves the consumer disabled — the conservative default. */
+ * leaves the consumer disabled — the conservative default.
+ *
+ * Thread model: `busy` is a single nonblocking C11 atomic claim held for the
+ * WHOLE operation — a sample op from generation/owner validation through
+ * owner_epoch, next, map_time, classifier state and sink publication, and
+ * begin/stop/status/lifecycle work end-to-end. Provider and sink callbacks
+ * therefore run serialized; reentrant or concurrent callers refuse
+ * EldenOrientationBusy without waiting. `stop` never waits: when the claim is
+ * held it posts a generation-tagged deferred stop (`stop_deferred`) that the
+ * holder applies at the next callback fence or at unwind; the tag is
+ * generation-scoped so a stop posted for a retired generation can never
+ * poison a re-armed successor. */
 typedef struct {
     void *context;
     /* Qualified input description for one kind: SUID identity, units/ranges
@@ -42,39 +54,50 @@ typedef int (*EldenMotionRotate)(void *context,int32_t axis);
 typedef struct {
     EldenMotionProvider provider;EldenMotionRotate rotate;void *rotate_context;
     EldenMotionSpec accel,gyro;EldenMotionRotation rotation;
-    uint64_t generation,owner,epoch,last_mach,last_ticks,last_ticks19;
-    uint32_t hold_us,state,samples,published,rejected,dropped;
-    int32_t published_axis;uint8_t busy,enabled,clock_failed;
+    _Atomic uint64_t generation,stop_deferred;
+    uint64_t owner,epoch,last_mach,last_ticks,last_ticks19;
+    uint32_t hold_us,samples,published,rejected,dropped;
+    _Atomic uint32_t state;
+    int32_t published_axis;
+    _Atomic uint8_t busy,enabled,clock_failed;
 } EldenMotionConsumer;
 typedef struct {
     uint32_t state,samples,published,rejected,dropped;
     uint64_t generation,owner,epoch,last_mach,last_ticks19;
     int32_t published_axis,pending_candidate;
 } EldenMotionConsumerStatus;
-/* Bind+qualify the provider and arm one generation. Missing callbacks, a zero
- * owner, an undescribed/bad accel-or-gyro spec (SUID, units, range, mount
- * parity) or a nonmonotonic time-map probe refuse before arming. hold_us is
- * the existing bounded hold (1..1000000). Re-arming a live run refuses. */
+/* Bind+qualify the provider and arm one generation under the claim. Missing
+ * callbacks, a zero owner, an undescribed/bad accel-or-gyro spec (SUID, units,
+ * range, mount parity), a nonmonotonic time-map probe or a concurrent
+ * operation refuse; the describe/owner_epoch/map_time probes all run
+ * serialized. Generation exhaustion (UINT64_MAX) refuses before any provider
+ * call rather than reusing an identity. hold_us is the existing bounded hold
+ * (1..1000000). Re-arming a live run refuses. */
 int elden_motion_consumer_begin(EldenMotionConsumer *,const EldenMotionProvider *,
     EldenMotionRotate,void *rotate_context,uint32_t hold_us,uint64_t *generation);
-/* Pull and consume one provider sample. Returns1 when a matured rotation
- * candidate is published to the sink, 2 when the provider had no sample
- * pending, 0 when a sample was consumed without publication. Fences stale
- * owner/epoch, wrong generation, foreign SUID/unit/kind, zero/duplicate/
- * reversed timestamps, nonmonotonic mach mapping, out-of-range axes and
- * flat/poor-quality input; a flat sample still resets the pending candidate
- * through the existing classifier. An owner/epoch check failure or drift is
- * terminal for the generation: the sample refuses before next()/map/sink, the
- * pending candidate clears, the last published axis stays the accepted UI
- * state and no further sample can publish until a fresh begin re-arms —
- * a provider re-reporting the armed identity cannot resume the session. */
+/* Pull and consume one provider sample under the whole-operation claim.
+ * Returns1 when a matured rotation candidate is published to the sink, 2 when
+ * the provider had no sample pending, 0 when a sample was consumed without
+ * publication. Fences stale owner/epoch, wrong generation, foreign SUID/unit/
+ * kind, zero/duplicate/reversed timestamps, nonmonotonic mach mapping,
+ * out-of-range axes and flat/poor-quality input; a flat sample still resets
+ * the pending candidate through the existing classifier. An owner/epoch check
+ * failure or drift is terminal for the generation: the sample refuses before
+ * next()/map/sink, the pending candidate clears, the last published axis
+ * stays the accepted UI state and no further sample can publish until a fresh
+ * begin re-arms — a provider re-reporting the armed identity cannot resume
+ * the session. A deferred stop posted during any provider/sink callback is
+ * applied at the next fence, before publication. */
 int elden_motion_consumer_sample(EldenMotionConsumer *,uint64_t generation);
-/* Stop. A stop landing during an in-flight sink callback aborts that
- * publication (never counted); after stop every produce refuses — no
- * publication after stop. */
+/* Stop. Never waits: claims the operation and applies directly, or — while
+ * another operation holds the claim — posts a deferred stop the holder
+ * applies at its next callback fence or at unwind. A stop landing during an
+ * in-flight sink callback aborts that publication (never counted); after
+ * stop every produce refuses — no publication after stop. */
 int elden_motion_consumer_stop(EldenMotionConsumer *,uint64_t generation);
-/* Read-only status for tests/status surfaces; no side effects. */
-int elden_motion_consumer_status(const EldenMotionConsumer *,EldenMotionConsumerStatus *);
+/* Status snapshot under the claim: coherent counters/identity or
+ * EldenOrientationBusy — never a torn mid-mutation read. */
+int elden_motion_consumer_status(EldenMotionConsumer *,EldenMotionConsumerStatus *);
 #ifdef __cplusplus
 }
 #endif
