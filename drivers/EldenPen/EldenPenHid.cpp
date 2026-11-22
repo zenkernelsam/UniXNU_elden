@@ -2,7 +2,7 @@
 #include "OriginalHidDeviceABI.h"
 #include "EldenPenOriginalAbi.h"
 #include "EldenPenNative.h"
-#include "Delivery.h"
+#include "NativeRoute.h"
 #include "HidReport.h"
 #include "Tilt.h"
 #include <IOKit/IOBufferMemoryDescriptor.h>
@@ -104,59 +104,81 @@ public:
 };
 OSDefineMetaClassAndStructors(EldenPenHid,IOHIDDevice)
 static EldenPenHid *active;
-static EldenPenDelivery delivery;
+static EldenPenNativeRoute route;
 static EldenPenLimits limits={19040,30400,4095,60};
 static unsigned attempted,enabled,stopped;
 static uint64_t nowUs(){uint64_t ns=0;absolutetime_to_nanoseconds(mach_absolute_time(),&ns);return ns/1000;}
 static int sendPen(void *,const EldenPenFrame *f){return active?active->submit(f):int(kIOReturnNotReady);}
-extern "C" int elden_pen_native_start(void){
+static int released(){EldenPenOwnerStatus st;return elden_pen_route_status(&route,&st)?0:st.delivery_released;}
+extern "C" int elden_pen_native_start(uintptr_t frame_owner){
     unsigned mode=0;PE_parse_boot_argn("elden-pen",&mode,sizeof(mode));
     if(mode!=1)return 0;
-    if(attempted)return int(kIOReturnBusy);attempted=1;
-    unsigned maximum=4095;PE_parse_boot_argn("elden-pen-pressure",&maximum,sizeof(maximum));
-    if(maximum!=4095&&maximum!=8191)return int(kIOReturnBadArgument);
-    limits.max_pressure=(uint16_t)maximum;
-    if(OSKextLoadKextWithIdentifier("com.apple.iokit.IOHIDFamily")||
-       OSKextLoadKextWithIdentifier("com.apple.iokit.IOHIDEventDriver"))return int(kIOReturnNotReady);
-    void *handle=OSMetaClass::preModLoad(g_kernel_kmod_info.name);if(!handle)return int(kIOReturnNotReady);
-    elden_pen_static_init();if(OSMetaClass::postModLoad(handle))return int(kIOReturnNotReady);
-    IOService *resource=IOService::getResourceService();if(!resource)return int(kIOReturnNotReady);
-    EldenPenHid *device=new EldenPenHid;if(!device)return int(kIOReturnNoMemory);
-    device->pressureMax=(uint16_t)maximum;
-    if(!device->init()||!device->attach(resource)){device->release();return int(kIOReturnError);}
-    if(!device->start(resource)){device->detach(resource);device->release();return int(kIOReturnError);}
-    active=device;elden_pen_delivery_init(&delivery,100000);enabled=1;
-    /* Lifetime retained to reset. Publication/pressure readiness is checked
-     * before each first successful send; handleReport success is not UI proof. */
-    IOLog("ELDEN_PEN native service started; pressure-max=%u; no SPI writes\n",maximum);return 0;
+    if(!frame_owner)return int(kIOReturnBadArgument);
+    if(!enabled){
+        if(attempted)return int(kIOReturnBusy);attempted=1;
+        unsigned maximum=4095;PE_parse_boot_argn("elden-pen-pressure",&maximum,sizeof(maximum));
+        if(maximum!=4095&&maximum!=8191)return int(kIOReturnBadArgument);
+        limits.max_pressure=(uint16_t)maximum;
+        if(OSKextLoadKextWithIdentifier("com.apple.iokit.IOHIDFamily")||
+           OSKextLoadKextWithIdentifier("com.apple.iokit.IOHIDEventDriver"))return int(kIOReturnNotReady);
+        void *handle=OSMetaClass::preModLoad(g_kernel_kmod_info.name);if(!handle)return int(kIOReturnNotReady);
+        elden_pen_static_init();if(OSMetaClass::postModLoad(handle))return int(kIOReturnNotReady);
+        IOService *resource=IOService::getResourceService();if(!resource)return int(kIOReturnNotReady);
+        EldenPenHid *device=new EldenPenHid;if(!device)return int(kIOReturnNoMemory);
+        device->pressureMax=(uint16_t)maximum;
+        if(!device->init()||!device->attach(resource)){device->release();return int(kIOReturnError);}
+        if(!device->start(resource)){device->detach(resource);device->release();return int(kIOReturnError);}
+        active=device;enabled=1;
+        /* Lifetime retained to reset. Publication/pressure readiness is checked
+         * before each first successful send; handleReport success is not UI proof. */
+        IOLog("ELDEN_PEN native service started; pressure-max=%u; no SPI writes\n",maximum);
+    }
+    /* frame_owner is the worker's live serialized Context — the real
+     * touch-frame owner this session's packets are sampled under. It is
+     * declared at bind and rechecked against the actual packet caller by the
+     * guarded owner path; a reused or foreign context is refused there. The
+     * named provider is the NT36536 sampler itself: the worker Context is
+     * both its provider owner and this session's provider epoch. */
+    int rc=elden_pen_route_begin(&route,&limits,sendPen,nullptr,"EldenNvt36536",
+                               (uint64_t)frame_owner,(uint64_t)frame_owner);
+    if(rc)return rc;
+    stopped=0;
+    IOLog("ELDEN_PEN worker route armed generation=%llu provider=EldenNvt36536\n",
+          (unsigned long long)route.gen);return 0;
 }
-extern "C" int elden_pen_native_packet(const uint8_t *packet,size_t bytes){
+extern "C" int elden_pen_native_packet(const uint8_t *packet,size_t bytes,uintptr_t frame_owner){
     if(!enabled||stopped)return 0;
-    EldenPenFrame f={};int rc=elden_pen_decode(packet,bytes,&limits,&f);
-    if(rc){int release=elden_pen_delivery_fault(&delivery,nowUs(),sendPen,nullptr);return release?release:rc;}
-    return elden_pen_delivery_feed(&delivery,&f,nowUs(),sendPen,nullptr);
+    return elden_pen_route_packet(&route,packet,bytes,(uint64_t)frame_owner,nowUs());
 }
 extern "C" int elden_pen_native_fault(void){
-    return enabled?elden_pen_delivery_fault(&delivery,nowUs(),sendPen,nullptr):0;
+    return enabled&&route.armed?elden_pen_route_fault(&route,nowUs()):0;
 }
 extern "C" int elden_pen_native_pause(void){
     if(!enabled)return 0;if(stopped)return EldenPenStopped;
-    int rc=elden_pen_delivery_pause(&delivery,nowUs(),sendPen,nullptr);
-    for(unsigned n=0;n<30&&!elden_pen_delivery_released(&delivery);++n){IOSleep(8);rc=elden_pen_delivery_tick(&delivery,nowUs(),sendPen,nullptr);}
+    if(!route.armed)return 0;
+    int rc=elden_pen_route_pause(&route,nowUs());
+    for(unsigned n=0;n<30&&!released();++n){IOSleep(8);rc=elden_pen_route_tick(&route,nowUs());}
     if(rc)return rc;
-    return elden_pen_delivery_released(&delivery)?0:int(kIOReturnNotReady);
+    return released()?0:int(kIOReturnNotReady);
 }
 extern "C" int elden_pen_native_resume(void){
-    return enabled?elden_pen_delivery_resume(&delivery,nowUs()):0;
+    return enabled&&route.armed?elden_pen_route_resume(&route,nowUs()):0;
 }
 extern "C" int elden_pen_native_stop(void){
     if(!enabled)return 0;stopped=1;
-    int rc=elden_pen_delivery_stop(&delivery,nowUs(),sendPen,nullptr);
-    for(unsigned n=0;n<30&&!elden_pen_delivery_released(&delivery);++n){IOSleep(8);rc=elden_pen_delivery_tick(&delivery,nowUs(),sendPen,nullptr);}
-    IOLog("ELDEN_PEN stop released=%u result=%x sent=%u failures=%u; service retained\n",
-          unsigned(elden_pen_delivery_released(&delivery)),unsigned(rc),delivery.sent,delivery.failures);
+    if(!route.armed)return 0;
+    int rc=elden_pen_route_stop(&route,nowUs());
+    for(unsigned n=0;n<30&&!released();++n){IOSleep(8);int rr=elden_pen_route_release(&route);if(rr)rc=rr;}
+    /* Released state and counters are read before retire — retire re-arms
+     * the delivery for a later session, zeroing failures and always
+     * reporting a fresh released state. */
+    EldenPenOwnerStatus st={};elden_pen_route_status(&route,&st);
+    int rel_flag=st.delivery_released?1:0;
+    int trc=elden_pen_route_retire(&route);
+    IOLog("ELDEN_PEN stop released=%u result=%x retire=%x sent=%u failures=%u; service retained\n",
+          unsigned(rel_flag),unsigned(rc),unsigned(trc),st.transport_delivered,st.transport_failures);
     IOLog("ELDEN_PEN pose converted=%u missing=%u rejected=%u; degrees contract, live mounting unverified\n",
           __atomic_load_n(&PenPressure::poseConverted,__ATOMIC_RELAXED),__atomic_load_n(&PenPressure::poseMissing,__ATOMIC_RELAXED),
           __atomic_load_n(&PenPressure::poseRejected,__ATOMIC_RELAXED));
-    return elden_pen_delivery_released(&delivery)?0:(rc?rc:int(kIOReturnNotReady));
+    return rel_flag?(trc?trc:0):(rc?rc:int(kIOReturnNotReady));
 }

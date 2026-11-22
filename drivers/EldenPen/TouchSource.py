@@ -19,7 +19,7 @@ def derive():
     if(penStop)__atomic_store_n(&input_release_error,penStop,__ATOMIC_RELEASE);
     release_contacts(c);
     if(c->dma_mode){''')
-    once('    c->streaming=true;','''    int penStart=elden_pen_native_start();
+    once('    c->streaming=true;','''    int penStart=elden_pen_native_start((uintptr_t)c);
     if(penStart)log("\\nELDEN_PEN start refused=%d; finger path retained\\n",penStart);
     c->streaming=true;''')
     once('''        error=elden_nvt_points(&c->device,packet);
@@ -27,8 +27,9 @@ def derive():
         error=elden_nvt_decode''','''        error=elden_nvt_points(&c->device,packet);
         if(error){elden_pen_native_fault();finish(c,error);return;}
         // Every complete packet is considered, even when the finger set is
-        // unchanged or its publisher is temporarily unavailable.
-        int penResult=elden_pen_native_packet(packet,sizeof(packet));
+        // unchanged or its publisher is temporarily unavailable. The worker's
+        // own Context is the real frame owner the guarded path rechecks.
+        int penResult=elden_pen_native_packet(packet,sizeof(packet),(uintptr_t)c);
         if(penResult&&++c->penErrors<=4)log("\\nELDEN_PEN report refused=%d\\n",penResult);
         error=elden_nvt_decode''')
     return text.encode()

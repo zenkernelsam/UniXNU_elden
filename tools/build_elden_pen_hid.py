@@ -16,8 +16,8 @@ def main():
         if sha(Path(remap(name)))!=item['sha256']:raise ValueError('Captured source/header differs')
     sources=json.loads((a.derived/'source.json').read_text())
     if not sources['qualified']:raise ValueError('Original HID ABI not qualified')
-    for name in ('Owner.c','Owner.h','NativeBridge.c','NativeBridge.h'):
-        if name not in sources['sources']:raise ValueError('Bridge source omitted from derived set: '+name)
+    for name in ('Owner.c','Owner.h','NativeBridge.c','NativeBridge.h','NativeRoute.c','NativeRoute.h'):
+        if name not in sources['sources']:raise ValueError('Owner/bridge/route source omitted from derived set: '+name)
     for name,digest in sources['sources'].items():
         if sha(a.derived/name)!=digest:raise ValueError('Derived input changed')
     def cpp_flags(job):
@@ -33,7 +33,7 @@ def main():
         r=subprocess.run(list(map(str,cmd)),cwd=cwd,capture_output=True);(out/(name+'.log')).write_bytes(r.stdout+r.stderr)
         if r.returncode:raise RuntimeError(name+' failed; logs retained')
         return r.stdout.decode()
-    for name in ('EldenPenHid.cpp','HidReport.c','PenReport.c','Delivery.c','Tilt.c','Owner.c','NativeBridge.c','EldenTouchRuntime.cpp'):
+    for name in ('EldenPenHid.cpp','HidReport.c','PenReport.c','Delivery.c','Tilt.c','Owner.c','NativeBridge.c','NativeRoute.c','EldenTouchRuntime.cpp'):
         src=a.derived/name;obj=out/(src.stem+'.o')
         if src.suffix=='.cpp':
             job=rec if name=='EldenPenHid.cpp' else next(j for j in cap['jobs'] if j['file'].endswith('/EldenNvt36536/Runtime.cpp'))

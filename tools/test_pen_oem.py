@@ -22,10 +22,14 @@ def main():
     results['oracle']=run([out/'oem-test'],'oracle-run')
     for label,rev in [('original',OLD),('fixed',None)]:
         folder=out/label;folder.mkdir();objects=[]
-        for name in ('PenReport.c','PenReport.h','Delivery.c','Delivery.h'):
+        headers=('PenReport.c','PenReport.h','Delivery.c','Delivery.h') if rev else (
+            'PenReport.c','PenReport.h','Delivery.c','Delivery.h',
+            'Owner.c','Owner.h','NativeBridge.c','NativeBridge.h','NativeRoute.c','NativeRoute.h')
+        for name in headers:
             data=subprocess.check_output(['git','-C',str(ROOT),'show',rev+':drivers/EldenPen/'+name]) if rev else (DRIVER/name).read_bytes()
             (folder/name).write_bytes(data)
-        for name in ('PenReport.c','Delivery.c'):
+        units=('PenReport.c','Delivery.c') if rev else ('PenReport.c','Delivery.c','Owner.c','NativeBridge.c','NativeRoute.c')
+        for name in units:
             obj=folder/(Path(name).stem+'.o');run(['xcrun','clang','-std=c11',*flags,'-c',folder/name,'-o',obj],label+'-'+name);objects.append(obj)
         native=subprocess.check_output(['git','-C',str(ROOT),'show',OLD+':drivers/EldenPen/EldenPenHid.cpp']).decode() if rev else (DRIVER/'EldenPenHid.cpp').read_text()
         body=function(native,'extern "C" int elden_pen_native_packet(');(folder/'ActualPacket.inc').write_text(body+'\n')

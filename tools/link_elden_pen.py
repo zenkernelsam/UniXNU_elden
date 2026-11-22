@@ -23,7 +23,7 @@ def main():
     pen=native/'libEldenPen.a'
     if sha(pen)!=report['archive_sha256']:raise ValueError('Pen archive changed')
     pen_members=subprocess.check_output(['ar','t',str(pen)],text=True).splitlines()
-    for need in ('Owner.o','NativeBridge.o'):
+    for need in ('Owner.o','NativeBridge.o','NativeRoute.o'):
         if pen_members.count(need)!=1:raise ValueError('Pen archive dropped bridge member: '+need)
     command=read(base/'link-command.json');args=[v for v in command if v.startswith('-Wl,-force_load,') and v.endswith('/libNativeLegacyDisplay.late.a')]
     if len(args)!=1:raise ValueError('Expected one display archive')
@@ -69,14 +69,17 @@ def main():
     with (out/'native-link.log').open('x') as f:subprocess.run(command,cwd=out,stdout=f,stderr=subprocess.STDOUT,check=True)
     for path,digest in inherited.items():
         if sha(Path(path))!=digest:raise ValueError('Baseline input changed during link')
-    bridge_exports={n for n in defs(out/'native.macho') if n.startswith(('_elden_pen_bridge_','_elden_pen_owner_'))}
+    bridge_exports={n for n in defs(out/'native.macho') if n.startswith(('_elden_pen_bridge_','_elden_pen_owner_','_elden_pen_route_'))}
     expected_exports={'_elden_pen_owner_init','_elden_pen_owner_bind','_elden_pen_owner_packet','_elden_pen_owner_tick',
         '_elden_pen_owner_fault','_elden_pen_owner_pause','_elden_pen_owner_resume','_elden_pen_owner_stop',
         '_elden_pen_owner_release','_elden_pen_owner_retire','_elden_pen_owner_released','_elden_pen_owner_status',
         '_elden_pen_bridge_init','_elden_pen_bridge_bind','_elden_pen_bridge_start','_elden_pen_bridge_packet',
         '_elden_pen_bridge_tick','_elden_pen_bridge_fault','_elden_pen_bridge_pause','_elden_pen_bridge_resume',
         '_elden_pen_bridge_stop','_elden_pen_bridge_release','_elden_pen_bridge_retire','_elden_pen_bridge_status',
-        '_elden_pen_bridge_started','_elden_pen_bridge_bound'}
+        '_elden_pen_bridge_started','_elden_pen_bridge_bound',
+        '_elden_pen_route_begin','_elden_pen_route_packet','_elden_pen_route_tick','_elden_pen_route_fault',
+        '_elden_pen_route_pause','_elden_pen_route_resume','_elden_pen_route_stop','_elden_pen_route_release',
+        '_elden_pen_route_retire','_elden_pen_route_status'}
     if bridge_exports!=expected_exports:raise ValueError('Native link changed/dropped bridge exports: '+str(sorted(bridge_exports^expected_exports)))
     image=read(base/'kernel.json')
     if sha(a.original_kernelcache)!=image['original_sha256']:raise ValueError('Original kernelcache differs')
