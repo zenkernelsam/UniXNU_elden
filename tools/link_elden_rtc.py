@@ -26,6 +26,13 @@ def main():
     for name,row in rtc['objects'].items():
         if sha(a.rtc_build/(Path(name).stem+'.o'))!=row['object_sha256']:raise ValueError('RTC object changed: '+name)
     if sha(a.rtc_build/'libEldenRtc.a')!=rtc['archive_sha256']:raise ValueError('RTC archive changed')
+    owner_row=rtc['objects'].get('Owner.c')
+    if owner_row is None:raise ValueError('RTC build receipt has no Owner.o')
+    rtc_members=subprocess.check_output(['ar','t',str(a.rtc_build/'libEldenRtc.a')],text=True).splitlines()
+    if rtc_members.count('Owner.o')!=1:raise ValueError('RTC archive dropped owner member')
+    member=subprocess.check_output(['ar','p',str(a.rtc_build/'libEldenRtc.a'),'Owner.o'])
+    if hashlib.sha256(member).hexdigest()!=owner_row['object_sha256']:raise ValueError('Archived Owner.o bytes differ from build receipt')
+    if any(k.endswith('/__mod_init_func') for k in sections(a.rtc_build/'Owner.o')):raise ValueError('Automatic owner initialization')
     command=read(a.parent/'link-command.json');inherited={}
     for arg in command:
         path=Path(arg.split(',')[-1])
@@ -102,6 +109,10 @@ def main():
     (out/'link-command.json').write_text(json.dumps(command,indent=2)+'\n');run(command,'native-link',out)
     for path,digest in inherited.items():
         if sha(Path(path))!=digest:raise ValueError('Original parent input changed')
+    owner_exports={'_elden_rtc_owner_init','_elden_rtc_owner_bind_nvmem','_elden_rtc_owner_bind_alarm',
+        '_elden_rtc_owner_restore','_elden_rtc_owner_learn','_elden_rtc_owner_alarm_set','_elden_rtc_owner_alarm_read',
+        '_elden_rtc_owner_alarm_ack','_elden_rtc_owner_stop','_elden_rtc_owner_retire','_elden_rtc_owner_status'}
+    if defined(out/'native.macho')&owner_exports!=owner_exports:raise ValueError('Native link dropped owner entries')
     original=read(a.parent/'kernel.json')
     if sha(a.original_kernelcache)!=original['original_sha256']:raise ValueError('Original OS image differs')
     plan=read(ROOT/'profiles/v91/image-build/plan.json')['prelink']
@@ -116,6 +127,9 @@ def main():
             'platform_added_exports':sorted(additions),'new_exports':sorted(defined(out/'native.macho')-defined(a.parent/'native.macho')),
             'shared_gate_replaced_once':True,'rtc_before_ufs_shutdown':True,'recovery_object_sha256':sha(new_ufs),
             'recovery_compile_command':compile_cmd,'rtc_report_sha256':sha(a.rtc_build/'result.json'),
+            'owner_object_sha256':owner_row['object_sha256'],'rtc_archive_members':rtc_members,
+            'owner_exports':sorted(owner_exports),'provider_bound':False,'nvmem_provider_installed':False,
+            'alarm_provider_installed':False,'owner_auto_started':False,
             'inherited_inputs':inherited,'parent_kernel_sha256':prior['kernel_sha256'],'hardware':False,'boot_packaged':False,
             'legacy_flags_unchanged':{n:metadata.get(n) for n in ('abi_qualified','loadable','runtime_qualified','instruction_relocation_complete')}}
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n')

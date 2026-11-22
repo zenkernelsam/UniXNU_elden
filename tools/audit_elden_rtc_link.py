@@ -5,7 +5,7 @@ The initializer must only register the two actual native clock callbacks; the
 recovery call must precede the existing storage shutdown in its real function.
 """
 from pathlib import Path
-import argparse, hashlib, json, re, struct, subprocess, sys
+import argparse, bisect, hashlib, json, re, struct, subprocess, sys
 
 
 def sha(p):
@@ -163,6 +163,7 @@ def main():
 
     # Scan actual backed text sections; no disassembly/name inference for BL.
     calls = []
+    all_calls = []
     rtc_stop = unique('_elden_rtc_stop_for_reboot')
     ufs_stop = unique('_elden_ufs_wait_shutdown')
     for seg in image['segments']:
@@ -173,9 +174,10 @@ def main():
             data = raw[sec['fileoff']:sec['fileoff'] + sec['size']]
             for off in range(0, len(data) - 3, 4):
                 insn = struct.unpack_from('<I', data, off)[0]
-                if insn & 0xfc000000 == 0x94000000:
+                if insn & 0x7c000000 == 0x14000000:
                     pc = base + off; target = pc + (signed(insn & 0x3ffffff, 26) << 2)
-                    if target == rtc_stop: calls.append(pc)
+                    all_calls.append((pc, target, insn & 0xfc000000 == 0x94000000))
+                    if target == rtc_stop and insn & 0xfc000000 == 0x94000000: calls.append(pc)
     if len(calls) != 1: raise ValueError('One actual recovery RTC-stop call required')
     call = calls[0]
     starts = sorted({addr for addr, _ in symbols})
@@ -187,13 +189,57 @@ def main():
             target = pc + (signed(insn & 0x3ffffff, 26) << 2)
             if target == ufs_stop: following.append(pc)
     if len(following) != 1: raise ValueError('RTC stop must precede UFS stop in same real function')
+    # Match the receipt against the linked image before applying the historical
+    # or packaged audit. Packaged owner code must have every
+    # public entry in the export table, none in __mod_init_func, no direct
+    # B/BL caller outside the owner's own function spans, and no 8-byte data
+    # reference in any non-__LINKEDIT section. This static scan covers direct
+    # calls and aligned pointers only; indirect BLR/BR or computed targets are
+    # outside its coverage and are not claimed either way.
+    native_report = json.loads((a.rtc_build / 'result.json').read_text())
+    owner_names = ['_elden_rtc_owner_init', '_elden_rtc_owner_bind_nvmem', '_elden_rtc_owner_bind_alarm',
+                   '_elden_rtc_owner_restore', '_elden_rtc_owner_learn', '_elden_rtc_owner_alarm_set',
+                   '_elden_rtc_owner_alarm_read', '_elden_rtc_owner_alarm_ack', '_elden_rtc_owner_stop',
+                   '_elden_rtc_owner_retire', '_elden_rtc_owner_status']
+    owner_row = native_report['objects'].get('Owner.c')
+    exported_owner = {n for n in names if n.startswith('_elden_rtc_owner_')}
+    native_owner = {n for _, n in symbols if n.startswith('_elden_rtc_owner_')}
+    expected_owner = set(owner_names) if owner_row is not None else set()
+    if exported_owner != expected_owner or native_owner != expected_owner:
+        raise ValueError('Linked RTC owner symbols disagree with build receipt')
+    owner = {'owner_packaged': False, 'owner_absent': True}
+    if owner_row is not None:
+        if sha(a.rtc_build / 'Owner.o') != owner_row['object_sha256']:
+            raise ValueError('Qualified RTC owner object changed')
+        entries = sorted(unique(n) for n in owner_names)
+        if any(v in constructors for v in entries): raise ValueError('Owner entry initializes automatically')
+        starts_sorted = sorted({addr for addr, _ in symbols})
+        def next_symbol(v):
+            at = bisect.bisect_right(starts_sorted, v)
+            return starts_sorted[at] if at < len(starts_sorted) else 1 << 64
+        spans = [(v, next_symbol(v)) for v in entries]
+        entry_set = set(entries)
+        foreign = [(pc, t) for pc, t, link in all_calls
+                   if t in entry_set and not any(lo <= pc < hi for lo, hi in spans)]
+        if foreign: raise ValueError('Unrelated caller reaches owner entry: ' + hex(foreign[0][0]))
+        for seg in image['segments']:
+            if seg['name'] == '__LINKEDIT': continue
+            for sec in seg['sections']:
+                body = raw[sec['fileoff']:sec['fileoff'] + sec['size']]
+                for v in entries:
+                    if body.find(struct.pack('<Q', v)) != -1:
+                        raise ValueError('Owner entry referenced by ' + seg['name'] + '/' + sec['name'])
+        owner = {'owner_packaged': True, 'owner_absent': False,
+                 'owner_exports': {n: hex(unique(n)) for n in owner_names},
+                 'owner_not_automatically_initialized': True,
+                 'owner_not_called_or_referenced': True,
+                 'owner_inertness_scope': 'direct B/BL call sites in __text plus 8-byte data references in non-__LINKEDIT sections; indirect BLR/BR or computed calls are outside this static scan'}
     # Direct read/learn and the current shared gate remain real linked exports.
     required = ['_elden_rtc_core_read', '_elden_rtc_core_learn', '_elden_rtc_spmi_read',
                 '_elden_spmi_transaction_acquire', '_elden_spmi_transaction_release',
                 '__ZN13ArmDTPlatform15getGMTTimeOfDayEv', '__ZN13ArmDTPlatform15setGMTTimeOfDayEl']
     edges = {n: hex(unique(n)) for n in required}
     metadata = json.loads((a.kernel_build / 'kernel.json').read_text())
-    native_report = json.loads((a.rtc_build / 'result.json').read_text())
     from replay_xnu_objects import sections
     extent = {name: {k: {'bytes': v[0], 'flags': v[1], 'sha256': v[2]} for k, v in
                     sections(a.rtc_build / (Path(name).stem + '.o')).items()}
@@ -201,7 +247,9 @@ def main():
     result = {'rtc_component_link_passed': True, 'kernel_sha256': sha(kernel), 'native_sha256': sha(native),
               'registration_only_initializer': hex(matched[0]), 'actual_clock_callbacks': [hex(clock_read), hex(clock_set)],
               'recovery_rtc_stop_call': hex(call), 'following_ufs_stop_call': hex(following[0]),
-              'exports': edges, 'section_extents': extent, 'hardware': False,
+              'exports': edges, 'section_extents': extent, 'owner': owner,
+              'provider_bound': False, 'nvmem_provider_installed': False,
+              'alarm_provider_installed': False, 'boot_packaged': False, 'hardware': False,
               'legacy_flags_unchanged': {k: metadata.get(k) for k in
                 ('abi_qualified', 'loadable', 'runtime_qualified', 'instruction_relocation_complete')}}
     result['retained_existing_RTC_mode']=a.retained_rtc

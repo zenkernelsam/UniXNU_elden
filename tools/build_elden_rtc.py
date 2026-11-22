@@ -8,6 +8,8 @@ def main():
     for key in ('source','base-native','llvm','output'):p.add_argument('--'+key,type=Path,required=True)
     a=p.parse_args();a.source=a.source.resolve(strict=True);a.base_native=a.base_native.resolve(strict=True);a.llvm=a.llvm.resolve(strict=True)
     out=a.output.resolve();out.mkdir(parents=True,exist_ok=False);cap=json.loads((a.base_native/'capture.json').read_text());record=json.loads((a.source/'source.json').read_text())
+    for name in ('Owner.c','Owner.h'):
+        if name not in record['sources']:raise ValueError('RTC owner source omitted from derived set: '+name)
     for name,digest in record['sources'].items():
         if sha(a.source/name)!=digest:raise ValueError('RTC source changed')
     job=next(x for x in cap['jobs'] if x['file'].endswith('/ArmDTPlatform.cpp'));old=job['file'].split('/research/',1)[0];project=a.base_native/'build/project'
@@ -25,17 +27,20 @@ def main():
         if r.returncode:raise RuntimeError(name+' failed; inspect retained compile log')
         return r.stdout.decode()
     records={};resource=run([a.llvm/'clang','-print-resource-dir'],'resource').strip()
-    for name in ('ArmDTPlatform.cpp','Native.cpp','Core.c','Spmi.c','TransactionGate.c'):
+    for name in ('ArmDTPlatform.cpp','Native.cpp','Core.c','Spmi.c','TransactionGate.c','Owner.c'):
         source=a.source/name;obj=out/(source.stem+'.o')
         if source.suffix=='.cpp':cmd=[*flags,'-I',str(a.source),'-Werror','-mgeneral-regs-only',str(source),'-o',str(obj)];cwd=remap(job['directory'])
         else:cmd=[a.llvm/'clang','-target','arm64-apple-ios17.0','-std=c11','-O2','-ffreestanding','-fno-builtin','-fno-stack-protector','-mgeneral-regs-only',
                   '-nostdinc','-isystem',Path(resource)/'include','-Wall','-Wextra','-Werror','-I',a.source,'-c',source,'-o',obj];cwd=None
         run(cmd,source.stem+'-compile',cwd);dis=run([a.llvm/'llvm-objdump','--disassemble','--no-show-raw-insn',obj],source.stem+'-asm');ops=re.findall(r'^\s*[0-9a-fA-F]+:\s+(.+)$',dis,re.M)
         if not ops or any(re.search(r'\b[vsdqhb][0-9]+(?:\b|\.)',s) for s in ops):raise ValueError('Non-scalar RTC code')
+        object_sections=sections(obj)
+        if name=='Owner.c' and any(k.endswith('/__mod_init_func') for k in object_sections):
+            raise ValueError('Automatic owner initialization')
         symbols=global_symbols(obj);records[name]={'source_sha256':sha(source),'object_sha256':sha(obj),'imports':[n for n,v in symbols.items() if not v[0]&0xe],
                 'exports':[n for n,v in symbols.items() if v[0]&0xe],'command':list(map(str,cmd)),
-                'sections':{k:{'bytes':v[0],'flags':v[1],'sha256':v[2]} for k,v in sections(obj).items()}}
-    run(['ar','rcs',out/'libEldenRtc.a',out/'Native.o',out/'Core.o',out/'Spmi.o'],'archive')
+                'sections':{k:{'bytes':v[0],'flags':v[1],'sha256':v[2]} for k,v in object_sections.items()}}
+    run(['ar','rcs',out/'libEldenRtc.a',out/'Native.o',out/'Core.o',out/'Spmi.o',out/'Owner.o'],'archive')
     (out/'result.json').write_text(json.dumps({'compiled':True,'objects':records,'archive_sha256':sha(out/'libEldenRtc.a'),
         'source_record_sha256':sha(a.source/'source.json'),'separate_replacements':['ArmDTPlatform.o','TransactionGate.o'],
         'persistent_clock_verified':False,'hardware':False,'full_link':False},indent=2)+'\n');print('PASS: RTC native/actual platform and shared gate compile; full link pending')
