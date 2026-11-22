@@ -1,7 +1,7 @@
 # Offline peripherals — current status
 
 Branch `offline-peripheral-fixes`, from main@f82da007 on2026-11-16. Latest
-source commit is `e29ca1b`; accepted offline deliveries also include the
+source commit is `b249a5f`; accepted offline deliveries also include the
 RTC-003/004 guarded owner facade, the Haptics-003/004 compiled-recipe RTP path,
 the deterministic Apple recipe manifest builder, the NT36536 worker route,
 the AW86937 output-safety regressions, and current motion/camera refusal
