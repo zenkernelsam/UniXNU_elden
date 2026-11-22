@@ -109,6 +109,17 @@ passes 86 unit and 179 deterministic race checks on WSL and CiscoMac, including
 TSan and scalar ARM64 object checks. This remains source-only with
 `native_bound:false`, `pencil_accepted:false` and `hardware:false`.
 
+The reproducible pen package now also carries `Owner.o` and `NativeBridge.o`.
+`prepare_elden_pen_hid.py` hash-qualifies all four bridge source/header files,
+`build_elden_pen_hid.py` compiles the objects scalar and rejects missing inputs,
+and `link_elden_pen.py` refuses an archive or link that drops any of the 26
+owner/bridge exports. The source-built Mac full-link audit retained all 30
+original execution regions, the existing touch-member replacement/imports,
+and the qualified 207-slot/10-override HID table. It found no bridge automatic
+initializer, call site or data reference in the linked image. These are
+source-build/ABI facts only; the bridge remains unbound, is not boot-packaged,
+and has no Pencil or hardware acceptance.
+
 ## Verified scope
 
 - 924 prior actual decoder/delivery checks remain valid; those C sources are
@@ -134,6 +145,12 @@ TSan and scalar ARM64 object checks. This remains source-only with
   frame owners or Pencil identity are synthesized into the native path. WSL
   TSan uses the recorded `setarch -R` workaround; CiscoMac TSan runs natively.
   Scalar ARM64 `NativeBridge.o` is clean on both toolchains.
+- The pen source-build pipeline packages `Owner.o` and `NativeBridge.o` and
+  requires all 26 exported entry points through the native link and final
+  prelink audit. The source-built full-link run preserved 30 original Apple
+  execution regions and the original touch/HID ABI. Audit flags remain
+  `native_bound:false`, `pencil_accepted:false`, `hardware:false`, and
+  `boot_packaged:false`.
 - Five native objects compile scalar, with no automatic initializer section.
   The pen's metaclass initializer is explicit/late. Four new pen objects have
   no warnings; the touch replacement retains exactly one existing DmaSurvey.h
