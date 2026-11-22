@@ -35,12 +35,20 @@ extern "C" {
  * generation's gate tag synchronously, then applies through the owner when
  * it wins `lc`, else posts a generation-tagged `stop_pending` the claim
  * holder consumes at release — preserving the owner's deferred-stop,
- * callback-safe semantics with no deadlock. */
+ * callback-safe semantics with no deadlock.
+ *
+ * `cur_gen` is the bridge's published generation identity: `bind` stores it
+ * only after a successful owner bind and `retire` clears it, both under
+ * `lc`. A stop whose token does not match `cur_gen` is stale/foreign — it
+ * mutates neither the gate nor `stop_pending` (so a stale token can never
+ * evict a live deferred stop), and `lc_release` rechecks the tag against
+ * `cur_gen` before consuming it. */
 typedef struct {
     EldenPenOwner owner;            /* the authoritative guarded facade */
     EldenPenDelivery delivery;      /* bridge-owned delivery state machine */
     _Atomic uint64_t started;       /* armed generation tag; 0 = gate off */
     _Atomic uint32_t lc;            /* lifecycle claim: bind/start/stop/retire */
+    _Atomic uint64_t cur_gen;       /* published generation identity */
     _Atomic uint64_t stop_pending;  /* deferred stop generation while lc held */
     _Atomic uint64_t stop_now;      /* its timestamp */
 } EldenPenNativeBridge;

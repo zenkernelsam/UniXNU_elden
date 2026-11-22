@@ -8,17 +8,18 @@
  * transition can publish or clear the gate across a successor. */
 static int lc_claim(EldenPenNativeBridge *b){return atomic_exchange(&b->lc,1);}
 /* Release the lifecycle claim, first consuming a stop posted while it was
- * held: the tag is applied through the owner only if its generation is still
- * live (a retired tag is moot — the same drop the owner's unwind makes for a
- * dead deferral). The gate tag is cleared whenever the applied or already-dead
- * generation was the armed one, so no stale gate can survive the transition.
- * A real apply/send error surfaces to the claim holder like the owner's
- * unwind; a dead tag is consumed silently. Must run before `lc` drops so the
- * deferred stop linearizes inside the holder's transition window. */
+ * held: the tag is applied through the owner only if it still names the
+ * bridge's published generation identity (a retired or superseded tag is
+ * moot — the same drop the owner's unwind makes for a dead deferral), and
+ * `cur_gen` cannot move while `lc` is held so the recheck is exact. The gate
+ * tag is cleared whenever the applied generation was the armed one, so no
+ * stale gate can survive the transition. A real apply/send error surfaces to
+ * the claim holder like the owner's unwind. Must run before `lc` drops so
+ * the deferred stop linearizes inside the holder's transition window. */
 static int lc_release(EldenPenNativeBridge *b){
     int x=0;
     uint64_t tag=atomic_exchange(&b->stop_pending,0);
-    if(tag){
+    if(tag&&tag==atomic_load(&b->cur_gen)){
         int rc=elden_pen_owner_stop(&b->owner,tag,atomic_load(&b->stop_now));
         if(!rc||atomic_load(&b->started)==tag)atomic_store(&b->started,0);
         if(rc&&rc!=EldenPenOwnerStale&&rc!=EldenPenStopped)x=rc;
@@ -28,7 +29,7 @@ static int lc_release(EldenPenNativeBridge *b){
 int elden_pen_bridge_init(EldenPenNativeBridge *b,const EldenPenLimits *limits,
                           EldenPenSend send,void *send_context){
     if(!b||!limits||!send)return EldenPenDeliveryArgument;
-    atomic_store(&b->started,0);atomic_store(&b->lc,0);
+    atomic_store(&b->started,0);atomic_store(&b->lc,0);atomic_store(&b->cur_gen,0);
     atomic_store(&b->stop_pending,0);atomic_store(&b->stop_now,0);
     int rc=elden_pen_delivery_init(&b->delivery,100000);
     if(rc)return rc;
@@ -42,6 +43,9 @@ int elden_pen_bridge_bind(EldenPenNativeBridge *b,const EldenPenProvider *p,
     int rc;
     if(atomic_load(&b->started))rc=EldenPenOwnerBusy;   /* armed run refuses */
     else rc=elden_pen_owner_bind(&b->owner,p,named,frame_owner,frame_epoch,generation);
+    /* Publish the generation identity only after a successful owner bind:
+     * stops may then reference it; on failure nothing was admitted. */
+    if(!rc)atomic_store(&b->cur_gen,*generation);
     int x=lc_release(b);return x?x:rc;
 }
 int elden_pen_bridge_start(EldenPenNativeBridge *b,uint64_t generation){
@@ -81,23 +85,41 @@ int elden_pen_bridge_resume(EldenPenNativeBridge *b,uint64_t generation,uint64_t
     if(atomic_load(&b->started)!=generation)return EldenPenOwnerDisabled;
     return elden_pen_owner_resume(&b->owner,generation,now_us);
 }
-/* The gate disarm is synchronous and unconditional when the tag names this
- * generation — the same "arm before attempting" order the owner uses for
- * `stopped` — so a gate can never outlive a stop that targets it, even while
- * the apply itself defers behind a held lifecycle claim. */
+/* A stop whose token is not the bridge's published generation identity is
+ * stale/foreign: it mutates neither the gate nor the deferred slot and is
+ * refused before any claim attempt. A current-generation stop disarms its
+ * gate tag synchronously — the same "arm before attempting" order the owner
+ * uses for `stopped` — so the gate can never outlive a valid stop even while
+ * the apply defers behind a held lifecycle claim. */
 int elden_pen_bridge_stop(EldenPenNativeBridge *b,uint64_t generation,uint64_t now_us){
     if(!b)return EldenPenDeliveryArgument;
+    if(generation!=atomic_load(&b->cur_gen))return EldenPenOwnerStale;
     {uint64_t exp=generation;atomic_compare_exchange_strong(&b->started,&exp,0);}
     if(!lc_claim(b)){
         int rc=elden_pen_owner_stop(&b->owner,generation,now_us);
         if(!rc)atomic_store(&b->started,0);
         int x=lc_release(b);return x?x:rc;
     }
-    /* A lifecycle transition holds the claim: post the deferred tag (callback
-     * inside the holder's operation is exactly the owner's case) and retry the
-     * claim once — if it freed meanwhile we drain our own post at release. */
+    /* A lifecycle transition holds the claim: queue the deferred tag (a
+     * callback inside the holder's operation is exactly the owner's case)
+     * only while the token still names the published identity — and never
+     * overwrite a live pending occupant; a dead one may be evicted. `cur_gen`
+     * cannot move while `lc` is held elsewhere, but it can between this
+     * thread's claim attempts, so revalidate inside the loop. `lc_release`
+     * rechecks again before consuming, so a tag can never apply across an
+     * identity change. */
     atomic_store(&b->stop_now,now_us);
-    (void)atomic_exchange(&b->stop_pending,generation);
+    for(;;){
+        uint64_t cur=atomic_load(&b->cur_gen);
+        if(generation!=cur)break;                        /* went stale mid-post */
+        uint64_t p=atomic_load(&b->stop_pending);
+        if(p==generation)break;                           /* already queued */
+        if(p&&p!=cur){                                    /* dead occupant — evict */
+            atomic_compare_exchange_weak(&b->stop_pending,&p,0);continue;
+        }
+        if(!p&&atomic_compare_exchange_weak(&b->stop_pending,&p,generation))break;
+        if(p)break;                                       /* live occupant (p==cur) */
+    }
     if(!lc_claim(b)){
         int rc=elden_pen_owner_stop(&b->owner,generation,now_us);
         if(!rc)atomic_store(&b->started,0);
@@ -113,7 +135,9 @@ int elden_pen_bridge_retire(EldenPenNativeBridge *b,uint64_t generation){
     if(!b)return EldenPenDeliveryArgument;
     if(lc_claim(b))return EldenPenOwnerBusy;
     int rc=elden_pen_owner_retire(&b->owner,generation);
-    if(!rc)atomic_store(&b->started,0);   /* delivery re-armed for a fresh bind */
+    /* Clear the published identity under the claim — a deferred tag queued
+     * for this generation is then moot and `lc_release`'s recheck drops it. */
+    if(!rc){atomic_store(&b->cur_gen,0);atomic_store(&b->started,0);}
     int x=lc_release(b);return x?x:rc;
 }
 int elden_pen_bridge_status(EldenPenNativeBridge *b,EldenPenOwnerStatus *out){

@@ -23,14 +23,17 @@ static void coord(uint8_t *p,unsigned pressure){memset(p,0,109);p[66]=1;put(p,67
 typedef struct {
     unsigned count,fail;EldenPenFrame trace[64];
     EldenPenNativeBridge *sb;uint64_t stop_gen,stop_now;int stop_once;
+    Gate hold_send;
 } Sink;
 /* send runs under the claim on whichever thread holds it — a bound abort
  * only (no CHECK counter bump, which would race main-thread CHECKs). A
  * reentrant stop inside send exercises the lc-deferred path deterministically:
  * lc is held by the op that entered the send, so the reentry posts a pending
- * tag consumed at that op's own release. */
+ * tag consumed at that op's own release. The opt-in hold_send gate pins the
+ * op inside its send call so `lc` stays provably held for contention cases. */
 static int send(void *p,const EldenPenFrame *f){
     Sink*s=p;if(s->fail){--s->fail;return -99;}if(s->count>=64)abort();s->trace[s->count++]=*f;
+    gate_hold(&s->hold_send);
     if(s->stop_once){s->stop_once=0;elden_pen_bridge_stop(s->sb,s->stop_gen,s->stop_now);}return 0;
 }
 typedef struct {
@@ -62,6 +65,7 @@ static void peer_init(M*m,EldenPenNativeBridge *b){
     m->ro_owner=7;m->ro_epoch=3;m->rf_owner=11;m->rf_epoch=22;
     gate_init(&m->hold_name);gate_init(&m->hold_oe);gate_init(&m->hold_fo);gate_init(&m->hold_pk);
 }
+static void sink_init(Sink*s,EldenPenNativeBridge *b){memset(s,0,sizeof(*s));s->sb=b;gate_init(&s->hold_send);}
 static uint8_t buf[109];
 static uint8_t *down(unsigned p){coord(buf,p);return buf;}
 typedef struct{EldenPenNativeBridge*b;M*m;uint64_t gen,now;int rc;uint64_t out_gen;} Job;
@@ -81,7 +85,7 @@ int main(void){
     /* 1. packet-vs-stop: a foreign-thread stop inside a held provider
      * packet posts the deferred tag; the operation applies it at the
      * unwind — no publication, generation stopped. */
-    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);memset(&s,0,sizeof(s));
+    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);sink_init(&s,&b);
      CHECK(!elden_pen_bridge_init(&b,&limits,send,&s));
      uint64_t gen=bindit(&m,&b);CHECK(!elden_pen_bridge_start(&b,gen));
      queue(&m,down(300),100,1);queue(&m,down(400),110,2);
@@ -97,7 +101,7 @@ int main(void){
      CHECK(elden_pen_bridge_packet(&b,gen)==EldenPenOwnerDisabled);}  /* gate off */
 
     /* 2. Stop inside provider owner_epoch: deferred before packet pull. */
-    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);memset(&s,0,sizeof(s));
+    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);sink_init(&s,&b);
      CHECK(!elden_pen_bridge_init(&b,&limits,send,&s));
      uint64_t gen=bindit(&m,&b);CHECK(!elden_pen_bridge_start(&b,gen));
      queue(&m,down(300),100,1);
@@ -111,7 +115,7 @@ int main(void){
 
     /* 3. Concurrent bridge packets serialize: the second refuses Busy inside
      * the held provider callback and never reaches the provider. */
-    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);memset(&s,0,sizeof(s));
+    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);sink_init(&s,&b);
      CHECK(!elden_pen_bridge_init(&b,&limits,send,&s));
      uint64_t gen=bindit(&m,&b);CHECK(!elden_pen_bridge_start(&b,gen));
      queue(&m,down(300),100,1);queue(&m,down(400),110,2);
@@ -126,7 +130,7 @@ int main(void){
     /* 4. Concurrent binds on a fresh bridge: one winner; the loser refuses
      * Busy inside the winner's name() callback without touching its own
      * provider's name(). */
-    {EldenPenNativeBridge b;Sink s;M a,d;peer_init(&a,&b);peer_init(&d,&b);memset(&s,0,sizeof(s));
+    {EldenPenNativeBridge b;Sink s;M a,d;peer_init(&a,&b);peer_init(&d,&b);sink_init(&s,&b);
      CHECK(!elden_pen_bridge_init(&b,&limits,send,&s));
      a.hold_name.active=1;
      Job ja={&b,&a,0,0,0,0},jd={&b,&d,0,0,0,0};pthread_t t1,t2;
@@ -139,7 +143,7 @@ int main(void){
 
     /* 5. start-vs-bind: a concurrent start while the winner's bind holds its
      * name() probe refuses on the owner's contended status claim. */
-    {EldenPenNativeBridge b;Sink s;M a;peer_init(&a,&b);memset(&s,0,sizeof(s));
+    {EldenPenNativeBridge b;Sink s;M a;peer_init(&a,&b);sink_init(&s,&b);
      CHECK(!elden_pen_bridge_init(&b,&limits,send,&s));
      a.hold_name.active=1;
      Job jb={&b,&a,0,0,0,0},js={&b,&a,1,0,0,0};pthread_t t1,t2;
@@ -149,7 +153,7 @@ int main(void){
      CHECK(elden_pen_bridge_start(&b,jb.out_gen)==0&&elden_pen_bridge_started(&b)==1);}
 
     /* 6. Status inside a held provider callback refuses Busy. */
-    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);memset(&s,0,sizeof(s));
+    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);sink_init(&s,&b);
      CHECK(!elden_pen_bridge_init(&b,&limits,send,&s));
      uint64_t gen=bindit(&m,&b);CHECK(!elden_pen_bridge_start(&b,gen));
      queue(&m,down(300),100,1);
@@ -162,7 +166,7 @@ int main(void){
 
     /* 7. Retire inside a held packet refuses Busy; after stop+release it
      * completes and clears the binding. */
-    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);memset(&s,0,sizeof(s));
+    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);sink_init(&s,&b);
      CHECK(!elden_pen_bridge_init(&b,&limits,send,&s));
      uint64_t gen=bindit(&m,&b);CHECK(!elden_pen_bridge_start(&b,gen));
      queue(&m,down(300),100,1);queue(&m,down(400),110,2);
@@ -184,7 +188,7 @@ int main(void){
 
     /* 8. Foreign frame owner under a held frame_owner() probe: the live
      * generation refuses and lifts a held contact through send. */
-    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);memset(&s,0,sizeof(s));
+    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);sink_init(&s,&b);
      CHECK(!elden_pen_bridge_init(&b,&limits,send,&s));
      uint64_t gen=bindit(&m,&b);CHECK(!elden_pen_bridge_start(&b,gen));
      queue(&m,down(300),100,1);queue(&m,down(400),110,2);
@@ -201,7 +205,7 @@ int main(void){
      * `lc` for the whole transition — start/retire/bind refuse Busy rather
      * than interleave, and a stop POSTS its deferred tag instead of touching
      * the owner (consumed at the holder's release). */
-    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);memset(&s,0,sizeof(s));
+    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);sink_init(&s,&b);
      CHECK(!elden_pen_bridge_init(&b,&limits,send,&s));
      uint64_t gen1=bindit(&m,&b);CHECK(!elden_pen_bridge_start(&b,gen1));
      CHECK(elden_pen_bridge_stop(&b,gen1,900)==0&&elden_pen_bridge_retire(&b,gen1)==0);
@@ -213,19 +217,21 @@ int main(void){
      spawn(&t2,t_start,&js);join(t2);CHECK(js.rc==EldenPenOwnerBusy);
      spawn(&t3,t_retire,&jr);join(t3);CHECK(jr.rc==EldenPenOwnerBusy);
      spawn(&t4,t_bind,&jd);join(t4);CHECK(jd.rc==EldenPenOwnerBusy);
-     spawn(&t5,t_stop,&jt);join(t5);CHECK(jt.rc==0);        /* posted, not applied */
-     CHECK(b.stop_pending==gen1&&b.lc==1);                  /* deferred tag held */
+     spawn(&t5,t_stop,&jt);join(t5);CHECK(jt.rc==EldenPenOwnerStale);
+     /* A stale/foreign token mutates nothing — the deferred slot stays empty
+      * even under claim contention (the -003 fence: gen1 is not cur_gen). */
+     CHECK(b.stop_pending==0&&b.lc==1&&b.started==0);
      gate_release(&m.hold_name);join(t1);
      CHECK(jb.rc==0&&jb.out_gen!=0&&jb.out_gen!=gen1);
-     CHECK(b.stop_pending==0&&b.lc==0&&b.started==0);       /* consumed, dropped */
-     CHECK(b.owner.stopped==0);                             /* dead tag was moot */
+     CHECK(b.stop_pending==0&&b.lc==0&&b.started==0);       /* nothing queued */
+     CHECK(b.owner.stopped==0);                             /* no mutation at all */
      CHECK(elden_pen_bridge_stop(&b,jb.out_gen,900)==0);
      CHECK(elden_pen_bridge_retire(&b,jb.out_gen)==0);}
 
     /* 10. Callback-reentrant stop: a stop invoked from inside the provider
      * packet() callback (lc free during data ops) claims lc, reaches the
      * owner's deferred path, applies at the in-flight unwind — no deadlock. */
-    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);memset(&s,0,sizeof(s));
+    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);sink_init(&s,&b);
      CHECK(!elden_pen_bridge_init(&b,&limits,send,&s));
      uint64_t gen=bindit(&m,&b);CHECK(!elden_pen_bridge_start(&b,gen));
      queue(&m,down(300),100,1);
@@ -238,7 +244,7 @@ int main(void){
     /* 11. Send-reentrant stop: a stop invoked inside send() during the outer
      * stop's own lift can't take lc — it posts the deferred tag and the outer
      * call consumes it at release; outcome identical, no claim leaked. */
-    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);memset(&s,0,sizeof(s));
+    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);sink_init(&s,&b);
      CHECK(!elden_pen_bridge_init(&b,&limits,send,&s));
      uint64_t gen=bindit(&m,&b);CHECK(!elden_pen_bridge_start(&b,gen));
      queue(&m,down(300),100,1);
@@ -254,7 +260,7 @@ int main(void){
      * (it can neither validate nor publish), and after the successor is
      * armed the same token is fenced — the gate stays 0 until an explicit,
      * validated start arms the NEW generation's tag. */
-    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);memset(&s,0,sizeof(s));
+    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);sink_init(&s,&b);
      CHECK(!elden_pen_bridge_init(&b,&limits,send,&s));
      uint64_t gen1=bindit(&m,&b);CHECK(!elden_pen_bridge_start(&b,gen1));
      queue(&m,down(300),100,1);CHECK(elden_pen_bridge_packet(&b,gen1)==0);
@@ -268,8 +274,8 @@ int main(void){
      CHECK(b.lc==1);
      spawn(&t2,t_start,&js);join(t2);CHECK(js.rc==EldenPenOwnerBusy);   /* can't publish */
      spawn(&t3,t_retire,&jr);join(t3);CHECK(jr.rc==EldenPenOwnerBusy);
-     CHECK(elden_pen_bridge_stop(&b,gen1,900)==0);                      /* posts pending */
-     CHECK(b.stop_pending==gen1);
+     CHECK(elden_pen_bridge_stop(&b,gen1,900)==EldenPenOwnerStale);     /* stale token */
+     CHECK(b.stop_pending==0&&b.started==0);                            /* mutates nothing */
      gate_release(&m.hold_name);join(t1);
      uint64_t gen2=jb.out_gen;
      CHECK(jb.rc==0&&gen2&&gen2!=gen1);
@@ -281,6 +287,53 @@ int main(void){
      CHECK(elden_pen_bridge_packet(&b,gen2)==0);                        /* successor flows */
      CHECK(elden_pen_bridge_stop(&b,gen2,900)==0&&b.started==0);
      CHECK(elden_pen_bridge_retire(&b,gen2)==0&&b.lc==0);}
+
+    /* 13. The -003 eviction proof: with `lc` held inside a stop's own lift
+     * send, a valid current-generation stop queues `stop_pending` — and a
+     * stale token CANNOT overwrite it (refused at the cur_gen fence before
+     * the slot is touched). A repeat of the live token stays idempotent. */
+    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);sink_init(&s,&b);
+     CHECK(!elden_pen_bridge_init(&b,&limits,send,&s));
+     uint64_t gen=bindit(&m,&b);CHECK(!elden_pen_bridge_start(&b,gen));
+     queue(&m,down(300),100,1);
+     CHECK(elden_pen_bridge_packet(&b,gen)==0);            /* contact held */
+     s.hold_send.active=1;                               /* pin inside lift send */
+     Job jt={&b,&m,gen,900,0,0};pthread_t t1;
+     spawn(&t1,t_stop,&jt);gate_wait_armed(&s.hold_send);
+     CHECK(b.lc==1&&b.started==0&&b.owner.stopped==gen);   /* gate already disarmed */
+     CHECK(elden_pen_bridge_stop(&b,gen,901)==0);          /* valid → queued */
+     CHECK(b.stop_pending==gen);
+     CHECK(elden_pen_bridge_stop(&b,gen+77,902)==EldenPenOwnerStale);  /* stale */
+     CHECK(b.stop_pending==gen);                         /* NOT evicted */
+     CHECK(elden_pen_bridge_stop(&b,gen,903)==0);          /* live repeat, idempotent */
+     CHECK(b.stop_pending==gen);
+     gate_release(&s.hold_send);join(t1);CHECK(jt.rc==0);
+     /* The pending tag was consumed at the outer release and filtered —
+      * gen was already stopped; nothing leaks. */
+     CHECK(b.stop_pending==0&&b.lc==0&&b.started==0&&b.owner.stopped==gen);
+     CHECK(elden_pen_bridge_retire(&b,gen)==0);}
+
+    /* 14. Valid stop before start: the identity is published by bind, so a
+     * stop for a bound-not-started generation applies normally — the gate
+     * stays 0 and the generation is stopped. */
+    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);sink_init(&s,&b);
+     CHECK(!elden_pen_bridge_init(&b,&limits,send,&s));
+     uint64_t gen=bindit(&m,&b);CHECK(b.cur_gen==gen&&b.started==0);
+     CHECK(elden_pen_bridge_stop(&b,gen,50)==0);
+     CHECK(b.owner.stopped==gen&&b.started==0);
+     CHECK(elden_pen_bridge_start(&b,gen)==EldenPenOwnerDisabled);
+     CHECK(elden_pen_bridge_retire(&b,gen)==0&&b.cur_gen==0);}
+
+    /* 15. Same-generation repeated stop: the token still names the published
+     * identity, so it reaches the owner and surfaces its Stopped semantics —
+     * not rewritten as stale and never queued behind itself. */
+    {EldenPenNativeBridge b;Sink s;M m;peer_init(&m,&b);sink_init(&s,&b);
+     CHECK(!elden_pen_bridge_init(&b,&limits,send,&s));
+     uint64_t gen=bindit(&m,&b);CHECK(!elden_pen_bridge_start(&b,gen));
+     CHECK(elden_pen_bridge_stop(&b,gen,900)==0);
+     CHECK(elden_pen_bridge_stop(&b,gen,901)==EldenPenStopped);
+     CHECK(b.stop_pending==0&&b.lc==0&&b.started==0&&b.cur_gen==gen);
+     CHECK(elden_pen_bridge_retire(&b,gen)==0);}
 
     printf("PASS %u\n",checks);return 0;
 }
