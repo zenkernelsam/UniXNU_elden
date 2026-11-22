@@ -2,7 +2,8 @@
 
 当前状态以 [STATUS](STATUS.md) 为准；五项目标的逐项验收边界见
 [GOAL-ACCEPTANCE-MATRIX](GOAL-ACCEPTANCE-MATRIX.md)，给主线的短提示是
-[MAINLINE-HANDOFF-PROMPT](MAINLINE-HANDOFF-PROMPT.md)。各组件说明保留独立
+[MAINLINE-HANDOFF-PROMPT](MAINLINE-HANDOFF-PROMPT.md)。真机测试顺序与停止
+条件见 [REAL-HARDWARE-RUNBOOK](REAL-HARDWARE-RUNBOOK.md)。各组件说明保留独立
 构建、ABI 和证据引用，旧逐轮状态已按原字节放入 archive。
 
 | 要查什么 | 当前路径与顺序 |
