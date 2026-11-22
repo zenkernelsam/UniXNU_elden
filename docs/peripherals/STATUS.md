@@ -81,13 +81,6 @@ The bridge adds 86 unit and 149 lifecycle/race checks, including WSL/CiscoMac
 TSan and scalar ARM64 objects. No real provider is bound, so
 `native_bound:false`, `pencil_accepted:false`, and `hardware:false` remain true.
 
-The default-off native bridge in `drivers/EldenPen/NativeBridge.{c,h}` routes
-future NT36536 worker hooks through the owner facade. Its generation-tagged
-gate and lifecycle claim close delayed-start races across stop/retire/rebind.
-The 86 unit and 149 race checks, including WSL/CiscoMac TSan and scalar ARM64
-objects, remain host evidence. No real provider is bound and
-`native_bound:false`, `pencil_accepted:false`, `hardware:false` remain true.
-
 The orientation consumer now holds one nonblocking atomic claim across each
 sample, provider callback, classifier update and rotation sink publication;
 begin/stop/status serialize against the same lifecycle. Generation-tagged
