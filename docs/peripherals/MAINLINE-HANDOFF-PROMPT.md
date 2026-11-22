@@ -1,6 +1,6 @@
 请继续 Y700 Elden 主线 Goal。离线分支 `offline-peripheral-fixes` 持续交付五项外设源码，独立于主线 Wi-Fi/PCIe/WCN/QRTR 和 GPU 分支；不要 commit/merge 错目录。
 
-离线最新提交为 `ee0e19f`。Motion generation exhaustion、RTC owner/provider refusal regressions、AP501U NT36536 worker route 与 hover/release regressions、Haptics output-safety regressions、Camera session refusal regressions 均已进入此分支。完整硬件缺口仍见 `docs/peripherals/STATUS.md`，host checks 不等于主线实机接受。
+离线最新提交为 `7335835`。Motion generation exhaustion、RTC owner/provider refusal regressions、AP501U NT36536 worker route 与 hover/release regressions、Haptics output-safety regressions、Camera session refusal regressions、Devin/CiscoMac 跨主机交接规则和隔离 GPU 交付说明均已进入此分支。完整硬件缺口仍见 `docs/peripherals/STATUS.md`，host checks 不等于主线实机接受。
 
 当前离线交付包含 RTC-003 guarded owner facade，入口 `docs/peripherals/STATUS.md`、`INDEX.md` 和各组件文档。相机源码链新增显式 capture-session 生命周期；已在 CiscoMac 以原始 OS17 kernelcache（固定 SHA）完成离线全链接：精确保留父 123 参数链接，只替换带回执的 `NativePipeline.o`、`FrameOutput.o`、`Service.o` 并加入唯一 `CaptureSession.o`。16 个 required leaf edge 审计通过，6 个 session entry 无调用者，30 个原 Apple executable regions、recovery5500ms和Apple30保持。产物 kernel `8b8e9eb4…`、native `8e8f9bb3…`。这不是可加载或硬件候选：physical flags false、自动启动 false、全局 ABI/loadable/runtime/relocation gates 仍 false。原 Bayer ABI/latest 修复父 `c15d94e` 保留。IRQ只屏蔽/原子锁存/唤醒，精确SM8750上升沿；只开CSID，原PHY mask和VFE nop不改。service rearm绝不清GICpending，wait enrollment后只atomic peek，附加attach未返回时IRQ/stop等待/active drain/rearm race防护。没有新线程或自动outercaller，`elden_camera_output_enable_irq`与`elden_camera_output_pump_irq`由原 camera executor 显式调用（文档有用法）。
 
