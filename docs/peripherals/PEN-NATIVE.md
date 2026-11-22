@@ -103,22 +103,44 @@ packet, tick, fault, pause, resume, stop, release and retire operation through
 `EldenPenOwner`. Its generation-tagged gate and nonblocking lifecycle claim
 serialize bind/start/stop/retire, preventing a delayed old-generation start
 from opening a successor after stop-retire-rebind. Callback-reentrant stop
-remains deferred and nonblocking. `Native.cpp`, `EldenPenHid.cpp`, the original
-touch worker and default boot path remain unchanged. `tools/test_pen_native_bridge.py`
+remains deferred and nonblocking. `Native.cpp`, the original touch worker and
+default boot path remain unchanged. `tools/test_pen_native_bridge.py`
 passes 86 unit and 179 deterministic race checks on WSL and CiscoMac, including
 TSan and scalar ARM64 object checks. This remains source-only with
 `native_bound:false`, `pencil_accepted:false` and `hardware:false`.
 
-The reproducible pen package now also carries `Owner.o` and `NativeBridge.o`.
-`prepare_elden_pen_hid.py` hash-qualifies all four bridge source/header files,
-`build_elden_pen_hid.py` compiles the objects scalar and rejects missing inputs,
-and `link_elden_pen.py` refuses an archive or link that drops any of the 26
-owner/bridge exports. The source-built Mac full-link audit retained all 30
-original execution regions, the existing touch-member replacement/imports,
-and the qualified 207-slot/10-override HID table. It found no bridge automatic
-initializer, call site or data reference in the linked image. These are
-source-build/ABI facts only; the bridge remains unbound, is not boot-packaged,
-and has no Pencil or hardware acceptance.
+`NativeRoute.{c,h}` is the real push-model edge between the derived NT36536
+sampling worker and that guarded owner path. The worker already holds the
+complete109-byte packet from its single SPI read; `elden_pen_route_packet`
+stages exactly those bytes with the caller's own sampling-owner identity (the
+live `Context *`, carried through `elden_pen_native_start(frame_owner)` and
+`elden_pen_native_packet(…,frame_owner)`), the worker's sampling timestamp and
+a real increasing sequence, then the bound `EldenPenOwner` pulls them through
+the existing provider contract under its claim. The route is the named
+provider (`EldenNvt36536`) the owner binds — there is one route object owned
+by the native entry, no second SPI read, and no invented packet, coordinate,
+pressure, tilt, timestamp, sequence or frame owner. `elden-pen=1` is still the
+only opt-in; start refuses without a live nonzero frame owner, and every
+packet is re-fenced against the declared worker association by the facade.
+`tools/test_pen_native_route.py` passes125 unit and51 deterministic race
+checks under ASan/UBSan and TSan on WSL and CiscoMac, with scalar ARM64
+`NativeRoute.o` clean. These are host-model contracts, not hardware proof.
+
+The reproducible pen package now also carries `Owner.o`, `NativeBridge.o` and
+`NativeRoute.o`. `prepare_elden_pen_hid.py` hash-qualifies all six
+owner/bridge/route source/header files, `build_elden_pen_hid.py` compiles the
+objects scalar and rejects missing inputs, and `link_elden_pen.py` refuses an
+archive or link that drops any of the 36 owner/bridge/route exports. The
+source-built Mac full-link audit retained all 30 original execution regions,
+the existing touch-member replacement/imports, and the qualified
+207-slot/10-override HID table — and it now proves the positive edge on the
+final image: the derived worker's own text calls `elden_pen_native_*`, which
+calls the route, which calls the bridge, which calls the owner, which reaches
+`elden_pen_decode`/`elden_pen_delivery_feed`, while the four static provider
+callbacks are materialized inside `elden_pen_route_begin`. No guarded entry
+initializes automatically and no foreign call site or data reference exists.
+These are source-build/ABI facts only; the path is still not boot-packaged and
+has no Pencil or hardware acceptance.
 
 ## Verified scope
 
@@ -145,13 +167,22 @@ and has no Pencil or hardware acceptance.
   frame owners or Pencil identity are synthesized into the native path. WSL
   TSan uses the recorded `setarch -R` workaround; CiscoMac TSan runs natively.
   Scalar ARM64 `NativeBridge.o` is clean on both toolchains.
-- The pen source-build pipeline packages `Owner.o` and `NativeBridge.o` and
-  requires all 26 exported entry points through the native link and final
-  prelink audit. The source-built full-link run preserved 30 original Apple
-  execution regions and the original touch/HID ABI. Audit flags remain
-  `native_bound:false`, `pencil_accepted:false`, `hardware:false`, and
-  `boot_packaged:false`.
-- Five native objects compile scalar, with no automatic initializer section.
+- The worker route adds125 unit and51 deterministic race checks. Synthetic
+  peers prove the route contract only: default-off refusal before arm,
+  argument validation, real worker-packet forwarding through the armed
+  generation, stale/foreign frame fencing, malformed-packet and transport
+  faults, stop/release/retire, rebind generation fencing and callback-safe
+  deferred stop. Scalar ARM64 `NativeRoute.o` is clean on both toolchains;
+  WSL TSan uses the recorded `setarch -R` workaround.
+- The pen source-build pipeline packages `Owner.o`, `NativeBridge.o` and
+  `NativeRoute.o` and requires all 36 exported entry points through the
+  native link and final prelink audit. The source-built full-link run
+  preserved 30 original Apple execution regions and the original touch/HID
+  ABI. The final-image audit now proves the worker→native→route→bridge→
+  owner→decode/feed direct-call chain plus materialized provider callbacks
+  inside `route_begin`. Audit flags remain `native_bound:false`,
+  `pencil_accepted:false`, `hardware:false`, and `boot_packaged:false`.
+- Six native objects compile scalar, with no automatic initializer section.
   The pen's metaclass initializer is explicit/late. Four new pen objects have
   no warnings; the touch replacement retains exactly one existing DmaSurvey.h
   aggregate-zero initialization diagnostic. Its exact source/site is checked.
@@ -214,9 +245,11 @@ the physical pen. Preserve mainline's newer SMMU/Wi-Fi changes when replacing it
 touch member, and rerun full boot/trust/entry/AVB/recovery audits. Install/launch
 the probe only in that coordinated window; it has not run on the tablet.
 
-The owner facade and native bridge are source-only: no production caller binds
-the bridge to a real NT36536 sampler yet, so worker→bridge→facade→delivery
-wiring is a mainline decision. The original
+The source-level worker→route→facade→delivery path now exists and is wired by
+the real `elden-pen=1` start: the derived NT36536 worker supplies its own
+109-byte packet, timestamp, sequence and `Context` frame-owner identity. What
+remains unproven is the physical chain — no AP501U has answered through it, so
+`native_bound:false` stands. The original
 finger checksum does not cover the pen. Raw SPI pen capture,0xF1,
 tail-byte/integrity semantics and possible scan-mode dependencies remain open.
 HID X/Y tilt is retained, but its conversion to UIKit polar altitude/azimuth is

@@ -10,7 +10,7 @@ GPU branch. The full five-part Goal is **active**.
 
 | Objective | Source-built offline implementation | Required evidence still missing |
 | --- | --- | --- |
-| AP501U pen | Stock NT36536/F1 report decoder, independent Pencil HID/tilt hook, original touch delivery and reversible release, atomic named-provider owner facade, generation-tagged native bridge packaged through the scalar source-build/full-link audit | Actual raw pen/scan mode, real NT36536 worker→bridge binding, Pencil type/force/tilt, palm/rotation/release, Notes/PencilKit and resume |
+| AP501U pen | Stock NT36536/F1 report decoder, independent Pencil HID/tilt hook, original touch delivery and reversible release, atomic named-provider owner facade, generation-tagged native bridge, real-worker NativeRoute (derived worker's own 109-byte packet/`Context` frame owner/timestamp/sequence) packaged through the scalar source-build/full-link edge audit | Actual raw pen/scan mode, physical AP501U answer through the route, Pencil type/force/tilt, palm/rotation/release, Notes/PencilKit and resume |
 | Dual AW86937/iOS effects | Source-bound Apple recipe/AHAP compiler, deterministic source-manifest generator, bounded calibrated-gain catalog/RTP/budget, continuous 24 kHz dual-motor chunks through the serialized Broker/RTP worker; output remains disabled without a measured dual-motor profile | Mechanical/electrical gain/boost/frequency/duty/thermal/dual-load calibration; production recipe bank/profile bind, system capabilities/VirtualAudio/tunings/real UIKit requests |
 | RTC/wake | Original PMK8550 read-onlyRTC/SPMI shared gate, board-clock registration, guarded named-owner persistence/alarm facade with stop/retire callback fences, original-worker reversible pen/touch pause/gesture IRQ/firmware resume | Real named NVMEM/SDAM provider, PMK8550 alarm IRQ owner, actual shared display/systemPM power provider, physical doubletap/sleep/wake cycles |
 | Accel/gyro/rotation | Exact sensor protocols/OS17 HID, one original ADSP/GLINK/QRTR/FastRPC/SSC worker, retained native memory/cache/pack/listener and prepared-memory adoption, atomic whole-operation J317 orientation consumer packaged inert in the SSC full-link | Genuine same-device PD/registry/calibration/mount/unit/time/SUID/sample input; actual J317 SPU/CoreMotion/UI provider and rotation acceptance |
@@ -76,20 +76,26 @@ Generation-tagged deferred stop cannot affect a successor binding; bind
 refuses generation wrap and status/released refuse or conservatively report
 during contention. WSL and CiscoMac pass 217 facade checks and 317 deterministic
 pthread checks under ASan/UBSan and TSan, plus decoder/HID/pressure/tilt
-regressions and scalar ARM64 objects. The provider remains unbound and
-Pencil/hardware acceptance is false.
+regressions and scalar ARM64 objects. The provider binds only when the
+`elden-pen=1` route arms; Pencil/hardware acceptance is false.
 
-The default-off `drivers/EldenPen/NativeBridge.{c,h}` routes future NT36536
-worker hooks through that owner facade. Its generation-tagged gate and
-nonblocking lifecycle claim close delayed-start races across stop/retire/rebind.
+The default-off `drivers/EldenPen/NativeBridge.{c,h}` routes worker hooks
+through that owner facade. Its generation-tagged gate and nonblocking
+lifecycle claim close delayed-start races across stop/retire/rebind.
 The bridge adds 86 unit and 179 lifecycle/race checks, including WSL/CiscoMac
-TSan and scalar ARM64 objects. No real provider is bound, so
-`native_bound:false`, `pencil_accepted:false`, and `hardware:false` remain true.
-The pen build now hash-qualifies and packages `Owner.o`/`NativeBridge.o`, and
-the full-link audit requires their 26 exports while proving no automatic
-initializer or call/reference edge. Mac source build preserved all 30 original
-execution regions and the HID/touch ABI. The kernel remains not boot-packaged
-and the bridge remains unbound.
+TSan and scalar ARM64 objects. `drivers/EldenPen/NativeRoute.{c,h}` now binds
+the real derived NT36536 worker as the named `EldenNvt36536` provider: each
+worker push carries the actual109-byte packet, the worker's `Context` frame
+owner, timestamp and sequence, and the facade re-fences provider owner/epoch
+and frame owner/epoch per packet. `elden-pen=1` remains the only opt-in. The
+route adds125 unit and51 deterministic race checks on both toolchains.
+The pen build hash-qualifies and packages `Owner.o`/`NativeBridge.o`/
+`NativeRoute.o`, and the full-link audit requires their 36 exports while
+proving the direct worker→native→route→bridge→owner→decode/feed call chain
+and materialized provider callbacks on the final image. Mac source build
+preserved all 30 original execution regions and the HID/touch ABI. These are
+source-build facts: no AP501U has answered, so `native_bound:false`,
+`pencil_accepted:false`, `hardware:false`, `boot_packaged:false` all stand.
 
 The orientation consumer now holds one nonblocking atomic claim across each
 sample, provider callback, classifier update and rotation sink publication;
