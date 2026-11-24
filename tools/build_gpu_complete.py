@@ -153,7 +153,7 @@ def main():
         (tree/'.cache/mesa-venv').symlink_to(args.shader_prefix.resolve()/'venv', target_is_directory=True)
     run('derive', tool('prepare_gpu_runtime.py', '--tree', tree, '--output', out/'derived'))
     run('native-core', tool('build_gpu_native.py', '--tree', tree, '--base-native', base/'native',
-                           '--xnu-source', base/'source/xnu', '--output', out/'core', '--jobs', '4'))
+                           '--xnu-source', base/'source/xnu', '--submit', out/'derived', '--output', out/'core', '--jobs', '4'))
     run('native-runtime', tool('build_gpu_runtime.py', '--tree', tree, '--derived', out/'derived',
         '--core-build', out/'core', '--base-native', base/'native', '--opps', out/'opps',
         '--firmware', out/'firmware', '--llvm', llvm, '--output', out/'runtime'))

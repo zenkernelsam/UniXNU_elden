@@ -111,7 +111,39 @@
         "file_sha256": "3572cc0c5086a882cf0d66803a6ef9f26717b19fc0ddae012554b58fcf65fe2e"
       }
     ],
-    "review": "The documented local vm_ deliberately selects the request VM; PID/owner and IOReturn conversions preserve32-bit diagnostic representation and do not change submission addresses."
+    "review": "The documented local vm_ deliberately selects the request VM; PID/owner and IOReturn conversions preserve32-bit diagnostic representation and do not change submission addresses.",
+    "derived": [
+      {
+        "source_sha256": "382f9b2f89ba74cedbae448cf28e3e97fb13917002745cfbc7a0446e91ee100b",
+        "sites": [
+          {
+            "file": "NativeAdrenoSubmit.cpp",
+            "line": 395,
+            "group": "-Wsign-conversion",
+            "file_sha256": "382f9b2f89ba74cedbae448cf28e3e97fb13917002745cfbc7a0446e91ee100b"
+          },
+          {
+            "file": "NativeAdrenoSubmit.cpp",
+            "line": 439,
+            "group": "-Wshadow",
+            "file_sha256": "382f9b2f89ba74cedbae448cf28e3e97fb13917002745cfbc7a0446e91ee100b"
+          },
+          {
+            "file": "NativeAdrenoSubmit.cpp",
+            "line": 521,
+            "group": "-Wsign-conversion",
+            "file_sha256": "382f9b2f89ba74cedbae448cf28e3e97fb13917002745cfbc7a0446e91ee100b"
+          },
+          {
+            "file": "NativeAdrenoSubmit.cpp",
+            "line": 600,
+            "group": "-Wsign-conversion",
+            "file_sha256": "382f9b2f89ba74cedbae448cf28e3e97fb13917002745cfbc7a0446e91ee100b"
+          }
+        ],
+        "review": "Derived instrumentation source (SubmitSource.py on the pinned baseline). Same four warnings as the reviewed baseline entry, shifted by the inserted blocks; the derivation adds no new warning."
+      }
+    ]
   },
   "NativeAdrenoUserClient.cpp": {
     "source_sha256": "5e7b9fa563ebac0b2c4ce3c2f2554d7b159093e84adcc52933975d712f316c6d",

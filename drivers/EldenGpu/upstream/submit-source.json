@@ -1,0 +1,17 @@
+{
+  "repository": "https://github.com/IssacL04/Adreno740",
+  "commit": "9c34ea46aa991c4fed6f0347a814473ad626de77",
+  "files": {
+    "NativeAdrenoSubmit.cpp": "3572cc0c5086a882cf0d66803a6ef9f26717b19fc0ddae012554b58fcf65fe2e",
+    "NativeAdrenoSubmit.h": "9cb04e9fd2f64ef9f517ecb954d2391b627b3546a02d56aeefe36e496c366717"
+  },
+  "donor": {
+    "repository": "https://github.com/UniXNU/Adreno740 (ipados27 branch lineage, research/Adreno740-ipados27)",
+    "commit": "93adbc1d312ecbabbb3356affe56738ba6184b0b",
+    "files": {
+      "NativeAdrenoSubmit.cpp": "e91a9b14f7ec89f2678dc68a26b27a659f0b2a989571443e1e6d7288ddecd60d",
+      "NativeAdrenoSubmit.h": "493d849685162d4efa3cd7fe0c0963685e50b11266673f2e56268d984aa4f9bb"
+    },
+    "note": "A740 ipados27 93adbc1 \"run the line audits only with gpu-audit=1 and time every job\", ported onto A830 9c34ea46. A830 deltas honoured: 2-arg noteStall, no Job.kick_us, no native_adreno_sync_audit/auditSynchronized/stall_ring/stall_log, Job copy (not &) in release, snapshot(next,now,pending,stalled) without the donor's waited argument; CP progress tracked with stall_begin_cp_ since A830 has no bvProgressState; post-93adbc1 switch work (native_adreno_switch_timeout, stall_find/stall_hang, findIb2) deliberately NOT ported."
+  }
+}
