@@ -44,12 +44,23 @@ def main():
     for rel in ('IOKit/IOTypes.h','IOKit/IOLib.h','IOKit/IOBufferMemoryDescriptor.h','kern/task.h'):
         f=stubs/rel;f.parent.mkdir(parents=True,exist_ok=True)
         f.write_text('// Host only; upstream XnuMemoryFixture supplies doubles.\n')
-    includes=['-I',derived,'-I',gpu,'-I',gpu/'tests','-I',stubs,'-I',kits/'ArmSmmu4K','-I',kits/'AdrenoPM4',
+    # Derived headers shadow tree headers for every TU (identical include guards would
+    # otherwise let a tree sibling win a quoted include): the same -ivfsoverlay the
+    # native build uses. Derived units replace their tree counterparts when present
+    # (round 3: NativeAdrenoVm.cpp and NativeAdrenoMemory.cpp are derived too).
+    contents=[{'type':'file','name':h.name,'external-contents':str(h)}
+              for h in sorted(derived.glob('*.h')) if (gpu/h.name).is_file()]
+    vfs=out/'derived-overlay.yaml'
+    vfs.write_text(json.dumps({'version':0,'case-sensitive':False,'fallthrough':True,
+        'roots':[{'type':'directory','name':str(gpu),'contents':contents}]},indent=2)+'\n')
+    includes=['-ivfsoverlay',vfs,'-I',derived,'-I',gpu,'-I',gpu/'tests','-I',stubs,'-I',kits/'ArmSmmu4K','-I',kits/'AdrenoPM4',
               '-I',kits/'AdrenoFirmware','-I',kits/'Sm8750Platform']
     flags=['-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-omit-frame-pointer',
            '-DNATIVE_ADRENO_HOST_TEST','-include',gpu/'tests/XnuMemoryFixture.h',*includes]
-    units=[derived/'NativeAdrenoSubmit.cpp',gpu/'NativeAdrenoRing.cpp',gpu/'NativeAdrenoVm.cpp',
-           gpu/'NativeAdrenoMemory.cpp',gpu/'NativeAdrenoSmmuMemory.cpp',gpu/'NativeAdrenoPreempt.cpp']
+    def unit(stem):return derived/(stem+'.cpp') if (derived/(stem+'.cpp')).is_file() else gpu/(stem+'.cpp')
+    units=[derived/'NativeAdrenoSubmit.cpp',gpu/'NativeAdrenoRing.cpp',unit('NativeAdrenoVm'),
+           unit('NativeAdrenoMemory'),gpu/'NativeAdrenoSmmuMemory.cpp',gpu/'NativeAdrenoPreempt.cpp',
+           DRIVER/'tests'/'HostKernelHooks.cpp']
     # ArmSmmu4KMmio.c is the direct SMMUv2 MMIO binding and compiles only for little-endian
     # AArch64; the host suite drives the software register peers instead.
     kits_c=sorted(p for p in (kits/'ArmSmmu4K').glob('ArmSmmu4K*.c') if p.name!='ArmSmmu4KMmio.c')+ \

@@ -5,12 +5,18 @@ ROOT=Path(__file__).resolve().parents[1];DRIVER=ROOT/'drivers/EldenGpu'
 sys.path.insert(0,str(DRIVER));from RuntimeSource import board,publisher,memory
 from FrameSource import presenter,display
 from SubmitSource import derive as submit_derive
+from MaintenanceSource import derive as maint_derive,pin as maint_pin
 def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--tree',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
  out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
  (out/'EldenGpuRuntime.cpp').write_bytes(board())
- original=a.tree/'drivers/Adreno740/NativeAdrenoPublish.cpp';(out/'NativeAdrenoPublish.cpp').write_bytes(publisher(original.read_bytes()))
- (out/'NativeAdrenoMemory.cpp').write_bytes(memory((a.tree/'drivers/Adreno740/NativeAdrenoMemory.cpp').read_bytes()))
+ original=a.tree/'drivers/Adreno740/NativeAdrenoPublish.cpp';(out/'NativeAdrenoPublish.cpp').write_bytes(maint_derive('NativeAdrenoPublish.cpp',publisher(original.read_bytes())))
+ (out/'NativeAdrenoMemory.cpp').write_bytes(maint_derive('NativeAdrenoMemory.cpp',memory((a.tree/'drivers/Adreno740/NativeAdrenoMemory.cpp').read_bytes())))
+ mpin=maint_pin()
+ for name in ('NativeAdrenoMemory.h','NativeAdrenoVm.h','NativeAdrenoVm.cpp','NativeAdrenoGpuContext.cpp'):
+  src=(a.tree/'drivers/Adreno740'/name).read_bytes()
+  if hashlib.sha256(src).hexdigest()!=mpin['files'][name]:raise ValueError('Maintenance source differs from the derivation pin: '+name)
+  (out/name).write_bytes(maint_derive(name,src))
  pin=json.loads((DRIVER/'upstream/submit-source.json').read_text())
  submit_cpp_src=(a.tree/'drivers/Adreno740/NativeAdrenoSubmit.cpp').read_bytes()
  submit_h_src=(a.tree/'drivers/Adreno740/NativeAdrenoSubmit.h').read_bytes()

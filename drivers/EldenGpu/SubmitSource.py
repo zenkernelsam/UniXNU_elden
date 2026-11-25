@@ -69,6 +69,21 @@ def submit_h(text):
         '    uint32_t stall_begin_cp_[6]{};   /* the CP\'s progress at the stalled fence\'s first timed-out wait */\n'
         '    uint64_t ring_retired_us_[2]{};uint32_t ring_retired_fence_[2]{};   /* the newest retirement seen on each ring */\n',
         'private helpers')
+    # Round 3 (7e8d248): the hung-CP snapshot marker and the fault-address search
+    # result live beside the stall log the same header documents.
+    text = once(text,
+        'extern "C" volatile uint32_t native_adreno_stall_kick[26];\n',
+        'extern "C" volatile uint32_t native_adreno_stall_kick[26];\n'
+        '/* The number of the hang the retained CP snapshot was taken at, 0 for one of an ordinary stall (7e8d248). */\n'
+        'extern "C" volatile uint32_t native_adreno_stall_hang;\n'
+        '/* Where a stalled job\'s commands named the IB2 the thread stopped in, and where they hold the faulting address\n'
+        ' * (NativeAdrenoSubmit.cpp findIb2/findFault): candidates for the board log, not decoded operands. */\n'
+        'extern "C" volatile uint32_t native_adreno_stall_find[14],native_adreno_stall_fault[32];\n'
+        '/* Where an accepted submission\'s time under the driver\'s lock goes (us, summed): [0] submissions timed,\n'
+        ' * [1] validation/retiring/holding, [2] re-assertion and audits, [3] the mappings pass, [4] the submission log,\n'
+        ' * [5] the table switch/ring/job record, [6] all of it. */\n'
+        'extern "C" volatile uint64_t native_adreno_submit_us[8];\n',
+        'header round3')
     return text
 
 
@@ -250,6 +265,216 @@ def submit_cpp(text):
         '        native_adreno_stall_log_count=n+1;\n'
         '    }\n',
         'snapshot split')
+    # Round 3 (5eb625f + 88241fa + 7e8d248): submit phase times, the synchronized
+    # trust audit, headWords for the IB log, the IB2/fault searches and the
+    # retained hung snapshot.
+    text = once(text,
+        'extern "C" {volatile uint32_t native_adreno_stall[2+NativeAdrenoRingStallWords];volatile uint32_t native_adreno_stall_mem[4+3*17+4];}\n',
+        'extern "C" {volatile uint32_t native_adreno_stall[2+NativeAdrenoRingStallWords];volatile uint32_t native_adreno_stall_mem[4+3*17+4];}\n'
+        'extern "C" {volatile uint32_t native_adreno_stall_find[14];volatile uint32_t native_adreno_stall_fault[32];\n'
+        '    volatile uint32_t native_adreno_stall_hang;volatile uint64_t native_adreno_submit_us[8];}\n',
+        'round3 externs')
+    # The IB2 and fault searches, next to the peeks that share their reader.
+    text = once(text,
+        'static bool indirectBuffer(uint32_t header) {return (header>>28)==7u && ((header>>16)&0x7fu)==0x3fu && (header&0x3fffu)==3;}\n'
+        if 'static bool indirectBuffer' in text else
+        'static uint32_t stall_fence,stall_timeouts,stall_stage;',
+        '/* Where the stalled job\'s command buffers name the IB2 the thread stopped in (88241fa): every IB1 of the job (the\n'
+        ' * CP_INDIRECT_BUFFER packets of its ring words) is read for a CP_INDIRECT_BUFFER whose low address word is the IB2 base\n'
+        ' * register\'s. [0] how many were found, [1] the IB1\'s place in the job, [2..3] its address, [4] the packet\'s dword offset in\n'
+        ' * it, [5..10] the packet\'s four words and the two before it, [11] IB1s read, [12] dwords read, [13] IB1s that could not be\n'
+        ' * read. Nothing found with every IB1 read means the address did not come from the job\'s commands. */\n'
+        'static bool indirectBuffer(uint32_t header) {return (header>>28)==7u && ((header>>16)&0x7fu)==0x3fu && (header&0x3fffu)==3;}\n'
+        'static void findIb2(const NativeAdrenoVm *vm,const uint32_t *ring_words,size_t ring_count,uint32_t ib2_low)\n'
+        '{\n'
+        '    uint32_t out[14]={};\n'
+        '    static uint32_t chunk[1024];\n'
+        '    uint32_t index=0;\n'
+        '    for(size_t i=0;i+3<ring_count && index<256;++i) {\n'
+        '        if(!indirectBuffer(ring_words[i]))continue;\n'
+        '        const uint64_t ib1=(uint64_t)ring_words[i+2]<<32|ring_words[i+1];\n'
+        '        const uint32_t dwords=ring_words[i+3]&0xfffffu;\n'
+        '        i+=3;++out[11];\n'
+        '        uint32_t carry[2]={};\n'
+        '        for(uint32_t at=0;at<dwords;at+=1024) {\n'
+        '            const uint32_t take=dwords-at<1024?dwords-at:1024;\n'
+        '            if(vm->peekWordsUncached(ib1+4ull*at,chunk,take)) {++out[13];break;}\n'
+        '            out[12]+=take;\n'
+        '            for(uint32_t k=0;k+3<take;++k) {\n'
+        '                if(!indirectBuffer(chunk[k]) || chunk[k+1]!=ib2_low)continue;\n'
+        '                if(!out[0]) {\n'
+        '                    out[1]=index;out[2]=(uint32_t)ib1;out[3]=(uint32_t)(ib1>>32);out[4]=at+k;\n'
+        '                    out[5]=k>=2?chunk[k-2]:carry[0];out[6]=k>=1?chunk[k-1]:carry[1];\n'
+        '                    for(unsigned w=0;w<4;++w)out[7+w]=chunk[k+w];\n'
+        '                }\n'
+        '                ++out[0];\n'
+        '            }\n'
+        '            carry[0]=chunk[take>=2?take-2:0];carry[1]=chunk[take-1];\n'
+        '        }\n'
+        '        ++index;\n'
+        '    }\n'
+        '    for(unsigned i=0;i<14;++i)native_adreno_stall_find[i]=out[i];\n'
+        '}\n'
+        '/* Where the stalled job\'s commands hold the faulting address (7e8d248): every IB1 of the job and every IB2 those name (up\n'
+        ' * to 512) are read for dwords equal to the fault\'s low address word. [0] matches, [1] of those followed by a 0 word (a 64-bit\n'
+        ' * address with no upper word), [2] level of the first match (1 IB1, 2 IB2), [3..4] that IB\'s address low/high, [5] the\n'
+        ' * match\'s dword offset in it, [6..15] the eight words before it, the match and the word after. [16] the nearest dword below\n'
+        ' * the fault within 1 MiB followed by a 0 word (a base the faulting fetch could have offset from), [17] its distance, [18]\n'
+        ' * its level, [19..20] its IB, [21] its offset, [22..29] the six words before it, it and the word after. [30] IBs read, [31]\n'
+        ' * dwords read. The fault low word is searched only when its upper word is 0. */\n'
+        'static void findFault(const NativeAdrenoVm *vm,const uint32_t *ring_words,size_t ring_count,uint32_t far_low)\n'
+        '{\n'
+        '    uint32_t out[32]={};\n'
+        '    static uint32_t chunk[1024];\n'
+        '    static uint64_t ib2s[512];static uint32_t ib2_size[512];\n'
+        '    uint32_t ib2_count=0,best=0xffffffffu;\n'
+        '    auto scan=[&](uint64_t ib,uint32_t dwords,uint32_t level) {\n'
+        '        ++out[30];\n'
+        '        for(uint32_t at=0;at<dwords;at+=1024) {\n'
+        '            const uint32_t take=dwords-at<1024?dwords-at:1024;\n'
+        '            if(vm->peekWordsUncached(ib+4ull*at,chunk,take))return;\n'
+        '            out[31]+=take;\n'
+        '            for(uint32_t k=0;k<take;++k) {\n'
+        '                const uint32_t w=chunk[k],next=k+1<take?chunk[k+1]:1;\n'
+        '                if(level==1 && k+3<take && indirectBuffer(w) && ib2_count<512 && chunk[k+2]) {\n'
+        '                    ib2s[ib2_count]=(uint64_t)chunk[k+2]<<32|chunk[k+1];ib2_size[ib2_count++]=chunk[k+3]&0xfffffu;\n'
+        '                }\n'
+        '                if(w==far_low) {\n'
+        '                    if(!out[0]) {\n'
+        '                        out[2]=level;out[3]=(uint32_t)ib;out[4]=(uint32_t)(ib>>32);out[5]=at+k;\n'
+        '                        for(unsigned i=0;i<10;++i) {const int x=(int)k-8+(int)i;out[6+i]=x>=0 && x<(int)take?chunk[x]:0xdeadbeef;}\n'
+        '                    }\n'
+        '                    ++out[0];if(!next)++out[1];\n'
+        '                }\n'
+        '                if(w<far_low && far_low-w<=(1u<<20) && !next && far_low-w<best) {\n'
+        '                    best=far_low-w;out[16]=w;out[17]=best;out[18]=level;out[19]=(uint32_t)ib;out[20]=(uint32_t)(ib>>32);out[21]=at+k;\n'
+        '                    for(unsigned i=0;i<8;++i) {const int x=(int)k-6+(int)i;out[22+i]=x>=0 && x<(int)take?chunk[x]:0xdeadbeef;}\n'
+        '                }\n'
+        '            }\n'
+        '        }\n'
+        '    };\n'
+        '    for(size_t i=0;i+3<ring_count;++i) {\n'
+        '        if(!indirectBuffer(ring_words[i]))continue;\n'
+        '        scan((uint64_t)ring_words[i+2]<<32|ring_words[i+1],ring_words[i+3]&0xfffffu,1);\n'
+        '        i+=3;\n'
+        '    }\n'
+        '    for(uint32_t i=0;i<ib2_count;++i)scan(ib2s[i],ib2_size[i],2);\n'
+        '    for(unsigned i=0;i<32;++i)native_adreno_stall_fault[i]=out[i];\n'
+        '}\n'
+        'static uint32_t stall_fence,stall_timeouts,stall_stage;',
+        'find searches')
+    # The phases' clock at the top of submit().
+    text = once(text,
+        '    if(!buffers || !count || count>SubmitMaxBuffers)return kIOReturnBadArgument;\n'
+        '    native_adreno_submit_ibs[0]=native_adreno_submit_ibs[0]+1;',
+        '    if(!buffers || !count || count>SubmitMaxBuffers)return kIOReturnBadArgument;\n'
+        '    /* The phases\' clock: each lap takes the time since the one before; an accepted submission adds them to\n'
+        '     * native_adreno_submit_us. */\n'
+        '    uint64_t lap_us=clock && clock->now_us?clock->now_us(clock->cookie):0,laps[6]={};\n'
+        '    const uint64_t began_us=lap_us;\n'
+        '    auto lap=[&](unsigned slot) {\n'
+        '        if(!began_us)return;\n'
+        '        const uint64_t now=clock->now_us(clock->cookie);\n'
+        '        laps[slot]=now-lap_us;lap_us=now;\n'
+        '    };\n'
+        '    native_adreno_submit_ibs[0]=native_adreno_submit_ibs[0]+1;',
+        'lap machinery')
+    text = once(text,
+        '        ++stats_.references_held;\n    }\n    uint32_t value=0;\n',
+        '        ++stats_.references_held;\n    }\n    lap(1);\n    uint32_t value=0;\n',
+        'lap 1')
+    # The synchronized trust audit after the wc audit, plus lap(2): the driver's
+    # own buffers are checked on the first 8 submissions and every 1024th.
+    text = once(text,
+        '    /* The coherence sample reads the first IB\'s word through a fresh uncached mapping before and after the publication: every 64th\n',
+        '    /* The driver\'s own buffers (ring, memptrs, SQE, AQE, power-up, scratch) are not cleaned at every submission: their writers\n'
+        '     * keep the GPU\'s view current (NativeAdrenoMemory::declareSynchronized). The first 8 submissions and every 1024th after them\n'
+        '     * compare the head of each one as a CPU cache and DRAM hold it; a dirty line ends that trust for good, and from this\n'
+        '     * submission on they are cleaned every time. */\n'
+        '    if((native_adreno_submit_ibs[0]<=8 || !(native_adreno_submit_ibs[0]&1023)) && !native_adreno_sync_audit[4]) {\n'
+        '        uint32_t lines=0,dirty=0,stale=0;\n'
+        '        const IOReturn audited=vm_->auditSynchronized(&lines,&dirty,&stale);\n'
+        '        if(audited!=kIOReturnUnsupported) {   /* no board hook (host): nothing to compare */\n'
+        '            native_adreno_sync_audit[0]=native_adreno_sync_audit[0]+1;\n'
+        '            native_adreno_sync_audit[1]=native_adreno_sync_audit[1]+lines;\n'
+        '            native_adreno_sync_audit[2]=native_adreno_sync_audit[2]+dirty;\n'
+        '            native_adreno_sync_audit[3]=native_adreno_sync_audit[3]+stale;\n'
+        '            if(audited)native_adreno_sync_audit[5]=(uint32_t)audited;\n'
+        '            if(dirty || audited)native_adreno_sync_audit[4]=native_adreno_sync_audit[0];\n'
+        '        }\n'
+        '    }\n'
+        '    lap(2);\n'
+        '    /* The coherence sample reads the first IB\'s word through a fresh uncached mapping before and after the publication: every 64th\n',
+        'sync audit')
+    text = once(text,
+        '    /* The ring this job goes to (the first ring alone unless the board turned the switch on). */\n'
+        '    const unsigned index=preemption()?ringForPriority():0;\n',
+        '    lap(3);\n'
+        '    /* The ring this job goes to (the first ring alone unless the board turned the switch on). */\n'
+        '    const unsigned index=preemption()?ringForPriority():0;\n',
+        'lap 3')
+    # The submission log reads the IB head only under diag, through headWords.
+    text = once(text,
+        '        const uint32_t slot=native_adreno_ib_log_count&3;uint32_t head[28];\n'
+        '        (void)vm_->peekWords(buffers[0].iova,head,28);\n',
+        '        const uint32_t slot=native_adreno_ib_log_count&3;uint32_t head[28]={};\n'
+        '        if(native_adreno_diag)(void)vm_->headWords(buffers[0].handle,buffers[0].iova,head,28);\n',
+        'headWords')
+    text = once(text,
+        '        native_adreno_ib_log_count=native_adreno_ib_log_count+1;\n    }\n'
+        '    status=useVm(vm,clock);\n',
+        '        native_adreno_ib_log_count=native_adreno_ib_log_count+1;\n    }\n'
+        '    lap(4);\n'
+        '    status=useVm(vm,clock);\n',
+        'lap 4')
+    text = once(text,
+        '    *fence=value;\n    driveSwitch(clock);\n    return kIOReturnSuccess;\n}\n'
+        'IOReturn NativeAdrenoSubmit::observeFence',
+        '    *fence=value;\n    driveSwitch(clock);\n'
+        '    lap(5);\n'
+        '    if(began_us) {\n'
+        '        native_adreno_submit_us[0]=native_adreno_submit_us[0]+1;\n'
+        '        for(unsigned i=1;i<6;++i)native_adreno_submit_us[i]=native_adreno_submit_us[i]+laps[i];\n'
+        '        native_adreno_submit_us[6]=native_adreno_submit_us[6]+(lap_us-began_us);\n'
+        '    }\n'
+        '    return kIOReturnSuccess;\n}\n'
+        'IOReturn NativeAdrenoSubmit::observeFence',
+        'lap 5')
+    # The retained hung snapshot (7e8d248): a hang's snapshot stays until the next
+    # hang; snapshot() skips while one is retained.
+    text = once(text,
+        '    uint32_t words[NativeAdrenoRingStallWords]={},fault[4]={};\n'
+        '    if(stalled->stallState(words))return;\n'
+        '    {\n'
+        '        const uint32_t n=native_adreno_stall_log_count;',
+        '    uint32_t words[NativeAdrenoRingStallWords]={},fault[4]={};\n'
+        '    if(native_adreno_stall_hang)return;\n'
+        '    if(stalled->stallState(words))return;\n'
+        '    {\n'
+        '        const uint32_t n=native_adreno_stall_log_count;',
+        'hang retain')
+    text = once(text,
+        '    peekFetch(space,(uint64_t)words[21]<<32|words[20],&native_adreno_stall_mem[4+34]);\n'
+        '    {\n'
+        '        uint64_t brIb=',
+        '    peekFetch(space,(uint64_t)words[21]<<32|words[20],&native_adreno_stall_mem[4+34]);\n'
+        '    if(job && job->word_count)findIb2(space,job->words,job->word_count,words[13]);\n'
+        '    for(unsigned i=0;i<32;++i)native_adreno_stall_fault[i]=0;\n'
+        '    if(job && job->word_count && fault[0] && !fault[2] && fault[1])findFault(space,job->words,job->word_count,fault[1]);\n'
+        '    {\n'
+        '        uint64_t brIb=',
+        'find calls')
+    text = once(text,
+        '    progress_retries_=0;++stats_.hangs;*hung=true;\n    return kIOReturnSuccess;\n}\n'
+        'IOReturn NativeAdrenoSubmit::recover',
+        '    progress_retries_=0;++stats_.hangs;*hung=true;\n'
+        '    /* Where the CP stopped, before the restart clears it. */\n'
+        '    native_adreno_stall_hang=0;\n'
+        '    snapshot(fence+1,clock_now_?clock_now_(clock_cookie_):0,0,r);\n'
+        '    native_adreno_stall_hang=(uint32_t)stats_.hangs;\n'
+        '    return kIOReturnSuccess;\n}\n'
+        'IOReturn NativeAdrenoSubmit::recover',
+        'hang snapshot')
     return text
 
 

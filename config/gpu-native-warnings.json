@@ -33,7 +33,21 @@
         "file_sha256": "780c9342e45765fcda4248ec4767f29625e1f1714b2bd575b7f7492386ba92dd"
       }
     ],
-    "review": "Boolean equality flags shifted through bit8 form a nonnegative <=511 mismatch bitmask."
+    "review": "Boolean equality flags shifted through bit8 form a nonnegative <=511 mismatch bitmask.",
+    "derived": [
+      {
+        "source_sha256": "da3bde802f6a984800b26ef62757fc0d19e580aa4c8083e3b61918fd8a923119",
+        "sites": [
+          {
+            "file": "NativeAdrenoGpuContext.cpp",
+            "line": 70,
+            "group": "-Wsign-conversion",
+            "file_sha256": "da3bde802f6a984800b26ef62757fc0d19e580aa4c8083e3b61918fd8a923119"
+          }
+        ],
+        "review": "upstream pin code (auditCompare ttbr/sctlr bitmask shift); same site reviewed on the tree file."
+      }
+    ]
   },
   "NativeAdrenoMemory.cpp": {
     "source_sha256": "4592dbc53e8287785f3c3e7d48dec995a2385ca6ed44307bdaf4d6011fbbdad7",
@@ -45,7 +59,21 @@
         "file_sha256": "4592dbc53e8287785f3c3e7d48dec995a2385ca6ed44307bdaf4d6011fbbdad7"
       }
     ],
-    "review": "Signed allocation/free delta intentionally updates unsigned system-memory accounting modulo 2^64 under its statistics lock; no DMA address is derived from this diagnostic counter."
+    "review": "Signed allocation/free delta intentionally updates unsigned system-memory accounting modulo 2^64 under its statistics lock; no DMA address is derived from this diagnostic counter.",
+    "derived": [
+      {
+        "source_sha256": "e1472016966e919a2315a0a4eac9f2915ebb0909f9c4b7909d5c300d48c6be1c",
+        "sites": [
+          {
+            "file": "NativeAdrenoMemory.cpp",
+            "line": 25,
+            "group": "-Wsign-conversion",
+            "file_sha256": "e1472016966e919a2315a0a4eac9f2915ebb0909f9c4b7909d5c300d48c6be1c"
+          }
+        ],
+        "review": "upstream pin code (noteSystem int64 accumulate into uint64); same site reviewed on the tree file."
+      }
+    ]
   },
   "NativeAdrenoPublish.cpp": {
     "source_sha256": "c2c73a9b336920af8497a5012189b749784eeeb4e858e47a49fe3858fe342d4e",
@@ -69,7 +97,33 @@
         "file_sha256": "c2c73a9b336920af8497a5012189b749784eeeb4e858e47a49fe3858fe342d4e"
       }
     ],
-    "review": "Trace-enabled is written as0/1; process identifiers are copied to uint32 diagnostic protocol fields, with no hardware address or control decision."
+    "review": "Trace-enabled is written as0/1; process identifiers are copied to uint32 diagnostic protocol fields, with no hardware address or control decision.",
+    "derived": [
+      {
+        "source_sha256": "13f4717b10d842cd4895d9987d5f1b740ada3b285ad57683d01b0761339781ef",
+        "sites": [
+          {
+            "file": "NativeGpuTrace.inc",
+            "line": 26,
+            "group": "-Wsign-conversion",
+            "file_sha256": "a40dec1c2b6228b026a0de27cb0a16090c972b2a568ac963445a619f1f99fe57"
+          },
+          {
+            "file": "NativeAdrenoPublish.cpp",
+            "line": 763,
+            "group": "-Wsign-conversion",
+            "file_sha256": "13f4717b10d842cd4895d9987d5f1b740ada3b285ad57683d01b0761339781ef"
+          },
+          {
+            "file": "NativeAdrenoPublish.cpp",
+            "line": 768,
+            "group": "-Wsign-conversion",
+            "file_sha256": "13f4717b10d842cd4895d9987d5f1b740ada3b285ad57683d01b0761339781ef"
+          }
+        ],
+        "review": "upstream pin code (NativeGpuTrace.inc macro + int event ids into uint32 fields); same sites reviewed on the tree file."
+      }
+    ]
   },
   "NativeAdrenoSmmuContext.cpp": {
     "source_sha256": "4276ab64c8f477ab4679fda49f19001701f1927e3e707432425a1b0fe2686b93",
@@ -142,6 +196,36 @@
           }
         ],
         "review": "Derived instrumentation source (SubmitSource.py on the pinned baseline). Same four warnings as the reviewed baseline entry, shifted by the inserted blocks; the derivation adds no new warning."
+      },
+      {
+        "source_sha256": "6360cced6244535b746afdf2071265340b6ca7a6ceee692beae4fa71552952b3",
+        "sites": [
+          {
+            "file": "NativeAdrenoSubmit.cpp",
+            "line": 479,
+            "group": "-Wsign-conversion",
+            "file_sha256": "6360cced6244535b746afdf2071265340b6ca7a6ceee692beae4fa71552952b3"
+          },
+          {
+            "file": "NativeAdrenoSubmit.cpp",
+            "line": 523,
+            "group": "-Wshadow",
+            "file_sha256": "6360cced6244535b746afdf2071265340b6ca7a6ceee692beae4fa71552952b3"
+          },
+          {
+            "file": "NativeAdrenoSubmit.cpp",
+            "line": 615,
+            "group": "-Wsign-conversion",
+            "file_sha256": "6360cced6244535b746afdf2071265340b6ca7a6ceee692beae4fa71552952b3"
+          },
+          {
+            "file": "NativeAdrenoSubmit.cpp",
+            "line": 713,
+            "group": "-Wsign-conversion",
+            "file_sha256": "6360cced6244535b746afdf2071265340b6ca7a6ceee692beae4fa71552952b3"
+          }
+        ],
+        "review": "upstream pin code (gpuTraceEvent int args into uint32 slots, wc_audit[4] IOReturn store, vm_ local shadow); same sites reviewed on the tree file."
       }
     ]
   },
@@ -162,5 +246,14 @@
       }
     ],
     "review": "proc_selfpid() is stored in the32-bit import identity/trace fields after successful task import; width is unchanged."
+  },
+  "NativeAdrenoVm.cpp": {
+    "derived": [
+      {
+        "source_sha256": "7b13a3e6aa49c48fdf2ec84ca83834f7b44652706bc65275e5a30e755a023e6d",
+        "sites": [],
+        "review": "derived unit compiles clean; no sites."
+      }
+    ]
   }
 }

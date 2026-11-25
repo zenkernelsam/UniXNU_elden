@@ -38,30 +38,34 @@ def main():
     submit_note=None
     vfs_overlay=None
     if a.submit:
-        derived=a.submit.resolve();dcpp=derived/'NativeAdrenoSubmit.cpp';dh=derived/'NativeAdrenoSubmit.h'
-        if not dcpp.is_file() or not dh.is_file():raise ValueError('Derived submit pair incomplete: '+str(derived))
-        tree_cpp=gpu/'NativeAdrenoSubmit.cpp'
-        if tree_cpp not in sources:raise ValueError('Derived submit given but the tree has no NativeAdrenoSubmit.cpp to replace')
-        # Overlay NativeAdrenoSubmit.h onto the tree directory so every TU (including
-        # quoted includes from tree headers and downstream runtime units inheriting
-        # these flags) compiles against the identical derived class layout.
-        vfs_overlay=out/'submit-overlay.yaml'
-        vfs_overlay.write_text(json.dumps({
-            'version': 0,
-            'case-sensitive': False,
-            'fallthrough': True,
-            'roots': [{
-                'type': 'directory',
-                'name': str(gpu),
-                'contents': [{
-                    'type': 'file',
-                    'name': 'NativeAdrenoSubmit.h',
-                    'external-contents': str(dh),
-                }],
-            }],
-        }, indent=2)+'\n')
-        sources=[dcpp if x==tree_cpp else x for x in sources]
-        submit_note={'derived_cpp_sha256':sha(dcpp),'derived_h_sha256':sha(dh),'tree_cpp_sha256':sha(tree_cpp),'vfs_overlay':str(vfs_overlay)}
+        derived=a.submit.resolve()
+        # Every derived unit that replaces a tree translation unit (same stem, one
+        # object), and every derived header that shadows a tree header: the overlay
+        # puts the derived layouts in front of every TU (including quoted includes
+        # and downstream runtime units inheriting these flags).
+        swapped={};overlaid={}
+        contents=[]
+        for stem in ('NativeAdrenoSubmit','NativeAdrenoVm','NativeAdrenoMemory','NativeAdrenoGpuContext','NativeAdrenoPublish'):
+            dcpp=derived/(stem+'.cpp')
+            tree_cpp=gpu/(stem+'.cpp')
+            if dcpp.is_file():
+                if tree_cpp not in sources:raise ValueError('Derived '+stem+' given but the tree has no '+stem+'.cpp to replace')
+                sources=[dcpp if x==tree_cpp else x for x in sources]
+                swapped[stem]={'derived_cpp_sha256':sha(dcpp),'tree_cpp_sha256':sha(tree_cpp)}
+            dh=derived/(stem+'.h')
+            if dh.is_file():
+                if not (gpu/(stem+'.h')).is_file():raise ValueError('Derived '+stem+'.h given but the tree has no '+stem+'.h to shadow')
+                contents.append({'type':'file','name':stem+'.h','external-contents':str(dh)})
+                overlaid[stem+'_h_sha256']=sha(dh)
+        if swapped:
+            vfs_overlay=out/'derived-overlay.yaml'
+            vfs_overlay.write_text(json.dumps({
+                'version': 0,
+                'case-sensitive': False,
+                'fallthrough': True,
+                'roots': [{'type':'directory','name':str(gpu),'contents':contents}],
+            }, indent=2)+'\n')
+            submit_note={'units':swapped,**overlaid,'vfs_overlay':str(vfs_overlay)}
     flags=[];i=0
     while i<len(rec['arguments']):
         v=rec['arguments'][i]

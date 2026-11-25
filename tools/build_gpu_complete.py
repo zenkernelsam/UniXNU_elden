@@ -152,6 +152,8 @@ def main():
     if not args.resume_userspace:
         (tree/'.cache/mesa-venv').symlink_to(args.shader_prefix.resolve()/'venv', target_is_directory=True)
     run('derive', tool('prepare_gpu_runtime.py', '--tree', tree, '--output', out/'derived'))
+    run('maintenance-test', tool('test_gpu_maintenance.py', '--tree', tree, '--derived', out/'derived',
+        '--output', out/'maintenance-test'))
     run('native-core', tool('build_gpu_native.py', '--tree', tree, '--base-native', base/'native',
                            '--xnu-source', base/'source/xnu', '--submit', out/'derived', '--output', out/'core', '--jobs', '4'))
     run('native-runtime', tool('build_gpu_runtime.py', '--tree', tree, '--derived', out/'derived',

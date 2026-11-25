@@ -1,0 +1,22 @@
+{
+  "repository": "https://github.com/IssacL04/Adreno740",
+  "commit": "9c34ea46aa991c4fed6f0347a814473ad626de77",
+  "files": {
+    "NativeAdrenoMemory.h": "8cf705d9896ce44e7fc976a52baff525a4a2b2935e9fb4421adf380bf69f24f4",
+    "NativeAdrenoMemory.cpp": "4592dbc53e8287785f3c3e7d48dec995a2385ca6ed44307bdaf4d6011fbbdad7",
+    "NativeAdrenoVm.h": "fe1db135e2384e86890d0b81e99b3b5e388c565e85a784559a4486b34926af0f",
+    "NativeAdrenoVm.cpp": "4d20ad7727b00bdb451e0b716f586f7c15974df9a9eba83f33cbf16c7bb9d14c",
+    "NativeAdrenoGpuContext.cpp": "780c9342e45765fcda4248ec4767f29625e1f1714b2bd575b7f7492386ba92dd",
+    "NativeAdrenoPublish.cpp": "c2c73a9b336920af8497a5012189b749784eeeb4e858e47a49fe3858fe342d4e"
+  },
+  "donors": {
+    "repository": "research/Adreno740-ipados27",
+    "commits": {
+      "5eb625fbb2394f34204e0b11eaadcbf8a7f09240": "synchronized-buffer maintenance skip (all 6 A830 context buffers declared synchronized; verified writer sets: no CP packet targets the scratch page)",
+      "88241faf6a615b9bf170d24a968d3f94de3d673c": "SMMU global fault status no longer fails other address spaces + sGFSR cleared at endFault + findIb2",
+      "7e8d2482c7fc0f79f0bee4013807679781f419f6": "retained hung CP snapshot + findFault IB2 address candidates",
+      "4799715c6d43690613be7ed914a8cfdd77846e84": "offerSystemPages for every BoAlloc (A830 has no page pool: the Memory.cpp pool hunk does not apply)"
+    },
+    "note": "A830 deltas honoured: six context buffers (SQE/ring/memptrs/pwrup/scratch/AQE, 184 KiB), buffer_count_ loop, probeBuffer publishForDevice with NativeAdrenoPhaseWrite, 4-arg snapshot(next,now,pending,stalled), no waited-fence plumbing, snapshot called from hangCheck with pending=0. gpu-maint-all=1 restores every pass."
+  }
+}
