@@ -23,6 +23,8 @@ IOMemoryMap*IOMemoryDescriptor::createMappingInTask(task_t,unsigned,unsigned){if
 #define OSSafeReleaseNULL(x) do{if(x){(x)->release();(x)=nullptr;}}while(0)
 static void native_legacy_gpu_complete(void*,int status){++completions;lastStatus=status;}
 static uint64_t native_gop_gpu_offers,native_gop_gpu_failures,native_gop_gpu_completions,native_gop_gpu_abandoned,native_gop_wait_stats[7],native_gop_wait_reasons[4],native_gop_wait_ring[64][3];static uint32_t native_gop_wait_ring_count;
+static uint64_t native_gop_gpu_fences[8];static bool fencesOk=true;static uint32_t fenceSub=40,fenceRet=37;
+extern "C" bool native_adreno_fences_detail(uint32_t *s,uint32_t *r,uint32_t *d){if(d)d[0]=d[1]=d[2]=0;if(!fencesOk)return false;*s=fenceSub;*r=fenceRet;return true;}
 #include "NativeGOPWire.h"
 class NativeGOPPresenter{
 public:
@@ -31,16 +33,19 @@ public:
  uint64_t swapSequence=0;struct Kept{IOMemoryDescriptor*memory=nullptr;IOMemoryMap*map=nullptr;task_t task=nullptr;uint32_t id=0;uint64_t used=0;};static constexpr unsigned kKept=6;Kept kept[kKept];uint32_t keptId=0;uint64_t keptUse=0;
  bool offer(void*,IOMemoryDescriptor*,uint64_t,uint32_t,uint32_t,uint32_t);
  IOReturn waitSwap(task_t,uint64_t,NGPSwap*);IOReturn completeSwap(uint64_t,int,task_t=TASK_NULL);
- void abandonSwap(task_t=TASK_NULL);void dropKept();
+ void abandonSwap(task_t=TASK_NULL);void dropKept();void noteFences(unsigned,uint64_t);
 };
 #include "ActualFrameMethods.inc"
 int main(){
  Task a,b;NativeGOPPresenter p;auto *m=new IOMemoryDescriptor;NGPSwap frame{};int display=1;
  CHECK(p.waitSwap(&a,0,&frame)==kIOReturnTimeout&&a.refs==2);
  CHECK(p.waitSwap(&b,0,&frame)==kIOReturnNotPermitted&&b.refs==1);
- CHECK(p.offer(&display,m,256,64,16,1));CHECK(!p.waitSwap(&a,0,&frame)&&liveMaps==1);
+ CHECK(p.offer(&display,m,256,64,16,1));CHECK(native_gop_gpu_fences[0]==1&&native_gop_gpu_fences[1]==40&&native_gop_gpu_fences[2]==37);
+ CHECK(!p.waitSwap(&a,0,&frame)&&liveMaps==1);
  CHECK(p.completeSwap(frame.sequence,0,&b)==kIOReturnBadArgument);p.abandonSwap(&b);CHECK(p.swap.offered&&a.refs==3);
- CHECK(!p.completeSwap(frame.sequence,0,&a)&&completions==1);p.abandonSwap(&a);CHECK(a.refs==1&&m->refs==1&&!liveMaps);
+ CHECK(!p.completeSwap(frame.sequence,0,&a)&&completions==1);
+ CHECK(native_gop_gpu_fences[3]==frame.sequence&&native_gop_gpu_fences[4]==40&&native_gop_gpu_fences[5]==37&&native_gop_gpu_fences[6]==0);
+ p.abandonSwap(&a);CHECK(a.refs==1&&m->refs==1&&!liveMaps);
  CHECK(p.waitSwap(&a,0,&frame)==kIOReturnTimeout);CHECK(p.offer(&display,m,256,64,16,1));mappingFails=true;
  CHECK(p.waitSwap(&a,0,&frame)==kIOReturnNoMemory&&!p.swap.offered&&lastStatus==kIOReturnNoMemory);mappingFails=false;p.abandonSwap(&a);
  CHECK(a.refs==1&&m->refs==1&&!liveMaps);
@@ -51,5 +56,8 @@ int main(){
  mappingHook=[&]{p.abandonSwap(&a);CHECK(p.waitSwap(&b,0,&newFrame)==kIOReturnTimeout);CHECK(p.offer(&display,second,256,64,16,1));CHECK(!p.waitSwap(&b,0,&newFrame));};
  CHECK(p.waitSwap(&a,0,&frame)==kIOReturnNotReady);CHECK(p.handoffOwner==&b&&p.swap.offered&&liveMaps==1&&m->refs==1);
  CHECK(!p.completeSwap(newFrame.sequence,0,&b));p.abandonSwap(&b);CHECK(a.refs==1&&b.refs==1&&m->refs==1&&second->refs==1&&!liveMaps);
- m->release();second->release();std::puts("PASS: actual presenter owner isolation, mapping failure fallback, close-during-map and new-owner race; references balanced");
+ CHECK(native_gop_gpu_fences[3]==newFrame.sequence&&native_gop_gpu_fences[7]==0);
+ fencesOk=false;CHECK(p.waitSwap(&a,0,&frame)==kIOReturnTimeout);CHECK(p.offer(&display,m,256,64,16,0xdead));
+ CHECK(native_gop_gpu_fences[0]==newFrame.sequence+1&&native_gop_gpu_fences[7]==1);fencesOk=true;p.abandonSwap(&a);
+ m->release();second->release();std::puts("PASS: actual presenter owner isolation, mapping failure fallback, close-during-map and new-owner race; references balanced; frame-fence correlation recorded");
 }
