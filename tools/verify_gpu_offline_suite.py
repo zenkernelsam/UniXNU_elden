@@ -86,6 +86,8 @@ def main():
                     '--build', build, '--package', a.package.resolve(), '--tree', tree])
     ok &= run_phase('a830-hwinit-irq-and-sha256', [tool('test_gpu_a830_hwinit_irq_and_sha256.py'),
                     '--prepared', a.prepared.resolve()])
+    ok &= run_phase('a830-hwinit-regseq-parity', [tool('test_gpu_a830_hwinit_regseq_parity.py'),
+                    '--prepared', a.prepared.resolve()])
     ok &= run_phase('pre-bringup-contract', [tool('test_gpu_pre_bringup_contract.py'),
                     '--tree', tree, '--package', a.package.resolve(), '--prepared', a.prepared.resolve()])
 
