@@ -82,6 +82,8 @@ def main():
                     '--opps', build / 'opps', '--derived', build / 'derived'])
     ok &= run_phase('runtime-lifecycle-and-maintenance', [tool('test_gpu_runtime_lifecycle_and_maintenance.py'),
                     '--derived', build / 'derived'])
+    ok &= run_phase('userspace-icd-and-abi-symbols', [tool('test_gpu_userspace_icd_and_abi_symbols.py'),
+                    '--build', build, '--package', a.package.resolve(), '--tree', tree])
     ok &= run_phase('pre-bringup-contract', [tool('test_gpu_pre_bringup_contract.py'),
                     '--tree', tree, '--package', a.package.resolve(), '--prepared', a.prepared.resolve()])
 
