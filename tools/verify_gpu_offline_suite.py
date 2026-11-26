@@ -71,6 +71,8 @@ def main():
                     '--tree', tree, '--derived', build / 'derived'])
     ok &= run_phase('smmu-vm-isolation', [tool('test_gpu_smmu_vm_isolation.py'),
                     '--tree', tree, '--derived', build / 'derived'])
+    ok &= run_phase('gmu-hfi-framing', [tool('test_gpu_gmu_hfi_framing.py'),
+                    '--tree', tree])
 
     # Guardrail validation across the chain and package evidence.
     guardrails = {}
