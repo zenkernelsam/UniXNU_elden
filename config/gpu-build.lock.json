@@ -1,84 +1,87 @@
 {
- "schema": 1,
- "status": "complete-chain work in progress; not qualified",
- "sources": {
-  "tooling": {
-   "url": "https://github.com/UniXNU/UniXNU.git",
-   "directory": "UniXNU-official",
-   "commit": "b6ac0630ed55feb926ccf2961523fca08bf2464e",
-   "destination": "."
+  "schema": 1,
+  "status": "complete-chain work in progress; not qualified",
+  "sources": {
+    "tooling": {
+      "url": "https://github.com/UniXNU/UniXNU.git",
+      "directory": "UniXNU-official",
+      "commit": "8542980d02b4d2cc5c32ee3542de1760b2562aac",
+      "destination": "."
+    },
+    "gpu": {
+      "url": "https://github.com/IssacL04/Adreno740.git",
+      "directory": "Adreno740-a830",
+      "commit": "9c34ea46aa991c4fed6f0347a814473ad626de77",
+      "ref": "refs/heads/a830-sm8750",
+      "destination": "drivers/Adreno740"
+    },
+    "metal": {
+      "url": "https://github.com/UniXNU/AdrenoMetal.git",
+      "directory": "AdrenoMetal-a830-opt2",
+      "commit": "cc01fa331982983169b019f7cb0218e2f25143b5",
+      "ref": "refs/heads/a830-sm8750-opt2",
+      "destination": "drivers/AdrenoMetal",
+      "merge": "official cc0a4e8 onto a830 base 8f90243 (opt-006 merge cc01fa33): +copied-buffer guard chain (0064 macOS-gated), shader-cache sleep/register, render-server stderr append, tiling-cost diagnostics; preserves SP_CORES=6, tu_debug, NBTraceScanoutCommand, GPU8 monitor, sheng- boot-args, singleSample=false, iOS 17 ABI"
+    },
+    "soc": {
+      "url": "https://github.com/IssacL04/UniXNU-sm8750-common.git",
+      "directory": "UniXNU-sm8750-common-pagani",
+      "commit": "feaa135df4763e3c19a155402e6b17b124a12e13",
+      "ref": "refs/heads/main",
+      "destination": "kits/Sm8750Platform",
+      "prefix": "kits/Sm8750Platform"
+    },
+    "firmware": {
+      "url": "https://github.com/IssacL04/AdrenoFirmware.git",
+      "directory": "AdrenoFirmware-a830",
+      "commit": "505d0a1ac079339ee1486f0e19cfd8bd36a282a2",
+      "ref": "refs/heads/a830-sm8750",
+      "destination": "kits/AdrenoFirmware"
+    },
+    "pm4": {
+      "url": "https://github.com/UniXNU/AdrenoPM4.git",
+      "directory": "AdrenoPM4-night",
+      "commit": "282606b528b2595bc4274ea7490b62b323f35a5f",
+      "ref": "refs/heads/main",
+      "destination": "kits/AdrenoPM4"
+    },
+    "smmu": {
+      "url": "https://github.com/UniXNU/ArmSmmu4K.git",
+      "directory": "ArmSmmu4K-night",
+      "commit": "83969cd874503e65997ff7639f7dcf3d0a92cd17",
+      "ref": "refs/heads/main",
+      "destination": "kits/ArmSmmu4K"
+    },
+    "gop": {
+      "url": "https://github.com/UniXNU/GopFramebuffer.git",
+      "directory": "GopFramebuffer-official",
+      "commit": "b0d812d578efa2acb005b66f73168891719af09a",
+      "ref": "refs/heads/main",
+      "destination": "drivers/GopFramebuffer"
+    }
   },
-  "gpu": {
-   "url": "https://github.com/IssacL04/Adreno740.git",
-   "directory": "Adreno740-a830",
-   "commit": "9c34ea46aa991c4fed6f0347a814473ad626de77",
-   "ref": "refs/heads/a830-sm8750",
-   "destination": "drivers/Adreno740"
+  "compatibility_inputs": {
+    "scripts/data/gpu-metal-vulkan-inputs.json": {
+      "worktree_file": "config/inputs/gpu-metal-vulkan-inputs-779eb522.json",
+      "sha256": "728b98a76fae3d31b86434ba37fd09d179e70a221de9d50adaa7e3b5fe46a445",
+      "note": "opt-006 native pin: metal2vulkan 779eb522; replaces the b6ac063-era git-object overlay"
+    },
+    "scripts/build-adreno-metal-bridge.py": {
+      "worktree_file": "config/inputs/build-adreno-metal-bridge.py",
+      "sha256": "947766405ed6b77a221ec8f58b3980a10ec779d40eb14627601d206ec6aad0c4",
+      "note": "upstream 8542980 builder with the single-line PATCHES swap to 0058-...-779eb522.patch (0064 retained)"
+    }
   },
-  "metal": {
-   "url": "https://github.com/UniXNU/AdrenoMetal.git",
-   "directory": "AdrenoMetal-a830-opt2",
-   "commit": "8f90243b91e45eb17b004ddd7d02625e60fa0468",
-   "ref": "refs/heads/a830-sm8750-opt2",
-   "destination": "drivers/AdrenoMetal",
-   "merge": "official 4a04695 + a830 fork a4aa33c (opt-002 merge 450a406); +copied.rs iOS read_pages cfg; +GPU8 status monitor; +NBTraceScanoutCommand export (tip 8f90243)"
-  },
-  "soc": {
-   "url": "https://github.com/IssacL04/UniXNU-sm8750-common.git",
-   "directory": "UniXNU-sm8750-common-pagani",
-   "commit": "feaa135df4763e3c19a155402e6b17b124a12e13",
-   "ref": "refs/heads/main",
-   "destination": "kits/Sm8750Platform",
-   "prefix": "kits/Sm8750Platform"
-  },
-  "firmware": {
-   "url": "https://github.com/IssacL04/AdrenoFirmware.git",
-   "directory": "AdrenoFirmware-a830",
-   "commit": "505d0a1ac079339ee1486f0e19cfd8bd36a282a2",
-   "ref": "refs/heads/a830-sm8750",
-   "destination": "kits/AdrenoFirmware"
-  },
-  "pm4": {
-   "url": "https://github.com/UniXNU/AdrenoPM4.git",
-   "directory": "AdrenoPM4-night",
-   "commit": "282606b528b2595bc4274ea7490b62b323f35a5f",
-   "ref": "refs/heads/main",
-   "destination": "kits/AdrenoPM4"
-  },
-  "smmu": {
-   "url": "https://github.com/UniXNU/ArmSmmu4K.git",
-   "directory": "ArmSmmu4K-night",
-   "commit": "83969cd874503e65997ff7639f7dcf3d0a92cd17",
-   "ref": "refs/heads/main",
-   "destination": "kits/ArmSmmu4K"
-  },
-  "gop": {
-   "url": "https://github.com/UniXNU/GopFramebuffer.git",
-   "directory": "GopFramebuffer-official",
-   "commit": "b0d812d578efa2acb005b66f73168891719af09a",
-   "ref": "refs/heads/main",
-   "destination": "drivers/GopFramebuffer"
+  "compatibility_reason": "metal 450a406 merges AdrenoMetal-official 4a04695 with the A830 fork adaptation layer; tooling and bridge builder both b6ac063 supply the cda5fd8f chain (0058 rollup) and Cargo manifest inputs. Raw Git blob export bypasses Windows archive/autocrlf conversion. opt-006: tooling upgraded to UniXNU-official 8542980, metal to the cc0a4e8 merge 32dc141; translator 779eb522 pin native via config/inputs worktree overrides.",
+  "patch_text_transform": "CRLF to LF only for .patch build copies; original Git and transformed SHA256 are both recorded.",
+  "runtime": {
+    "repository": "https://github.com/steelbrain/metal2vulkan",
+    "ref": "refs/heads/development",
+    "commit": "779eb522b45615ab7a2e96f823502715238e472b",
+    "paired_patch_count": 1,
+    "user_confirmed_branch": true,
+    "historical_pin_record": "UniXNU/UniXNU@95c6788390124e22302a24d794efdfa7235815de:scripts/data/gpu-metal-vulkan-inputs.json",
+    "current_ref_relation": "diverged; see docs/evidence/gpu-runtime-development-20261115.json",
+    "pin_note": "development 779eb522 + 0058-main-optimizations-on-development-779eb522.patch + 0064-copies-leave-unreachable-pages-alone.patch (macOS-gated). Re-anchored from cda5fd8f: upstream 5d725aee deletes metal2vulkan-runtime in favor of metal2vulkan-rt; 779eb522 is the last development commit with the module-split runtime and the full bridge FFI surface; SEMANTICS_VERSION 0x8000_0000|2201. opt-006: pin represented natively through config/inputs worktree-file compatibility overrides; no post-prepare overlay."
   }
- },
- "compatibility_inputs": {
-  "scripts/data/gpu-metal-vulkan-inputs.json": {
-   "repository": "https://github.com/UniXNU/UniXNU.git",
-   "directory": "UniXNU-official",
-   "commit": "b6ac0630ed55feb926ccf2961523fca08bf2464e",
-   "path": "scripts/data/gpu-metal-vulkan-inputs.json",
-   "sha256": "57a402e84d17831c8faf465bc3f7e71f26dd60be946bff0d8c38bf4a81ba31bb"
-  }
- },
- "compatibility_reason": "metal 450a406 merges AdrenoMetal-official 4a04695 with the A830 fork adaptation layer; tooling and bridge builder both b6ac063 supply the cda5fd8f chain (0058 rollup) and Cargo manifest inputs. Raw Git blob export bypasses Windows archive/autocrlf conversion. opt-005: translator re-anchored to 779eb522 via prepared-tree overlay (see runtime.pin_note).",
- "patch_text_transform": "CRLF to LF only for .patch build copies; original Git and transformed SHA256 are both recorded.",
- "runtime": {
-  "repository": "https://github.com/steelbrain/metal2vulkan",
-  "ref": "refs/heads/development",
-  "commit": "779eb522b45615ab7a2e96f823502715238e472b",
-  "paired_patch_count": 1,
-  "user_confirmed_branch": true,
-  "historical_pin_record": "UniXNU/UniXNU@95c6788390124e22302a24d794efdfa7235815de:scripts/data/gpu-metal-vulkan-inputs.json",
-  "current_ref_relation": "diverged; see docs/evidence/gpu-runtime-development-20261115.json",
-  "pin_note": "development 779eb522 + 0058-main-optimizations-on-development-779eb522.patch (re-anchored from cda5fd8f: upstream 5d725aee deletes metal2vulkan-runtime in favor of metal2vulkan-rt; 779eb522 is the last development commit with the module-split runtime and the full bridge FFI surface; SEMANTICS_VERSION 0x8000_0000|2201). The exported compatibility input at b6ac063 still names cda5fd8f: prepared trees must overlay scripts/data/gpu-metal-vulkan-inputs.json + elden-build-lock.json with this pin and re-sync prepared.json + elden-source-manifest.json shas, as opt-005-20261125-1913/inputs/prepared records."
- }
 }

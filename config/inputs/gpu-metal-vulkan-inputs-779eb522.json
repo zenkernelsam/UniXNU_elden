@@ -1,0 +1,15 @@
+{
+ "schema": 1,
+ "translator": {
+  "repository": "https://github.com/steelbrain/metal2vulkan",
+  "commit": "779eb522b45615ab7a2e96f823502715238e472b",
+  "branch": "development",
+  "clone": "depth 1, blob filter, checked out source",
+  "files": {
+   "README.md": "8dec2f8a7be8db43c25427373462a63581f474837fee0679971c92615363a125",
+   "Cargo.toml": "25a8cec40c20cd47574d42a5199c9f0e3397d46686be00f6bc69f068e6fcd875",
+   "crates/metal2vulkan/src/device/policy.rs": "276a0586c78e4fff1579fc2bfc4c57133639e50c6ff6dbf10f2fabdd5056448a"
+  },
+  "pin_note": "opt-006: 779eb522 is the last development commit with the module-split metal2vulkan-runtime and the full bridge FFI surface (5d725aee deletes it for metal2vulkan-rt); paired with 0058-main-optimizations-on-development-779eb522.patch + 0064-copies-leave-unreachable-pages-alone.patch"
+ }
+}

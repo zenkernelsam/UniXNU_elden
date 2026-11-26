@@ -44,10 +44,13 @@ def main():
         print(name,count,flush=True)
     for path,row in lock.get('compatibility_inputs',{}).items():
         if path not in records or records[path]['component']!='tooling':raise ValueError('Compatibility override must replace declared tooling')
-        raw=subprocess.check_output(['git','-C',str(a.references/row['directory']),'show',row['commit']+':'+row['path']])
+        if row.get('worktree_file'):
+            raw=(ROOT/row['worktree_file']).read_bytes()
+        else:
+            raw=subprocess.check_output(['git','-C',str(a.references/row['directory']),'show',row['commit']+':'+row['path']])
         if hashlib.sha256(raw).hexdigest()!=row['sha256']:raise ValueError('Compatibility source identity changed')
         (out/path).write_bytes(raw)
-        records[path]={'component':'tooling-compatibility','commit':row['commit'],'git_path':row['path'],'sha256':row['sha256']}
+        records[path]={'component':'tooling-compatibility','worktree_file':row.get('worktree_file'),'commit':row.get('commit'),'git_path':row.get('path'),'sha256':row['sha256']}
     (out/'elden-source-manifest.json').write_text(json.dumps({'lock_sha256':hashlib.sha256(a.lock.read_bytes()).hexdigest(),'files':records},indent=2)+'\n')
     (out/'elden-build-lock.json').write_bytes(a.lock.read_bytes())
 if __name__=='__main__':main()
