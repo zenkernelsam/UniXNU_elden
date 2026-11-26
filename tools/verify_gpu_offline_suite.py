@@ -59,6 +59,8 @@ def main():
     ok &= run_phase('recovery-frame-diag', [tool('test_gpu_recovery_and_frame_diag.py'),
                     '--derived', build / 'derived', '--wire', tree / 'drivers/GopFramebuffer',
                     '--recovery', build / 'recovery'])
+    ok &= run_phase('firmware-warnings', [tool('test_gpu_firmware_and_warnings.py'),
+                    '--prepared', a.prepared.resolve(), '--native', build / 'core'])
 
     # Guardrail validation across the chain and package evidence.
     guardrails = {}
