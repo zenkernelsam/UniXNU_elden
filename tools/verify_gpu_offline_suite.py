@@ -63,6 +63,8 @@ def main():
                     '--prepared', a.prepared.resolve(), '--native', build / 'core'])
     ok &= run_phase('userspace-package-hygiene', [tool('test_gpu_userspace_and_package_hygiene.py'),
                     '--package', a.package.resolve()])
+    ok &= run_phase('activation-abi-gates', [tool('test_gpu_activation_and_abi_gates.py'),
+                    '--build', build, '--package', a.package.resolve()])
 
     # Guardrail validation across the chain and package evidence.
     guardrails = {}
