@@ -73,6 +73,8 @@ def main():
                     '--tree', tree, '--derived', build / 'derived'])
     ok &= run_phase('gmu-hfi-framing', [tool('test_gpu_gmu_hfi_framing.py'),
                     '--tree', tree])
+    ok &= run_phase('pm4-cmdbuf-bounds', [tool('test_gpu_pm4_cmdbuf_bounds.py'),
+                    '--tree', tree, '--derived', build / 'derived'])
 
     # Guardrail validation across the chain and package evidence.
     guardrails = {}

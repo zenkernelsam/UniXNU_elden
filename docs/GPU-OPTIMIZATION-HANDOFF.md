@@ -4,7 +4,7 @@
 
 ## 已验证优化基线（gpu-opt-001..014,HEAD `b8c1a60`)
 
-2026-11-27 更新。十八轮离线优化验收(opt-001..015 为 fresh solo 20 阶段链;opt-016/017/018 磁盘安全复用 opt-015 未变构建树仅跑验证门)（每轮 `returncode=0`、`resumed_userspace: false`),GPU 专项 ABI 逐轮逐字节相同（136B / 168 slots / `[0,1,7,39,40,41,140]` / C2+D2),30 个原 Apple 执行区保持，legacy prelinker 全局标志全 `false`,`hardware_qualified`/`device_access`/`boot_image_packaged`/`live_policy_selected` 全 `false`。各轮证据在 `lab/records/gpu-opt-001..018`,交接在 `_relay/gpu-opt-*/handover-to-codex.md`。
+2026-11-27 更新。十九轮离线优化验收(opt-001..015 为 fresh solo 20 阶段链;opt-016..019 磁盘安全复用 opt-015 未变构建树仅跑验证门)（每轮 `returncode=0`、`resumed_userspace: false`),GPU 专项 ABI 逐轮逐字节相同（136B / 168 slots / `[0,1,7,39,40,41,140]` / C2+D2),30 个原 Apple 执行区保持，legacy prelinker 全局标志全 `false`,`hardware_qualified`/`device_access`/`boot_image_packaged`/`live_policy_selected` 全 `false`。各轮证据在 `lab/records/gpu-opt-001..019`,交接在 `_relay/gpu-opt-*/handover-to-codex.md`。
 
 已验证并合入的基线内容：
 
@@ -21,6 +21,7 @@
 - **KMD 多上下文环/fence 压力**(opt-016):`tools/test_gpu_kmd_stress_and_fences.py` 以真实派生 Submit/Ring/Vm/Memory 编译 `tests/test_kmd_stress.cpp`(ASan+UBSan -Werror)跑五组压力:单上下文 2400 次提交+退役环绕风暴、A830 单环四上下文轮转 1200 次交织(环全局单调 fence、表切换 prologue、逐 fence 属主排空)、fence 边界(传递完成/重复等待/陈旧快速路径/未提交与零 fence 拒绝)、环饱和 fail-closed Busy 不消耗 fence 且排空后单调恢复、悬挂 fence 拆卸 Busy 至排空。约 6000+ 迭代;引用全程平衡。本轮磁盘安全:未跑新链,验证门复用 opt-015 未变 complete+package 树。并入验证门为第十阶段 `kmd-stress-fences`。
 - **SMMU/VM 地址空间隔离与 BO 生命周期压力**(opt-017):`tools/test_gpu_smmu_vm_isolation.py` 以真实派生 Vm/Memory/SmmuMemory 编译 `tests/test_smmu_vm_isolation.cpp`(ASan+UBSan -Werror,每上下文独立软件 SMMU peer——bank 不交互故为精确模型)跑五组:900+ map/unmap/remap churn 循环后净拆卸、双上下文同 IOVA 独立命名空间隔离(per-VM `next_handle_` 设计语义,隔离不变量=跨上下文操作永不干扰对方映射;200 次 churn 期间对方映射全程存活)、验证电池(零尺寸/未对齐/越界/坏权限后 VM 保持可用)、悬挂映射拆卸 Busy 稳定、findAddress 对齐/不相交。重叠占用返回 `kIOReturnBusy`(设计语义"地址在用")与畸形输入 `kIOReturnBadArgument` 区分,2236 迭代。并入验证门为第 11 阶段 `smmu-vm-isolation`。
 - **GMU/HFI 帧/队列环绕/超时界压力**(opt-018):`tools/test_gpu_gmu_hfi_framing.py` 以**逐字节相同的 pin 树 `AdrenoHfi.c`**(sanctioned `ADRENO_HFI_HOST_TEST` 原子栅栏 host 模式,零提取零替换)编译 `tests/test_gmu_hfi_framing.cpp`(ASan+UBSan -Werror),软件 peer 扮演 GMU 固件侧:620 次命令/ACK 交换双队列环绕风暴(序列 mod 4095 递增、载荷完整)、跳过流量下的序列相关(F2H 错误+异序列回复消费计数后真 ACK 完成)、初始化布局精确、畸形/超载/截断/坏索引毒化 fail-closed、固件错误毒化带精确码、**无响应 GMU 交换在预算界内 Timeout+poison 终止(有界等待证明)**。1371 迭代。审计澄清:链树 AdrenoHfi.c 比 research 克隆新,已内建 host 模式。并入验证门为第 12 阶段 `gmu-hfi-framing`。
+- **PM4 包流/IB 命令缓冲边界**(opt-019):`tools/test_gpu_pm4_cmdbuf_bounds.py` 以真实 AdrenoPM4 kit 单元+派生 Ring/Submit/VM 编译 `tests/test_pm4_cmdbuf_bounds.cpp`(ASan+UBSan -Werror):Type4/Type7 发射边界电池(18 位寄存器/1..127 值/reg+count-1 精确界/7 位 opcode/0..16383 值)、**奇偶校验位**(count/opcode 奇偶位翻转经重建比对解码 InvalidHeader)、Plan 往返/截断/容量、多 IB 批(2-4 缓冲轮转 150 提交,fence 单调净排空)、环环绕完整性(520 提交后首提交 prologue 快照经真实解码器解析为 4+ 有效包)。审计确认 test_submit 已覆盖 IB 验证电池(零尺寸/未对齐/越界/未知句柄),本套件补 PM4 单元与多 IB/环绕缺口。1419 迭代。并入验证门为第 13 阶段 `pm4-cmdbuf-bounds`。
 
 明确的实机验收推迟项（均未做，勿在离线轮宣称）:ZAP/PAS 认证签名与装载、GMU/HFI 真实握手、基本 BO/map/submit/fence 硬件路径、正确像素与系统呈现、Metal/IOSurface 真实客户端、DCVS/IFPC/ACD 调频与省电、suspend/resume、双 ring 抢占与 GMEM restore、DPU 直扫、功耗与续航测量、GPU drain 在 UFS 停机前完成的实机次序。`metal2vulkan-rt` 迁移未定：上游已将 `metal2vulkan-runtime` 扁平重写，FFI 缺口由 `tools/audit_metal2vulkan_rt_gap.py` 产出的 `m2v-rt-gap.json` 逐项记录（见 opt-010 交接）。
 
