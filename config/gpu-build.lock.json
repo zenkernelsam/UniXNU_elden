@@ -70,6 +70,29 @@
       "worktree_file": "config/inputs/build-adreno-metal-bridge.py",
       "sha256": "947766405ed6b77a221ec8f58b3980a10ec779d40eb14627601d206ec6aad0c4",
       "note": "upstream 8542980 builder with the single-line PATCHES swap to 0058-...-779eb522.patch (0064 retained)"
+    },
+    "scripts/data/adreno-compiler-inputs.json": {
+      "worktree_file": "config/inputs/adreno-compiler-inputs.json",
+      "sha256": "4c0898149b313be0c2ba0c110800677d942546e17c04855882bb6a36446b2db3",
+      "note": "opt-007: upstream 8542980 pin set + 3 ArmadaOS A830/IR3 patches appended (0002/0003/0015 folded; 0001 excluded)"
+    },
+    "patches/mesa/freedreno-a830-chip-id-variants.patch": {
+      "worktree_file": "config/inputs/mesa-patches/freedreno-a830-chip-id-variants.patch",
+      "sha256": "89ef73a6171a149c06accc0403da8733071aa18bd3b5b87aa8597b4055cbcb53",
+      "additive": true,
+      "note": "opt-007 ArmadaOS fold: A830 chip-ID variants 0xffff44050001+0x44050000; verbatim ArmadaOS 0002"
+    },
+    "patches/mesa/ir3-bindless-ubo-const-gating.patch": {
+      "worktree_file": "config/inputs/mesa-patches/ir3-bindless-ubo-const-gating.patch",
+      "sha256": "394122180007fd95d85a4d5f3e84f572ee40b6e8026fa83cad9bcd12082ba79a",
+      "additive": true,
+      "note": "opt-007 ArmadaOS fold: bindless UBO const-range lowering requires const offset; verbatim ArmadaOS 0003"
+    },
+    "patches/mesa/ir3-array-to-ssa-phi-chains.patch": {
+      "worktree_file": "config/inputs/mesa-patches/ir3-array-to-ssa-phi-chains.patch",
+      "sha256": "8652eba5cb2cda0c0b5a16c217c801aa1a97c38e93ff0a8649cb526b0bdbc98f",
+      "additive": true,
+      "note": "opt-007 ArmadaOS fold: lookup_value follows trivial PHI chains with self-cycle guard; verbatim ArmadaOS 0015"
     }
   },
   "compatibility_reason": "metal 450a406 merges AdrenoMetal-official 4a04695 with the A830 fork adaptation layer; tooling and bridge builder both b6ac063 supply the cda5fd8f chain (0058 rollup) and Cargo manifest inputs. Raw Git blob export bypasses Windows archive/autocrlf conversion. opt-006: tooling upgraded to UniXNU-official 8542980, metal to the cc0a4e8 merge 32dc141; translator 779eb522 pin native via config/inputs worktree overrides.",
