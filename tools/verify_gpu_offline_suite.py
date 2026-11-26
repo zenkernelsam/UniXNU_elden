@@ -77,6 +77,9 @@ def main():
                     '--tree', tree, '--derived', build / 'derived'])
     ok &= run_phase('m2v-callsite-reachability', [tool('test_gpu_m2v_callsite_reachability.py'),
                     '--tree', tree, '--m2v-repo', str(Path(a.build).resolve().parent / 'caches' / 'metal2vulkan')])
+    ok &= run_phase('rpmh-votes-and-callgate', [tool('test_gpu_rpmh_votes_and_callgate.py'),
+                    '--tree', tree, '--prepared', a.prepared.resolve(),
+                    '--opps', build / 'opps', '--derived', build / 'derived'])
     ok &= run_phase('pre-bringup-contract', [tool('test_gpu_pre_bringup_contract.py'),
                     '--tree', tree, '--package', a.package.resolve(), '--prepared', a.prepared.resolve()])
 
