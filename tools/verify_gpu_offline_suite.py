@@ -69,6 +69,8 @@ def main():
                     '--prepared', a.prepared.resolve(), '--build', build])
     ok &= run_phase('kmd-stress-fences', [tool('test_gpu_kmd_stress_and_fences.py'),
                     '--tree', tree, '--derived', build / 'derived'])
+    ok &= run_phase('smmu-vm-isolation', [tool('test_gpu_smmu_vm_isolation.py'),
+                    '--tree', tree, '--derived', build / 'derived'])
 
     # Guardrail validation across the chain and package evidence.
     guardrails = {}
