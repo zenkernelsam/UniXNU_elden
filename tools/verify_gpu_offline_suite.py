@@ -56,6 +56,9 @@ def main():
     ok &= run_phase('turnip-patches', [tool('test_gpu_turnip_patches.py'), '--tree', tree,
                     '--mesa', a.mesa_pristine.resolve()])
     ok &= run_phase('kmd-diag', [tool('test_gpu_kmd_diag.py'), '--tree', a.prepared.resolve() / 'tree'])
+    ok &= run_phase('recovery-frame-diag', [tool('test_gpu_recovery_and_frame_diag.py'),
+                    '--derived', build / 'derived', '--wire', tree / 'drivers/GopFramebuffer',
+                    '--recovery', build / 'recovery'])
 
     # Guardrail validation across the chain and package evidence.
     guardrails = {}

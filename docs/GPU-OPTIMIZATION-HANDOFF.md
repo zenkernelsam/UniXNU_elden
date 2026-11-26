@@ -2,9 +2,9 @@
 
 2026-11-22 · 接手分支 `codex/elden-gpu-offline`。A830 是 Elden 的首项离线外设交付。当前任务是继续离线优化。主线完成 Wi-Fi 后，使用当时的 `main` 复现并逐项验证，通过的外设与 GPU 源码按依赖顺序合入 `main`。
 
-## 已验证优化基线（gpu-opt-001..009,HEAD `f83a3c0`)
+## 已验证优化基线（gpu-opt-001..010,HEAD `cf701ec`)
 
-2026-11-27 更新。九轮离线优化全部以 fresh solo 20 阶段链验收（每轮 `returncode=0`、`resumed_userspace: false`),GPU 专项 ABI 逐轮逐字节相同（136B / 168 slots / `[0,1,7,39,40,41,140]` / C2+D2),30 个原 Apple 执行区保持，legacy prelinker 全局标志全 `false`,`hardware_qualified`/`device_access`/`boot_image_packaged`/`live_policy_selected` 全 `false`。各轮证据在 `lab/records/gpu-opt-001..009`,交接在 `_relay/gpu-opt-*/handover-to-codex.md`。
+2026-11-27 更新。十轮离线优化全部以 fresh solo 20 阶段链验收（每轮 `returncode=0`、`resumed_userspace: false`),GPU 专项 ABI 逐轮逐字节相同（136B / 168 slots / `[0,1,7,39,40,41,140]` / C2+D2),30 个原 Apple 执行区保持，legacy prelinker 全局标志全 `false`,`hardware_qualified`/`device_access`/`boot_image_packaged`/`live_policy_selected` 全 `false`。各轮证据在 `lab/records/gpu-opt-001..010`,交接在 `_relay/gpu-opt-*/handover-to-codex.md`。
 
 已验证并合入的基线内容：
 
@@ -13,6 +13,7 @@
 - **KMD 诊断对等**(opt-008):pin `9c34ea46` 已携带 nbNote 内核笔记（method 18、512 行惰性 ring)、GPU priority 归因（newest-32 ring)、有界 frame trace(NativeGpuTrace v1,16384+4096）的完整等价实现；`tools/test_gpu_kmd_diag.py` 以精确提取+内核 shim 在 ASan/UBSan 下验证全部行为，抢占谱系（e971110/ccabc7e/b895643/7b6245f）确认排除。
 - **Linux SM8750 DTS 对等**(opt-009):`test_gpu_board_inputs.py --linux` 阶段验证 14 GPU OPP、3 GMU OPP、4 个 speed-bin 熔丝（190/221/232/242)、寄存器孔径、IRQ/SMMU 与 pin `6f97250e` DTS 逐一相同，含 11 项负面/边界拒绝用例；cx_dbgc 合法子窗口包含关系已记录。`live_policy_selected` 保持 `false`,DCVS/IFPC/ACD 严格推迟。
 - **统一离线验证门**(opt-009):`tools/verify_gpu_offline_suite.py` 顺序运行 board-inputs、submit-timing、turnip-patches、kmd-diag 四个 host 套件并验证 17 项护栏，输出单一机器可读 `offline-verification.json`(`passed: true`)。后续轮次以该门为验收标准。
+- **呈现/帧时序诊断与关机排空对等**(opt-011): 独立 host 套件验证 FrameBridge 16 槽诊断（逐项拒绝归因、像素格式转发、KMD fence 关联、fallback/copy/validation 计数）、12 项真实排空用例（超时终止、时钟回退/停滞、悬挂 fence、活调用、零超时拒绝）与 GPU 排空前置于 UFS 停机的关机次序；并入验证门为第五阶段 `recovery-frame-diag`。
 
 明确的实机验收推迟项（均未做，勿在离线轮宣称）:ZAP/PAS 认证签名与装载、GMU/HFI 真实握手、基本 BO/map/submit/fence 硬件路径、正确像素与系统呈现、Metal/IOSurface 真实客户端、DCVS/IFPC/ACD 调频与省电、suspend/resume、双 ring 抢占与 GMEM restore、DPU 直扫、功耗与续航测量、GPU drain 在 UFS 停机前完成的实机次序。`metal2vulkan-rt` 迁移未定：上游已将 `metal2vulkan-runtime` 扁平重写，FFI 缺口由 `tools/audit_metal2vulkan_rt_gap.py` 产出的 `m2v-rt-gap.json` 逐项记录（见 opt-010 交接）。
 
