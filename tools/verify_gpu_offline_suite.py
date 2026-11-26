@@ -61,6 +61,8 @@ def main():
                     '--recovery', build / 'recovery'])
     ok &= run_phase('firmware-warnings', [tool('test_gpu_firmware_and_warnings.py'),
                     '--prepared', a.prepared.resolve(), '--native', build / 'core'])
+    ok &= run_phase('userspace-package-hygiene', [tool('test_gpu_userspace_and_package_hygiene.py'),
+                    '--package', a.package.resolve()])
 
     # Guardrail validation across the chain and package evidence.
     guardrails = {}

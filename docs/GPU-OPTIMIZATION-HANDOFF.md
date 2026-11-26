@@ -2,9 +2,9 @@
 
 2026-11-22 · 接手分支 `codex/elden-gpu-offline`。A830 是 Elden 的首项离线外设交付。当前任务是继续离线优化。主线完成 Wi-Fi 后，使用当时的 `main` 复现并逐项验证，通过的外设与 GPU 源码按依赖顺序合入 `main`。
 
-## 已验证优化基线（gpu-opt-001..011,HEAD `e121465`)
+## 已验证优化基线（gpu-opt-001..012,HEAD `fea73ca`)
 
-2026-11-27 更新。十一轮离线优化全部以 fresh solo 20 阶段链验收（每轮 `returncode=0`、`resumed_userspace: false`),GPU 专项 ABI 逐轮逐字节相同（136B / 168 slots / `[0,1,7,39,40,41,140]` / C2+D2),30 个原 Apple 执行区保持，legacy prelinker 全局标志全 `false`,`hardware_qualified`/`device_access`/`boot_image_packaged`/`live_policy_selected` 全 `false`。各轮证据在 `lab/records/gpu-opt-001..011`,交接在 `_relay/gpu-opt-*/handover-to-codex.md`。
+2026-11-27 更新。十二轮离线优化全部以 fresh solo 20 阶段链验收（每轮 `returncode=0`、`resumed_userspace: false`),GPU 专项 ABI 逐轮逐字节相同（136B / 168 slots / `[0,1,7,39,40,41,140]` / C2+D2),30 个原 Apple 执行区保持，legacy prelinker 全局标志全 `false`,`hardware_qualified`/`device_access`/`boot_image_packaged`/`live_policy_selected` 全 `false`。各轮证据在 `lab/records/gpu-opt-001..012`,交接在 `_relay/gpu-opt-*/handover-to-codex.md`。
 
 已验证并合入的基线内容：
 
@@ -15,6 +15,7 @@
 - **统一离线验证门**(opt-009):`tools/verify_gpu_offline_suite.py` 顺序运行 board-inputs、submit-timing、turnip-patches、kmd-diag 四个 host 套件并验证 17 项护栏，输出单一机器可读 `offline-verification.json`(`passed: true`)。后续轮次以该门为验收标准。
 - **呈现/帧时序诊断与关机排空对等**(opt-011): 独立 host 套件验证 FrameBridge 16 槽诊断（逐项拒绝归因、像素格式转发、KMD fence 关联、fallback/copy/validation 计数）、12 项真实排空用例（超时终止、时钟回退/停滞、悬挂 fence、活调用、零超时拒绝）与 GPU 排空前置于 UFS 停机的关机次序；并入验证门为第五阶段 `recovery-frame-diag`。
 - **Gen80000 固件结构与原生告警卫生**(opt-012):`tools/test_gpu_firmware_and_warnings.py` 独立套件验证固件锁完整性、4 个 pin 固件字节+SHA256 同一性、Qualcomm 再分发声明在位、ZAP ELF32/MBN 结构（独立重实现与 pin 解析器输出逐字节互证）、DT 保留上限，含 14 项变异负向用例（截断/坏 magic/程序头越界/重叠段/缺 hash 段/超 span/翻转字节等）;`gpu-native-warnings.json` 全部条目与树文件哈希核对（含 `.inc` 嵌套站点语义）,native 构建 27 单元 14 告警全部已评审，评审匹配逻辑 fail-closed 三模式实证。并入验证门为第六阶段 `firmware-warnings`。
+- **用户态 Mach-O 与离线包卫生**(opt-013):`tools/test_gpu_userspace_and_package_hygiene.py` 纯 python Mach-O 解析套件验证包内全部 5 个 Mach-O 为 arm64、LC_UUID 非零（逐成员录入 result.json 供 prewarm 键追踪）、dylib/rpath 零宿主路径泄漏，tarball 成员计数/SHA256 与 manifest 一致、无绝对/遍历路径、无符号链接，activation 门全 false；含 10 项合成负向用例（宿主路径注入/缺失或全零 UUID/x86_64/遍历成员/翻转哈希/翻转门标志）。并入验证门为第七阶段 `userspace-package-hygiene`。
 
 明确的实机验收推迟项（均未做，勿在离线轮宣称）:ZAP/PAS 认证签名与装载、GMU/HFI 真实握手、基本 BO/map/submit/fence 硬件路径、正确像素与系统呈现、Metal/IOSurface 真实客户端、DCVS/IFPC/ACD 调频与省电、suspend/resume、双 ring 抢占与 GMEM restore、DPU 直扫、功耗与续航测量、GPU drain 在 UFS 停机前完成的实机次序。`metal2vulkan-rt` 迁移未定：上游已将 `metal2vulkan-runtime` 扁平重写，FFI 缺口由 `tools/audit_metal2vulkan_rt_gap.py` 产出的 `m2v-rt-gap.json` 逐项记录（见 opt-010 交接）。
 
