@@ -75,6 +75,8 @@ def main():
                     '--tree', tree])
     ok &= run_phase('pm4-cmdbuf-bounds', [tool('test_gpu_pm4_cmdbuf_bounds.py'),
                     '--tree', tree, '--derived', build / 'derived'])
+    ok &= run_phase('pre-bringup-contract', [tool('test_gpu_pre_bringup_contract.py'),
+                    '--tree', tree, '--package', a.package.resolve(), '--prepared', a.prepared.resolve()])
 
     # Guardrail validation across the chain and package evidence.
     guardrails = {}
