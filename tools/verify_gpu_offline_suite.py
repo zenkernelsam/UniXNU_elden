@@ -111,20 +111,31 @@ def main():
     guardrails['live_policy_selected_false'] = parity.get('live_policy_selected') is False
     guardrails['board_hardware_qualified_false'] = parity.get('hardware_qualified') is False
 
+    def write_rollup(passed_so_far):
+        manifest = {
+            'passed': bool(passed_so_far),
+            'phases': {name: {'returncode': ph['returncode'], 'passed': ph['passed']} for name, ph in phases.items()},
+            'guardrails': guardrails,
+            'package_archive_sha256': package.get('archive_sha256'),
+            'kernel_sha256': abi.get('kernel_sha256'),
+            'abi_checks': abi.get('checks'),
+            'device_access': False,
+            'hardware_qualified': False,
+            'live_policy_selected': False,
+            'note': 'Unified offline host verification; host/model evidence only, no device or hardware claim.',
+        }
+        (out / 'offline-verification.json').write_text(json.dumps(manifest, indent=2) + '\n')
+
+    # Provisional rollup (phases 1-15 + guardrails) so the bringup-manifest phase can
+    # consume verify/offline-verification.json without a circular dependency; the final
+    # rewrite below covers all 17 phases.
+    write_rollup(ok and all(guardrails.values()))
+    ok &= run_phase('bringup-manifest', [tool('test_gpu_bringup_manifest_gate.py'),
+                    '--build', build, '--package', a.package.resolve(), '--verify', out])
+    ok &= run_phase('prepare-scratch-refs', [tool('prepare_gpu_scratch_refs.py'), '--self-test'])
+
     ok &= all(guardrails.values())
-    manifest = {
-        'passed': bool(ok),
-        'phases': {name: {'returncode': ph['returncode'], 'passed': ph['passed']} for name, ph in phases.items()},
-        'guardrails': guardrails,
-        'package_archive_sha256': package.get('archive_sha256'),
-        'kernel_sha256': abi.get('kernel_sha256'),
-        'abi_checks': abi.get('checks'),
-        'device_access': False,
-        'hardware_qualified': False,
-        'live_policy_selected': False,
-        'note': 'Unified offline host verification; host/model evidence only, no device or hardware claim.',
-    }
-    (out / 'offline-verification.json').write_text(json.dumps(manifest, indent=2) + '\n')
+    write_rollup(ok)
     if not ok:
         failed = [k for k, v in guardrails.items() if not v]
         failed += [n for n, ph in phases.items() if not ph['passed']]

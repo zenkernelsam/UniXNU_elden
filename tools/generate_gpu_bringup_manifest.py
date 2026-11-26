@@ -72,8 +72,11 @@ def collect_manifest(build_dir, package_dir, verify_dir):
     failed = sorted(n for n, v in phases.items() if not (isinstance(v, dict) and v.get('passed')))
     if failed:
         failures.append('failed verification phases: ' + ','.join(failed))
-    if len(phases) != 15:
-        failures.append('phase count %d != 15' % len(phases))
+    # The manifest is generated mid-gate against the provisional rollup (15 phases,
+    # everything before bringup-manifest itself) or post-hoc against the final rollup
+    # (17 phases); both are valid. The fail-closed invariant is that every phase passed.
+    if len(phases) < 15:
+        failures.append('phase count %d < 15' % len(phases))
     guardrails = gate.get('guardrails', {})
     false_guards = sorted(n for n, v in guardrails.items() if v is not True)
     if false_guards:
