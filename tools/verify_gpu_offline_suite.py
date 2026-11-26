@@ -80,6 +80,8 @@ def main():
     ok &= run_phase('rpmh-votes-and-callgate', [tool('test_gpu_rpmh_votes_and_callgate.py'),
                     '--tree', tree, '--prepared', a.prepared.resolve(),
                     '--opps', build / 'opps', '--derived', build / 'derived'])
+    ok &= run_phase('runtime-lifecycle-and-maintenance', [tool('test_gpu_runtime_lifecycle_and_maintenance.py'),
+                    '--derived', build / 'derived'])
     ok &= run_phase('pre-bringup-contract', [tool('test_gpu_pre_bringup_contract.py'),
                     '--tree', tree, '--package', a.package.resolve(), '--prepared', a.prepared.resolve()])
 
