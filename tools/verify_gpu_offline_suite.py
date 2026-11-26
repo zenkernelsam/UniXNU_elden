@@ -65,6 +65,8 @@ def main():
                     '--package', a.package.resolve()])
     ok &= run_phase('activation-abi-gates', [tool('test_gpu_activation_and_abi_gates.py'),
                     '--build', build, '--package', a.package.resolve()])
+    ok &= run_phase('lock-repro', [tool('test_gpu_lock_and_repro.py'),
+                    '--prepared', a.prepared.resolve(), '--build', build])
 
     # Guardrail validation across the chain and package evidence.
     guardrails = {}
