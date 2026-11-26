@@ -2,9 +2,9 @@
 
 2026-11-22 · 接手分支 `codex/elden-gpu-offline`。A830 是 Elden 的首项离线外设交付。当前任务是继续离线优化。主线完成 Wi-Fi 后，使用当时的 `main` 复现并逐项验证，通过的外设与 GPU 源码按依赖顺序合入 `main`。
 
-## 已验证优化基线（gpu-opt-001..014,HEAD `b8c1a60`)
+## 已验证优化基线（gpu-opt-001..021,HEAD `96904b3`)
 
-2026-11-27 更新。十九轮离线优化验收(opt-001..015 为 fresh solo 20 阶段链;opt-016..019 磁盘安全复用 opt-015 未变构建树仅跑验证门)（每轮 `returncode=0`、`resumed_userspace: false`),GPU 专项 ABI 逐轮逐字节相同（136B / 168 slots / `[0,1,7,39,40,41,140]` / C2+D2),30 个原 Apple 执行区保持，legacy prelinker 全局标志全 `false`,`hardware_qualified`/`device_access`/`boot_image_packaged`/`live_policy_selected` 全 `false`。各轮证据在 `lab/records/gpu-opt-001..019`,交接在 `_relay/gpu-opt-*/handover-to-codex.md`。
+2026-11-27 更新。二十一轮离线优化验收(opt-001..015 与 opt-022 为 fresh solo 20 阶段链;opt-016..021 磁盘安全复用 opt-015 未变构建树仅跑验证门)（每轮 `returncode=0`、`resumed_userspace: false`),GPU 专项 ABI 逐轮逐字节相同（136B / 168 slots / `[0,1,7,39,40,41,140]` / C2+D2),30 个原 Apple 执行区保持，legacy prelinker 全局标志全 `false`,`hardware_qualified`/`device_access`/`boot_image_packaged`/`live_policy_selected` 全 `false`。各轮证据在 `lab/records/gpu-opt-001..022`,交接在 `_relay/gpu-opt-*/handover-to-codex.md`。
 
 已验证并合入的基线内容：
 
@@ -24,6 +24,7 @@
 - **PM4 包流/IB 命令缓冲边界**(opt-019):`tools/test_gpu_pm4_cmdbuf_bounds.py` 以真实 AdrenoPM4 kit 单元+派生 Ring/Submit/VM 编译 `tests/test_pm4_cmdbuf_bounds.cpp`(ASan+UBSan -Werror):Type4/Type7 发射边界电池(18 位寄存器/1..127 值/reg+count-1 精确界/7 位 opcode/0..16383 值)、**奇偶校验位**(count/opcode 奇偶位翻转经重建比对解码 InvalidHeader)、Plan 往返/截断/容量、多 IB 批(2-4 缓冲轮转 150 提交,fence 单调净排空)、环环绕完整性(520 提交后首提交 prologue 快照经真实解码器解析为 4+ 有效包)。审计确认 test_submit 已覆盖 IB 验证电池(零尺寸/未对齐/越界/未知句柄),本套件补 PM4 单元与多 IB/环绕缺口。1419 迭代。并入验证门为第 13 阶段 `pm4-cmdbuf-bounds`。
 - **跨层 pre-bringup 契约验证**(opt-020):`tools/test_gpu_pre_bringup_contract.py` 纯 python 确定性套件,函数化纯评估使负向故障注入真实:zap 三段哈希链互证(lock==prepared.json==zap.bin 字节 0e3ae03f…/12088B)+ board_zap_reservation ≤8192(实值 8192)+ parser 身份互证;SP_CORES=6 锚定;chip-id 补丁覆盖 KMD 0x44050001+通配;sysmem,nocb 无 gmem;五件 Mach-O 集齐;**rollup 聚合全部前序阶段 result.json**(兼容 passed/pass 双 truthful 标记)输出 matrix_totals(13 阶段 62 正+83 负/13621 迭代)。负向 9 项全 fail-closed(reservation 8193/字节翻转/parser 漂移/SP_CORES→8/chip-id 抹除/gmem 翻转/缺员/rollup 失败相/缺失相)。6 正+9 负。并入验证门为第 14(最终 rollup)阶段 `pre-bringup-contract`。
 - **metal2vulkan 迁移调用点可达性**(opt-021):tools/test_gpu_m2v_callsite_reachability.py 纯 python 静态分析,git archive 单进程内存提取 pin 779eb522 表面(>200 pub 项,逐 crate 文件 ITEM/reexport/macro 索引,与 audit 工具同模型),全部 pin 编译面 bridge/*.rs 导入解析干净;零漂移(NativeMetalObjects.rs 导入集==opt-010 审计 109 清单)。**迁移情报:29/29 符号(26 缺失+3 更名)全为活跃 blocker**——排除 use 跨度后全部存在非导入调用点,零 import-only 零 unused,a3786dd8 迁移无可弃 cruft。审计发现:adrenoprobed 由 NativeAdrenoProbeDaemon.cpp 构建,MetalVulkanProbe.rs 为未引用陈旧工具(SamplingPolicy 在 pin 不存在),信息性记录不影响 pin 面。负向 4 项 fail-closed(幻影导入/腐坏 pin/丢源文件/表面截断)。6 正+4 负。接入为第 15 阶段 m2v-callsite-reachability(位于 pre-bringup-contract 之前,rollup 覆盖 14 前序)。
+- **Prewarm 密钥/Bringup 清单生成器 + 全 fresh 再验收**(opt-022):`tools/generate_gpu_bringup_manifest.py` 确定性生成 bringup-manifest.json——复合 prewarm-pack 密钥(翻译器 pin 779eb522 + 四件 Mach-O LC_UUID 定序拼接 sha256)、激活/护栏契约(11 项固定值)、制品/门rollup(包 sha256+kernel sha256+15/15 相+17/17 护栏+matrix_totals);全证据层诚信标志 fail-closed 交互核对,缺 UUID/败相/hw-qualified/resumed 全拒绝发射。`--self-test` 2 正+5 负(合成夹具,含确定性重复发射一致性)。本轮为 30Gi 解禁后首次全 fresh solo 20 阶段+15 相再验收。
 
 明确的实机验收推迟项（均未做，勿在离线轮宣称）:ZAP/PAS 认证签名与装载、GMU/HFI 真实握手、基本 BO/map/submit/fence 硬件路径、正确像素与系统呈现、Metal/IOSurface 真实客户端、DCVS/IFPC/ACD 调频与省电、suspend/resume、双 ring 抢占与 GMEM restore、DPU 直扫、功耗与续航测量、GPU drain 在 UFS 停机前完成的实机次序。`metal2vulkan-rt` 迁移未定：上游已将 `metal2vulkan-runtime` 扁平重写，FFI 缺口由 `tools/audit_metal2vulkan_rt_gap.py` 产出的 `m2v-rt-gap.json` 逐项记录（见 opt-010 交接）。
 
