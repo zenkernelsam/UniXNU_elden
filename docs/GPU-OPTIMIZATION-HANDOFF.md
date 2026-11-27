@@ -2,7 +2,7 @@
 
 2026-11-22 · 接手分支 `codex/elden-gpu-offline`。A830 是 Elden 的首项离线外设交付。当前任务是继续离线优化。主线完成 Wi-Fi 后，使用当时的 `main` 复现并逐项验证，通过的外设与 GPU 源码按依赖顺序合入 `main`。
 
-## 已验证优化基线（gpu-opt-001..027,HEAD `44c804e`)
+## 已验证优化基线（gpu-opt-001..028,HEAD `6eea2f0`)
 
 2026-11-27 更新。二十一轮离线优化验收(opt-001..015 与 opt-022 为 fresh solo 20 阶段链;opt-016..021 磁盘安全复用 opt-015 未变构建树仅跑验证门)（每轮 `returncode=0`、`resumed_userspace: false`),GPU 专项 ABI 逐轮逐字节相同（136B / 168 slots / `[0,1,7,39,40,41,140]` / C2+D2),30 个原 Apple 执行区保持，legacy prelinker 全局标志全 `false`,`hardware_qualified`/`device_access`/`boot_image_packaged`/`live_policy_selected` 全 `false`。各轮证据在 `lab/records/gpu-opt-001..022`,交接在 `_relay/gpu-opt-*/handover-to-codex.md`。
 
@@ -31,6 +31,7 @@
 - **用户态 ICD/Mach-O 符号/跨层契约奇偶**(opt-026):统一验证门扩至 **20 相**里程碑——`userspace-icd-and-abi-symbols` 接于 pre-bringup-contract 之前。真实 nm/otool/file 审计打包三二进制(libvulkan_freedreno.dylib/NativeAdrenoMetal/adrenoprobed)：真实 vk_icd 三入口导出、LC_LOAD/ID/UUID 闭环零宿主机路径泄露(otool 头行回显路径正确排除)、arm64+非零 LC_UUID、kernel 侧 elden-gpu bootarg 门与 userspace sysmem/nocb 跨层契约奇偶、无 live-policy/default-enable 痕迹、双扫描符号摘要 sha256 逐位确定。正 15+负 6(缺 ICD 导出/清单宿主机路径/LC 泄露/缺契约守卫/ABI 不匹配/非 arm64 缺 UUID 合成夹具全 fail-closed)。零功能改动。
 - **A830 HwInit/IRQ/SHA256/SocInfo 原语**(opt-027):统一验证门扩至 **21 相**——`a830-hwinit-irq-and-sha256` 接于 pre-bringup-contract 之前。真实编译 pin 单元(NativeAdrenoSha256.cpp/NativeAdrenoIrq.cpp/Sm8750SocInfo.c,XnuMemoryFixture host shim 既定装配)：NIST FIPS 180-4 向量(空/abc/56B 双块边界)+320 轮长度扫描摘要确定性、pin 精确 fixture 熔丝图像解码(id=618/code 组合精确)、真实 RingIo attach/programMask/handle 600 轮风暴共 2473 迭代,正+负覆盖篡改检出/null 契约/畸形熔丝 -22/-71 精确/未 attach 拒绝/稀疏 MMIO 零状态安全。pin 自测(test_irq.cpp/Test-socinfo.c)从未入统一门,本轮补齐。零功能改动。
 - **A830 HwInit 寄存器序列奇偶**(opt-028):统一验证门扩至 **22 相**——`a830-hwinit-regseq-parity`。真实编译 HwInit/Ring/CpInit/Preempt/Pwrup+AdrenoPM4.c 单元：完整 configure+finish 序列 stage=8 精确、SP/NC mode+protect 编程证据、**双次写序列逐条完全确定一致**(pin 自测未覆盖)、全 MMIO 写严格落在 0x3ffff 架构寄存器空间内(opt-019 界)、500 轮 configure+200 轮全生命周期压力共 1622 迭代；负向 null 参数/读回篡改/写故障注入毒化永久/时钟卡住/认证+hang 故障全 fail-closed。同轮完成 CiscoMac 历史构建产物 65G 安全移入回收站(lab 70G→4.7G,opt-022/027 基线完好实证)。零功能改动。
+- **电源序列/ZAP 装载/定时器原语**(opt-029):统一验证门扩至 **23 相**——`a830-power-zap-and-timer` 接于 pre-bringup-contract 之前。真实编译 pin 单元 Sm8750GpuPower.c+Sm8750GpuZap.c+NativeAdrenoTimer.cpp(+AdrenoHfiVotes.c 依赖单元),pin 精确 peer 装配(gpu-power.c/gpu-zap.c 为唯一真实语义源):真实 Sm8750GpuPowerOn 冷启动序列 pin 精确初始寄存器态(gcc[0]=bit31/gcc[0x10]=31/gcc[0x14]=0x4000/gcc[0x52000]=0x80/cc[0x9080]=1,数组窗 0x80000/0x9800 字节)ready+双次写计数确定一致+350 轮序列压力;Sm8750GpuZapLoad 三段 SCM 协议 pin 精确(0x42000201/02/05 定序、r[2]=13、publish 数据逐字节核验、cpu 0x4000+reserved 0x2000 对齐夹具 a5 守卫不动);NativeAdrenoTimer GMU/CP 双源 high/low 合成+**read 入口即清零输出**(失败绝不伪造 ticks 语义实证)+420 轮压力共 1036 迭代,正 17+负 6(卡死 GDSC/写故障 fail-closed 绝不 ready、zap 步故障全拒绝+authenticated false、timer IO 故障 ticks==0)。**新依赖链发现**:Sm8750GpuPower.c 引用 AdrenoHfiArcVotes 须连带编译 AdrenoHfiVotes.c。零功能改动。
 
 明确的实机验收推迟项（均未做，勿在离线轮宣称）:ZAP/PAS 认证签名与装载、GMU/HFI 真实握手、基本 BO/map/submit/fence 硬件路径、正确像素与系统呈现、Metal/IOSurface 真实客户端、DCVS/IFPC/ACD 调频与省电、suspend/resume、双 ring 抢占与 GMEM restore、DPU 直扫、功耗与续航测量、GPU drain 在 UFS 停机前完成的实机次序。`metal2vulkan-rt` 迁移未定：上游已将 `metal2vulkan-runtime` 扁平重写，FFI 缺口由 `tools/audit_metal2vulkan_rt_gap.py` 产出的 `m2v-rt-gap.json` 逐项记录（见 opt-010 交接）。
 

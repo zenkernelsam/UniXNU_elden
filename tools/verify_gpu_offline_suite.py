@@ -88,6 +88,8 @@ def main():
                     '--prepared', a.prepared.resolve()])
     ok &= run_phase('a830-hwinit-regseq-parity', [tool('test_gpu_a830_hwinit_regseq_parity.py'),
                     '--prepared', a.prepared.resolve()])
+    ok &= run_phase('a830-power-zap-and-timer', [tool('test_gpu_a830_power_zap_and_timer.py'),
+                    '--prepared', a.prepared.resolve()])
     ok &= run_phase('pre-bringup-contract', [tool('test_gpu_pre_bringup_contract.py'),
                     '--tree', tree, '--package', a.package.resolve(), '--prepared', a.prepared.resolve()])
 
