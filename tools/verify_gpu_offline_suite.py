@@ -92,6 +92,8 @@ def main():
                     '--prepared', a.prepared.resolve()])
     ok &= run_phase('arm-smmu4k-and-sm8750-smmu', [tool('test_gpu_arm_smmu4k_and_sm8750_smmu.py'),
                     '--prepared', a.prepared.resolve()])
+    ok &= run_phase('sm8750-gmu-and-firmware-startup', [tool('test_gpu_sm8750_gmu_and_firmware_startup.py'),
+                    '--prepared', a.prepared.resolve()])
     ok &= run_phase('pre-bringup-contract', [tool('test_gpu_pre_bringup_contract.py'),
                     '--tree', tree, '--package', a.package.resolve(), '--prepared', a.prepared.resolve()])
 
