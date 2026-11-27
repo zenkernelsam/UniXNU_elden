@@ -19,7 +19,7 @@ from pathlib import Path
 import argparse, hashlib, json, re, shutil, subprocess, sys, tempfile
 
 SCHEMA = 'elden-gpu-bringup-readiness-dossier/1'
-EXPECTED_PHASE_COUNT = 23
+EXPECTED_PHASE_COUNT = 24
 EXPECTED_GUARDRAIL_COUNT = 17
 HEX64 = re.compile(r'^[0-9a-f]{64}$')
 HEX40 = re.compile(r'^[0-9a-f]{40}$')
