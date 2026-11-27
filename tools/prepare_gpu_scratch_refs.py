@@ -6,8 +6,12 @@ Reusable, read-only-safe automation for the environment problems exposed in gpu-
    the source repositories, never writes into research/;
 2. cc01fa33-style bundle/object injection into the scratch mirror, verified fail-closed
    (missing/corrupt bundle or unreachable object => nonzero exit);
-3. blob:none partial-clone promisor detection (e.g. tb322fc-linux-kernel) with an explicit
-   refusal to chain `--shared` clones of such repos plus the direct `--linux` guidance.
+3. blob:none partial-clone handling hardened in gpu-opt-030 real-world use: ALL research
+   repos are partial clones, so mirroring them is mandatory (opt-022 manual drill proved
+   byte-reproducible prepared output). Alternates sharing is read-only safe; missing objects
+   fail loudly downstream, never silently. Zero-refs object-store-only mirrors (m2v-cda5-ship
+   shape) are accepted; refs-present-but-dangling HEAD stays fail-closed. The linux kernel
+   repo is still passed directly via `--linux` to prepare_gpu_complete.py.
 
 `--self-test` builds synthetic temporary repos inside %TEMP% / /private/tmp only,
 cleans them up afterwards, and never touches research/.
@@ -77,9 +81,12 @@ def build_shared_equivalent(src, dst):
         return ['refusing tamper: scratch path overlaps source repo']
     if dst.exists() and any(dst.iterdir()):
         return ['destination already populated: %s' % dst]
-    info = partial_clone_info(src)
-    if info['promisor'] and info['filter'] and 'blob:none' in info['filter']:
-        return detect_partial_failures(src)
+    # gpu-opt-030 real-world hardening: partial (blob:none) clones ARE mirrored.
+    # Alternates object-sharing is read-only safe for pinned-object access: every object
+    # prepare needs was already fetched into the source partial clone during prior prepare
+    # runs (empirically proven byte-reproducible in gpu-opt-022), and any genuinely missing
+    # object access fails loudly downstream -- never silently. The mirror carries no promisor
+    # config, so no lazy network fetch can ever happen through the scratch path.
     dst.mkdir(parents=True, exist_ok=True)
     subprocess.run(['git', '-C', str(dst), 'init', '-q'], check=True,
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -92,10 +99,16 @@ def build_shared_equivalent(src, dst):
             shutil.copy2(gd / item, dg / item)
     if (gd / 'refs').is_dir():
         shutil.copytree(gd / 'refs', dg / 'refs', dirs_exist_ok=True)
-    # Validate object visibility: HEAD must resolve.
+    # Validate object visibility. Two legitimate mirror shapes exist in practice:
+    # 1. HEAD resolves -- normal mirror;
+    # 2. zero refs + dangling symref HEAD -- object-store-only mirror (m2v-cda5-ship is
+    #    exactly this shape upstream; prepare reads pinned objects by sha, never HEAD).
+    # Refs present but HEAD unresolvable is genuine corruption and stays fail-closed.
     r = subprocess.run(['git', '-C', str(dst), 'rev-parse', '--verify', 'HEAD'], capture_output=True)
     if r.returncode != 0:
-        return ['constructed scratch clone cannot resolve HEAD']
+        refs = subprocess.run(['git', '-C', str(dst), 'for-each-ref'], capture_output=True, text=True)
+        if refs.stdout.strip():
+            return ['constructed scratch clone cannot resolve HEAD']
     return []
 
 
@@ -133,21 +146,43 @@ def inject_object(scratch_repo, bundle_path, expected_sha, helper_repo=None, hel
     return []
 
 
-def scratch_refs_failures(references, output, skip_partial=True):
-    """Build a full scratch mirror of a references directory. Returns failures."""
+def scratch_refs_failures(references, output):
+    """Build a full scratch mirror of a references directory. Returns failures.
+    Writes a transparency manifest recording per-repo partial-clone/head shape."""
     refs, out = Path(references), Path(output)
     if not refs.is_dir():
         return ['references root missing: %s' % refs]
     if path_within(out, refs):
         return ['refusing tamper: scratch output inside references root']
     failures = []
+    manifest = {}
     for entry in sorted(refs.iterdir()):
         if not entry.is_dir() or gitdir_of(entry) is None:
             continue
+        info = partial_clone_info(entry)
         f = build_shared_equivalent(entry, out / entry.name)
-        if f and skip_partial and partial_clone_info(entry)['promisor']:
-            continue  # partial clones are consumed directly via their original paths
+        mirror = out / entry.name
+        head_ok = False
+        nrefs = 0
+        if not f and mirror.is_dir():
+            r = subprocess.run(['git', '-C', str(mirror), 'rev-parse', '--verify', 'HEAD'],
+                               capture_output=True)
+            head_ok = r.returncode == 0
+            rr = subprocess.run(['git', '-C', str(mirror), 'for-each-ref'],
+                                capture_output=True, text=True)
+            nrefs = len(rr.stdout.strip().splitlines()) if rr.stdout.strip() else 0
+        manifest[entry.name] = {
+            'partial_clone': info['promisor'], 'filter': info['filter'],
+            'mirrored': not f, 'head_resolvable': head_ok, 'ref_count': nrefs,
+        }
         failures.extend('%s: %s' % (entry.name, x) for x in f)
+    try:
+        out.mkdir(parents=True, exist_ok=True)
+        (out / 'scratch-refs-manifest.json').write_text(
+            json.dumps({'repos': manifest, 'device_access': False, 'hardware_qualified': False},
+                       indent=2) + chr(10))
+    except OSError:
+        pass
     return failures
 
 
@@ -201,15 +236,44 @@ def self_test():
         else:
             failures.append('positive injection failed: ' + '; '.join(f))
 
-        # positive 3: blob:none detection outputs direct --linux guidance
+        # positive 3: blob:none partial clone mirror constructs successfully (gpu-opt-030 semantics)
         partial = make_repo(tmp / 'src-partial')
         subprocess.run(['git', '-C', str(partial), 'config', 'remote.origin.promisor', 'true'], check=True)
         subprocess.run(['git', '-C', str(partial), 'config', 'remote.origin.partialclonefilter', 'blob:none'], check=True)
-        f = detect_partial_failures(partial)
-        if f and '--linux' in f[0]:
-            positive.append('blob:none partial clone detected with direct --linux guidance')
+        f = build_shared_equivalent(partial, tmp / 's3p' / 'src-partial')
+        head_src = git(partial, 'rev-parse', 'HEAD').decode().strip()
+        head_dst = git(tmp / 's3p' / 'src-partial', 'rev-parse', 'HEAD').decode().strip() if not f else ''
+        if not f and head_src == head_dst:
+            positive.append('blob:none partial clone mirrored with identical HEAD resolution')
         else:
-            failures.append('partial detection missing guidance')
+            failures.append('partial mirror construction failed: ' + '; '.join(f))
+
+        # positive 4: zero-refs object-store-only mirror accepted (m2v-cda5-ship shape)
+        zref = tmp / 'src-zeroref'
+        zref.mkdir(parents=True)
+        subprocess.run(['git', '-C', str(zref), 'init', '-q'], check=True, stdout=subprocess.DEVNULL)
+        subprocess.run(['git', '-C', str(zref), 'config', 'user.email', 'self@test'], check=True)
+        subprocess.run(['git', '-C', str(zref), 'config', 'user.name', 'selftest'], check=True)
+        (zref / 'z.txt').write_text('zcontent')
+        subprocess.run(['git', '-C', str(zref), 'add', 'z.txt'], check=True, stdout=subprocess.DEVNULL)
+        zsha = git(zref, 'hash-object', '-w', 'z.txt').decode().strip()
+        subprocess.run(['git', '-C', str(zref), 'commit', '-qm', 'zc'], check=True)
+        # detach into zero-ref shape: delete the only branch ref, keep dangling symref HEAD
+        zgd = zref / '.git'
+        for rf in (zgd / 'refs' / 'heads').glob('*'):
+            rf.unlink()
+        if (zgd / 'packed-refs').is_file():
+            (zgd / 'packed-refs').unlink()
+        r = subprocess.run(['git', '-C', str(zref), 'for-each-ref'], capture_output=True, text=True)
+        assert not r.stdout.strip()
+        f = build_shared_equivalent(zref, tmp / 's4z' / 'src-zeroref')
+        # object visibility through the zero-ref mirror: blob object readable via alternates
+        vis = subprocess.run(['git', '-C', str(tmp / 's4z' / 'src-zeroref'), 'cat-file', '-e', zsha],
+                             capture_output=True) if not f else None
+        if not f and vis is not None and vis.returncode == 0:
+            positive.append('zero-refs object-store-only mirror accepted with visible objects')
+        else:
+            failures.append('zero-refs mirror failed: ' + '; '.join(f))
 
         # negative 1: missing source repo rejected
         expect_reject('missing source repo rejected',
@@ -219,9 +283,12 @@ def self_test():
         corrupt.write_bytes(b'not a bundle at all')
         expect_reject('corrupt bundle rejected',
                       lambda: inject_object(dst, corrupt, sha))
-        # negative 3: chained --shared of a blob:none partial clone refused
-        expect_reject('chained shared clone of blob:none refused',
-                      lambda: build_shared_equivalent(partial, tmp / 's3' / 'src-partial'))
+        # negative 3: refs present but HEAD unresolvable (genuine corruption) stays fail-closed
+        corrupt_head = make_repo(tmp / 'src-corrupthead')
+        chd = corrupt_head / '.git'
+        (chd / 'HEAD').write_text('ref: refs/heads/nonexistent-branch\n')
+        expect_reject('refs-present-but-dangling HEAD rejected',
+                      lambda: build_shared_equivalent(corrupt_head, tmp / 's3c' / 'src-corrupthead'))
         # negative 4: scratch-inside-source tamper attempt rejected
         expect_reject('scratch-inside-source tamper rejected',
                       lambda: build_shared_equivalent(src, src / 'scratch-inside'))
