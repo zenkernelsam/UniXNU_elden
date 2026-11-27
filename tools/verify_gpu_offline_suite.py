@@ -100,6 +100,8 @@ def main():
                     '--tree', tree])
     ok &= run_phase('a830-kmd-board-client-and-userclient', [tool('test_gpu_a830_kmd_board_client_and_userclient.py'),
                     '--tree', tree])
+    ok &= run_phase('main-merge-and-coverage-audit', [tool('test_gpu_main_merge_and_coverage_audit.py'),
+                    '--tree', tree, '--package', a.package.resolve()])
     ok &= run_phase('pre-bringup-contract', [tool('test_gpu_pre_bringup_contract.py'),
                     '--tree', tree, '--package', a.package.resolve(), '--prepared', a.prepared.resolve()])
 
