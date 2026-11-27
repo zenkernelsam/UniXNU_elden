@@ -147,6 +147,13 @@ def main():
                     '--build', build, '--package', a.package.resolve(), '--verify', out])
     ok &= run_phase('prepare-scratch-refs', [tool('prepare_gpu_scratch_refs.py'), '--self-test'])
 
+    # gpu-opt-031: the dossier phase runs after all 23 evidence phases and consumes the
+    # complete 23-phase offline-verification.json, so that rollup is written first;
+    # the final rewrite below covers all 24 phases.
+    write_rollup(ok and all(guardrails.values()))
+    ok &= run_phase('bringup-readiness-dossier', [tool('audit_gpu_bringup_readiness.py'),
+                    '--build', build, '--package', a.package.resolve(), '--verify', out])
+
     ok &= all(guardrails.values())
     write_rollup(ok)
     if not ok:
