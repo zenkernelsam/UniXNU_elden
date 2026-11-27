@@ -98,6 +98,8 @@ def main():
                     '--prepared', a.prepared.resolve()])
     ok &= run_phase('a830-gmu-kmd-service-and-firmware', [tool('test_gpu_a830_gmu_kmd_service_and_firmware.py'),
                     '--tree', tree])
+    ok &= run_phase('a830-kmd-board-client-and-userclient', [tool('test_gpu_a830_kmd_board_client_and_userclient.py'),
+                    '--tree', tree])
     ok &= run_phase('pre-bringup-contract', [tool('test_gpu_pre_bringup_contract.py'),
                     '--tree', tree, '--package', a.package.resolve(), '--prepared', a.prepared.resolve()])
 
