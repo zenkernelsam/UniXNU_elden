@@ -187,6 +187,21 @@ def station(data, *, oem_target_pdev=False, oem_tcl_v1=False):
          if(sl&&linkSendWmi(link,sb,sl)==1){
            const uint32_t sv[]={st_req,dp.st.txFrames,(uint32_t)(st_t0?now-st_t0:0),link.events};
            diag_line("STATS_REQ n/tx/dt/ev",sv,4);
+           if(st_req==0){
+             const ChipIo cio{owner_io.owner,owner_io.read,owner_io.write};
+             const uint32_t pre_whp[]={
+               cio.read(cio.ctx,kDpWbm2Sw0R2),cio.read(cio.ctx,kDpWbm2Sw0R2+4),
+               cio.read(cio.ctx,kDpWbm2Sw0R2+kDpWbm2SwR2Stride),cio.read(cio.ctx,kDpWbm2Sw0R2+kDpWbm2SwR2Stride+4),
+               cio.read(cio.ctx,kDpTclBankConfig),cio.read(cio.ctx,kDpTclBankConfig+4),
+               cio.read(cio.ctx,dp.tcl.r2),cio.read(cio.ctx,dp.tcl.r2+4)};
+             diag_line("PRE_TX w0hp/tp/w1hp/tp/bk0/bk1/tclhp/tp",pre_whp,8);
+             const uint32_t w1r0=kDpWbm2Sw0R0+kDpWbm2SwR0Stride;
+             const uint32_t w1cfg[]={
+               cio.read(cio.ctx,w1r0),cio.read(cio.ctx,w1r0+4),
+               cio.read(cio.ctx,w1r0+8),cio.read(cio.ctx,w1r0+0x10),
+               cio.read(cio.ctx,kDpWbm2Sw0R0+8),cio.read(cio.ctx,kDpWbm2Sw0R0+0x10)};
+             diag_line("WBM1CFG lo/hi/id/misc/w0id/w0misc",w1cfg,6);
+           }
            if(st_req==1){
              const ChipIo cio{owner_io.owner,owner_io.read,owner_io.write};
              const int cp0=ceIndexOf(0),cp1=ceIndexOf(1),cp2=ceIndexOf(2),cp3=ceIndexOf(3),cp4=ceIndexOf(4);
@@ -329,10 +344,10 @@ def dp_header(data, *, single_pdev_bank=False, oem_index_bank=False):
         # Keep the existing station search mode and the descriptor's VDEV ID.
         bank = 'kDpBankStation & ~kDpBankVdevCheck'
         if oem_index_bank:
-            # hal_tx_populate_bank_register_be masks SW bank_config with 0x1ffff
-            # (dropping SW mcast_pkt_ctrl bits 18:17) and shifts dscp_tid_map_id
-            # (bits 24:19) to HW bits 22:17, writing 0x00000204 for STA index mode.
-            bank = '0x00000204u'
+            # r91: test bank=0x00000a04u (encap=2, index_lookup=1, addry_en=1,
+            # vdev_id_check_en=0) — donor STA bank minus vdev check — with pkt_offset=0,
+            # nonzero cookie, OEM critical notify/flow_override, dmb oshst, 8B HTT.
+            bank = '0x00000a04u'
         text = replace_once(
             text,
             '  write(dp, io, kDpTclBankConfig + 4 * dp.bank, kDpBankStation);',
@@ -350,14 +365,20 @@ def dp_header(data, *, single_pdev_bank=False, oem_index_bank=False):
         text,
         '  put32(e + 8, (dp.bank & 0x3fu) << kDpTclBankShift);                          // a buffer, bank 0',
         '  put32(e + 8, (dp.bank & 0x3fu) << kDpTclBankShift |\n'
-        '                (0u));',
+        '                (critical ? 0x300u : 0u));',
         'TX notify field',
+    )
+    text = replace_once(
+        text,
+        '  put32(e + 4, uint32_t((b.bus >> 32) & 0xffu) | kDpRbmSw0 << 8 | (uint32_t(buffer) & 0xfffffu) << 12);',
+        '  put32(e + 4, uint32_t((b.bus >> 32) & 0xffu) | kDpRbmSw0 << 8 | (uint32_t(buffer + 1u) & 0xfffffu) << 12);',
+        'r89: nonzero 1-based sw_buffer_cookie',
     )
     text = replace_once(
         text,
         '  put32(e + 20, kDpTclTidOverwrite | (dp.tid & 0xfu) << kDpTclTidShift | (dp.vdevId & 0xffu) << kDpTclVdevShift);',
         '  put32(e + 20, kDpTclTidOverwrite |\n'
-        '                    (0u) |\n'
+        '                    (critical ? 0x6u : 0u) |\n'
         '                    (dp.tid & 0xfu) << kDpTclTidShift |\n'
         '                    ((dp.pdevId & 0x3u) << 9) | (dp.vdevId & 0xffu) << kDpTclVdevShift);',
         'critical queue fields',
@@ -366,16 +387,14 @@ def dp_header(data, *, single_pdev_bank=False, oem_index_bank=False):
         text,
         '  for (uint32_t i = 0; i < length; ++i) b.va[i] = frame[i];',
         '  (void)critical;\n'
-        '  const uint32_t off = 0x28u;\n'
-        '  for (uint32_t i = 0; i < off; ++i) b.va[i] = 0;\n'
-        '  for (uint32_t i = 0; i < length; ++i) b.va[off + i] = frame[i];',
-        'Peach 0x28 headroom zeroed before Ethernet frame',
+        '  for (uint32_t i = 0; i < length; ++i) b.va[i] = frame[i];',
+        'r88: Ethernet frame at b.va[0] (pkt_offset=0)',
     )
     text = replace_once(
         text,
         '  put32(e + 16, length & 0xffffu);                                              // no offset, not to the firmware',
-        '  put32(e + 16, (length & 0xffffu) | (0x28u << 23)); // r87: direct TQM path (to_fw=0) + pkt_offset=0x28 with dmb oshst and post-M2 PDEV_TX stats',
-        'Peach pktOff=0x28 in w4',
+        '  put32(e + 16, length & 0xffffu); // r91: bank=0x0a04 (index_lookup=1, addry_en=1) + pkt_offset=0 + nonzero cookie + OEM critical',
+        'r88: pktOff=0 in w4',
     )
     text = replace_once(
         text,
@@ -511,7 +530,7 @@ constexpr uint32_t kDpReoCmdEntryWords = 10, kDpReoStatusEntryWords = 28;
     text = replace_once(
         text,
         '      if (cookie < kDpTxBuffers && dp.tx[cookie].busy && addrOf(e) == dp.tx[cookie].bus) dp.tx[cookie].busy = false;',
-        '      if (cookie < kDpTxBuffers && dp.tx[cookie].busy && addrOf(e) == dp.tx[cookie].bus) dp.tx[cookie].busy = false;',
+        '      if (cookie >= 1u && cookie <= kDpTxBuffers && dp.tx[cookie - 1u].busy && addrOf(e) == dp.tx[cookie - 1u].bus) dp.tx[cookie - 1u].busy = false;',
         'Peach +0x28 TX completion buffer address',
     )
     text = replace_once(
