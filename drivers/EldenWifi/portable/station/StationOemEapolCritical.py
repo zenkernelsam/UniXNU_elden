@@ -72,7 +72,7 @@ def station(data, *, oem_target_pdev=False, oem_tcl_v1=False):
         const HttPeerMap *pm=httPeerMapOf(htt,link.options.vdevId,sta.bssid);
         {const uint32_t pv[]={0u,pm?pm->type:0,pm?pm->peerId:0,pm?pm->hwPeerId:0,pm?pm->astHash:0,pm?(uint32_t)pm->hasSearch:0};diag_line("TX_LMAC_PM lmac/type/pid/hwpid/hash/has",pv,6);}
         if(!dp.programmed)dpProgram(dp,{owner_io.owner,owner_io.read,owner_io.write});
-        dpTxSetupPeer(dp,{owner_io.owner,owner_io.read,owner_io.write},link.options.vdevId,kDpPdevSingle,pm);
+        dpTxSetupPeer(dp,{owner_io.owner,owner_io.read,owner_io.write},link.options.vdevId,1u,pm);
     }'''
         else:
             tx_replace = '''    if(current&&sta.vdevUp&&!dp.txReady&&tx_target_pdev){
@@ -159,6 +159,21 @@ def station(data, *, oem_target_pdev=False, oem_tcl_v1=False):
         htt.errorsSeen,dp.st.excEntries,dp.st.rxEntries,dp.st.rxErrors
     };
     diag_line("DP_SW httN/t0..3/t4..7/httErr/exc/rx/rxErr",dp_sw,7);'''
+        diag_extra = diag_extra + '''
+    const uint32_t tcl_r0[]={
+        io.read(io.ctx,dp.tcl.r0),io.read(io.ctx,dp.tcl.r0+4),
+        io.read(io.ctx,dp.tcl.r0+8),io.read(io.ctx,dp.tcl.r0+0x10),
+        io.read(io.ctx,dp.tcl.r0+0x1c),io.read(io.ctx,dp.tcl.r0+0x20),
+        dp.tcl.theirs?*dp.tcl.theirs:0xffffffffu,
+        io.read(io.ctx,dp.tcl.r2),io.read(io.ctx,dp.tcl.r2+4)
+    };
+    diag_line("TCL_R0 lo/msb/id/misc/tpLo/tpHi/theirs/hp/tp",tcl_r0,9);
+    const DpRelRecord *rr=dp.st.relRecorded?&dp.st.rel[0]:nullptr;
+    const uint32_t rel_dec[]={
+        dp.st.relEntries,dp.st.relRecycled,dp.st.relOther,dp.st.relRecorded,
+        rr?rr->source:0,rr?rr->rxdmaPush:0,rr?rr->rxdmaError:0,rr?rr->reoPush:0,rr?rr->reoError:0
+    };
+    diag_line("REL3_DEC ent/rec/oth/cnt/src/rxP/rxE/reoP/reoE",rel_dec,9);'''
         bhi_anchor = 'follow(now);key_turn(now);transmit();tx_diagnostic(now);port_replies();publish_snapshot();protocol_status(out);'
         bhi_extra = bhi_anchor + '''
     {static uint64_t t0;static uint32_t last_st,nlog;
@@ -219,6 +234,20 @@ def station(data, *, oem_target_pdev=False, oem_tcl_v1=False):
              diag_line("CEWIN win/c0hp/c0tp/c3hp/c3tp/c4hp/c4tp/d1hp/d1tp/d2hp/d2tp/s2hp/s2tp",cw,13);
              const uint32_t cpw[]={cio.read(cio.ctx,0x1e04040),cio.read(cio.ctx,0x3008),cio.read(cio.ctx,0x38),cio.read(cio.ctx,0x48),cio.read(cio.ctx,0x3004),link.events};
              diag_line("CEPWR scratch/reset/mhictrl/mhistat/wake/ev",cpw,6);
+           }
+           if(st_req==2){
+             const ChipIo cio{owner_io.owner,owner_io.read,owner_io.write};
+             const int cp3=ceIndexOf(3),cp4=ceIndexOf(4),cp1=ceIndexOf(1),cp2=ceIndexOf(2);
+             const CePipe *p3=(cp3>=0&&link.ce)?&link.ce->pipes[cp3]:nullptr;
+             const CePipe *p4=(cp4>=0&&link.ce)?&link.ce->pipes[cp4]:nullptr;
+             const CePipe *p1=(cp1>=0&&link.ce)?&link.ce->pipes[cp1]:nullptr;
+             const CePipe *p2=(cp2>=0&&link.ce)?&link.ce->pipes[cp2]:nullptr;
+             const uint32_t cw2[]={
+               p3?cio.read(cio.ctx,p3->src.r2):0,p3?cio.read(cio.ctx,p3->src.r2+4):0,
+               p4?cio.read(cio.ctx,p4->src.r2):0,p4?cio.read(cio.ctx,p4->src.r2+4):0,
+               p1?cio.read(cio.ctx,p1->dst.r2):0,p1?cio.read(cio.ctx,p1->dst.r2+4):0,
+               p2?cio.read(cio.ctx,p2->dst.r2):0,p2?cio.read(cio.ctx,p2->dst.r2+4):0,link.events};
+             diag_line("CEWIN2 c3hp/c3tp/c4hp/c4tp/d1hp/d1tp/d2hp/d2tp/ev",cw2,9);
            }
            ++st_req;}}}}'''
         edits.append((diag_anchor, diag_extra))
@@ -363,8 +392,7 @@ def dp_header(data, *, single_pdev_bank=False, oem_index_bank=False):
     text = replace_once(
         text,
         '  put32(e + 8, (dp.bank & 0x3fu) << kDpTclBankShift);                          // a buffer, bank 0',
-        '  put32(e + 8, (dp.bank & 0x3fu) << kDpTclBankShift |\n'
-        '                (critical ? 0x300u : 0u));',
+        '  put32(e + 8, (dp.bank & 0x3fu) << kDpTclBankShift); // r93: clear tx_notify_frame=3 to avoid FW WBM2SW1 bypass',
         'TX notify field',
     )
     text = replace_once(
@@ -377,7 +405,6 @@ def dp_header(data, *, single_pdev_bank=False, oem_index_bank=False):
         text,
         '  put32(e + 20, kDpTclTidOverwrite | (dp.tid & 0xfu) << kDpTclTidShift | (dp.vdevId & 0xffu) << kDpTclVdevShift);',
         '  put32(e + 20, kDpTclTidOverwrite |\n'
-        '                    (critical ? 0x6u : 0u) |\n'
         '                    (dp.tid & 0xfu) << kDpTclTidShift |\n'
         '                    ((dp.pdevId & 0x3u) << 9) | (dp.vdevId & 0xffu) << kDpTclVdevShift);',
         'critical queue fields',
@@ -392,7 +419,7 @@ def dp_header(data, *, single_pdev_bank=False, oem_index_bank=False):
     text = replace_once(
         text,
         '  put32(e + 16, length & 0xffffu);                                              // no offset, not to the firmware',
-        '  put32(e + 16, length & 0xffffu); // r92: HTT V2 fw_metadata + pre-WMI dpProgram + OEM bank 0x0204 + pkt_offset=0',
+        '  put32(e + 16, length & 0xffffu); // r94: pdev=1 (w3=0x08010000, w5=0x201) + TCL_R0/REL3_DEC/CEWIN2 diag',
         'r88: pktOff=0 in w4',
     )
     text = replace_once(
