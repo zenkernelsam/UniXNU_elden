@@ -368,14 +368,13 @@ def dp_header(data, *, single_pdev_bank=False, oem_index_bank=False):
         '  (void)critical;\n'
         '  const uint32_t off = 0x28u;\n'
         '  for (uint32_t i = 0; i < off; ++i) b.va[i] = 0;\n'
-        '  put32(b.va, 0x80000000u); // r79: ext2 dword0 host_tx_desc_pool (TQM-BYPASS host-pool completion linkage)\n'
         '  for (uint32_t i = 0; i < length; ++i) b.va[off + i] = frame[i];',
         'Peach 0x28 headroom zeroed before Ethernet frame',
     )
     text = replace_once(
         text,
         '  put32(e + 16, length & 0xffffu);                                              // no offset, not to the firmware',
-        '  put32(e + 16, (length & 0xffffu) | (1u << 21) | (0x28u << 23)); // r78: to_fw=1 + pkt_offset=0x28, all-zero ext2 metadata (TQM VP WAR firmware path)',
+        '  put32(e + 16, (length & 0xffffu) | (0x28u << 23)); // r87: direct TQM path (to_fw=0) + pkt_offset=0x28 with dmb oshst and post-M2 PDEV_TX stats',
         'Peach pktOff=0x28 in w4',
     )
     text = replace_once(
