@@ -58,7 +58,20 @@ def station(data, *, oem_target_pdev=False, oem_tcl_v1=False):
         const uint32_t normal_tid=dp.tid;
         if(false&&f->eapol&&sta.phy.qos)dp.tid=7;
         const bool sent=dpSend(dp,{{owner_io.owner,owner_io.read,owner_io.write}},f->bytes,f->length,{critical_arg});
-        dp.tid=normal_tid;'''
+        dp.tid=normal_tid;
+        if(sent&&!f->eapol&&f->length>=14){{
+            static unsigned en0_tx_log;
+            if(en0_tx_log<16){{
+                ++en0_tx_log;
+                const uint32_t et=(((uint32_t)f->bytes[12])<<8)|f->bytes[13];
+                const uint32_t pr=(et==0x0800u&&f->length>=34)?f->bytes[23]:0u;
+                const uint32_t sp=(pr==17u&&f->length>=38)?((((uint32_t)f->bytes[34])<<8)|f->bytes[35]):0u;
+                const uint32_t dp_p=(pr==17u&&f->length>=38)?((((uint32_t)f->bytes[36])<<8)|f->bytes[37]):0u;
+                const uint32_t op=(pr==17u&&(sp==68u||dp_p==67u)&&f->length>=43)?f->bytes[42]:0u;
+                const uint32_t v[]={{en0_tx_log,et,f->length,pr,sp,dp_p,op}};
+                diag_line("EN0_TX n/et/len/proto/sp/dp/dhcpOp",v,7);
+            }}
+        }}'''
     edits = [(send, replacement)]
     if oem_target_pdev or oem_tcl_v1:
         dp_state = 'static Dp dp;'
@@ -72,7 +85,7 @@ def station(data, *, oem_target_pdev=False, oem_tcl_v1=False):
         const HttPeerMap *pm=httPeerMapOf(htt,link.options.vdevId,sta.bssid);
         {const uint32_t pv[]={0u,pm?pm->type:0,pm?pm->peerId:0,pm?pm->hwPeerId:0,pm?pm->astHash:0,pm?(uint32_t)pm->hasSearch:0};diag_line("TX_LMAC_PM lmac/type/pid/hwpid/hash/has",pv,6);}
         if(!dp.programmed)dpProgram(dp,{owner_io.owner,owner_io.read,owner_io.write});
-        dpTxSetupPeer(dp,{owner_io.owner,owner_io.read,owner_io.write},link.options.vdevId,1u,pm);
+        dpTxSetupPeer(dp,{owner_io.owner,owner_io.read,owner_io.write},link.options.vdevId,tx_target_pdev-1u,pm);
     }'''
         else:
             tx_replace = '''    if(current&&sta.vdevUp&&!dp.txReady&&tx_target_pdev){
@@ -358,6 +371,25 @@ def station(data, *, oem_target_pdev=False, oem_tcl_v1=False):
         uint32_t facts[]={kind.message,eapol_bytes,(uint32_t)dp.txReady,(uint32_t)sta.vdevUp};diag_line("EAPOL_RX message/bytes/TXready/up",facts,4);
         if(n)(void)send_message(session,message,n);"""
     edits.append((rx_old,rx_new))
+    edits.append((
+        '}else if(live&&sta.authorized&&callbacks.rx){callbacks.rx(frame,bytes);}',
+        '}else if(live&&sta.authorized&&callbacks.rx){\n'
+        '        static unsigned en0_rx_log;\n'
+        '        if(en0_rx_log<16&&bytes>=14){\n'
+        '            const uint32_t et=(((uint32_t)frame[12])<<8)|frame[13];\n'
+        '            const uint32_t pr=(et==0x0800u&&bytes>=34)?frame[23]:0u;\n'
+        '            const uint32_t sp=(pr==17u&&bytes>=38)?((((uint32_t)frame[34])<<8)|frame[35]):0u;\n'
+        '            const uint32_t dp_p=(pr==17u&&bytes>=38)?((((uint32_t)frame[36])<<8)|frame[37]):0u;\n'
+        '            if(et==0x0806u||(pr==17u&&(sp==67u||dp_p==68u||sp==53u||dp_p==53u))||en0_rx_log<6){\n'
+        '                ++en0_rx_log;\n'
+        '                const uint32_t op=(pr==17u&&(sp==67u||dp_p==68u)&&bytes>=62)?frame[42]:0u;\n'
+        '                const uint32_t yi=(pr==17u&&(sp==67u||dp_p==68u)&&bytes>=62)?((((uint32_t)frame[58])<<24)|(((uint32_t)frame[59])<<16)|(((uint32_t)frame[60])<<8)|frame[61]):0u;\n'
+        '                const uint32_t v[]={en0_rx_log,et,bytes,pr,sp,dp_p,op,yi?1u:0u};\n'
+        '                diag_line("EN0_RX n/et/len/proto/sp/dp/dhcpOp/hasYi",v,8);\n'
+        '            }\n'
+        '        }\n'
+        '        callbacks.rx(frame,bytes);}'
+    ))
     return derive(data, READY_SOURCE_SHA, edits)
 
 
@@ -419,7 +451,7 @@ def dp_header(data, *, single_pdev_bank=False, oem_index_bank=False):
     text = replace_once(
         text,
         '  put32(e + 16, length & 0xffffu);                                              // no offset, not to the firmware',
-        '  put32(e + 16, length & 0xffffu); // r94: pdev=1 (w3=0x08010000, w5=0x201) + TCL_R0/REL3_DEC/CEWIN2 diag',
+        '  put32(e + 16, length & 0xffffu); // r95: dynamic pdev (tx_target_pdev-1) + EN0_TX/EN0_RX L3/DHCP telemetry',
         'r88: pktOff=0 in w4',
     )
     text = replace_once(
