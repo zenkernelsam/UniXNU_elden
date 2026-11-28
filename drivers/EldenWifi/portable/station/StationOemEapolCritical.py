@@ -84,7 +84,6 @@ def station(data, *, oem_target_pdev=False, oem_tcl_v1=False):
             (response, response + '''
             if(station_began&&sta.step==kStaVdevStart&&sta.vdevStartSent&&facts[1]==0&&facts[2]==0)
                 tx_target_pdev=(facts[3]==kWmiVdevStartOk)?(facts[6]+1u):0;'''),
-            ('dpProgram(dp,chip);ceProgram(ce,chip);', 'ceProgram(ce,chip);'),
             (tx_setup, tx_replace),
         ])
         diag_anchor = '    diag_line("TX_DESC metadata-only words2..7",desc,6);'
@@ -344,10 +343,10 @@ def dp_header(data, *, single_pdev_bank=False, oem_index_bank=False):
         # Keep the existing station search mode and the descriptor's VDEV ID.
         bank = 'kDpBankStation & ~kDpBankVdevCheck'
         if oem_index_bank:
-            # r91: test bank=0x00000a04u (encap=2, index_lookup=1, addry_en=1,
-            # vdev_id_check_en=0) — donor STA bank minus vdev check — with pkt_offset=0,
-            # nonzero cookie, OEM critical notify/flow_override, dmb oshst, 8B HTT.
-            bank = '0x00000a04u'
+            # r92: restore exact OEM STA index bank 0x00000204u alongside HTT V2
+            # fw_metadata (0x0001 instead of V1 0x0401 which decoded as vdev=128)
+            # and pre-WMI dpProgram() timing.
+            bank = '0x00000204u'
         text = replace_once(
             text,
             '  write(dp, io, kDpTclBankConfig + 4 * dp.bank, kDpBankStation);',
@@ -393,7 +392,7 @@ def dp_header(data, *, single_pdev_bank=False, oem_index_bank=False):
     text = replace_once(
         text,
         '  put32(e + 16, length & 0xffffu);                                              // no offset, not to the firmware',
-        '  put32(e + 16, length & 0xffffu); // r91: bank=0x0a04 (index_lookup=1, addry_en=1) + pkt_offset=0 + nonzero cookie + OEM critical',
+        '  put32(e + 16, length & 0xffffu); // r92: HTT V2 fw_metadata + pre-WMI dpProgram + OEM bank 0x0204 + pkt_offset=0',
         'r88: pktOff=0 in w4',
     )
     text = replace_once(
@@ -520,12 +519,6 @@ constexpr uint32_t kDpReoCmdEntryWords = 10, kDpReoStatusEntryWords = 28;
       program(dp, io, dp.sw2wbm, true);
       break;''',
         'r75 fabric rings programmed',
-    )
-    text = replace_once(
-        text,
-        '  put32(e + 12, (dp.tclMetadata & 0xffffu) << kDpTclCmdNumShift);',
-        '  put32(e + 12, (0x0401u | ((dp.vdevId & 0xffu) << 2)) << kDpTclCmdNumShift);',
-        'Peach V1 fw_metadata target pdev=1 vdev=0 (0x0401)',
     )
     text = replace_once(
         text,
