@@ -9,6 +9,35 @@ READY_SOURCE_SHA = '66585bb02c6a5428a23efbc1ab7de8b29482ebb202d99f500ad8ca741f81
 DP_SOURCE_SHA = 'e34fd826570c827b3c20790a895296a963066450790196df55b8d2d4a3afa5ef'
 
 
+# r86: the r55-era ScanHttDrain residue accidentally discards the intended
+# 8-byte HTT version request and always sends the 4-byte form.  Commit
+# 04d275f explicitly selected 8-byte HTT + OEM v1 TCL metadata after the
+# 4-byte form stalled CE.  The build imports this module before ScanHttDrain,
+# so installing the corrected derivation here keeps the change inside this
+# patcher while preserving the 56-byte Peach SRNG setup.
+def _install_htt8_negotiation_fix():
+    try:
+        import ScanHttDrain as drain
+    except ImportError:
+        return
+
+    def oem_srng_header_htt8(data, *, oem_htt_v1=False):
+        if sha(data) != drain.HTT_SHA:
+            raise ValueError('OEM SRNG setup requires the pinned HTT header')
+        old = b'  const uint32_t bytes = kHttSrngSetupWords * 4;'
+        new = b'''  // TB322FC htt_srng_setup sends 56 bytes. Its final word contains
+  // IPA drop thresholds, which are unused on this polling path.
+  const uint32_t bytes = (kHttSrngSetupWords + 1) * 4;'''
+        if data.count(old) != 1:
+            raise ValueError('SRNG setup encoder differs')
+        return data.replace(old, new, 1)
+
+    drain.oem_srng_header = oem_srng_header_htt8
+
+
+_install_htt8_negotiation_fix()
+
+
 def sha(data):
     return hashlib.sha256(data).hexdigest()
 
@@ -174,6 +203,8 @@ def station(data, *, oem_target_pdev=False, oem_tcl_v1=False):
                p2?cio.read(cio.ctx,p2->dst.r2):0,p2?cio.read(cio.ctx,p2->dst.r2+4):0,
                p2?cio.read(cio.ctx,p2->status.r2):0,p2?cio.read(cio.ctx,p2->status.r2+4):0};
              diag_line("CEWIN win/c0hp/c0tp/c3hp/c3tp/c4hp/c4tp/d1hp/d1tp/d2hp/d2tp/s2hp/s2tp",cw,13);
+             const uint32_t cpw[]={cio.read(cio.ctx,0x1e04040),cio.read(cio.ctx,0x3008),cio.read(cio.ctx,0x38),cio.read(cio.ctx,0x48),cio.read(cio.ctx,0x3004),link.events};
+             diag_line("CEPWR scratch/reset/mhictrl/mhistat/wake/ev",cpw,6);
            }
            ++st_req;}}}}'''
         edits.append((diag_anchor, diag_extra))
@@ -232,6 +263,28 @@ def station(data, *, oem_target_pdev=False, oem_tcl_v1=False):
     edits.append((
         'httFill(htt);const ChipIo chip{io->owner,io->read,io->write};',
         'httFill(htt);const ChipIo chip{owner_io.owner,owner_io.read,owner_io.write};'
+    ))
+    edits.append((
+        '    linkRun(link,now);\n    if(link.step==kLinkHandOff){',
+        '    linkRun(link,now);\n'
+        '    {static unsigned scan_ce_diag;if(!scan_ce_diag&&(link.step==612||link.error==-4)){\n'
+        '      scan_ce_diag=1;\n'
+        '      const ChipIo cio{owner_io.owner,owner_io.read,owner_io.write};\n'
+        '      const int cp0=ceIndexOf(0),cp1=ceIndexOf(1),cp2=ceIndexOf(2),cp3=ceIndexOf(3),cp4=ceIndexOf(4);\n'
+        '      const CePipe *p0=cp0>=0?&ce.pipes[cp0]:nullptr,*p1=cp1>=0?&ce.pipes[cp1]:nullptr;\n'
+        '      const CePipe *p2=cp2>=0?&ce.pipes[cp2]:nullptr,*p3=cp3>=0?&ce.pipes[cp3]:nullptr,*p4=cp4>=0?&ce.pipes[cp4]:nullptr;\n'
+        '      const uint32_t cw[]={cio.read(cio.ctx,0x3278),\n'
+        '        p0?cio.read(cio.ctx,p0->src.r2):0,p0?cio.read(cio.ctx,p0->src.r2+4):0,\n'
+        '        p3?cio.read(cio.ctx,p3->src.r2):0,p3?cio.read(cio.ctx,p3->src.r2+4):0,\n'
+        '        p4?cio.read(cio.ctx,p4->src.r2):0,p4?cio.read(cio.ctx,p4->src.r2+4):0,\n'
+        '        p1?cio.read(cio.ctx,p1->dst.r2):0,p1?cio.read(cio.ctx,p1->dst.r2+4):0,\n'
+        '        p2?cio.read(cio.ctx,p2->dst.r2):0,p2?cio.read(cio.ctx,p2->dst.r2+4):0,\n'
+        '        p2?cio.read(cio.ctx,p2->status.r2):0,p2?cio.read(cio.ctx,p2->status.r2+4):0};\n'
+        '      diag_line("CEWIN_SCAN win/c0hp/c0tp/c3hp/c3tp/c4hp/c4tp/d1hp/d1tp/d2hp/d2tp/s2hp/s2tp",cw,13);\n'
+        '      const uint32_t cpw[]={cio.read(cio.ctx,0x1e04040),cio.read(cio.ctx,0x3008),cio.read(cio.ctx,0x38),cio.read(cio.ctx,0x48),cio.read(cio.ctx,0x3004),link.events};\n'
+        '      diag_line("CEPWR_SCAN scratch/reset/mhictrl/mhistat/wake/ev",cpw,6);\n'
+        '    }}\n'
+        '    if(link.step==kLinkHandOff){'
     ))
     edits.append((
         '    dpPoll(dp,{owner_io.owner,owner_io.read,owner_io.write},receive);',
